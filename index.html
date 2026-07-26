@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b6f67" />
+  <meta name="description" content="Salita Quest Map Edition — an experiential, mastery-driven Tagalog learning game." />
+  <title>Salita Quest — Map Edition</title>
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body data-current-view="home">
+  <header class="mobile-appbar" aria-label="Mobile app header">
+    <button class="mobile-brand-button" type="button" data-view="home" aria-label="Go to home">
+      <span class="mobile-brand-mark">S<span>★</span></span>
+      <span class="mobile-brand-copy"><strong>Salita Quest</strong><small id="mobileViewTitle">Home</small></span>
+    </button>
+    <div class="mobile-appbar-actions">
+      <span class="mobile-stat" title="Daily streak">🔥 <strong id="mobileStreakValue">0</strong></span>
+      <span class="mobile-stat" title="Coins">🪙 <strong id="mobileCoinValue">0</strong></span>
+      <button id="mobileMenuBtn" class="mobile-menu-btn" type="button" onclick="openMobileMenu()" aria-label="Open more options" aria-expanded="false">•••</button>
+    </div>
+  </header>
+
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">S★</div>
+        <div>
+          <h1>Salita Quest</h1>
+          <p>Practical Tagalog</p>
+        </div>
+      </div>
+
+      <nav class="nav-list" aria-label="Main navigation">
+        <button class="nav-item active" data-view="home"><span class="nav-art" data-art="home"></span><span>Home</span></button>
+        <button class="nav-item" data-view="learn"><span class="nav-art" data-art="daily"></span><span>Learn</span></button>
+        <button class="nav-item" data-view="review"><span class="nav-art" data-art="quick"></span><span>Topic Review</span></button>
+        <button class="nav-item" data-view="dictionary"><span class="nav-art" data-art="dictionary"></span><span>Dictionary</span></button>
+        <button class="nav-item" data-view="skills"><span class="nav-art" data-art="map"></span><span>Journey Map</span></button>
+        <button class="nav-item" data-view="boss"><span class="nav-art" data-art="conversation"></span><span>Boss Challenge</span></button>
+        <button class="nav-item" data-view="progress"><span class="nav-art" data-art="progress"></span><span>Progress</span></button>
+        <button class="nav-item" data-view="settings"><span class="nav-art" data-art="settings"></span><span>Settings</span></button>
+      </nav>
+
+      <div class="sidebar-note">
+        <strong>Design principle</strong>
+        <p>Learn the Tagalog that Filipinos retain. Treat familiar English roots as grammar practice, not new vocabulary.</p>
+        <small class="version-label">Version 5.0 Map Edition</small>
+      </div>
+    </aside>
+
+    <main class="main-area">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow" id="todayLabel"></p>
+          <h2 id="viewTitle">Magandang araw!</h2>
+        </div>
+        <div class="top-stats">
+          <div class="stat-chip" title="Current daily streak">🔥 <strong id="streakValue">0</strong></div>
+          <div class="stat-chip" title="Coins earned">🪙 <strong id="coinValue">0</strong></div>
+          <div class="level-chip">
+            <span id="levelValue">Level 1</span>
+            <div class="mini-progress"><span id="levelBar"></span></div>
+          </div>
+        </div>
+      </header>
+
+      <section class="mastery-rail-shell" aria-label="Mastery progress toward new regions">
+        <div class="mastery-rail-heading">
+          <div>
+            <p class="eyebrow">World progress</p>
+            <strong id="masteryRailTitle">0 Mastery Points</strong>
+          </div>
+          <div class="mastery-next-copy">
+            <span id="masteryNextRegion">Welcome Bay</span>
+            <small id="masteryNextText">Start learning to open the map.</small>
+          </div>
+        </div>
+        <div id="masteryMilestones" class="mastery-milestones" role="list"></div>
+      </section>
+
+      <section id="homeView" class="view active">
+        <div class="hero-card">
+          <div class="hero-copy">
+            <span class="pill" id="homeHeroPill">Today’s next step</span>
+            <h3 id="homeHeroTitle">Keep your Tagalog moving.</h3>
+            <p id="homeHeroText">A short session mixes new language with retrieval practice so progress stays manageable and durable.</p>
+            <div class="hero-actions">
+              <button class="primary-btn" id="startDailyBtn">Start daily session</button>
+              <div class="quick-review-launcher">
+                <select id="homeQuickReviewLength" aria-label="Number of quick-review questions">
+                  <option value="3">3 questions</option>
+                  <option value="4" selected>4 questions</option>
+                  <option value="6">6 questions</option>
+                  <option value="8">8 questions</option>
+                  <option value="12">12 questions</option>
+                  <option value="20">20 questions</option>
+                </select>
+                <button class="secondary-btn" id="quickReviewBtn">Quick review</button>
+              </div>
+            </div>
+          </div>
+          <div class="hero-visual" aria-hidden="true">
+            <div class="orbit orbit-one"><span>kumusta</span></div>
+            <div class="orbit orbit-two"><span>ako si…</span></div>
+            <div class="orbit orbit-three"><span>taga-saan?</span></div>
+            <div class="mascot">🦅</div>
+          </div>
+        </div>
+
+        <section class="activity-hub" aria-label="Choose a learning activity">
+          <article class="activity-tile activity-tile-primary">
+            <button id="activityDailyBtn" class="activity-main" type="button">
+              <span class="activity-art" data-art="daily"></span>
+              <span class="activity-copy"><small>RECOMMENDED</small><strong>Daily Session</strong><em>Continue your current mission</em></span>
+              <span class="activity-arrow">›</span>
+            </button>
+          </article>
+          <article class="activity-tile activity-tile-review">
+            <button id="activityQuickBtn" class="activity-main" type="button">
+              <span class="activity-art" data-art="quick"></span>
+              <span class="activity-copy"><small>MEMORY CAMP</small><strong>Quick Review</strong><em>Strengthen learned language</em></span>
+              <span class="activity-arrow">›</span>
+            </button>
+            <select id="activityQuickLength" class="activity-mini-select" aria-label="Quick review length">
+              <option value="3">3 items</option><option value="4">4 items</option><option value="6">6 items</option><option value="8">8 items</option><option value="12">12 items</option><option value="20">20 items</option>
+            </select>
+          </article>
+          <article class="activity-tile">
+            <button class="activity-main" type="button" data-view="review">
+              <span class="activity-art" data-art="topic"></span>
+              <span class="activity-copy"><small>CHOOSE A REGION</small><strong>Topic Review</strong><em>Practise one part of the map</em></span>
+              <span class="activity-arrow">›</span>
+            </button>
+          </article>
+          <article class="activity-tile">
+            <button class="activity-main" type="button" data-view="dictionary">
+              <span class="activity-art" data-art="dictionary"></span>
+              <span class="activity-copy"><small>WORD BOOK</small><strong>Dictionary</strong><em>Search, hide, reveal and listen</em></span>
+              <span class="activity-arrow">›</span>
+            </button>
+          </article>
+          <article class="activity-tile">
+            <button class="activity-main" type="button" data-view="boss">
+              <span class="activity-art" data-art="conversation"></span>
+              <span class="activity-copy"><small>CONVERSATION GATE</small><strong>Challenge</strong><em>Use several skills together</em></span>
+              <span class="activity-arrow">›</span>
+            </button>
+          </article>
+          <article class="activity-tile">
+            <button class="activity-main" type="button" data-view="progress">
+              <span class="activity-art" data-art="progress"></span>
+              <span class="activity-copy"><small>YOUR JOURNEY</small><strong>Progress</strong><em>Mastery, streaks and badges</em></span>
+              <span class="activity-arrow">›</span>
+            </button>
+          </article>
+        </section>
+
+        <article id="mobileTransferPrompt" class="mobile-transfer-prompt">
+          <div class="mobile-transfer-icon">↗</div>
+          <div>
+            <strong>Continue from your desktop</strong>
+            <p>Import a Salita Quest JSON backup and keep your mastery, streak, XP, and review schedule.</p>
+          </div>
+          <button id="mobileImportBtn" class="mobile-transfer-btn" type="button" onclick="document.getElementById('importInput').click()">Import</button>
+        </article>
+
+        <section class="game-dashboard" aria-label="Learning momentum">
+          <article class="player-card">
+            <div class="player-avatar-wrap" aria-hidden="true">
+              <div class="player-avatar">🦅</div>
+              <span class="player-level-badge" id="playerLevelBadge">1</span>
+            </div>
+            <div class="player-copy">
+              <p class="eyebrow">Your learning level</p>
+              <h3 id="playerLevelTitle">Starter</h3>
+              <p id="playerLevelSubtitle">Build your first conversational habits.</p>
+              <div class="player-xp-row"><span id="playerXpText">0 / 250 XP</span><span id="playerXpRemaining">250 to next level</span></div>
+              <div class="player-xp-track"><span id="playerXpBar"></span></div>
+            </div>
+          </article>
+          <article class="week-card">
+            <div class="week-card-head">
+              <div><p class="eyebrow">Weekly momentum</p><strong id="weekMomentumLabel">Start your week</strong></div>
+              <span class="week-flame">🔥</span>
+            </div>
+            <div id="weekMomentum" class="week-momentum" aria-label="Study days this week"></div>
+          </article>
+        </section>
+
+        <article class="daily-quests-card">
+          <div class="quest-card-header">
+            <div>
+              <p class="eyebrow">Daily quests</p>
+              <h3>Three small wins</h3>
+              <p>Short, meaningful goals keep practice focused without turning XP into the objective.</p>
+            </div>
+            <div id="dailyQuestScore" class="quest-score">0/3</div>
+          </div>
+          <div id="dailyQuestList" class="daily-quest-list"></div>
+          <div id="questChest" class="quest-chest locked" aria-live="polite">
+            <div class="quest-chest-icon" aria-hidden="true">🎁</div>
+            <div><strong id="questChestTitle">Complete all 3 quests</strong><small id="questChestText">Bonus: +25 XP and +20 coins</small></div>
+            <span id="questChestStatus">🔒</span>
+          </div>
+        </article>
+
+        <section class="journey-section" aria-label="Learning journey">
+          <div class="journey-header">
+            <div><p class="eyebrow">Your learning journey</p><h3>Explore your Tagalog world</h3><p>Master language to open new regions. Review camps, conversation gates, and topic missions all live on the same map.</p></div>
+            <button class="text-btn" type="button" data-view="skills">Full map</button>
+          </div>
+          <div id="journeyPath" class="journey-path"></div>
+        </section>
+
+        <article id="conversationSpotlight" class="panel conversation-spotlight"></article>
+
+        <article class="panel home-topic-review">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">Return to learned material</p>
+              <h3>Review a specific topic</h3>
+            </div>
+            <button class="text-btn" type="button" data-view="review">See all topics</button>
+          </div>
+          <p>Choose a topic you have already started. Review a short sample or every learned item in that topic.</p>
+          <div class="home-topic-controls">
+            <select id="homeTopicSelect" aria-label="Choose a learned topic"></select>
+            <button class="secondary-btn" id="homeTopicShortBtn">Review 5</button>
+            <button class="primary-btn" id="homeTopicAllBtn">Review all learned</button>
+          </div>
+          <p id="homeTopicEmpty" class="small-note hidden">Complete a few learning questions first; your covered topics will then appear here.</p>
+        </article>
+
+        <div class="dashboard-grid">
+          <article class="panel daily-panel">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">Today’s training</p>
+                <h3>Daily quest</h3>
+              </div>
+              <span class="completion-ring" id="dailyRing">0%</span>
+            </div>
+            <div class="quest-row">
+              <div class="quest-icon">🧠</div>
+              <div>
+                <strong id="reviewCount">0 reviews due</strong>
+                <p>Recall previously learned material.</p>
+              </div>
+            </div>
+            <div class="quest-row">
+              <div class="quest-icon">🌱</div>
+              <div>
+                <strong id="newCount">3 new items</strong>
+                <p>Small doses prevent shallow memorisation.</p>
+              </div>
+            </div>
+            <div class="quest-row">
+              <div class="quest-icon">🎧</div>
+              <div>
+                <strong>Listening round</strong>
+                <p>Use Filipino speech playback when supported.</p>
+              </div>
+            </div>
+          </article>
+
+          <article class="panel">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">Current focus</p>
+                <h3 id="currentModuleTitle">Foundations</h3>
+              </div>
+              <span class="module-badge" id="currentModuleBadge">1</span>
+            </div>
+            <p id="currentModuleDescription"></p>
+            <div class="large-progress">
+              <span id="moduleProgressBar"></span>
+            </div>
+            <div class="progress-caption">
+              <span id="moduleProgressText">0 mastered</span>
+              <span id="moduleItemCount">0 items</span>
+            </div>
+          </article>
+
+          <article class="panel compact-panel">
+            <p class="eyebrow">Vocabulary strategy</p>
+            <h3>English filter</h3>
+            <p>Words commonly retained in English are taught only when Tagalog grammar changes how they behave.</p>
+            <div class="example-strip"><span>send</span><strong>→</strong><span>i-send</span></div>
+          </article>
+
+          <article class="panel compact-panel">
+            <p class="eyebrow">Etymology layer</p>
+            <h3>Spanish highlights</h3>
+            <p>Integrated Spanish-origin words are labelled, but learned as ordinary Filipino vocabulary.</p>
+            <div class="example-strip spanish"><span>gusto</span><span>trabaho</span><span>oras</span></div>
+          </article>
+        </div>
+
+        <article class="panel achievement-panel">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">Recent achievements</p>
+              <h3>Your badge shelf</h3>
+            </div>
+          </div>
+          <div id="badgeShelf" class="badge-shelf"></div>
+        </article>
+      </section>
+
+      <section id="learnView" class="view">
+        <div class="learn-layout">
+          <article class="lesson-card" id="lessonCard">
+            <div class="lesson-topline">
+              <div class="lesson-top-row">
+                <button id="mobileExitLessonBtn" class="lesson-close-btn" type="button" aria-label="Exit lesson">×</button>
+                <span class="pill" id="exerciseType">Recognition</span>
+                <div class="lesson-hud"><span id="comboChip" class="combo-chip">⚡ 0</span><span id="lessonXpChip" class="lesson-xp-chip">0 XP</span><span id="sessionCounter">1 / 10</span></div>
+              </div>
+              <div class="lesson-progress-track" aria-hidden="true"><span id="lessonProgressBar"></span></div>
+            </div>
+
+            <div class="lesson-content">
+              <p class="eyebrow" id="lessonModule">Foundations</p>
+              <div id="originBadge" class="origin-badge hidden"></div>
+              <h3 id="lessonPrompt">Ready to begin?</h3>
+              <p id="lessonContext" class="lesson-context"></p>
+              <div id="structureBox" class="structure-box hidden"></div>
+
+              <button class="audio-btn hidden" id="audioBtn" type="button">🔊 Hear pronunciation</button>
+
+              <div id="answerArea" class="answer-area">
+                <input id="answerInput" type="text" autocomplete="off" spellcheck="false" placeholder="Type your answer" />
+                <div id="choiceGrid" class="choice-grid hidden"></div>
+                <div id="sentenceBuilder" class="sentence-builder hidden" aria-label="Build the sentence">
+                  <p class="builder-instruction">Choose the correct words in order. You may not need all six.</p>
+                  <div id="builtSentence" class="built-sentence" aria-live="polite"></div>
+                  <div id="wordBank" class="word-bank"></div>
+                  <div class="builder-controls">
+                    <button id="undoWordBtn" class="text-btn" type="button">Undo</button>
+                    <button id="clearWordsBtn" class="text-btn" type="button">Clear</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="hint-row">
+                <button class="text-btn" id="hintBtn">Show hint</button>
+                <span id="hintText"></span>
+              </div>
+
+              <div id="feedbackBox" class="feedback-box hidden" aria-live="polite">
+                <strong id="feedbackTitle"></strong>
+                <p id="feedbackText"></p>
+                <div id="answerDetail" class="answer-detail"></div>
+              </div>
+            </div>
+
+            <div class="lesson-footer">
+              <button class="secondary-btn" id="skipBtn">Skip</button>
+              <button class="primary-btn" id="checkBtn">Check answer</button>
+              <button class="primary-btn hidden" id="nextBtn">Continue</button>
+            </div>
+          </article>
+
+          <aside class="session-panel">
+            <p class="eyebrow">Session rewards</p>
+            <div class="session-score">
+              <span>XP</span>
+              <strong id="sessionXp">0</strong>
+            </div>
+            <div class="session-score">
+              <span>Accuracy</span>
+              <strong id="sessionAccuracy">—</strong>
+            </div>
+            <div class="session-score">
+              <span>Combo</span>
+              <strong id="sessionCombo">0</strong>
+            </div>
+            <hr />
+            <p class="eyebrow">Mastery ladder</p>
+            <div class="mastery-list">
+              <span>1 Seen</span>
+              <span>2 Familiar</span>
+              <span>3 Usable</span>
+              <span>4 Flexible</span>
+              <span>5 Mastered</span>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section id="reviewView" class="view">
+        <div class="section-intro">
+          <p class="eyebrow">Targeted repetition</p>
+          <h3>Review by topic</h3>
+          <p>Return to any topic you have started. Short reviews sample the material; “all learned” presents every item you have encountered in that topic once.</p>
+        </div>
+        <div id="topicReviewGrid" class="topic-review-grid"></div>
+      </section>
+
+      <section id="dictionaryView" class="view">
+        <div class="section-intro">
+          <p class="eyebrow">Search, hide, reveal</p>
+          <h3>Interactive Tagalog dictionary</h3>
+          <p>Search the course vocabulary, hide either language, and tap individual cards to reveal the answer.</p>
+        </div>
+        <article class="panel dictionary-controls">
+          <input id="dictionarySearch" type="search" placeholder="Search Tagalog, English, or an example…" autocomplete="off" />
+          <select id="dictionaryModuleFilter" aria-label="Filter dictionary by topic"></select>
+          <select id="dictionaryOriginFilter" aria-label="Filter dictionary by origin">
+            <option value="all">All origins</option>
+            <option value="native">Tagalog / native</option>
+            <option value="Spanish">Spanish-origin</option>
+            <option value="English">English-origin</option>
+            <option value="Mixed">Mixed / Taglish</option>
+          </select>
+          <select id="dictionaryMode" aria-label="Choose which side of dictionary cards is hidden">
+            <option value="both">Show both languages</option>
+            <option value="hideEnglish">Hide English</option>
+            <option value="hideTagalog">Hide Tagalog</option>
+          </select>
+          <button class="secondary-btn" id="dictionaryRandomBtn" type="button">Random card</button>
+        </article>
+        <div class="dictionary-summary"><strong id="dictionaryCount">0</strong> entries shown</div>
+        <div id="dictionaryGrid" class="dictionary-grid"></div>
+      </section>
+
+      <section id="skillsView" class="view">
+        <div class="section-intro">
+          <p class="eyebrow">Structured progression</p>
+          <h3>Journey map</h3>
+          <p>Travel through every region, revisit unlocked places, and see how mastery opens the next part of your Tagalog world.</p>
+        </div>
+        <div id="skillTree" class="skill-tree"></div>
+        <article class="panel course-roadmap-panel">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">Long-term course design</p>
+              <h3>Path toward complete conversational Tagalog</h3>
+            </div>
+          </div>
+          <div class="course-roadmap">
+            <div class="roadmap-stage active"><strong>A1 Foundations</strong><span>Current conversation path</span></div>
+            <div class="roadmap-stage"><strong>A2 Daily life</strong><span>Home, travel, shopping, routines</span></div>
+            <div class="roadmap-stage"><strong>B1 Connected speech</strong><span>Past events, plans, explanations</span></div>
+            <div class="roadmap-stage"><strong>B2 Natural fluency</strong><span>Nuance, focus, idioms, Taglish register</span></div>
+          </div>
+          <p class="small-note">The current release is a strong beginner foundation, not yet a complete Tagalog course. The new data structure allows later modules to be added without discarding existing progress.</p>
+        </article>
+      </section>
+
+      <section id="bossView" class="view">
+        <div class="boss-hero">
+          <div>
+            <span class="pill">Integrated assessment</span>
+            <h3>Your first meeting</h3>
+            <p>Respond to greetings, introduce yourself, say where you are from, and answer a simple wellbeing question.</p>
+          </div>
+          <div class="boss-icon">👑</div>
+        </div>
+
+        <article class="panel boss-panel">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">Scenario 1</p>
+              <h3>Greeting and introduction challenge</h3>
+            </div>
+            <span id="bossStatus" class="status-tag">Locked</span>
+          </div>
+          <p>Use the first two modules in a short supported encounter. The challenge remains multiple choice for beginners.</p>
+          <div class="boss-requirements">
+            <span>✓ Greetings</span>
+            <span>✓ Names</span>
+            <span>✓ Place of origin</span>
+            <span>✓ Basic wellbeing</span>
+          </div>
+          <button class="primary-btn" id="startBossBtn">Start challenge</button>
+          <p class="small-note" id="bossUnlockNote"></p>
+        </article>
+      </section>
+
+      <section id="progressView" class="view">
+        <div class="section-intro">
+          <p class="eyebrow">Evidence of learning</p>
+          <h3>Progress dashboard</h3>
+          <p>Recognition and production are tracked separately through the same mastery model.</p>
+        </div>
+
+        <div class="progress-showcase">
+          <article class="panel progress-level-card">
+            <div class="progress-level-icon">🏅</div>
+            <div><p class="eyebrow">Current level</p><h3 id="progressLevelTitle">Starter</h3><p id="progressLevelCopy">Every correct retrieval moves the level bar.</p><div class="player-xp-track"><span id="progressXpBar"></span></div></div>
+          </article>
+          <article class="panel progress-week-card"><p class="eyebrow">This week</p><h3 id="progressWeekTitle">0 study days</h3><div id="progressWeekDots" class="week-momentum"></div></article>
+          <article class="panel progress-achievement-card"><p class="eyebrow">Achievements</p><h3><span id="achievementCount">0</span> unlocked</h3><p>Badges mark real language milestones rather than simple app usage.</p></article>
+        </div>
+
+        <div class="stats-grid">
+          <article class="metric-card"><span>XP</span><strong id="totalXpMetric">0</strong></article>
+          <article class="metric-card"><span>Mastered</span><strong id="masteredMetric">0</strong></article>
+          <article class="metric-card"><span>Due now</span><strong id="dueMetric">0</strong></article>
+          <article class="metric-card"><span>Best streak</span><strong id="bestStreakMetric">0</strong></article>
+        </div>
+
+        <article class="panel">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">Skill profile</p>
+              <h3>Current strengths</h3>
+            </div>
+          </div>
+          <div id="skillBars" class="skill-bars"></div>
+        </article>
+
+        <article class="panel">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">Learning inventory</p>
+              <h3>Content coverage</h3>
+            </div>
+          </div>
+          <div id="inventoryTable" class="inventory-table"></div>
+        </article>
+      </section>
+
+      <section id="settingsView" class="view">
+        <div class="section-intro">
+          <p class="eyebrow">Personalise training</p>
+          <h3>Settings</h3>
+        </div>
+        <article class="panel settings-panel">
+          <label class="toggle-label">
+            <span>
+              <strong>Complete beginner mode</strong>
+              <small>Introduces only two new items, repeats them within the same session, uses fewer choices, and delays typing.</small>
+            </span>
+            <input id="beginnerSetting" type="checkbox" checked />
+          </label>
+          <label>
+            <span>New items per daily session</span>
+            <select id="newItemsSetting">
+              <option value="1">1</option>
+              <option value="2" selected>2</option>
+              <option value="3">3</option>
+              <option value="5">5</option>
+            </select>
+          </label>
+          <label>
+            <span>Daily-session length</span>
+            <select id="sessionLengthSetting">
+              <option value="6">6 exercises</option>
+              <option value="8" selected>8 exercises</option>
+              <option value="12">12 exercises</option>
+              <option value="20">20 exercises</option>
+            </select>
+          </label>
+          <label>
+            <span>
+              <strong>Default quick-review length</strong>
+              <small>Used when Quick Review is opened without choosing a one-off length.</small>
+            </span>
+            <select id="quickReviewLengthSetting">
+              <option value="3">3 questions</option>
+              <option value="4" selected>4 questions</option>
+              <option value="6">6 questions</option>
+              <option value="8">8 questions</option>
+              <option value="12">12 questions</option>
+              <option value="20">20 questions</option>
+            </select>
+          </label>
+          <label class="toggle-label">
+            <span>
+              <strong>Natural AI voice</strong>
+              <small>Uses the local voice service when the app is started through server.py.</small>
+            </span>
+            <input id="naturalVoiceSetting" type="checkbox" checked />
+          </label>
+          <div id="voiceStatus" class="voice-status">Checking voice service…</div>
+          <p class="ai-disclosure">Voice audio generated through the optional service is AI-generated, not a human recording.</p>
+          <label class="toggle-label">
+            <span>
+              <strong>Strict accents and punctuation</strong>
+              <small>Off is recommended for early Tagalog learning.</small>
+            </span>
+            <input id="strictSetting" type="checkbox" />
+          </label>
+          <label class="toggle-label">
+            <span>
+              <strong>Prefer typed production</strong>
+              <small>Leave this off until recognition feels comfortable.</small>
+            </span>
+            <input id="productionSetting" type="checkbox" />
+          </label>
+          <label class="toggle-label">
+            <span><strong>Celebration sounds</strong><small>Play the positive ding and milestone sounds after successful answers.</small></span>
+            <input id="celebrationSoundSetting" type="checkbox" checked />
+          </label>
+          <label class="toggle-label">
+            <span><strong>Reduced motion</strong><small>Turn off confetti, bouncing, and movement while keeping feedback visible.</small></span>
+            <input id="reducedMotionSetting" type="checkbox" />
+          </label>
+          <label class="toggle-label">
+            <span><strong>Dark mode</strong><small>Use a darker interface for evening study.</small></span>
+            <input id="darkModeSetting" type="checkbox" />
+          </label>
+          <div class="transfer-panel">
+            <div>
+              <p class="eyebrow">Progress portability</p>
+              <h3>Move progress between phone, desktop, and future versions</h3>
+              <p>Your item IDs remain stable. Import the JSON backup created by desktop v3.2, v4.0, or this mobile version. Mastery, review dates, XP, streaks, coins, and settings are preserved.</p>
+            </div>
+            <div class="settings-actions">
+              <button class="secondary-btn" id="exportBtn">Download progress backup</button>
+              <label class="secondary-btn file-label">
+                Import progress backup
+                <input id="importInput" type="file" accept="application/json" />
+              </label>
+              <button class="secondary-btn" id="copyTransferBtn" type="button">Copy transfer code</button>
+            </div>
+            <textarea id="transferCodeInput" rows="4" placeholder="Paste a Salita Quest transfer code here"></textarea>
+            <button class="secondary-btn" id="restoreTransferBtn" type="button">Restore pasted transfer code</button>
+            <p id="transferStatus" class="small-note">Data schema 2 · compatible with raw v3 progress exports.</p>
+          </div>
+          <div class="install-panel">
+            <div>
+              <p class="eyebrow">Phone installation</p>
+              <h3>Install as an app</h3>
+              <p>This version is a Progressive Web App. When served through <code>server.py</code> or another web server, supported phones and computers can install it from the browser.</p>
+            </div>
+            <button class="primary-btn hidden" id="installAppBtn" type="button">Install Salita Quest</button>
+            <p id="installHelp" class="small-note">On iPhone or iPad, open the Share menu and choose “Add to Home Screen.”</p>
+          </div>
+          <div class="settings-actions danger-zone">
+            <button class="danger-btn" id="resetBtn">Reset all progress</button>
+          </div>
+        </article>
+      </section>
+    </main>
+  </div>
+
+  <nav class="mobile-nav" aria-label="Primary mobile navigation">
+    <button class="mobile-nav-item active" data-view="home"><span class="mobile-nav-icon">⌂</span><span>Home</span></button>
+    <button class="mobile-nav-item" data-view="learn"><span class="mobile-nav-icon">▶</span><span>Learn</span></button>
+    <button class="mobile-nav-item" data-view="review"><span class="mobile-nav-icon">↻</span><span>Review</span></button>
+    <button class="mobile-nav-item" data-view="dictionary"><span class="mobile-nav-icon">Aa</span><span>Words</span></button>
+    <button class="mobile-nav-item" data-view="progress"><span class="mobile-nav-icon">▥</span><span>Progress</span></button>
+  </nav>
+
+  <div id="mobileMenuBackdrop" class="mobile-menu-backdrop hidden" onclick="closeMobileMenu()" aria-hidden="true"></div>
+  <section id="mobileMenuSheet" class="mobile-menu-sheet hidden" aria-label="More Salita Quest sections">
+    <div class="mobile-sheet-handle"></div>
+    <div class="mobile-sheet-header">
+      <div><p class="eyebrow">More</p><h2>Explore Salita Quest</h2></div>
+      <button id="mobileMenuCloseBtn" class="mobile-sheet-close" type="button" onclick="closeMobileMenu()" aria-label="Close menu">×</button>
+    </div>
+    <div class="mobile-more-grid">
+      <button type="button" data-view="skills"><span>🗺️</span><strong>Journey map</strong><small>See every module</small></button>
+      <button type="button" data-view="boss"><span>👑</span><strong>Challenges</strong><small>Test conversations</small></button>
+      <button type="button" data-view="progress"><span>📊</span><strong>Progress</strong><small>Mastery and streaks</small></button>
+      <button type="button" data-view="settings"><span>⚙️</span><strong>Settings</strong><small>Import and customise</small></button>
+    </div>
+    <div class="mobile-sheet-transfer">
+      <strong>Moving between phone and desktop?</strong>
+      <p>Use Settings → Download progress backup, then import the same JSON file on the other device.</p>
+      <button id="mobileSheetImportBtn" class="secondary-btn" type="button">Import a progress backup</button>
+    </div>
+  </section>
+
+
+  <div id="dialogueModal" class="dialogue-modal hidden" role="dialog" aria-modal="true" aria-labelledby="dialogueTitle">
+    <div class="dialogue-modal-card">
+      <div class="dialogue-modal-header">
+        <div>
+          <p class="eyebrow" id="dialogueLevel">Beginner</p>
+          <h2 id="dialogueTitle">Conversation</h2>
+        </div>
+        <button id="closeDialogueBtn" class="modal-close-btn" type="button" aria-label="Close conversation">×</button>
+      </div>
+      <p id="dialogueNote" class="dialogue-note"></p>
+      <div class="translation-key">
+        <span><strong>Top:</strong> Filipino phrase</span>
+        <span><strong>Below:</strong> word or function</span>
+        <span><strong>Literal:</strong> Filipino order</span>
+        <span><strong>Natural:</strong> normal English</span>
+      </div>
+      <div id="dialogueBody" class="dialogue-body"></div>
+    </div>
+  </div>
+
+  <div id="sessionCompleteModal" class="session-complete-modal hidden" role="dialog" aria-modal="true" aria-labelledby="sessionCompleteTitle">
+    <div class="session-complete-card">
+      <div id="sessionCelebrationIcon" class="session-celebration-icon">✨</div>
+      <p class="eyebrow">Session complete</p>
+      <h2 id="sessionCompleteTitle">Great work!</h2>
+      <p id="sessionCompleteMessage">You strengthened your Tagalog today.</p>
+      <div class="session-stars" id="sessionStars" aria-label="Session rating">★ ★ ★</div>
+      <div class="session-summary-grid">
+        <div><span>Accuracy</span><strong id="completeAccuracy">0%</strong></div>
+        <div><span>XP</span><strong id="completeXp">+0</strong></div>
+        <div><span>Best combo</span><strong id="completeCombo">0</strong></div>
+      </div>
+      <div class="session-complete-actions">
+        <button id="sessionHomeBtn" class="primary-btn" type="button">Continue journey</button>
+        <button id="sessionReviewBtn" class="secondary-btn" type="button">Quick review</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="rewardBurst" class="reward-burst hidden" aria-live="polite"><span id="rewardBurstIcon">✨</span><strong id="rewardBurstText">Quest complete!</strong></div>
+
+  <div id="toast" class="toast hidden" role="status"></div>
+  <script src="app.js"></script>
+</body>
+</html>
