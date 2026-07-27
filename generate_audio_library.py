@@ -43,8 +43,149 @@ def canonical_text(value: Any) -> str:
     return re.sub(r"\s+", " ", str(value or "")).strip()
 
 
+def clean_js_literal(text: str) -> str:
+    """Convert the simple JavaScript object/array literals in app.js to JSON.
+
+    Salita Quest started with JSON-style data, then later course additions used
+    normal JavaScript conveniences such as // comments and unquoted object keys.
+    This small lexer handles those features without touching text inside strings.
+    """
+    out: list[str] = []
+    index = 0
+    length = len(text)
+    quote: str | None = None
+    escaped = False
+
+    while index < length:
+        char = text[index]
+
+        if quote is not None:
+            # The course data currently uses double-quoted strings. Keep them
+            # byte-for-byte so apostrophes and Filipino punctuation stay intact.
+            out.append(char)
+            if escaped:
+                escaped = False
+            elif char == "\\":
+                escaped = True
+            elif char == quote:
+                quote = None
+            index += 1
+            continue
+
+        if char in {'"', "'"}:
+            # Double quotes are already JSON. Single-quoted literals are uncommon
+            # in the course data; convert them safely when encountered.
+            if char == '"':
+                quote = char
+                out.append(char)
+                index += 1
+                continue
+
+            # Parse a JavaScript-style single-quoted string and emit JSON text.
+            index += 1
+            value_chars: list[str] = []
+            single_escaped = False
+            while index < length:
+                current = text[index]
+                if single_escaped:
+                    escapes = {"n": "\n", "r": "\r", "t": "\t", "b": "\b", "f": "\f"}
+                    value_chars.append(escapes.get(current, current))
+                    single_escaped = False
+                elif current == "\\":
+                    single_escaped = True
+                elif current == "'":
+                    index += 1
+                    break
+                else:
+                    value_chars.append(current)
+                index += 1
+            out.append(json.dumps("".join(value_chars), ensure_ascii=False))
+            continue
+
+        # Remove // line comments outside strings.
+        if char == "/" and index + 1 < length and text[index + 1] == "/":
+            index += 2
+            while index < length and text[index] not in "\r\n":
+                index += 1
+            continue
+
+        # Remove /* ... */ comments outside strings too.
+        if char == "/" and index + 1 < length and text[index + 1] == "*":
+            end = text.find("*/", index + 2)
+            index = length if end < 0 else end + 2
+            continue
+
+        # Quote bare JavaScript object keys such as {id:"...", module:"..."}.
+        if char.isalpha() or char in "_$":
+            end = index + 1
+            while end < length and (text[end].isalnum() or text[end] in "_$"):
+                end += 1
+            identifier = text[index:end]
+
+            previous = ""
+            for existing in reversed(out):
+                stripped = existing.strip()
+                if stripped:
+                    previous = stripped[-1]
+                    break
+
+            look = end
+            while look < length and text[look].isspace():
+                look += 1
+
+            if previous in "{" + "," and look < length and text[look] == ":":
+                out.append(json.dumps(identifier))
+                out.append(text[end:look])
+                index = look
+                continue
+
+            out.append(identifier)
+            index = end
+            continue
+
+        out.append(char)
+        index += 1
+
+    cleaned = "".join(out)
+
+    # JavaScript allows trailing commas; JSON does not. Remove only commas that
+    # are outside strings and immediately precede a closing ] or }.
+    result: list[str] = []
+    index = 0
+    quote = None
+    escaped = False
+    while index < len(cleaned):
+        char = cleaned[index]
+        if quote is not None:
+            result.append(char)
+            if escaped:
+                escaped = False
+            elif char == "\\":
+                escaped = True
+            elif char == quote:
+                quote = None
+            index += 1
+            continue
+        if char == '"':
+            quote = char
+            result.append(char)
+            index += 1
+            continue
+        if char == ",":
+            look = index + 1
+            while look < len(cleaned) and cleaned[look].isspace():
+                look += 1
+            if look < len(cleaned) and cleaned[look] in "]}":
+                index += 1
+                continue
+        result.append(char)
+        index += 1
+
+    return "".join(result)
+
+
 def extract_json_constant(source: str, name: str) -> Any:
-    """Extract a JSON-compatible const assignment from app.js."""
+    """Extract a JavaScript const object/array assignment from app.js."""
     marker = f"const {name} ="
     marker_index = source.find(marker)
     if marker_index < 0:
@@ -55,33 +196,37 @@ def extract_json_constant(source: str, name: str) -> Any:
         start += 1
 
     if start >= len(source) or source[start] not in "[{":
-        raise ValueError(f"{name} does not start with a JSON object/array")
+        raise ValueError(f"{name} does not start with an object/array")
 
     opener = source[start]
     closer = "]" if opener == "[" else "}"
     depth = 0
-    in_string = False
+    quote: str | None = None
     escaped = False
 
     for index in range(start, len(source)):
         char = source[index]
-        if in_string:
+        if quote is not None:
             if escaped:
                 escaped = False
             elif char == "\\":
                 escaped = True
-            elif char == '"':
-                in_string = False
+            elif char == quote:
+                quote = None
             continue
 
-        if char == '"':
-            in_string = True
+        if char in {'"', "'"}:
+            quote = char
         elif char == opener:
             depth += 1
         elif char == closer:
             depth -= 1
             if depth == 0:
-                return json.loads(source[start : index + 1])
+                literal = source[start : index + 1]
+                try:
+                    return json.loads(literal)
+                except json.JSONDecodeError:
+                    return json.loads(clean_js_literal(literal))
 
     raise ValueError(f"Could not find the end of {name}")
 
