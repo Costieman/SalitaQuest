@@ -1276,7 +1276,7 @@ const BADGES = [
   {id:"boss_one",icon:"👑",name:"First Meeting",description:"Pass the greeting and introduction challenge",test:s=>s.bossWins>=1}
 ];
 
-const APP_VERSION = "5.2.0";
+const APP_VERSION = "5.3.0";
 const DATA_SCHEMA_VERSION = 3;
 const STORAGE_KEY = "salitaQuestProgress";
 const LEGACY_STORAGE_KEYS = ["salitaQuestStateV3", "salitaQuestStateV2", "salitaQuestState"];
@@ -1336,6 +1336,31 @@ let activeDialogueId = "greetings";
 let dictionaryRevealIds = new Set();
 let deferredInstallPrompt = null;
 const audioCache = new Map();
+let staticAudioManifest = null;
+let staticAudioManifestPromise = null;
+
+async function loadStaticAudioManifest() {
+  if (staticAudioManifest) return staticAudioManifest;
+  if (!location.protocol.startsWith("http")) return null;
+  if (!staticAudioManifestPromise) {
+    staticAudioManifestPromise = fetch("./audio/audio_manifest.json", {cache:"no-store"})
+      .then(response => {
+        if (!response.ok) throw new Error("Audio manifest unavailable");
+        return response.json();
+      })
+      .then(data => (staticAudioManifest = data))
+      .catch(() => null)
+      .finally(() => { staticAudioManifestPromise = null; });
+  }
+  return staticAudioManifestPromise;
+}
+
+async function staticAudioUrl(text, lang) {
+  const manifest = await loadStaticAudioManifest();
+  const path = manifest?.entries?.[lang]?.[String(text || "").replace(/\s+/g," ").trim()];
+  return path ? `./${path}` : null;
+}
+
 const HANDS_FREE_MAX_SECONDS = 118;
 const handsFreeReview = {queue:[],index:0,estimatedSeconds:0,playing:false,paused:false,completed:false,runId:0,wallStart:0,totalPausedMs:0,pauseStarted:0,timerId:null,wakeLock:null,currentSpeechResolve:null};
 
@@ -2690,6 +2715,24 @@ function handsFreeDelay(ms,runId,onTick=null) {
 
 async function handsFreeSpeak(text,lang,runId) {
   if(handsFreeReview.runId!==runId || !handsFreeReview.playing)return false;
+
+  if(state.settings.naturalVoice && location.protocol.startsWith("http")){
+    try{
+      const staticUrl=await staticAudioUrl(text,lang);
+      if(staticUrl){
+        if(handsFreeReview.runId!==runId)return false;
+        if(activeAudio){activeAudio.pause();activeAudio=null;}
+        const audio=new Audio(staticUrl);activeAudio=audio;
+        const ok=await new Promise(resolve=>{
+          let settled=false;const finish=value=>{if(settled)return;settled=true;handsFreeReview.currentSpeechResolve=null;resolve(value);};
+          handsFreeReview.currentSpeechResolve=()=>finish(false);audio.onended=()=>finish(true);audio.onerror=()=>finish(false);audio.play().catch(()=>finish(false));
+        });
+        if(activeAudio===audio)activeAudio=null;
+        if(ok)return handsFreeReview.runId===runId && handsFreeReview.playing;
+      }
+    }catch{}
+  }
+
   if(lang==="fil-PH" && state.settings.naturalVoice && location.protocol.startsWith("http")){
     try{
       let url=audioCache.get(text);
@@ -2705,6 +2748,7 @@ async function handsFreeSpeak(text,lang,runId) {
       if(ok)return handsFreeReview.runId===runId && handsFreeReview.playing;
     }catch{}
   }
+
   if(!("speechSynthesis" in window))return false;
   return await new Promise(resolve=>{
     let settled=false;const finish=value=>{if(settled)return;settled=true;handsFreeReview.currentSpeechResolve=null;resolve(value);};
@@ -2712,7 +2756,7 @@ async function handsFreeSpeak(text,lang,runId) {
     speechSynthesis.cancel();
     const utterance=new SpeechSynthesisUtterance(text);utterance.lang=lang;utterance.rate=lang==="fil-PH"?.78:.9;utterance.pitch=1;
     const voices=speechSynthesis.getVoices();
-    const preferred=lang==="fil-PH"?(voices.find(v=>v.lang.toLowerCase().startsWith("fil"))||voices.find(v=>v.lang.toLowerCase().startsWith("tl"))):voices.find(v=>v.lang.toLowerCase().startsWith("en-us"))||voices.find(v=>v.lang.toLowerCase().startsWith("en"));
+    const preferred=lang==="fil-PH"?(voices.find(v=>v.lang.toLowerCase().startsWith("fil"))||voices.find(v=>v.lang.toLowerCase().startsWith("tl"))):voices.find(v=>v.lang.toLowerCase().startsWith("en-gb"))||voices.find(v=>v.lang.toLowerCase().startsWith("en"));
     if(preferred)utterance.voice=preferred;utterance.onend=()=>finish(true);utterance.onerror=()=>finish(false);speechSynthesis.speak(utterance);
   });
 }
@@ -2740,7 +2784,7 @@ async function startHandsFreeReview() {
     document.getElementById("handsFreeRecallPrompt").classList.remove("active");if(!recalled)break;
     document.getElementById("handsFreeCountdown").textContent="5";document.getElementById("handsFreePhase").textContent="CHECK — ENGLISH";
     document.getElementById("handsFreeNowEnglish").textContent=handsFreeEnglish(item);
-    const checked=await handsFreeSpeak(handsFreeEnglish(item),"en-US",runId);if(!checked||runId!==handsFreeReview.runId||!handsFreeReview.playing)break;
+    const checked=await handsFreeSpeak(handsFreeEnglish(item),"en-GB",runId);if(!checked||runId!==handsFreeReview.runId||!handsFreeReview.playing)break;
     await handsFreeDelay(650,runId);
   }
   if(runId===handsFreeReview.runId && handsFreeReview.playing){
@@ -2795,7 +2839,13 @@ async function speakFilipino(text, sourceButton=null) {
   if(activeAudio){activeAudio.pause();activeAudio=null;}
   if(state.settings.naturalVoice && location.protocol.startsWith("http")) {
     try {
-      if(btn){btn.disabled=true;btn.textContent="Generating audio…";}
+      if(btn){btn.disabled=true;btn.textContent="Loading audio…";}
+      const staticUrl=await staticAudioUrl(text,"fil-PH");
+      if(staticUrl){
+        activeAudio=new Audio(staticUrl);await activeAudio.play();
+        if(btn){btn.textContent=sourceButton?originalButtonText:"🔊 Replay pronunciation";btn.disabled=false;}return;
+      }
+
       let url=audioCache.get(text);
       if(!url){
         const response=await fetch("/api/speech",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({text})});
@@ -2806,7 +2856,7 @@ async function speakFilipino(text, sourceButton=null) {
       if(btn){btn.textContent=sourceButton?originalButtonText:"🔊 Replay pronunciation";btn.disabled=false;}return;
     } catch(err) {
       if(btn){btn.disabled=false;btn.textContent=sourceButton?originalButtonText:"🔊 Hear pronunciation";}
-      toast("Natural voice is unavailable; using the browser voice instead.");
+      toast("Recorded voice is unavailable; using the browser voice instead.");
     }
   }
   fallbackSpeech(text);
@@ -2820,14 +2870,21 @@ function fallbackSpeech(text) {
 
 async function checkVoiceService() {
   const status=document.getElementById("voiceStatus");if(!status)return;
-  if(!state.settings.naturalVoice){status.textContent="Natural voice is turned off.";status.className="voice-status";return;}
-  if(!location.protocol.startsWith("http")){status.textContent="Open the app through server.py to use the natural voice. Browser voice is currently active.";status.className="voice-status warning";return;}
+  if(!state.settings.naturalVoice){status.textContent="Recorded natural voices are turned off.";status.className="voice-status";return;}
+  if(!location.protocol.startsWith("http")){status.textContent="Open the hosted app to use the recorded voice library. Browser voice is currently active.";status.className="voice-status warning";return;}
+  const manifest=await loadStaticAudioManifest();
+  if(manifest){
+    const filCount=Object.keys(manifest.entries?.["fil-PH"]||{}).length;
+    const enCount=Object.keys(manifest.entries?.["en-GB"]||{}).length;
+    status.textContent=`Google voice library ready · ${filCount} Filipino + ${enCount} British English clips.`;
+    status.className="voice-status ready";return;
+  }
   try {
     const res=await fetch("/api/health",{cache:"no-store"});const data=await res.json();
-    status.textContent=data.natural_voice?"Natural AI voice is ready. Audio is generated once and cached locally.":"The app server is running, but OPENAI_API_KEY is not set. Browser voice is active.";
+    status.textContent=data.natural_voice?"Natural voice service is ready.":"Recorded voice library not found. Browser voice is active.";
     status.className=`voice-status ${data.natural_voice?"ready":"warning"}`;
   } catch {
-    status.textContent="Natural voice service was not detected. Browser voice is active.";status.className="voice-status warning";
+    status.textContent="Recorded voice library not found. Browser voice is active.";status.className="voice-status warning";
   }
 }
 
