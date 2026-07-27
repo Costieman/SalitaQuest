@@ -38,6 +38,7 @@
         <button class="nav-item active" data-view="home"><span class="nav-art" data-art="home"></span><span>Home</span></button>
         <button class="nav-item" data-view="learn"><span class="nav-art" data-art="daily"></span><span>Learn</span></button>
         <button class="nav-item" data-view="review"><span class="nav-art" data-art="quick"></span><span>Topic Review</span></button>
+        <button class="nav-item" data-view="audioReview"><span class="nav-art" data-art="headphones"></span><span>Hands-Free Review</span></button>
         <button class="nav-item" data-view="dictionary"><span class="nav-art" data-art="dictionary"></span><span>Dictionary</span></button>
         <button class="nav-item" data-view="skills"><span class="nav-art" data-art="map"></span><span>Journey Map</span></button>
         <button class="nav-item" data-view="boss"><span class="nav-art" data-art="conversation"></span><span>Boss Challenge</span></button>
@@ -128,6 +129,13 @@
             <select id="activityQuickLength" class="activity-mini-select" aria-label="Quick review length">
               <option value="3">3 items</option><option value="4">4 items</option><option value="6">6 items</option><option value="8">8 items</option><option value="12">12 items</option><option value="20">20 items</option>
             </select>
+          </article>
+          <article class="activity-tile activity-tile-audio">
+            <button class="activity-main" type="button" data-view="audioReview">
+              <span class="activity-art" data-art="headphones"></span>
+              <span class="activity-copy"><small>HANDS-FREE</small><strong>2-Minute Audio Review</strong><em>Listen, recall for 5 seconds, then check English</em></span>
+              <span class="activity-arrow">›</span>
+            </button>
           </article>
           <article class="activity-tile">
             <button class="activity-main" type="button" data-view="review">
@@ -401,6 +409,62 @@
         <div id="topicReviewGrid" class="topic-review-grid"></div>
       </section>
 
+      <section id="audioReviewView" class="view">
+        <div class="section-intro">
+          <p class="eyebrow">Hands-free retrieval</p>
+          <h3>2-minute audio review</h3>
+          <p>Review language that is still moving toward mastery without touching the screen. Hear the Tagalog, use the five-second recall gap to repeat it and say the English meaning, then hear the answer.</p>
+        </div>
+
+        <div class="audio-review-layout">
+          <article class="audio-review-player panel">
+            <div class="audio-review-hero">
+              <div class="audio-review-emblem"><span data-art="headphones"></span></div>
+              <div>
+                <p class="eyebrow">Current training track</p>
+                <h3 id="handsFreeTrackTitle">Building your review mix…</h3>
+                <p id="handsFreeTrackSummary">Only items you have started but not yet mastered are included.</p>
+              </div>
+            </div>
+
+            <div class="audio-track-progress" aria-label="Audio review progress">
+              <span id="handsFreeProgressBar"></span>
+            </div>
+            <div class="audio-track-meta">
+              <strong id="handsFreeElapsed">0:00</strong>
+              <span id="handsFreeApproxTime">Approx. 0:00</span>
+            </div>
+
+            <div class="audio-now-card">
+              <div class="audio-now-topline"><span id="handsFreePhase">READY</span><strong id="handsFreeItemCounter">0 / 0</strong></div>
+              <p id="handsFreeNowTagalog" class="audio-now-tagalog">Press play when you are ready.</p>
+              <div id="handsFreeRecallPrompt" class="audio-recall-prompt">
+                <span id="handsFreeCountdown">5</span>
+                <div><strong>Recall gap</strong><small>Repeat the Tagalog aloud and say what it means in English.</small></div>
+              </div>
+              <p id="handsFreeNowEnglish" class="audio-now-english">The English answer stays hidden until the recall gap ends.</p>
+            </div>
+
+            <div class="audio-review-controls">
+              <button id="handsFreePlayBtn" class="primary-btn" type="button">▶ Play review</button>
+              <button id="handsFreePauseBtn" class="secondary-btn" type="button" disabled>Pause</button>
+              <button id="handsFreeStopBtn" class="secondary-btn" type="button" disabled>Stop</button>
+              <button id="handsFreeNewMixBtn" class="text-btn audio-new-mix-btn" type="button">Build next mix</button>
+            </div>
+            <p class="audio-review-note">Sequence: <strong>Tagalog → 5-second recall gap → English answer</strong>. The mix is capped at roughly two minutes and rotates through active items when more material is available.</p>
+          </article>
+
+          <aside class="audio-review-queue panel">
+            <div class="panel-heading">
+              <div><p class="eyebrow">Up next</p><h3>Working toward mastery</h3></div>
+              <span id="handsFreeActiveCount" class="audio-active-count">0 active</span>
+            </div>
+            <p class="audio-queue-help">Due and lower-mastery material is prioritised. Listening here does not artificially increase mastery; you still earn mastery by answering exercises.</p>
+            <div id="handsFreeQueueList" class="audio-queue-list"></div>
+          </aside>
+        </div>
+      </section>
+
       <section id="dictionaryView" class="view">
         <div class="section-intro">
           <p class="eyebrow">Search, hide, reveal</p>
@@ -658,6 +722,7 @@
     </div>
     <div class="mobile-more-grid">
       <button type="button" data-view="skills"><span>🗺️</span><strong>Journey map</strong><small>See every module</small></button>
+      <button type="button" data-view="audioReview"><span>🎧</span><strong>Hands-Free</strong><small>2-minute recall track</small></button>
       <button type="button" data-view="boss"><span>👑</span><strong>Challenges</strong><small>Test conversations</small></button>
       <button type="button" data-view="progress"><span>📊</span><strong>Progress</strong><small>Mastery and streaks</small></button>
       <button type="button" data-view="settings"><span>⚙️</span><strong>Settings</strong><small>Import and customise</small></button>

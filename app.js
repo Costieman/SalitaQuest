@@ -1276,7 +1276,7 @@ const BADGES = [
   {id:"boss_one",icon:"👑",name:"First Meeting",description:"Pass the greeting and introduction challenge",test:s=>s.bossWins>=1}
 ];
 
-const APP_VERSION = "5.0.0";
+const APP_VERSION = "5.2.0";
 const DATA_SCHEMA_VERSION = 3;
 const STORAGE_KEY = "salitaQuestProgress";
 const LEGACY_STORAGE_KEYS = ["salitaQuestStateV3", "salitaQuestStateV2", "salitaQuestState"];
@@ -1290,6 +1290,7 @@ const DEFAULT_STATE = {
   totalAnswers: 0,
   correctAnswers: 0,
   bossWins: 0,
+  audioReviewCursor: 0,
   itemState: {},
   studyDates: [],
   dailyActivity: {date:null,answers:0,correct:0,reviews:0,sessions:0,questsClaimed:[],chestClaimed:false},
@@ -1335,6 +1336,8 @@ let activeDialogueId = "greetings";
 let dictionaryRevealIds = new Set();
 let deferredInstallPrompt = null;
 const audioCache = new Map();
+const HANDS_FREE_MAX_SECONDS = 118;
+const handsFreeReview = {queue:[],index:0,estimatedSeconds:0,playing:false,paused:false,completed:false,runId:0,wallStart:0,totalPausedMs:0,pauseStarted:0,timerId:null,wakeLock:null,currentSpeechResolve:null};
 
 function unwrapProgressPayload(payload) {
   if (payload && payload.app === "Salita Quest" && payload.data) return payload.data;
@@ -1480,6 +1483,7 @@ function pictogram(name, extraClass="") {
     home:`<path ${stroke} d="M10 30 32 12l22 18v22H38V38H26v14H10Z"/>`,
     daily:`<circle ${stroke} cx="18" cy="18" r="7"/><path ${stroke} d="M18 5v4M18 27v4M5 18h4M27 18h4M9 9l3 3M24 24l3 3M27 9l-3 3"/><path ${stroke} d="M12 49c10-14 22-14 40-18"/><path ${stroke} d="m44 27 8 4-6 7"/><path ${stroke} d="M24 43h14l7 7H24Z"/>`,
     quick:`<rect ${stroke} x="12" y="16" width="28" height="34" rx="5"/><rect ${stroke} x="22" y="10" width="28" height="34" rx="5"/><path ${stroke} d="M11 9C6 14 5 21 7 27M7 27l-4-5M7 27l5-3M53 48c5-5 6-12 4-18M57 30l4 5M57 30l-5 3"/>`,
+    headphones:`<path ${stroke} d="M10 34V29c0-13 9-22 22-22s22 9 22 22v5"/><path ${stroke} d="M10 33h9v19h-5c-3 0-5-2-5-5V38c0-3 1-5 1-5ZM54 33h-9v19h5c3 0 5-2 5-5V38c0-3-1-5-1-5Z"/><path ${stroke} d="M25 41h14M28 47h8"/>`,
     topic:`<path ${stroke} d="M32 55s16-14 16-28a16 16 0 1 0-32 0c0 14 16 28 16 28Z"/><circle ${stroke} cx="32" cy="27" r="5"/><path ${stroke} d="M8 52c8-5 13-5 20-1 7 4 13 4 28-3"/>`,
     dictionary:`<path ${stroke} d="M8 15c9-4 17-3 24 3v36c-7-6-15-7-24-3ZM56 15c-9-4-17-3-24 3v36c7-6 15-7 24-3Z"/><path ${stroke} d="M16 26h9M16 34h9M39 26h9M39 34h9"/>`,
     conversation:`<path ${stroke} d="M8 13h30v23H22l-9 8v-8H8Z"/><path ${stroke} d="M30 31h26v20H44l-8 6v-6h-6"/><circle cx="18" cy="24" r="2.5" fill="currentColor"/><circle cx="25" cy="24" r="2.5" fill="currentColor"/><circle cx="32" cy="24" r="2.5" fill="currentColor"/>`,
@@ -2274,7 +2278,7 @@ function moduleStats(moduleId) {
   return {items:items.length,practised,mastered,pct};
 }
 
-function updateAll() {ensureDailyActivity();claimDailyQuestRewards(false);applyDisplaySettings();hydratePictograms();updateGlobalUI();renderMasteryRail();updateHome();renderDailyQuests();renderJourney();renderSkillTree();renderTopicReview();renderDictionaryFilters();renderDictionary();renderProgress();renderBadges();updateBoss();syncSettings();checkVoiceService();updateTransferStatus();}
+function updateAll() {ensureDailyActivity();claimDailyQuestRewards(false);applyDisplaySettings();hydratePictograms();updateGlobalUI();renderMasteryRail();updateHome();renderDailyQuests();renderJourney();renderSkillTree();renderTopicReview();renderHandsFreeReview();renderDictionaryFilters();renderDictionary();renderProgress();renderBadges();updateBoss();syncSettings();checkVoiceService();updateTransferStatus();}
 
 function updateGlobalUI() {
   document.getElementById("streakValue").textContent=state.streak;
@@ -2566,6 +2570,199 @@ function openMobileMenu() {
   document.getElementById("mobileMenuBtn")?.setAttribute("aria-expanded","true");
 }
 
+
+function handsFreeActiveItems() {
+  const now=Date.now();
+  return ITEMS.filter(item=>{
+    const s=state.itemState[item.id];
+    const mastery=Number(s?.mastery||0);
+    return s && Number(s.seen||0)>0 && mastery>0 && mastery<5;
+  }).sort((a,b)=>{
+    const sa=state.itemState[a.id]||{}, sb=state.itemState[b.id]||{};
+    const aDue=Number(sa.due||0)<=now?0:1, bDue=Number(sb.due||0)<=now?0:1;
+    if(aDue!==bDue)return aDue-bDue;
+    if((sa.mastery||0)!==(sb.mastery||0))return (sa.mastery||0)-(sb.mastery||0);
+    return Number(sa.lastReviewed||0)-Number(sb.lastReviewed||0);
+  });
+}
+
+function handsFreeTagalog(item) {
+  return (item.example || item.term || item.root || "").replace(/\s+/g," ").trim();
+}
+function handsFreeEnglish(item) {
+  return (item.natural || item.meaning || "").replace(/\s+/g," ").trim();
+}
+function estimateSpeechSeconds(text,wpm) {
+  const words=String(text||"").trim().split(/\s+/).filter(Boolean).length;
+  return Math.max(1.2, words/(wpm/60)+0.55);
+}
+function estimateHandsFreeItemSeconds(item) {
+  return estimateSpeechSeconds(handsFreeTagalog(item),125)+5+estimateSpeechSeconds(handsFreeEnglish(item),145)+0.7;
+}
+function formatAudioTime(seconds) {
+  const n=Math.max(0,Math.round(Number(seconds)||0));
+  return `${Math.floor(n/60)}:${String(n%60).padStart(2,"0")}`;
+}
+
+function buildHandsFreeQueue({advance=false}={}) {
+  const active=handsFreeActiveItems();
+  if(!active.length){
+    handsFreeReview.queue=[];handsFreeReview.index=0;handsFreeReview.estimatedSeconds=0;handsFreeReview.completed=false;
+    renderHandsFreeReview();return;
+  }
+  if(advance && handsFreeReview.queue.length){
+    state.audioReviewCursor=(Number(state.audioReviewCursor||0)+handsFreeReview.queue.length)%active.length;
+    saveState();
+  }
+  const cursor=((Number(state.audioReviewCursor||0)%active.length)+active.length)%active.length;
+  const rotated=[...active.slice(cursor),...active.slice(0,cursor)];
+  const selected=[];let total=0;
+  for(const item of rotated){
+    const duration=estimateHandsFreeItemSeconds(item);
+    if(selected.length && total+duration>HANDS_FREE_MAX_SECONDS)continue;
+    selected.push(item);total+=duration;
+    if(total>=HANDS_FREE_MAX_SECONDS-4)break;
+  }
+  if(!selected.length){selected.push(rotated[0]);total=estimateHandsFreeItemSeconds(rotated[0]);}
+  handsFreeReview.queue=selected;handsFreeReview.index=0;handsFreeReview.estimatedSeconds=Math.min(HANDS_FREE_MAX_SECONDS,total);handsFreeReview.completed=false;
+  renderHandsFreeReview();
+}
+
+function renderHandsFreeReview() {
+  const list=document.getElementById("handsFreeQueueList");if(!list)return;
+  const active=handsFreeActiveItems();
+  if(!handsFreeReview.queue.length && active.length) buildHandsFreeQueue();
+  const queue=handsFreeReview.queue;
+  document.getElementById("handsFreeActiveCount").textContent=`${active.length} active`;
+  document.getElementById("handsFreeTrackTitle").textContent=active.length?`${queue.length} phrase${queue.length===1?"":"s"} ready for active recall`:`No active phrases yet`;
+  document.getElementById("handsFreeTrackSummary").textContent=active.length?`${queue.length} of ${active.length} items are in this mix. More active items rotate into later mixes.`:`Complete a lesson first. Items at mastery levels 1–4 will automatically appear here.`;
+  document.getElementById("handsFreeApproxTime").textContent=`Approx. ${formatAudioTime(handsFreeReview.estimatedSeconds)}`;
+  document.getElementById("handsFreeItemCounter").textContent=queue.length?`${Math.min(handsFreeReview.index+1,queue.length)} / ${queue.length}`:"0 / 0";
+  const play=document.getElementById("handsFreePlayBtn"),pause=document.getElementById("handsFreePauseBtn"),stop=document.getElementById("handsFreeStopBtn"),mix=document.getElementById("handsFreeNewMixBtn");
+  play.disabled=!queue.length || handsFreeReview.playing;
+  play.textContent=handsFreeReview.completed?"▶ Play next mix":"▶ Play review";
+  pause.disabled=!handsFreeReview.playing;pause.textContent=handsFreeReview.paused?"Resume":"Pause";
+  stop.disabled=!handsFreeReview.playing;mix.disabled=handsFreeReview.playing || !active.length;
+  list.innerHTML=queue.length?queue.map((item,i)=>{
+    const s=state.itemState[item.id]||{};const mod=MODULES.find(m=>m.id===item.module);
+    const classes=["audio-queue-item",i===handsFreeReview.index&&handsFreeReview.playing?"current":"",i<handsFreeReview.index?"done":""].filter(Boolean).join(" ");
+    return `<div class="${classes}"><span class="audio-queue-num">${i+1}</span><div class="audio-queue-copy"><strong>${escapeHTML(handsFreeTagalog(item))}</strong><small>${escapeHTML(mod?.title||item.module)}</small></div><span class="audio-queue-mastery">M${Number(s.mastery||0)}</span></div>`;
+  }).join(""):`<div class="audio-queue-empty">Your hands-free track fills automatically after you have started learning some phrases.</div>`;
+  if(!handsFreeReview.playing && !handsFreeReview.completed){
+    document.getElementById("handsFreePhase").textContent="READY";
+    document.getElementById("handsFreeNowTagalog").textContent=queue.length?"Press play and listen for the first Tagalog phrase.":"Start a learning session to add phrases.";
+    document.getElementById("handsFreeNowEnglish").textContent="The English answer stays hidden until each recall gap ends.";
+    document.getElementById("handsFreeCountdown").textContent="5";
+    document.getElementById("handsFreeRecallPrompt").classList.remove("active");
+    document.getElementById("handsFreeProgressBar").style.width="0%";
+    document.getElementById("handsFreeElapsed").textContent="0:00";
+  }
+}
+
+function handsFreeElapsedSeconds() {
+  if(!handsFreeReview.wallStart)return 0;
+  const pausedExtra=handsFreeReview.paused&&handsFreeReview.pauseStarted?Date.now()-handsFreeReview.pauseStarted:0;
+  return Math.max(0,(Date.now()-handsFreeReview.wallStart-handsFreeReview.totalPausedMs-pausedExtra)/1000);
+}
+function updateHandsFreeClock() {
+  const elapsed=handsFreeElapsedSeconds();
+  const elapsedEl=document.getElementById("handsFreeElapsed");if(elapsedEl)elapsedEl.textContent=formatAudioTime(elapsed);
+  const bar=document.getElementById("handsFreeProgressBar");if(bar)bar.style.width=`${Math.min(100,elapsed/HANDS_FREE_MAX_SECONDS*100)}%`;
+  if(elapsed>=120 && handsFreeReview.playing) stopHandsFreeReview("Two-minute review complete.");
+}
+async function acquireHandsFreeWakeLock() {
+  try{if("wakeLock" in navigator)handsFreeReview.wakeLock=await navigator.wakeLock.request("screen");}catch{}
+}
+async function releaseHandsFreeWakeLock() {
+  try{await handsFreeReview.wakeLock?.release();}catch{}finally{handsFreeReview.wakeLock=null;}
+}
+function handsFreeDelay(ms,runId,onTick=null) {
+  return new Promise(async resolve=>{
+    let remaining=ms;
+    while(remaining>0 && handsFreeReview.runId===runId && handsFreeReview.playing){
+      if(handsFreeReview.paused){await new Promise(r=>setTimeout(r,120));continue;}
+      if(onTick)onTick(remaining);
+      const chunk=Math.min(120,remaining);await new Promise(r=>setTimeout(r,chunk));remaining-=chunk;
+    }
+    resolve(handsFreeReview.runId===runId && handsFreeReview.playing);
+  });
+}
+
+async function handsFreeSpeak(text,lang,runId) {
+  if(handsFreeReview.runId!==runId || !handsFreeReview.playing)return false;
+  if(lang==="fil-PH" && state.settings.naturalVoice && location.protocol.startsWith("http")){
+    try{
+      let url=audioCache.get(text);
+      if(!url){const response=await fetch("/api/speech",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({text})});if(!response.ok)throw new Error("Natural voice unavailable");const blob=await response.blob();url=URL.createObjectURL(blob);audioCache.set(text,url);}
+      if(handsFreeReview.runId!==runId)return false;
+      if(activeAudio){activeAudio.pause();activeAudio=null;}
+      const audio=new Audio(url);activeAudio=audio;
+      const ok=await new Promise(resolve=>{
+        let settled=false;const finish=value=>{if(settled)return;settled=true;handsFreeReview.currentSpeechResolve=null;resolve(value);};
+        handsFreeReview.currentSpeechResolve=()=>finish(false);audio.onended=()=>finish(true);audio.onerror=()=>finish(false);audio.play().catch(()=>finish(false));
+      });
+      if(activeAudio===audio)activeAudio=null;
+      if(ok)return handsFreeReview.runId===runId && handsFreeReview.playing;
+    }catch{}
+  }
+  if(!("speechSynthesis" in window))return false;
+  return await new Promise(resolve=>{
+    let settled=false;const finish=value=>{if(settled)return;settled=true;handsFreeReview.currentSpeechResolve=null;resolve(value);};
+    handsFreeReview.currentSpeechResolve=()=>finish(false);
+    speechSynthesis.cancel();
+    const utterance=new SpeechSynthesisUtterance(text);utterance.lang=lang;utterance.rate=lang==="fil-PH"?.78:.9;utterance.pitch=1;
+    const voices=speechSynthesis.getVoices();
+    const preferred=lang==="fil-PH"?(voices.find(v=>v.lang.toLowerCase().startsWith("fil"))||voices.find(v=>v.lang.toLowerCase().startsWith("tl"))):voices.find(v=>v.lang.toLowerCase().startsWith("en-us"))||voices.find(v=>v.lang.toLowerCase().startsWith("en"));
+    if(preferred)utterance.voice=preferred;utterance.onend=()=>finish(true);utterance.onerror=()=>finish(false);speechSynthesis.speak(utterance);
+  });
+}
+
+async function startHandsFreeReview() {
+  if(handsFreeReview.playing)return;
+  if(handsFreeReview.completed)buildHandsFreeQueue({advance:true});
+  if(!handsFreeReview.queue.length)buildHandsFreeQueue();
+  if(!handsFreeReview.queue.length){toast("Start learning some phrases first — active mastery items will appear here automatically.");return;}
+  handsFreeReview.playing=true;handsFreeReview.paused=false;handsFreeReview.completed=false;handsFreeReview.index=0;handsFreeReview.runId+=1;handsFreeReview.wallStart=Date.now();handsFreeReview.totalPausedMs=0;handsFreeReview.pauseStarted=0;
+  const runId=handsFreeReview.runId;await acquireHandsFreeWakeLock();
+  clearInterval(handsFreeReview.timerId);handsFreeReview.timerId=setInterval(updateHandsFreeClock,250);renderHandsFreeReview();
+  for(let i=0;i<handsFreeReview.queue.length;i++){
+    if(runId!==handsFreeReview.runId || !handsFreeReview.playing)break;
+    if(handsFreeElapsedSeconds()>=116)break;
+    handsFreeReview.index=i;const item=handsFreeReview.queue[i];
+    document.getElementById("handsFreeItemCounter").textContent=`${i+1} / ${handsFreeReview.queue.length}`;
+    document.getElementById("handsFreePhase").textContent="LISTEN — TAGALOG";
+    document.getElementById("handsFreeNowTagalog").textContent=handsFreeTagalog(item);
+    document.getElementById("handsFreeNowEnglish").textContent="English answer hidden — recall it during the gap.";
+    document.getElementById("handsFreeRecallPrompt").classList.remove("active");renderHandsFreeReview();
+    const spoken=await handsFreeSpeak(handsFreeTagalog(item),"fil-PH",runId);if(!spoken||runId!==handsFreeReview.runId||!handsFreeReview.playing)break;
+    document.getElementById("handsFreePhase").textContent="YOUR TURN";document.getElementById("handsFreeRecallPrompt").classList.add("active");
+    const recalled=await handsFreeDelay(5000,runId,remaining=>{document.getElementById("handsFreeCountdown").textContent=String(Math.max(1,Math.ceil(remaining/1000)));});
+    document.getElementById("handsFreeRecallPrompt").classList.remove("active");if(!recalled)break;
+    document.getElementById("handsFreeCountdown").textContent="5";document.getElementById("handsFreePhase").textContent="CHECK — ENGLISH";
+    document.getElementById("handsFreeNowEnglish").textContent=handsFreeEnglish(item);
+    const checked=await handsFreeSpeak(handsFreeEnglish(item),"en-US",runId);if(!checked||runId!==handsFreeReview.runId||!handsFreeReview.playing)break;
+    await handsFreeDelay(650,runId);
+  }
+  if(runId===handsFreeReview.runId && handsFreeReview.playing){
+    handsFreeReview.playing=false;handsFreeReview.paused=false;handsFreeReview.completed=true;clearInterval(handsFreeReview.timerId);handsFreeReview.timerId=null;updateHandsFreeClock();
+    document.getElementById("handsFreePhase").textContent="COMPLETE";document.getElementById("handsFreeNowTagalog").textContent="Review track complete.";document.getElementById("handsFreeNowEnglish").textContent="Play again for the next rotating mix of active phrases.";
+    document.getElementById("handsFreeProgressBar").style.width="100%";await releaseHandsFreeWakeLock();renderHandsFreeReview();toast("Hands-free review complete.");
+  }
+}
+
+function toggleHandsFreePause() {
+  if(!handsFreeReview.playing)return;
+  if(!handsFreeReview.paused){handsFreeReview.paused=true;handsFreeReview.pauseStarted=Date.now();try{activeAudio?.pause();window.speechSynthesis?.pause();}catch{}}
+  else{handsFreeReview.paused=false;if(handsFreeReview.pauseStarted)handsFreeReview.totalPausedMs+=Date.now()-handsFreeReview.pauseStarted;handsFreeReview.pauseStarted=0;try{activeAudio?.play().catch(()=>{});window.speechSynthesis?.resume();}catch{}}
+  renderHandsFreeReview();
+}
+function stopHandsFreeReview(message="Review stopped.") {
+  if(!handsFreeReview.playing)return;
+  handsFreeReview.runId+=1;handsFreeReview.playing=false;handsFreeReview.paused=false;handsFreeReview.completed=false;clearInterval(handsFreeReview.timerId);handsFreeReview.timerId=null;
+  try{if(activeAudio){activeAudio.pause();activeAudio=null;}window.speechSynthesis?.cancel();handsFreeReview.currentSpeechResolve?.();}catch{}handsFreeReview.currentSpeechResolve=null;releaseHandsFreeWakeLock();
+  renderHandsFreeReview();document.getElementById("handsFreePhase").textContent="STOPPED";document.getElementById("handsFreeNowEnglish").textContent="Press play to restart this mix.";toast(message);
+}
+
 function switchView(view) {
   currentView=view;
   document.body.dataset.currentView=view;
@@ -2576,6 +2773,7 @@ function switchView(view) {
     home:"Home",
     learn:"Lesson",
     review:"Topic review",
+    audioReview:"Hands-Free",
     dictionary:"Dictionary",
     skills:"Skill path",
     boss:"Challenges",
@@ -2583,7 +2781,7 @@ function switchView(view) {
     settings:"Settings"
   };
   document.getElementById("viewTitle").textContent={
-    home:"Magandang araw!",learn:"Conversation-first training",review:"Choose what to review",dictionary:"Explore the course dictionary",skills:"Your progressive conversation path",boss:"Meet someone in Filipino",progress:"Your learning evidence",settings:"Training preferences"
+    home:"Magandang araw!",learn:"Conversation-first training",review:"Choose what to review",audioReview:"Hands-free active recall",dictionary:"Explore the course dictionary",skills:"Your progressive conversation path",boss:"Meet someone in Filipino",progress:"Your learning evidence",settings:"Training preferences"
   }[view]||"Salita Quest";
   const mobileTitle=document.getElementById("mobileViewTitle");
   if(mobileTitle)mobileTitle.textContent=titles[view]||"Salita Quest";
@@ -2721,6 +2919,10 @@ document.getElementById("quickReviewBtn").addEventListener("click",()=>{
 document.getElementById("activityDailyBtn")?.addEventListener("click",()=>startSession("daily"));
 document.getElementById("activityQuickBtn")?.addEventListener("click",()=>{const el=document.getElementById("activityQuickLength");const length=Number(el?.value||state.settings.quickReviewLength||4);startSession("quick",false,{length});});
 document.getElementById("activityQuickLength")?.addEventListener("change",e=>{state.settings.quickReviewLength=Number(e.target.value);const old=document.getElementById("homeQuickReviewLength");if(old)old.value=e.target.value;saveState();syncSettings();});
+document.getElementById("handsFreePlayBtn")?.addEventListener("click",startHandsFreeReview);
+document.getElementById("handsFreePauseBtn")?.addEventListener("click",toggleHandsFreePause);
+document.getElementById("handsFreeStopBtn")?.addEventListener("click",()=>stopHandsFreeReview());
+document.getElementById("handsFreeNewMixBtn")?.addEventListener("click",()=>buildHandsFreeQueue({advance:true}));
 document.getElementById("checkBtn").addEventListener("click",checkAnswer);
 document.getElementById("nextBtn").addEventListener("click",nextExercise);
 document.getElementById("skipBtn").addEventListener("click",()=>{if(!session)return;session.combo=0;session.index++;session.boss?loadBossExercise():loadExercise();});
