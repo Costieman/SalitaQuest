@@ -6,6 +6,7 @@
     "wellbeing.json",
     "questions.json",
     "food.json",
-    "grammar.json"
+    "grammar.json",
+    "verbs.json"
   ]
 }
