@@ -1,56 +1,38 @@
-# Salita Quest v4.2 Mobile
+# Salita Quest v5.4 — Local Learner Profiles
 
-A mobile-first, conversation-based Tagalog learning app. This release keeps the v4 data model and remains compatible with desktop progress backups from v3.2 and v4.0.
+This patch adds a local profile gateway without changing the course engine or progress schema.
 
-## Mobile improvements
+## Included
 
-- Compact app header and persistent five-tab bottom navigation
-- Original, high-end language-learning interface with large touch targets
-- Focused home screen with a clear daily lesson and configurable quick review
-- Full-screen lesson mode with a progress bar and fixed answer controls
-- Phone-friendly topic cards, dictionary filters, dialogues, progress panels, and settings
-- More menu for Skill Path, Challenges, Progress, and Settings
-- First-run desktop-progress import prompt
-- Progressive Web App installation support
-- Self-contained `index.html` build included, preventing missing-style problems when files are moved
+- Multiple local learner profiles
+- Learner name and 4–6 digit PIN
+- Salted SHA-256 PIN hashing through Web Crypto
+- Eight 64×64 Philippine flora/fauna avatars
+- Explicit local-storage consent
+- Separate progress JSON for each profile
+- Automatic migration of existing progress into the first profile
+- Profile switching and logout
+- Browser persistent-storage request
+- Existing JSON export/import remains available inside Salita Quest
 
-## Import progress from the desktop version
+## Apply
 
-1. On the desktop version, open **Settings**.
-2. Select **Download progress backup** (or **Export progress** in v3.2).
-3. Move the downloaded `.json` file to the phone.
-4. In this version, open **Settings → Import progress backup**.
-5. Select the JSON file.
-
-The importer preserves mastery, due dates, review intervals, correct and incorrect counts, XP, coins, streaks, and compatible settings. It accepts raw v3.2 exports and packaged v4 backups.
-
-## Run
-
-### Simplest offline use
-
-Extract the complete ZIP and open `index.html`. The file is self-contained, so its design and learning logic load even when the browser does not handle nearby CSS or JavaScript files correctly.
-
-### Recommended installed-app use
-
-Run:
+From inside the patch folder:
 
 ```bash
-python server.py
+python3 apply_patch.py /path/to/SalitaQuest
 ```
 
-Open `http://127.0.0.1:8000`. On Android, choose **Install app** or **Add to Home screen** from the browser menu.
+The installer:
 
-Note: a phone cannot normally reach a server running only on a different computer through `127.0.0.1`. For phone installation, host the folder on an HTTPS site or run the server on a reachable local-network address.
+1. backs up the current `index.html` and `service-worker.js`;
+2. copies the current app page to `app.html`;
+3. installs the new login gateway as `index.html`;
+4. adds the profile scripts, styling and avatars;
+5. updates the service-worker cache.
 
+## Storage design
 
-## Journey Edition additions
+Profiles are stored under `salitaQuestLocalProfilesV1`. Progress remains compatible with the existing `salitaQuestProgress` structure and is copied into profile-specific keys beginning with `salitaQuestProgress.profile.`.
 
-- Visual learning journey with module nodes and review camps
-- Daily quests tied to meaningful learning actions rather than XP grinding
-- Weekly momentum display
-- Level titles and visual XP progression
-- Session completion ratings and milestone celebrations
-- Combo feedback during lessons
-- Research-aligned achievement presentation
-- Reduced-motion, dark-mode, and celebration-sound settings
-- Full progress import compatibility with v3.2, v4.0, and v4.1 backups
+This is a local profile lock, not a secure server-authenticated account. Progress remains tied to the same website origin, device and browser until a future synchronization backend is added.
