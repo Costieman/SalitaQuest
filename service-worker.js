@@ -1,7 +1,7 @@
-const CACHE_NAME = "salita-quest-v5-4-exercise-fixes-r6";
+const CACHE_NAME = "salita-quest-v5-4-bisaya-question-crossroads-r11";
 const STATIC_FILES = [
-  "./", "./index.html", "./app.html", "./profile-shell.css", "./profile-app.js", "./progression-v54.js", "./exercise-fixes-v545.js",
-  "./style.css", "./app.js", "./manifest.webmanifest", "./icons/icon-192.png", "./icons/icon-512.png",
+  "./", "./index.html", "./app.html", "./bisaya.html", "./bisaya-app-loader.js", "./profile-shell.css", "./profile-app.js", "./progression-v54.js", "./exercise-fixes-v545.js",
+  "./style.css", "./app.js", "./languages/cebuano/course.json", "./languages/cebuano/README.md", "./languages/cebuano/modules/manifest.json", "./languages/cebuano/modules/introductions.json", "./languages/cebuano/modules/origin.json", "./languages/cebuano/modules/wellbeing.json", "./languages/cebuano/modules/questions.json", "./manifest.webmanifest", "./icons/icon-192.png", "./icons/icon-512.png",
   "./avatars/tarsier.png", "./avatars/eagle.png", "./avatars/tamaraw.png", "./avatars/peacock.png",
   "./avatars/orchid.png", "./avatars/jade.png", "./avatars/rafflesia.png", "./avatars/anahaw.png"
 ];
@@ -40,9 +40,9 @@ self.addEventListener("fetch", event => {
         const cached = await caches.match(event.request);
         if (cached) return cached;
         if (event.request.mode === "navigate") {
-          return url.pathname.endsWith("/app.html")
-            ? caches.match("./app.html")
-            : caches.match("./index.html");
+          if (url.pathname.endsWith("/bisaya.html")) return caches.match("./bisaya.html");
+          if (url.pathname.endsWith("/app.html")) return caches.match("./app.html");
+          return caches.match("./index.html");
         }
         return Response.error();
       })

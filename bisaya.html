@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="theme-color" content="#0b6f67" />
-  <title>Salita Quest — Loading</title>
+  <title>Salita Quest: Bisaya — Loading</title>
   <style>
     html,body{height:100%;margin:0;font-family:Inter,"Segoe UI",system-ui,sans-serif;background:#edf7f3;color:#173a37}
     body{display:grid;place-items:center}.loader{max-width:460px;padding:32px;text-align:center}.mark{width:64px;height:64px;margin:0 auto 18px;border-radius:20px;display:grid;place-items:center;background:#0b6f67;color:#fff;font-size:30px;font-weight:900;box-shadow:0 16px 34px rgba(11,111,103,.22)}
@@ -13,20 +13,20 @@
 </head>
 <body>
   <main class="loader" id="loader">
-    <div class="mark">S★</div>
-    <h1>Opening your Tagalog journey…</h1>
-    <p>Loading the Salita Quest course.</p>
+    <div class="mark">B★</div>
+    <h1>Opening your Bisaya journey…</h1>
+    <p>Loading the Cebuano course pack.</p>
   </main>
   <script>
     (async () => {
       "use strict";
 
       const SOURCE = "https://raw.githubusercontent.com/Costieman/SalitaQuest/cb89fa4778737b16408bd5a66dd8fcc7f7f37f81/index.html";
-      const DOCUMENT_CACHE = "salitaQuestAppDocumentV53";
+      const DOCUMENT_CACHE = "salitaQuestBisayaAppDocumentV1";
       const PROFILE_STORE = "salitaQuestLocalProfilesV1";
       const ACTIVE_PROFILE = "salitaQuestActiveProfileId";
       const ACTIVE_COURSE = "salitaQuestActiveCourse";
-      const COURSE_ID = "tagalog";
+      const COURSE_ID = "cebuano";
       const BASE_PROGRESS = "salitaQuestProgress";
       const BASE_OWNER = "salitaQuestBaseProgressOwner";
       const PROFILE_PROGRESS_PREFIX = "salitaQuestProgress.profile.";
@@ -62,14 +62,9 @@
       saveSharedProgress(previousOwner, sharedProgress);
 
       const courseProgressKey = `${PROFILE_PROGRESS_PREFIX}${activeId}.${COURSE_ID}`;
-      const legacyProgressKey = `${PROFILE_PROGRESS_PREFIX}${activeId}`;
-      const activeProgress = localStorage.getItem(courseProgressKey) || localStorage.getItem(legacyProgressKey);
-      if (activeProgress) {
-        localStorage.setItem(BASE_PROGRESS, activeProgress);
-        localStorage.setItem(courseProgressKey, activeProgress);
-      } else {
-        localStorage.removeItem(BASE_PROGRESS);
-      }
+      const activeProgress = localStorage.getItem(courseProgressKey);
+      if (activeProgress) localStorage.setItem(BASE_PROGRESS, activeProgress);
+      else localStorage.removeItem(BASE_PROGRESS);
       localStorage.setItem(BASE_OWNER, `${activeId}:${COURSE_ID}`);
       sessionStorage.setItem(ACTIVE_COURSE, COURSE_ID);
 
@@ -87,16 +82,22 @@
         if (!html) {
           console.error(error);
           document.getElementById("loader").innerHTML = `
-            <div class="mark">S★</div>
-            <h1>Course files could not be loaded</h1>
-            <p class="error">Check your connection, then reload this page. Your learner profile and saved progress remain on this device.</p>`;
+            <div class="mark">B★</div>
+            <h1>Bisaya course files could not be loaded</h1>
+            <p class="error">Check your connection, then reload this page. Saved Tagalog and Bisaya progress remain separate on this device.</p>`;
           return;
         }
       }
 
       html = html.replace(/<head([^>]*)>/i, '<head$1><base href="./">');
-      html = html.replace(/<body([^>]*)>/i, '<body$1 data-course="tagalog">');
-      html = html.replace(/<\/body>/i, '<script src="progression-v54.js?v=5.4.6"><\/script><script src="exercise-fixes-v545.js?v=5.4.6"><\/script><script src="profile-app.js?v=5.4.6"><\/script></body>');
+      html = html.replace(/<body([^>]*)>/i, '<body$1 data-course="cebuano">');
+      html = html.replaceAll("Tagalog", "Bisaya");
+      html = html.replaceAll("Taglish", "Bisaya-English");
+      html = html.replace("Magandang araw!", "Maayong adlaw!");
+      html = html.replace("kumusta</span>", "kumusta</span>");
+      html = html.replace("ako si…</span>", "ako si…</span>");
+      html = html.replace("taga-saan?</span>", "taga-asa?</span>");
+      html = html.replace(/<script\s+src=["']app\.js["']\s*><\/script>/i, '<script src="bisaya-app-loader.js?v=0.1.0"><\/script>');
       document.open();
       document.write(html);
       document.close();
