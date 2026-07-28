@@ -1,6 +1,6 @@
-const CACHE_NAME = "salita-quest-v5-4-local-profiles-r2";
+const CACHE_NAME = "salita-quest-v5-4-full-screen-profiles-r3";
 const STATIC_FILES = [
-  "./", "./index.html", "./app.html", "./profile-shell.css", "./profile-shell.js",
+  "./", "./index.html", "./app.html", "./profile-shell.css", "./profile-shell.js", "./profile-app.js",
   "./style.css", "./app.js", "./manifest.webmanifest", "./icons/icon-192.png", "./icons/icon-512.png",
   "./avatars/tarsier.png", "./avatars/eagle.png", "./avatars/tamaraw.png", "./avatars/peacock.png",
   "./avatars/orchid.png", "./avatars/jade.png", "./avatars/rafflesia.png", "./avatars/anahaw.png"
@@ -40,7 +40,9 @@ self.addEventListener("fetch", event => {
         const cached = await caches.match(event.request);
         if (cached) return cached;
         if (event.request.mode === "navigate") {
-          return url.pathname.endsWith("/app.html") ? caches.match("./app.html") : caches.match("./index.html");
+          return url.pathname.endsWith("/app.html")
+            ? caches.match("./app.html")
+            : caches.match("./index.html");
         }
         return Response.error();
       })
