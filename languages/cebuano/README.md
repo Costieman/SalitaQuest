@@ -63,7 +63,18 @@ Run:
 node scripts/validate-bisaya.mjs
 ```
 
-The validator checks JavaScript syntax, JSON parsing, map and module integrity, duplicate item IDs, exercise references, engine transformation markers, the six-token sentence-builder rule, and the absence of calls to the Tagalog speech endpoint.
+The validator checks:
+
+- JavaScript syntax and JSON parsing
+- the 13-location map and sequential release order
+- duplicate map, module, item, module-pack, and exercise IDs
+- item, exercise, and module references
+- token analysis and native-review status
+- exactly six selectable tokens in every sentence builder
+- inclusion of every answer token in its word bank
+- required shared-engine transformation markers
+- offline caching of every registered module pack
+- the absence of calls to the Tagalog speech endpoint
 
 ## Reference material used for drafting
 
