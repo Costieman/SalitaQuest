@@ -10,12 +10,13 @@ This directory contains the Cebuano/Sinugbuanong Binisaya language layer for Sal
 - Feeling Forest: wellbeing, physical sensations, emotions, and common discomforts
 - Question Crossroads: clarification, repetition, slower speech, meanings, essential questions, and requests for help
 - Market Port: wants, availability, quantities, prices, ordering, payment, change, and receipts
-- 102 course items across the first six regions
-- 59 authored starter exercises, with exactly six tokens in every sentence-builder word bank
+- Grammar Bridge: pronouns, noun markers, linkers, location words, demonstratives, and high-frequency particles
+- 122 course items across the first seven regions
+- 71 authored starter exercises, with exactly six tokens in every sentence-builder word bank
 - Separate progress for each learner and language
 - In-app switching between Tagalog and Bisaya through the learner-profile menu
 
-The remaining regions stay visible on the shared map but remain locked until reviewed content is added. The next planned module is Grammar Bridge, covering pronouns, markers, linkers, location words, and high-frequency particles.
+The remaining regions stay visible on the shared map but remain locked until reviewed content is added. The next planned module is Verb Volcano, introducing high-value roots and useful aspect and voice patterns through complete sentences.
 
 ## Structure
 
@@ -26,6 +27,7 @@ The remaining regions stay visible on the shared map but remain locked until rev
 - `modules/wellbeing.json` — Feeling Forest content and dialogue
 - `modules/questions.json` — Question Crossroads content and dialogue
 - `modules/food.json` — Market Port content and dialogue
+- `modules/grammar.json` — Grammar Bridge content and dialogue
 
 Additional regions should be implemented as independent module packs and added to the manifest. This keeps the Cebuano content maintainable while the application engine remains shared with Tagalog.
 
@@ -45,6 +47,9 @@ All lesson material remains marked for fluent or native Cebuano review before a 
 - Clarification phrases are deliberately repeated across exercises because they are recovery tools that must remain accessible under conversational pressure.
 - Market Port treats requests such as `walay baboy` as basic language. Learners should communicate allergies explicitly rather than relying on a preference phrase for safety.
 - English `bill` is retained where natural code-switching is common, while price, quantity, and payment structures remain Cebuano.
+- Grammar Bridge avoids presenting `ang`, `og`, and `sa` as direct one-word equivalents of English articles or prepositions. Their lesson descriptions focus on how they mark relationships within Cebuano sentences.
+- `kita` and `kami` are taught separately because including or excluding the listener changes the meaning of “we.”
+- Particles such as `man`, `ra`, `pa`, `na`, and `gyud` are introduced through complete phrases because their English translation depends strongly on context.
 
 ## Audio policy
 
@@ -84,7 +89,8 @@ The validator checks:
 
 - John U. Wolff, *A Dictionary of Cebuano Visayan* (1972), digitised search edition
 - Bohol.ph Peace Corps-derived Cebuano phrasebook
-- Contemporary Cebuano teaching references used to compare restaurant and market expressions
-- Wikivoyage Cebuano phrase references for price, shopping, and dining alternatives
+- *Cebuano Grammar Notes*, University of Hawai‘i Press digital edition
+- Universal Dependencies Cebuano documentation for markers, linkers, and particles
+- Contemporary Cebuano teaching references used to compare regional and conversational alternatives
 
 These sources support initial drafting but do not replace fluent-speaker review of contemporary usage.
