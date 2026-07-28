@@ -13,12 +13,13 @@ This directory contains the Cebuano/Sinugbuanong Binisaya language layer for Sal
 - Grammar Bridge: pronouns, noun markers, linkers, location words, demonstratives, and high-frequency particles
 - Verb Volcano: verb roots, actor-focused aspect patterns, ability forms, goal focus, transfer focus, negation, and time cues
 - Spanish Square: Spanish-derived calendar words, clock time, and integrated everyday nouns
-- 162 course items across the first nine regions
-- 95 authored starter exercises, with exactly six tokens in every sentence-builder word bank
+- Bisaya-English City: purposeful Cebuano-English code-switching in work and scheduling conversations
+- 182 course items across all ten curriculum regions
+- 107 authored starter exercises, with exactly six tokens in every sentence-builder word bank
 - Separate progress for each learner and language
 - In-app switching between Tagalog and Bisaya through the learner-profile menu
 
-The remaining regions stay visible on the shared map but remain locked until reviewed content is added. The next planned module is Bisaya-English City, focusing on natural Cebuano-English code-switching while retaining Cebuano particles and sentence structure.
+All ten curriculum regions now have foundation content. The next milestone is improving the three review locations—Memory Camp, Echo Cave, and Campfire Review—and adding reviewed Cebuano audio.
 
 ## Structure
 
@@ -32,8 +33,7 @@ The remaining regions stay visible on the shared map but remain locked until rev
 - `modules/grammar.json` — Grammar Bridge content and dialogue
 - `modules/verbs.json` — Verb Volcano content and dialogue
 - `modules/spanish.json` — Spanish Square content and dialogue
-
-Additional regions should be implemented as independent module packs and added to the manifest. This keeps the Cebuano content maintainable while the application engine remains shared with Tagalog.
+- `modules/code-switching.json` — Bisaya-English City content and dialogue
 
 ## Language policy
 
@@ -56,7 +56,9 @@ All lesson material remains marked for fluent or native Cebuano review before a 
 - Verb Volcano describes Cebuano through aspect, focus, mood, time cues, and common verb classes rather than forcing every form into an English tense table.
 - Verb affixes are taught through reviewed high-frequency forms rather than attached mechanically to every root.
 - Spanish Square distinguishes integrated Cebuano vocabulary from modern Spanish. Borrowed words follow Cebuano spelling, pronunciation, grammar, and local meaning.
-- Clock expressions such as `ala una` and `alas dos` retain Spanish-derived forms, while surrounding time and location phrases remain Cebuano.
+- Bisaya-English City treats code-switching as a context-sensitive bilingual practice. It is not presented as the only natural register or as a replacement for full Cebuano forms.
+- English roots may take Cebuano affixes or appear inside Cebuano marker, pronoun, and particle patterns. The surrounding Cebuano structure remains part of the learning target.
+- Workplace examples are provisional and remain marked for fluent review because code-switching preferences vary by speaker, setting, age, profession, and region.
 
 ## Audio policy
 
@@ -83,5 +85,6 @@ The validator checks JavaScript and JSON syntax, the 13-location map, sequential
 - *Cebuano Grammar Notes* and *Cebuano for Beginners*, University of Hawai‘i Press digital editions
 - Universal Dependencies Cebuano documentation
 - Cebuano phrase references for calendar, clock-time, and established Spanish-derived vocabulary
+- Research on Cebuano-English code-switching, code-mixing, pragmatic functions, and English roots carrying Cebuano affixes
 
 These sources support initial drafting but do not replace fluent-speaker review of contemporary usage.
