@@ -2,6 +2,7 @@
   "schemaVersion": 1,
   "packs": [
     "introductions.json",
-    "origin.json"
+    "origin.json",
+    "wellbeing.json"
   ]
 }
