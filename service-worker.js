@@ -1,6 +1,6 @@
-const CACHE_NAME = "salita-quest-v5-4-full-screen-profiles-r3";
+const CACHE_NAME = "salita-quest-v5-4-full-screen-profiles-r4";
 const STATIC_FILES = [
-  "./", "./index.html", "./app.html", "./profile-shell.css", "./profile-shell.js", "./profile-app.js",
+  "./", "./index.html", "./app.html", "./profile-shell.css", "./profile-app.js",
   "./style.css", "./app.js", "./manifest.webmanifest", "./icons/icon-192.png", "./icons/icon-512.png",
   "./avatars/tarsier.png", "./avatars/eagle.png", "./avatars/tamaraw.png", "./avatars/peacock.png",
   "./avatars/orchid.png", "./avatars/jade.png", "./avatars/rafflesia.png", "./avatars/anahaw.png"
