@@ -143,7 +143,16 @@
     }
 
     const version = document.querySelector(".version-label");
-    if (version) version.textContent = COURSE === "cebuano" ? "Bisaya Foundation 0.1" : "Version 5.4 Full-Screen Profiles";
+    if (version) version.textContent = COURSE === "cebuano" ? "Bisaya Foundation 0.3 · 13 regions" : "Version 5.4 Full-Screen Profiles";
+  }
+
+  function loadCourseEnhancements() {
+    if (COURSE !== "cebuano" || document.querySelector("script[data-bisaya-review-regions]")) return;
+    const script = document.createElement("script");
+    script.src = "./bisaya-review-regions.js?v=0.3.0";
+    script.dataset.bisayaReviewRegions = "true";
+    script.onerror = () => console.warn("Bisaya review regions could not be loaded.");
+    document.body.appendChild(script);
   }
 
   const timer = window.setInterval(syncProgress, 700);
@@ -154,9 +163,13 @@
   });
 
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", installProfileControl, { once: true });
+    document.addEventListener("DOMContentLoaded", () => {
+      installProfileControl();
+      loadCourseEnhancements();
+    }, { once: true });
   } else {
     installProfileControl();
+    loadCourseEnhancements();
   }
 
   window.addEventListener("unload", () => window.clearInterval(timer));
