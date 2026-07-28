@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b6f67" />
+  <title>Salita Quest: Bisaya — Loading</title>
+  <style>
+    html,body{height:100%;margin:0;font-family:Inter,"Segoe UI",system-ui,sans-serif;background:#edf7f3;color:#173a37}
+    body{display:grid;place-items:center}.loader{max-width:460px;padding:32px;text-align:center}.mark{width:64px;height:64px;margin:0 auto 18px;border-radius:20px;display:grid;place-items:center;background:#0b6f67;color:#fff;font-size:30px;font-weight:900;box-shadow:0 16px 34px rgba(11,111,103,.22)}
+    h1{margin:0 0 8px;font-size:28px}p{margin:0;color:#607773;line-height:1.55}.error{color:#9b3434}
+  </style>
+</head>
+<body>
+  <main class="loader" id="loader">
+    <div class="mark">B★</div>
+    <h1>Opening your Bisaya journey…</h1>
+    <p>Loading the Cebuano course pack.</p>
+  </main>
+  <script>
+    (async () => {
+      "use strict";
+
+      const SOURCE = "https://raw.githubusercontent.com/Costieman/SalitaQuest/cb89fa4778737b16408bd5a66dd8fcc7f7f37f81/index.html";
+      const DOCUMENT_CACHE = "salitaQuestBisayaAppDocumentV1";
+      const PROFILE_STORE = "salitaQuestLocalProfilesV1";
+      const ACTIVE_PROFILE = "salitaQuestActiveProfileId";
+      const ACTIVE_COURSE = "salitaQuestActiveCourse";
+      const COURSE_ID = "cebuano";
+      const BASE_PROGRESS = "salitaQuestProgress";
+      const BASE_OWNER = "salitaQuestBaseProgressOwner";
+      const PROFILE_PROGRESS_PREFIX = "salitaQuestProgress.profile.";
+
+      function readProfiles() {
+        try {
+          const store = JSON.parse(localStorage.getItem(PROFILE_STORE) || "null");
+          return store && Array.isArray(store.profiles) ? store.profiles : [];
+        } catch {
+          return [];
+        }
+      }
+
+      function saveSharedProgress(owner, progress) {
+        if (!owner || !progress) return;
+        const separator = owner.lastIndexOf(":");
+        const profileId = separator > 0 ? owner.slice(0, separator) : owner;
+        const courseId = separator > 0 ? owner.slice(separator + 1) : "tagalog";
+        if (!readProfiles().some(item => item.id === profileId)) return;
+        localStorage.setItem(`${PROFILE_PROGRESS_PREFIX}${profileId}.${courseId}`, progress);
+        if (courseId === "tagalog") localStorage.setItem(`${PROFILE_PROGRESS_PREFIX}${profileId}`, progress);
+      }
+
+      const activeId = sessionStorage.getItem(ACTIVE_PROFILE);
+      const profile = readProfiles().find(item => item.id === activeId);
+      if (!activeId || !profile) {
+        window.location.replace("./");
+        return;
+      }
+
+      const previousOwner = localStorage.getItem(BASE_OWNER);
+      const sharedProgress = localStorage.getItem(BASE_PROGRESS);
+      saveSharedProgress(previousOwner, sharedProgress);
+
+      const courseProgressKey = `${PROFILE_PROGRESS_PREFIX}${activeId}.${COURSE_ID}`;
+      const activeProgress = localStorage.getItem(courseProgressKey);
+      if (activeProgress) localStorage.setItem(BASE_PROGRESS, activeProgress);
+      else localStorage.removeItem(BASE_PROGRESS);
+      localStorage.setItem(BASE_OWNER, `${activeId}:${COURSE_ID}`);
+      sessionStorage.setItem(ACTIVE_COURSE, COURSE_ID);
+
+      let html = "";
+      try {
+        const response = await fetch(SOURCE, { cache: "force-cache" });
+        if (!response.ok) throw new Error(`Course document unavailable (${response.status})`);
+        html = await response.text();
+        if (!html.includes('id="homeView"') || !html.includes('src="app.js"')) {
+          throw new Error("The retrieved course document was not recognised.");
+        }
+        try { localStorage.setItem(DOCUMENT_CACHE, html); } catch {}
+      } catch (error) {
+        try { html = localStorage.getItem(DOCUMENT_CACHE) || ""; } catch {}
+        if (!html) {
+          console.error(error);
+          document.getElementById("loader").innerHTML = `
+            <div class="mark">B★</div>
+            <h1>Bisaya course files could not be loaded</h1>
+            <p class="error">Check your connection, then reload this page. Saved Tagalog and Bisaya progress remain separate on this device.</p>`;
+          return;
+        }
+      }
+
+      html = html.replace(/<head([^>]*)>/i, '<head$1><base href="./">');
+      html = html.replace(/<body([^>]*)>/i, '<body$1 data-course="cebuano">');
+      html = html.replaceAll("Tagalog", "Bisaya");
+      html = html.replaceAll("Taglish", "Bisaya-English");
+      html = html.replace("Magandang araw!", "Maayong adlaw!");
+      html = html.replace("kumusta</span>", "kumusta</span>");
+      html = html.replace("ako si…</span>", "ako si…</span>");
+      html = html.replace("taga-saan?</span>", "taga-asa?</span>");
+      html = html.replace(/<script\s+src=["']app\.js["']\s*><\/script>/i, '<script src="bisaya-app-loader.js?v=0.1.0"><\/script>');
+      document.open();
+      document.write(html);
+      document.close();
+    })();
+  </script>
+</body>
+</html>
