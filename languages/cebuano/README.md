@@ -6,8 +6,10 @@ This directory contains the Cebuano/Sinugbuanong Binisaya language layer for Sal
 
 - Beginners Bay: greetings, courtesy, replies, and leave-taking
 - Name Village: names, preferred names, introductions, and occupations
-- 30 course items across the first two regions
-- 18 authored starter exercises, with exactly six tokens in every sentence-builder word bank
+- Home Hills: origin, residence, family, and explaining that the learner is studying Bisaya
+- Feeling Forest: wellbeing, physical sensations, emotions, and common discomforts
+- 63 course items across the first four regions
+- 37 authored starter exercises, with exactly six tokens in every sentence-builder word bank
 - Separate progress for each learner and language
 - In-app switching between Tagalog and Bisaya through the learner-profile menu
 
@@ -18,6 +20,8 @@ The remaining regions stay visible on the shared map but remain locked until rev
 - `course.json` — course metadata, map, module definitions, Beginners Bay items, and initial exercises
 - `modules/manifest.json` — ordered list of additional module packs
 - `modules/introductions.json` — Name Village content and dialogue
+- `modules/origin.json` — Home Hills content and dialogue
+- `modules/wellbeing.json` — Feeling Forest content and dialogue
 
 Additional regions should be implemented as independent module packs and added to the manifest. This keeps the Cebuano content maintainable while the application engine remains shared with Tagalog.
 
@@ -28,6 +32,12 @@ The primary target is contemporary conversational Cebuano, commonly called Bisay
 Regional, spelling, and register alternatives may be recorded in `accepted` fields. Alternatives should be accepted only when they preserve the intended meaning and remain natural in a relevant Cebuano-speaking context.
 
 All lesson material remains marked for fluent or native Cebuano review before a production release.
+
+## Content cautions
+
+- Questions about marriage and family are taught because they occur in reference phrasebooks, but the lesson notes that they may be too personal in some contexts.
+- Physical and emotional expressions are taught as language patterns, not as medical guidance.
+- Experienced-state forms such as `gikapoy ko`, `gigutom ko`, and `giuhaw ko` are preserved rather than reshaped to imitate English adjective order.
 
 ## Audio policy
 
@@ -55,7 +65,8 @@ The validator checks JavaScript syntax, JSON parsing, map and module integrity, 
 ## Reference material used for drafting
 
 - John U. Wolff, *A Dictionary of Cebuano Visayan* (1972), digitised search edition
-- Bohol.ph Cebuano phrasebook, including biographical questions and introductions
-- Omniglot and Wikivoyage Cebuano phrase references for comparison of common alternatives
+- Bohol.ph Cebuano phrasebook, including biographical, family, wellbeing, and physical-discomfort expressions
+- Native-speaker-authored contemporary Cebuano learning references used to compare everyday alternatives
+- Omniglot and Wikivoyage Cebuano phrase references for comparison of common forms
 
 These sources support initial drafting but do not replace fluent-speaker review of contemporary usage.
