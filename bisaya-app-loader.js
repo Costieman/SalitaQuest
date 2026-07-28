@@ -2,6 +2,7 @@
   "use strict";
 
   const COURSE_URL = "./languages/cebuano/course.json";
+  const MODULE_MANIFEST_URL = "./languages/cebuano/modules/manifest.json";
   const ENGINE_URL = "./app.js";
 
   function replaceBlock(source, startMarker, endMarker, replacement) {
@@ -21,9 +22,22 @@
     });
   }
 
-  function normaliseCourse(course) {
+  async function loadModulePacks() {
+    const manifestResponse = await fetch(MODULE_MANIFEST_URL, {cache:"no-store"});
+    if (!manifestResponse.ok) throw new Error(`Cebuano module manifest unavailable (${manifestResponse.status})`);
+    const manifest = await manifestResponse.json();
+    const packNames = Array.isArray(manifest.packs) ? manifest.packs : [];
+    const responses = await Promise.all(packNames.map(name => fetch(`./languages/cebuano/modules/${name}`, {cache:"no-store"})));
+    responses.forEach((response, index) => {
+      if (!response.ok) throw new Error(`Cebuano module pack ${packNames[index]} unavailable (${response.status})`);
+    });
+    return Promise.all(responses.map(response => response.json()));
+  }
+
+  function normaliseCourse(course, packs) {
     const moduleId = id => id === "codeSwitching" ? "taglish" : id;
-    const items = course.items.map(item => ({...item, module:moduleId(item.module)}));
+    const packedItems = packs.flatMap(pack => Array.isArray(pack.items) ? pack.items : []);
+    const items = [...course.items, ...packedItems].map(item => ({...item, module:moduleId(item.module)}));
     const modulesWithContent = new Set(items.map(item => item.module));
     const unavailableThreshold = items.length * 5 + 1;
     let unreleasedRegionReached = false;
@@ -49,7 +63,7 @@
     return {modules, moduleMeta, items};
   }
 
-  function buildDialogues(modules) {
+  function buildDialogues(modules, packs) {
     const placeholders = Object.fromEntries(modules.map(module => [module.id, {
       title: module.title,
       level: module.id === "greetings" ? "Beginner 1" : "Coming soon",
@@ -94,6 +108,10 @@
         }
       ]
     };
+
+    packs.forEach(pack => {
+      if (pack.moduleId && pack.dialogue) placeholders[pack.moduleId] = pack.dialogue;
+    });
     return placeholders;
   }
 
@@ -101,6 +119,7 @@
     return [
       {prompt:"Someone greets you: ‘Maayong buntag!’ Choose a natural reply.",answers:["maayong buntag","maayong buntag pud"],choices:["Maayong buntag","Dili","Walay sapayan"],hint:"Repeat the morning greeting."},
       {prompt:"Someone asks: ‘Kumusta ka?’",answers:["maayo ra ko","okay ra ko","maayo man ko"],choices:["Maayo ra ko","Maayong gabii","Palihug"],hint:"Choose a natural wellbeing reply."},
+      {prompt:"Someone asks: ‘Unsa imong ngalan?’",answers:["ako si lucille","akong ngalan kay lucille","ang akong ngalan kay lucille"],choices:["Ako si Lucille","Maayo ra ko","Data scientist ko"],hint:"Use Ako si ___ or Akong ngalan kay ___."},
       {prompt:"Someone says: ‘Salamat!’",answers:["walay sapayan","way sapayan"],choices:["Walay sapayan","Pasayloa ko","Dili"],hint:"This means ‘You’re welcome’ or ‘No problem’."},
       {prompt:"Someone says: ‘Amping!’",answers:["ikaw pud","ikaw sad"],choices:["Ikaw pud","Maayong buntag","Oo"],hint:"Pud and sad can both mean ‘too’, depending on regional preference."}
     ];
@@ -110,13 +129,14 @@
     return `const BADGES = [
   {id:"first_step",icon:"🌱",name:"First Step",description:"Complete one exercise",test:s=>s.totalAnswers>=1},
   {id:"first_greeting",icon:"👋",name:"First Bisaya Greeting",description:"Reach familiarity with six greeting items",test:s=>countMasteredInModule(s,"greetings",2)>=6},
-  {id:"boss_one",icon:"👑",name:"First Bisaya Meeting",description:"Pass the greeting challenge",test:s=>s.bossWins>=1}
+  {id:"introduced",icon:"🙂",name:"Introduced in Bisaya",description:"Reach familiarity with four introduction patterns",test:s=>countMasteredInModule(s,"introductions",2)>=4},
+  {id:"boss_one",icon:"👑",name:"First Bisaya Meeting",description:"Pass the greeting and introduction challenge",test:s=>s.bossWins>=1}
 ];`;
   }
 
-  function transformEngine(engine, course) {
-    const {modules, moduleMeta, items} = normaliseCourse(course);
-    const dialogues = buildDialogues(modules);
+  function transformEngine(engine, course, packs) {
+    const {modules, moduleMeta, items} = normaliseCourse(course, packs);
+    const dialogues = buildDialogues(modules, packs);
     const bossItems = buildBossItems();
 
     let source = engine;
@@ -143,16 +163,17 @@
 
   (async () => {
     try {
-      const [courseResponse, engineResponse] = await Promise.all([
+      const [courseResponse, engineResponse, packs] = await Promise.all([
         fetch(COURSE_URL, {cache:"no-store"}),
-        fetch(ENGINE_URL, {cache:"no-store"})
+        fetch(ENGINE_URL, {cache:"no-store"}),
+        loadModulePacks()
       ]);
       if (!courseResponse.ok) throw new Error(`Cebuano course unavailable (${courseResponse.status})`);
       if (!engineResponse.ok) throw new Error(`Shared engine unavailable (${engineResponse.status})`);
 
       const course = await courseResponse.json();
       const engine = await engineResponse.text();
-      const transformed = transformEngine(engine, course);
+      const transformed = transformEngine(engine, course, packs);
       const script = document.createElement("script");
       script.textContent = transformed;
       document.body.appendChild(script);
