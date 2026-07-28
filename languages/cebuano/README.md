@@ -14,12 +14,22 @@ This directory contains the Cebuano/Sinugbuanong Binisaya language layer for Sal
 - Verb Volcano: verb roots, actor-focused aspect patterns, ability forms, goal focus, transfer focus, negation, and time cues
 - Spanish Square: Spanish-derived calendar words, clock time, and integrated everyday nouns
 - Bisaya-English City: purposeful Cebuano-English code-switching in work and scheduling conversations
+- Memory Camp: adaptive written review prioritising weaker, due, and already-encountered items
+- Echo Cave: hands-free active recall using Bisaya audio, a five-second recall gap, and the English answer
+- Campfire Review: a ten-part final challenge drawing from every curriculum region
 - 182 course items across all ten curriculum regions
 - 107 authored starter exercises, with exactly six tokens in every sentence-builder word bank
+- All 13 map locations now have a defined activity
 - Separate progress for each learner and language
 - In-app switching between Tagalog and Bisaya through the learner-profile menu
 
-All ten curriculum regions now have foundation content. The next milestone is improving the three review locations—Memory Camp, Echo Cave, and Campfire Review—and adding reviewed Cebuano audio.
+All curriculum material remains foundation content requiring fluent or native Cebuano review. Review-region logic does not grant artificial mastery: Memory Camp uses the existing spaced-repetition queue, Echo Cave does not raise mastery through listening alone, and Campfire Review records challenge results separately from item-level mastery.
+
+## Review-region behaviour
+
+- `Memory Camp` unlocks after at least eight course items have been encountered. It selects up to twelve items from the existing review pool, which is ordered by due status and weaker mastery.
+- `Echo Cave` unlocks after at least one active item exists at mastery level 1–4. It opens the existing two-minute hands-free recall interface. If verified Cebuano audio is unavailable, Tagalog audio is not substituted.
+- `Campfire Review` unlocks after at least two items have been encountered in each of the ten curriculum regions. Passing requires at least 80% accuracy across ten representative questions.
 
 ## Structure
 
@@ -34,6 +44,7 @@ All ten curriculum regions now have foundation content. The next milestone is im
 - `modules/verbs.json` — Verb Volcano content and dialogue
 - `modules/spanish.json` — Spanish Square content and dialogue
 - `modules/code-switching.json` — Bisaya-English City content and dialogue
+- `../../bisaya-review-regions.js` — Memory Camp, Echo Cave, Campfire Review, final challenge, and review badges
 
 ## Language policy
 
@@ -76,7 +87,7 @@ Run:
 node scripts/validate-bisaya.mjs
 ```
 
-The validator checks JavaScript and JSON syntax, the 13-location map, sequential release order, duplicate IDs, item and exercise references, token analysis, native-review status, six-token sentence builders, answer-token coverage, shared-engine transformation markers, offline caching, and the absence of calls to the Tagalog speech endpoint.
+The validator checks JavaScript and JSON syntax, the 13-location map, sequential release order, duplicate IDs, item and exercise references, token analysis, native-review status, six-token sentence builders, answer-token coverage, shared-engine transformation markers, review-region wiring, offline caching, and the absence of calls to the Tagalog speech endpoint.
 
 ## Reference material used for drafting
 
