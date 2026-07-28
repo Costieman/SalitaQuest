@@ -1,4 +1,4 @@
-const CACHE_NAME = "salita-quest-v5-4-local-profiles";
+const CACHE_NAME = "salita-quest-v5-4-local-profiles-r2";
 const STATIC_FILES = [
   "./", "./index.html", "./app.html", "./profile-shell.css", "./profile-shell.js",
   "./style.css", "./app.js", "./manifest.webmanifest", "./icons/icon-192.png", "./icons/icon-512.png",
@@ -8,7 +8,11 @@ const STATIC_FILES = [
 
 self.addEventListener("install", event => {
   self.skipWaiting();
-  event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(STATIC_FILES)));
+  event.waitUntil(
+    caches.open(CACHE_NAME).then(cache =>
+      Promise.allSettled(STATIC_FILES.map(file => cache.add(file)))
+    )
+  );
 });
 
 self.addEventListener("activate", event => {
@@ -22,11 +26,14 @@ self.addEventListener("activate", event => {
 self.addEventListener("fetch", event => {
   const url = new URL(event.request.url);
   if (event.request.method !== "GET" || url.pathname.startsWith("/api/")) return;
+
   event.respondWith(
     fetch(event.request)
       .then(response => {
-        const copy = response.clone();
-        caches.open(CACHE_NAME).then(cache => cache.put(event.request, copy));
+        if (response.ok || response.type === "opaque") {
+          const copy = response.clone();
+          caches.open(CACHE_NAME).then(cache => cache.put(event.request, copy)).catch(() => {});
+        }
         return response;
       })
       .catch(async () => {
