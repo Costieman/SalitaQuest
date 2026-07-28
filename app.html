@@ -20,10 +20,43 @@
   <script>
     (async () => {
       "use strict";
-      const SOURCE = "https://raw.githubusercontent.com/Costieman/SalitaQuest/cb89fa4778737b16408bd5a66dd8fcc7f7f37f81/index.html";
-      const CACHE_KEY = "salitaQuestAppDocumentV53";
-      let html = "";
 
+      const SOURCE = "https://raw.githubusercontent.com/Costieman/SalitaQuest/cb89fa4778737b16408bd5a66dd8fcc7f7f37f81/index.html";
+      const DOCUMENT_CACHE = "salitaQuestAppDocumentV53";
+      const PROFILE_STORE = "salitaQuestLocalProfilesV1";
+      const ACTIVE_PROFILE = "salitaQuestActiveProfileId";
+      const BASE_PROGRESS = "salitaQuestProgress";
+      const BASE_OWNER = "salitaQuestBaseProgressOwner";
+      const PROFILE_PROGRESS_PREFIX = "salitaQuestProgress.profile.";
+
+      function readProfiles() {
+        try {
+          const store = JSON.parse(localStorage.getItem(PROFILE_STORE) || "null");
+          return store && Array.isArray(store.profiles) ? store.profiles : [];
+        } catch {
+          return [];
+        }
+      }
+
+      const activeId = sessionStorage.getItem(ACTIVE_PROFILE);
+      const profile = readProfiles().find(item => item.id === activeId);
+      if (!activeId || !profile) {
+        window.location.replace("./");
+        return;
+      }
+
+      const previousOwner = localStorage.getItem(BASE_OWNER);
+      const sharedProgress = localStorage.getItem(BASE_PROGRESS);
+      if (previousOwner && sharedProgress && readProfiles().some(item => item.id === previousOwner)) {
+        localStorage.setItem(`${PROFILE_PROGRESS_PREFIX}${previousOwner}`, sharedProgress);
+      }
+
+      const activeProgress = localStorage.getItem(`${PROFILE_PROGRESS_PREFIX}${activeId}`);
+      if (activeProgress) localStorage.setItem(BASE_PROGRESS, activeProgress);
+      else localStorage.removeItem(BASE_PROGRESS);
+      localStorage.setItem(BASE_OWNER, activeId);
+
+      let html = "";
       try {
         const response = await fetch(SOURCE, { cache: "force-cache" });
         if (!response.ok) throw new Error(`Course document unavailable (${response.status})`);
@@ -31,9 +64,9 @@
         if (!html.includes('id="homeView"') || !html.includes('src="app.js"')) {
           throw new Error("The retrieved course document was not recognised.");
         }
-        try { localStorage.setItem(CACHE_KEY, html); } catch (_) {}
+        try { localStorage.setItem(DOCUMENT_CACHE, html); } catch {}
       } catch (error) {
-        try { html = localStorage.getItem(CACHE_KEY) || ""; } catch (_) {}
+        try { html = localStorage.getItem(DOCUMENT_CACHE) || ""; } catch {}
         if (!html) {
           console.error(error);
           document.getElementById("loader").innerHTML = `
@@ -45,6 +78,7 @@
       }
 
       html = html.replace(/<head([^>]*)>/i, '<head$1><base href="./">');
+      html = html.replace(/<\/body>/i, '<script src="profile-app.js"><\/script></body>');
       document.open();
       document.write(html);
       document.close();
