@@ -25,6 +25,8 @@
       const DOCUMENT_CACHE = "salitaQuestAppDocumentV53";
       const PROFILE_STORE = "salitaQuestLocalProfilesV1";
       const ACTIVE_PROFILE = "salitaQuestActiveProfileId";
+      const ACTIVE_COURSE = "salitaQuestActiveCourse";
+      const COURSE_ID = "tagalog";
       const BASE_PROGRESS = "salitaQuestProgress";
       const BASE_OWNER = "salitaQuestBaseProgressOwner";
       const PROFILE_PROGRESS_PREFIX = "salitaQuestProgress.profile.";
@@ -38,6 +40,16 @@
         }
       }
 
+      function saveSharedProgress(owner, progress) {
+        if (!owner || !progress) return;
+        const separator = owner.lastIndexOf(":");
+        const profileId = separator > 0 ? owner.slice(0, separator) : owner;
+        const courseId = separator > 0 ? owner.slice(separator + 1) : "tagalog";
+        if (!readProfiles().some(item => item.id === profileId)) return;
+        localStorage.setItem(`${PROFILE_PROGRESS_PREFIX}${profileId}.${courseId}`, progress);
+        if (courseId === "tagalog") localStorage.setItem(`${PROFILE_PROGRESS_PREFIX}${profileId}`, progress);
+      }
+
       const activeId = sessionStorage.getItem(ACTIVE_PROFILE);
       const profile = readProfiles().find(item => item.id === activeId);
       if (!activeId || !profile) {
@@ -47,14 +59,19 @@
 
       const previousOwner = localStorage.getItem(BASE_OWNER);
       const sharedProgress = localStorage.getItem(BASE_PROGRESS);
-      if (previousOwner && sharedProgress && readProfiles().some(item => item.id === previousOwner)) {
-        localStorage.setItem(`${PROFILE_PROGRESS_PREFIX}${previousOwner}`, sharedProgress);
-      }
+      saveSharedProgress(previousOwner, sharedProgress);
 
-      const activeProgress = localStorage.getItem(`${PROFILE_PROGRESS_PREFIX}${activeId}`);
-      if (activeProgress) localStorage.setItem(BASE_PROGRESS, activeProgress);
-      else localStorage.removeItem(BASE_PROGRESS);
-      localStorage.setItem(BASE_OWNER, activeId);
+      const courseProgressKey = `${PROFILE_PROGRESS_PREFIX}${activeId}.${COURSE_ID}`;
+      const legacyProgressKey = `${PROFILE_PROGRESS_PREFIX}${activeId}`;
+      const activeProgress = localStorage.getItem(courseProgressKey) || localStorage.getItem(legacyProgressKey);
+      if (activeProgress) {
+        localStorage.setItem(BASE_PROGRESS, activeProgress);
+        localStorage.setItem(courseProgressKey, activeProgress);
+      } else {
+        localStorage.removeItem(BASE_PROGRESS);
+      }
+      localStorage.setItem(BASE_OWNER, `${activeId}:${COURSE_ID}`);
+      sessionStorage.setItem(ACTIVE_COURSE, COURSE_ID);
 
       let html = "";
       try {
@@ -78,7 +95,8 @@
       }
 
       html = html.replace(/<head([^>]*)>/i, '<head$1><base href="./">');
-      html = html.replace(/<\/body>/i, '<script src="progression-v54.js?v=5.4.5"><\/script><script src="exercise-fixes-v545.js?v=5.4.5"><\/script><script src="profile-app.js?v=5.4.5"><\/script></body>');
+      html = html.replace(/<body([^>]*)>/i, '<body$1 data-course="tagalog">');
+      html = html.replace(/<\/body>/i, '<script src="progression-v54.js?v=5.4.6"><\/script><script src="exercise-fixes-v545.js?v=5.4.6"><\/script><script src="profile-app.js?v=5.4.6"><\/script></body>');
       document.open();
       document.write(html);
       document.close();
