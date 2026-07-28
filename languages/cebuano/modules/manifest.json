@@ -3,6 +3,7 @@
   "packs": [
     "introductions.json",
     "origin.json",
-    "wellbeing.json"
+    "wellbeing.json",
+    "questions.json"
   ]
 }
