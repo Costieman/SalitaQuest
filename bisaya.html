@@ -89,7 +89,7 @@
         }
       }
 
-      html = html.replace(/<head([^>]*)>/i, '<head$1><base href="./">');
+      html = html.replace(/<head([^>]*)>/i, '<head$1><base href="./"><link rel="stylesheet" href="bisaya-review-regions.css?v=0.3.0">');
       html = html.replace(/<body([^>]*)>/i, '<body$1 data-course="cebuano">');
       html = html.replaceAll("Tagalog", "Bisaya");
       html = html.replaceAll("Taglish", "Bisaya-English");

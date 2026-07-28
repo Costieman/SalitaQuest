@@ -9,7 +9,7 @@ const fail = message => {
   throw new Error(message);
 };
 
-for (const file of ["bisaya-app-loader.js", "profile-app.js", "service-worker.js"]) {
+for (const file of ["bisaya-app-loader.js", "bisaya-review-regions.js", "profile-app.js", "service-worker.js"]) {
   new vm.Script(read(file), {filename:file});
 }
 
@@ -25,6 +25,20 @@ if (!Array.isArray(course.map) || course.map.length !== 13) fail("The Bisaya map
 
 const mapIds = course.map.map(place => place.id);
 if (new Set(mapIds).size !== mapIds.length) fail("Duplicate map IDs found");
+
+const reviewMap = course.map.filter(place => place.type);
+const expectedReviewMap = [
+  ["MAP-11", "Memory Camp", "review"],
+  ["MAP-12", "Echo Cave", "audio-review"],
+  ["MAP-13", "Campfire Review", "final-review"]
+];
+if (reviewMap.length !== expectedReviewMap.length) fail("The Bisaya map must contain exactly three review regions");
+expectedReviewMap.forEach(([id, region, type], index) => {
+  const actual = reviewMap[index];
+  if (!actual || actual.id !== id || actual.region !== region || actual.type !== type) {
+    fail(`Review region ${id} is missing or out of order`);
+  }
+});
 
 const moduleIds = course.modules.map(module => module.id);
 if (new Set(moduleIds).size !== moduleIds.length) fail("Duplicate module IDs found");
@@ -107,10 +121,36 @@ const loader = read("bisaya-app-loader.js");
 if (loader.includes('/api/speech')) fail("Bisaya loader must not call the Tagalog speech endpoint");
 if (!loader.includes('"ceb-PH"')) fail("Bisaya loader must specify the Cebuano language tag");
 
+const reviewRuntime = read("bisaya-review-regions.js");
+for (const marker of [
+  "Memory Camp",
+  "Echo Cave",
+  "Campfire Review",
+  "startMemoryCamp",
+  "openEchoCave",
+  "startCampfireReview",
+  'switchView("audioReview")',
+  "BOSS_ITEMS.splice"
+]) {
+  if (!reviewRuntime.includes(marker)) fail(`Review-region runtime marker missing: ${marker}`);
+}
+if (reviewRuntime.includes('/api/speech') || reviewRuntime.includes('fil-PH')) {
+  fail("Review regions must not introduce Tagalog speech or speech endpoints");
+}
+const challengeStart = reviewRuntime.indexOf("const FINAL_CHALLENGE_ITEMS");
+const challengeEnd = reviewRuntime.indexOf("function reviewReadiness", challengeStart);
+const challengeBlock = reviewRuntime.slice(challengeStart, challengeEnd);
+const challengeCount = (challengeBlock.match(/\bprompt:/g) || []).length;
+if (challengeCount !== 10) fail(`Campfire Review must contain exactly ten challenge questions; found ${challengeCount}`);
+
+const profileApp = read("profile-app.js");
+if (!profileApp.includes("bisaya-review-regions.js")) fail("The Bisaya profile runtime must load the review-region script");
+
 const serviceWorker = read("service-worker.js");
 for (const packName of manifest.packs) {
   const expectedPath = `./languages/cebuano/modules/${packName}`;
   if (!serviceWorker.includes(expectedPath)) fail(`Offline cache is missing module pack: ${expectedPath}`);
 }
+if (!serviceWorker.includes("./bisaya-review-regions.js")) fail("Offline cache is missing the Bisaya review-region runtime");
 
-console.log(`Validated ${course.map.length} locations, ${course.modules.length} modules, ${items.length} items, and ${exercises.length} starter exercises.`);
+console.log(`Validated ${course.map.length} locations, ${course.modules.length} modules, ${items.length} items, ${exercises.length} starter exercises, and ${reviewMap.length} review regions.`);
