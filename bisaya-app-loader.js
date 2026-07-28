@@ -23,7 +23,19 @@
 
   function normaliseCourse(course) {
     const moduleId = id => id === "codeSwitching" ? "taglish" : id;
-    const modules = course.modules.map(module => ({...module, id:moduleId(module.id)}));
+    const items = course.items.map(item => ({...item, module:moduleId(item.module)}));
+    const modulesWithContent = new Set(items.map(item => item.module));
+    const unavailableThreshold = items.length * 5 + 1;
+    let unreleasedRegionReached = false;
+    const modules = course.modules.map((module, index) => {
+      const id = moduleId(module.id);
+      if (index > 0 && (!modulesWithContent.has(id) || unreleasedRegionReached)) unreleasedRegionReached = true;
+      return {
+        ...module,
+        id,
+        unlockAt: unreleasedRegionReached ? unavailableThreshold + index : module.unlockAt
+      };
+    });
     const moduleMeta = {};
     course.map.forEach(place => {
       if (!place.module) return;
@@ -34,7 +46,6 @@
         terrain: place.terrain
       };
     });
-    const items = course.items.map(item => ({...item, module:moduleId(item.module)}));
     return {modules, moduleMeta, items};
   }
 
@@ -146,7 +157,6 @@
       script.textContent = transformed;
       document.body.appendChild(script);
 
-      await loadScript("./progression-v54.js?v=5.4.6-bisaya");
       await loadScript("./exercise-fixes-v545.js?v=5.4.6-bisaya");
       await loadScript("./profile-app.js?v=5.4.6-bisaya");
     } catch (error) {
