@@ -11,12 +11,13 @@ This directory contains the Cebuano/Sinugbuanong Binisaya language layer for Sal
 - Question Crossroads: clarification, repetition, slower speech, meanings, essential questions, and requests for help
 - Market Port: wants, availability, quantities, prices, ordering, payment, change, and receipts
 - Grammar Bridge: pronouns, noun markers, linkers, location words, demonstratives, and high-frequency particles
-- 122 course items across the first seven regions
-- 71 authored starter exercises, with exactly six tokens in every sentence-builder word bank
+- Verb Volcano: verb roots, actor-focused aspect patterns, ability forms, goal focus, transfer focus, negation, and time cues
+- 142 course items across the first eight regions
+- 83 authored starter exercises, with exactly six tokens in every sentence-builder word bank
 - Separate progress for each learner and language
 - In-app switching between Tagalog and Bisaya through the learner-profile menu
 
-The remaining regions stay visible on the shared map but remain locked until reviewed content is added. The next planned module is Verb Volcano, introducing high-value roots and useful aspect and voice patterns through complete sentences.
+The remaining regions stay visible on the shared map but remain locked until reviewed content is added. The next planned module is Spanish Square, focusing on Spanish-origin vocabulary that is fully integrated into everyday Cebuano.
 
 ## Structure
 
@@ -28,6 +29,7 @@ The remaining regions stay visible on the shared map but remain locked until rev
 - `modules/questions.json` — Question Crossroads content and dialogue
 - `modules/food.json` — Market Port content and dialogue
 - `modules/grammar.json` — Grammar Bridge content and dialogue
+- `modules/verbs.json` — Verb Volcano content and dialogue
 
 Additional regions should be implemented as independent module packs and added to the manifest. This keeps the Cebuano content maintainable while the application engine remains shared with Tagalog.
 
@@ -50,6 +52,10 @@ All lesson material remains marked for fluent or native Cebuano review before a 
 - Grammar Bridge avoids presenting `ang`, `og`, and `sa` as direct one-word equivalents of English articles or prepositions. Their lesson descriptions focus on how they mark relationships within Cebuano sentences.
 - `kita` and `kami` are taught separately because including or excluding the listener changes the meaning of “we.”
 - Particles such as `man`, `ra`, `pa`, `na`, and `gyud` are introduced through complete phrases because their English translation depends strongly on context.
+- Verb Volcano describes Cebuano through aspect, focus, mood, time cues, and common verb classes rather than forcing every form into an English past/present/future table.
+- `mo-/mu-`, `ni-/mi-`, and other variants are retained where documented. Learners should copy natural local usage rather than treating one spelling as universally correct.
+- `gi-`, `-on`, and `i-` are introduced as recognition and controlled-use patterns. Their full focus systems are broader than a single English passive or object construction.
+- Verb affixes must not be attached mechanically to every root. The course teaches high-frequency forms in complete sentences and keeps the module marked for fluent review.
 
 ## Audio policy
 
@@ -89,7 +95,7 @@ The validator checks:
 
 - John U. Wolff, *A Dictionary of Cebuano Visayan* (1972), digitised search edition
 - Bohol.ph Peace Corps-derived Cebuano phrasebook
-- *Cebuano Grammar Notes*, University of Hawai‘i Press digital edition
+- *Cebuano Grammar Notes* and *Cebuano for Beginners*, University of Hawai‘i Press digital editions
 - Universal Dependencies Cebuano documentation for markers, linkers, and particles
 - Contemporary Cebuano teaching references used to compare regional and conversational alternatives
 
