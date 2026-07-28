@@ -1,7 +1,7 @@
-const CACHE_NAME = "salita-quest-v5-4-bisaya-question-crossroads-r11";
+const CACHE_NAME = "salita-quest-v5-4-bisaya-market-port-r12";
 const STATIC_FILES = [
   "./", "./index.html", "./app.html", "./bisaya.html", "./bisaya-app-loader.js", "./profile-shell.css", "./profile-app.js", "./progression-v54.js", "./exercise-fixes-v545.js",
-  "./style.css", "./app.js", "./languages/cebuano/course.json", "./languages/cebuano/README.md", "./languages/cebuano/modules/manifest.json", "./languages/cebuano/modules/introductions.json", "./languages/cebuano/modules/origin.json", "./languages/cebuano/modules/wellbeing.json", "./languages/cebuano/modules/questions.json", "./manifest.webmanifest", "./icons/icon-192.png", "./icons/icon-512.png",
+  "./style.css", "./app.js", "./languages/cebuano/course.json", "./languages/cebuano/README.md", "./languages/cebuano/modules/manifest.json", "./languages/cebuano/modules/introductions.json", "./languages/cebuano/modules/origin.json", "./languages/cebuano/modules/wellbeing.json", "./languages/cebuano/modules/questions.json", "./languages/cebuano/modules/food.json", "./manifest.webmanifest", "./icons/icon-192.png", "./icons/icon-512.png",
   "./avatars/tarsier.png", "./avatars/eagle.png", "./avatars/tamaraw.png", "./avatars/peacock.png",
   "./avatars/orchid.png", "./avatars/jade.png", "./avatars/rafflesia.png", "./avatars/anahaw.png"
 ];
