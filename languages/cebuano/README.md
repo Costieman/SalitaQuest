@@ -1,44 +1,61 @@
-# Salita Quest: Bisaya — Cebuano course pack
+# Salita Quest: Bisaya
 
-This directory starts a Cebuano/Sinugbuanong Binisaya edition of Salita Quest while retaining the existing interface, map, reward system, mastery logic, sentence-builder exercises, profiles, and review modes.
+This directory contains the Cebuano/Sinugbuanong Binisaya language layer for Salita Quest.
 
-## Current scope
+## Current playable scope
 
-- Complete 13-location map metadata
-- Ten reusable teaching modules
-- A separate Cebuano progress namespace
-- Beginners Bay vocabulary and phrase analysis
-- Twelve starter exercises, including six-token sentence-builder banks
-- Accepted regional and spelling alternatives where they are common
+- Beginners Bay: greetings, courtesy, replies, and leave-taking
+- Name Village: names, preferred names, introductions, and occupations
+- 30 course items across the first two regions
+- 18 authored starter exercises, with exactly six tokens in every sentence-builder word bank
+- Separate progress for each learner and language
+- In-app switching between Tagalog and Bisaya through the learner-profile menu
 
-The course pack is intentionally separate from the Tagalog constants currently embedded in `app.js`. The next implementation step is to make the engine load a selected course pack rather than duplicating the application logic.
+The remaining regions stay visible on the shared map but remain locked until reviewed content is added.
+
+## Structure
+
+- `course.json` — course metadata, map, module definitions, Beginners Bay items, and initial exercises
+- `modules/manifest.json` — ordered list of additional module packs
+- `modules/introductions.json` — Name Village content and dialogue
+
+Additional regions should be implemented as independent module packs and added to the manifest. This keeps the Cebuano content maintainable while the application engine remains shared with Tagalog.
 
 ## Language policy
 
-The primary target is contemporary conversational Cebuano, commonly called Bisaya. “Bisaya” is broader than Cebuano and may also refer to other Visayan languages; the interface and documentation should therefore identify the course as Cebuano/Sinugbuanong Binisaya.
+The primary target is contemporary conversational Cebuano, commonly called Bisaya. The course does not treat Cebuano, Hiligaynon, Waray, and other Visayan languages as interchangeable.
 
-Regional alternatives should be stored in `accepted` fields rather than deleted. Examples in the foundation pack include:
+Regional, spelling, and register alternatives may be recorded in `accepted` fields. Alternatives should be accepted only when they preserve the intended meaning and remain natural in a relevant Cebuano-speaking context.
 
-- `pud` / `sad`
-- `palihug` / `palihog`
-- `gabii` / `gabi-i`
-- `walay sapayan` / `way sapayan`
+All lesson material remains marked for fluent or native Cebuano review before a production release.
 
-A fluent Cebuano speaker should review each completed module before it is marked production-ready, especially pronunciation, particle use, register, and regionally marked vocabulary.
+## Audio policy
 
-## Integration plan
+Tagalog pronunciation must never be substituted for Cebuano. The Bisaya runtime uses only:
 
-1. Extract the Tagalog `MODULES`, `MODULE_META`, `ITEMS`, and exercise data from `app.js` into a Tagalog course pack.
-2. Add a small course loader that selects `tagalog` or `cebuano` before the learning interface opens.
-3. Namespace progress by course and learner so Tagalog and Cebuano mastery never overwrite one another.
-4. Replace hard-coded labels such as “Tagalog” with values from the selected course pack.
-5. Add Cebuano-capable audio; never use Tagalog speech as a pronunciation fallback.
-6. Run schema validation and manual language review before expanding beyond Beginners Bay.
+1. verified static audio mapped to `ceb-PH`; or
+2. a browser voice explicitly identified as Cebuano.
 
-## Reference material used for the foundation
+When neither is available, audio remains disabled and the written lesson continues normally.
 
-- John U. Wolff, *A Dictionary of Cebuano Visayan* (1972), digitised search edition: https://www.bohol.ph/wced.php
-- Peace Corps-derived Cebuano phrasebook hosted by Bohol.ph: https://www.bohol.ph/article123.html
-- Learn Bisaya essential phrase guide: https://learnbisaya.net/blog/essential-bisaya-phrases-your-first-steps-to-speaking-cebuano
+## Progress compatibility
 
-These references support initial drafting but do not replace native-speaker review of contemporary usage.
+Tagalog and Cebuano progress use separate profile-and-course keys. Existing Tagalog progress is migrated to the Tagalog namespace and is not overwritten when the learner switches to Bisaya.
+
+## Validation
+
+Run:
+
+```bash
+node scripts/validate-bisaya.mjs
+```
+
+The validator checks JavaScript syntax, JSON parsing, map and module integrity, duplicate item IDs, exercise references, engine transformation markers, the six-token sentence-builder rule, and the absence of calls to the Tagalog speech endpoint.
+
+## Reference material used for drafting
+
+- John U. Wolff, *A Dictionary of Cebuano Visayan* (1972), digitised search edition
+- Bohol.ph Cebuano phrasebook, including biographical questions and introductions
+- Omniglot and Wikivoyage Cebuano phrase references for comparison of common alternatives
+
+These sources support initial drafting but do not replace fluent-speaker review of contemporary usage.
