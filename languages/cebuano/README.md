@@ -14,7 +14,7 @@ This directory contains the Cebuano/Sinugbuanong Binisaya language layer for Sal
 - Separate progress for each learner and language
 - In-app switching between Tagalog and Bisaya through the learner-profile menu
 
-The remaining regions stay visible on the shared map but remain locked until reviewed content is added.
+The remaining regions stay visible on the shared map but remain locked until reviewed content is added. The next planned module is Market Port, covering food, wants, prices, quantities, ordering, and payment.
 
 ## Structure
 
