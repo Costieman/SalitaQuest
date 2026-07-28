@@ -78,7 +78,7 @@
       }
 
       html = html.replace(/<head([^>]*)>/i, '<head$1><base href="./">');
-      html = html.replace(/<\/body>/i, '<script src="profile-app.js"><\/script></body>');
+      html = html.replace(/<\/body>/i, '<script src="progression-v54.js?v=5.4.4"><\/script><script src="profile-app.js?v=5.4.4"><\/script></body>');
       document.open();
       document.write(html);
       document.close();
