@@ -1,0 +1,156 @@
+(() => {
+  "use strict";
+
+  const COURSE_URL = "./languages/cebuano/course.json";
+  const ENGINE_URL = "./app.js";
+
+  function replaceBlock(source, startMarker, endMarker, replacement) {
+    const start = source.indexOf(startMarker);
+    const end = source.indexOf(endMarker, start + startMarker.length);
+    if (start < 0 || end < 0) throw new Error(`Could not replace ${startMarker}`);
+    return `${source.slice(0, start)}${replacement}\n\n${source.slice(end)}`;
+  }
+
+  function loadScript(src) {
+    return new Promise((resolve, reject) => {
+      const script = document.createElement("script");
+      script.src = src;
+      script.onload = resolve;
+      script.onerror = () => reject(new Error(`Could not load ${src}`));
+      document.body.appendChild(script);
+    });
+  }
+
+  function normaliseCourse(course) {
+    const moduleId = id => id === "codeSwitching" ? "taglish" : id;
+    const modules = course.modules.map(module => ({...module, id:moduleId(module.id)}));
+    const moduleMeta = {};
+    course.map.forEach(place => {
+      if (!place.module) return;
+      moduleMeta[moduleId(place.module)] = {
+        region: place.region,
+        x: place.x,
+        y: place.y,
+        terrain: place.terrain
+      };
+    });
+    const items = course.items.map(item => ({...item, module:moduleId(item.module)}));
+    return {modules, moduleMeta, items};
+  }
+
+  function buildDialogues(modules) {
+    const placeholders = Object.fromEntries(modules.map(module => [module.id, {
+      title: module.title,
+      level: module.id === "greetings" ? "Beginner 1" : "Coming soon",
+      note: module.id === "greetings"
+        ? "These expressions introduce conversational Cebuano. Regional alternatives are accepted where they remain natural and widely understood."
+        : "This region is part of the Bisaya roadmap but its reviewed lesson content has not yet been released.",
+      lines: []
+    }]));
+
+    placeholders.greetings = {
+      title: "Your first Bisaya greeting",
+      level: "Beginner 1",
+      note: "Maayong buntag is a time-of-day greeting. Kumusta is common and Spanish-derived, while maayo ra ko gives a natural everyday response.",
+      lines: [
+        {
+          speaker:"A",
+          text:"Maayong buntag!",
+          tokens:[["Maayo-ng","good-LINK"],["buntag","morning"]],
+          literal:"Good morning.",
+          natural:"Good morning!"
+        },
+        {
+          speaker:"B",
+          text:"Maayong buntag. Kumusta ka?",
+          tokens:[["Maayo-ng","good-LINK"],["buntag","morning"],["Kumusta","how-are-things"],["ka","you"]],
+          literal:"Good morning. How-are-things you?",
+          natural:"Good morning. How are you?"
+        },
+        {
+          speaker:"A",
+          text:"Maayo ra ko, salamat. Ikaw?",
+          tokens:[["Maayo","well"],["ra","just / only"],["ko","I"],["salamat","thanks"],["Ikaw","you"]],
+          literal:"Well just I, thanks. You?",
+          natural:"I’m fine, thank you. And you?"
+        },
+        {
+          speaker:"B",
+          text:"Maayo pud. Sige, amping!",
+          tokens:[["Maayo","well"],["pud","also"],["Sige","okay"],["amping","take care"]],
+          literal:"Well also. Okay, take care!",
+          natural:"I’m well too. Okay, take care!"
+        }
+      ]
+    };
+    return placeholders;
+  }
+
+  function buildBossItems() {
+    return [
+      {prompt:"Someone greets you: ‘Maayong buntag!’ Choose a natural reply.",answers:["maayong buntag","maayong buntag pud"],choices:["Maayong buntag","Dili","Walay sapayan"],hint:"Repeat the morning greeting."},
+      {prompt:"Someone asks: ‘Kumusta ka?’",answers:["maayo ra ko","okay ra ko","maayo man ko"],choices:["Maayo ra ko","Maayong gabii","Palihug"],hint:"Choose a natural wellbeing reply."},
+      {prompt:"Someone says: ‘Salamat!’",answers:["walay sapayan","way sapayan"],choices:["Walay sapayan","Pasayloa ko","Dili"],hint:"This means ‘You’re welcome’ or ‘No problem’."},
+      {prompt:"Someone says: ‘Amping!’",answers:["ikaw pud","ikaw sad"],choices:["Ikaw pud","Maayong buntag","Oo"],hint:"Pud and sad can both mean ‘too’, depending on regional preference."}
+    ];
+  }
+
+  function buildBadgesSource() {
+    return `const BADGES = [
+  {id:"first_step",icon:"🌱",name:"First Step",description:"Complete one exercise",test:s=>s.totalAnswers>=1},
+  {id:"first_greeting",icon:"👋",name:"First Bisaya Greeting",description:"Reach familiarity with six greeting items",test:s=>countMasteredInModule(s,"greetings",2)>=6},
+  {id:"boss_one",icon:"👑",name:"First Bisaya Meeting",description:"Pass the greeting challenge",test:s=>s.bossWins>=1}
+];`;
+  }
+
+  function transformEngine(engine, course) {
+    const {modules, moduleMeta, items} = normaliseCourse(course);
+    const dialogues = buildDialogues(modules);
+    const bossItems = buildBossItems();
+
+    let source = engine;
+    source = replaceBlock(source, "const MODULES =", "const MODULE_META =", `const MODULES = ${JSON.stringify(modules, null, 2)};`);
+    source = replaceBlock(source, "const MODULE_META =", "const ITEMS =", `const MODULE_META = ${JSON.stringify(moduleMeta, null, 2)};`);
+    source = replaceBlock(source, "const ITEMS =", "const DIALOGUES =", `const ITEMS = ${JSON.stringify(items, null, 2)};`);
+    source = replaceBlock(source, "const DIALOGUES =", "const BOSS_ITEMS =", `const DIALOGUES = ${JSON.stringify(dialogues, null, 2)};`);
+    source = replaceBlock(source, "const BOSS_ITEMS =", "const BADGES =", `const BOSS_ITEMS = ${JSON.stringify(bossItems, null, 2)};`);
+    source = replaceBlock(source, "const BADGES =", "const APP_VERSION =", buildBadgesSource());
+    source = source.replace(/const APP_VERSION = "[^"]+";/, 'const APP_VERSION = "5.4.6-bisaya-foundation";');
+    source = source.replaceAll("Tagalog", "Bisaya");
+    source = source.replaceAll("Taglish", "Bisaya-English");
+    source = source.replaceAll("Filipino speech playback", "Cebuano speech playback");
+    source = source.replaceAll('"fil-PH"', '"ceb-PH"');
+    source = source.replaceAll("'fil-PH'", "'ceb-PH'");
+    return `${source}\n//# sourceURL=bisaya-app.generated.js`;
+  }
+
+  function showError(error) {
+    console.error(error);
+    const main = document.querySelector(".main-area") || document.body;
+    main.innerHTML = `<section style="max-width:680px;margin:40px auto;padding:28px;border:1px solid #e5bcbc;border-radius:18px;background:#fff;color:#713434"><h2 style="margin-top:0">Bisaya course could not be loaded</h2><p>The shared Salita Quest interface is available, but the Cebuano course pack or engine could not be prepared. Reload the page after checking the connection.</p></section>`;
+  }
+
+  (async () => {
+    try {
+      const [courseResponse, engineResponse] = await Promise.all([
+        fetch(COURSE_URL, {cache:"no-store"}),
+        fetch(ENGINE_URL, {cache:"no-store"})
+      ]);
+      if (!courseResponse.ok) throw new Error(`Cebuano course unavailable (${courseResponse.status})`);
+      if (!engineResponse.ok) throw new Error(`Shared engine unavailable (${engineResponse.status})`);
+
+      const course = await courseResponse.json();
+      const engine = await engineResponse.text();
+      const transformed = transformEngine(engine, course);
+      const script = document.createElement("script");
+      script.textContent = transformed;
+      document.body.appendChild(script);
+
+      await loadScript("./progression-v54.js?v=5.4.6-bisaya");
+      await loadScript("./exercise-fixes-v545.js?v=5.4.6-bisaya");
+      await loadScript("./profile-app.js?v=5.4.6-bisaya");
+    } catch (error) {
+      showError(error);
+    }
+  })();
+})();
