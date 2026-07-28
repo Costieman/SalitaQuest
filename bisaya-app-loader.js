@@ -78,34 +78,10 @@
       level: "Beginner 1",
       note: "Maayong buntag is a time-of-day greeting. Kumusta is common and Spanish-derived, while maayo ra ko gives a natural everyday response.",
       lines: [
-        {
-          speaker:"A",
-          text:"Maayong buntag!",
-          tokens:[["Maayo-ng","good-LINK"],["buntag","morning"]],
-          literal:"Good morning.",
-          natural:"Good morning!"
-        },
-        {
-          speaker:"B",
-          text:"Maayong buntag. Kumusta ka?",
-          tokens:[["Maayo-ng","good-LINK"],["buntag","morning"],["Kumusta","how-are-things"],["ka","you"]],
-          literal:"Good morning. How-are-things you?",
-          natural:"Good morning. How are you?"
-        },
-        {
-          speaker:"A",
-          text:"Maayo ra ko, salamat. Ikaw?",
-          tokens:[["Maayo","well"],["ra","just / only"],["ko","I"],["salamat","thanks"],["Ikaw","you"]],
-          literal:"Well just I, thanks. You?",
-          natural:"I’m fine, thank you. And you?"
-        },
-        {
-          speaker:"B",
-          text:"Maayo pud. Sige, amping!",
-          tokens:[["Maayo","well"],["pud","also"],["Sige","okay"],["amping","take care"]],
-          literal:"Well also. Okay, take care!",
-          natural:"I’m well too. Okay, take care!"
-        }
+        {speaker:"A",text:"Maayong buntag!",tokens:[["Maayo-ng","good-LINK"],["buntag","morning"]],literal:"Good morning.",natural:"Good morning!"},
+        {speaker:"B",text:"Maayong buntag. Kumusta ka?",tokens:[["Maayo-ng","good-LINK"],["buntag","morning"],["Kumusta","how-are-things"],["ka","you"]],literal:"Good morning. How-are-things you?",natural:"Good morning. How are you?"},
+        {speaker:"A",text:"Maayo ra ko, salamat. Ikaw?",tokens:[["Maayo","well"],["ra","just / only"],["ko","I"],["salamat","thanks"],["Ikaw","you"]],literal:"Well just I, thanks. You?",natural:"I’m fine, thank you. And you?"},
+        {speaker:"B",text:"Maayo pud. Sige, amping!",tokens:[["Maayo","well"],["pud","also"],["Sige","okay"],["amping","take care"]],literal:"Well also. Okay, take care!",natural:"I’m well too. Okay, take care!"}
       ]
     };
 
@@ -134,6 +110,80 @@
 ];`;
   }
 
+  function buildHandsFreeSpeechSource() {
+    return `async function handsFreeSpeak(text,lang,runId) {
+  if(handsFreeReview.runId!==runId || !handsFreeReview.playing)return false;
+  if(state.settings.naturalVoice && location.protocol.startsWith("http")){
+    try{
+      const staticUrl=await staticAudioUrl(text,lang);
+      if(staticUrl){
+        if(handsFreeReview.runId!==runId)return false;
+        if(activeAudio){activeAudio.pause();activeAudio=null;}
+        const audio=new Audio(staticUrl);activeAudio=audio;
+        const ok=await new Promise(resolve=>{
+          let settled=false;const finish=value=>{if(settled)return;settled=true;handsFreeReview.currentSpeechResolve=null;resolve(value);};
+          handsFreeReview.currentSpeechResolve=()=>finish(false);audio.onended=()=>finish(true);audio.onerror=()=>finish(false);audio.play().catch(()=>finish(false));
+        });
+        if(activeAudio===audio)activeAudio=null;
+        if(ok)return handsFreeReview.runId===runId && handsFreeReview.playing;
+      }
+    }catch{}
+  }
+  if(!("speechSynthesis" in window))return false;
+  const voices=speechSynthesis.getVoices();
+  const preferred=lang==="ceb-PH"?voices.find(v=>v.lang.toLowerCase().startsWith("ceb")):voices.find(v=>v.lang.toLowerCase().startsWith("en-gb"))||voices.find(v=>v.lang.toLowerCase().startsWith("en"));
+  if(lang==="ceb-PH"&&!preferred)return false;
+  return await new Promise(resolve=>{
+    let settled=false;const finish=value=>{if(settled)return;settled=true;handsFreeReview.currentSpeechResolve=null;resolve(value);};
+    handsFreeReview.currentSpeechResolve=()=>finish(false);speechSynthesis.cancel();
+    const utterance=new SpeechSynthesisUtterance(text);utterance.lang=lang;utterance.rate=lang==="ceb-PH"?.78:.9;utterance.pitch=1;
+    if(preferred)utterance.voice=preferred;utterance.onend=()=>finish(true);utterance.onerror=()=>finish(false);speechSynthesis.speak(utterance);
+  });
+}`;
+  }
+
+  function buildCebuanoSpeechSource() {
+    return `async function speakFilipino(text, sourceButton=null) {
+  const btn=sourceButton || document.getElementById("audioBtn");
+  const originalButtonText=btn?.textContent || "🔊";
+  if(activeAudio){activeAudio.pause();activeAudio=null;}
+  if(state.settings.naturalVoice && location.protocol.startsWith("http")) {
+    try {
+      if(btn){btn.disabled=true;btn.textContent="Loading audio…";}
+      const staticUrl=await staticAudioUrl(text,"ceb-PH");
+      if(staticUrl){
+        activeAudio=new Audio(staticUrl);await activeAudio.play();
+        if(btn){btn.textContent=sourceButton?originalButtonText:"🔊 Replay pronunciation";btn.disabled=false;}return;
+      }
+    } catch {}
+  }
+  if(btn){btn.disabled=false;btn.textContent=sourceButton?originalButtonText:"🔊 Hear pronunciation";}
+  fallbackSpeech(text);
+}
+
+function fallbackSpeech(text) {
+  if(!("speechSynthesis" in window)){toast("Speech playback is not supported in this browser.");return;}
+  const voices=speechSynthesis.getVoices();
+  const cebVoice=voices.find(v=>v.lang.toLowerCase().startsWith("ceb"));
+  if(!cebVoice){toast("A verified Cebuano voice is not installed yet. Audio remains disabled rather than using Tagalog pronunciation.");return;}
+  speechSynthesis.cancel();const utterance=new SpeechSynthesisUtterance(text);utterance.lang="ceb-PH";utterance.rate=0.78;utterance.pitch=1;utterance.voice=cebVoice;speechSynthesis.speak(utterance);
+}`;
+  }
+
+  function buildCebuanoVoiceStatusSource() {
+    return `async function checkVoiceService() {
+  const status=document.getElementById("voiceStatus");if(!status)return;
+  if(!state.settings.naturalVoice){status.textContent="Cebuano audio is turned off.";status.className="voice-status";return;}
+  const manifest=location.protocol.startsWith("http")?await loadStaticAudioManifest():null;
+  const count=Object.keys(manifest?.entries?.["ceb-PH"]||{}).length;
+  if(count){status.textContent=\`Verified Cebuano voice library ready · \${count} clips.\`;status.className="voice-status ready";return;}
+  const voices="speechSynthesis" in window?speechSynthesis.getVoices():[];
+  const hasCebuano=voices.some(v=>v.lang.toLowerCase().startsWith("ceb"));
+  status.textContent=hasCebuano?"A Cebuano browser voice is available.":"Verified Cebuano audio is not installed yet; Tagalog voice substitution is disabled.";
+  status.className=\`voice-status \${hasCebuano?"ready":"warning"}\`;
+}`;
+  }
+
   function transformEngine(engine, course, packs) {
     const {modules, moduleMeta, items} = normaliseCourse(course, packs);
     const dialogues = buildDialogues(modules, packs);
@@ -146,10 +196,13 @@
     source = replaceBlock(source, "const DIALOGUES =", "const BOSS_ITEMS =", `const DIALOGUES = ${JSON.stringify(dialogues, null, 2)};`);
     source = replaceBlock(source, "const BOSS_ITEMS =", "const BADGES =", `const BOSS_ITEMS = ${JSON.stringify(bossItems, null, 2)};`);
     source = replaceBlock(source, "const BADGES =", "const APP_VERSION =", buildBadgesSource());
+    source = replaceBlock(source, "async function handsFreeSpeak", "async function startHandsFreeReview", buildHandsFreeSpeechSource());
+    source = replaceBlock(source, "async function speakFilipino", "async function checkVoiceService", buildCebuanoSpeechSource());
+    source = replaceBlock(source, "async function checkVoiceService", "function toast", buildCebuanoVoiceStatusSource());
     source = source.replace(/const APP_VERSION = "[^"]+";/, 'const APP_VERSION = "5.4.6-bisaya-foundation";');
     source = source.replaceAll("Tagalog", "Bisaya");
     source = source.replaceAll("Taglish", "Bisaya-English");
-    source = source.replaceAll("Filipino speech playback", "Cebuano speech playback");
+    source = source.replaceAll(" Filipino", " Cebuano");
     source = source.replaceAll('"fil-PH"', '"ceb-PH"');
     source = source.replaceAll("'fil-PH'", "'ceb-PH'");
     return `${source}\n//# sourceURL=bisaya-app.generated.js`;
