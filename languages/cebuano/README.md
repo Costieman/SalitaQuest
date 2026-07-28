@@ -8,8 +8,9 @@ This directory contains the Cebuano/Sinugbuanong Binisaya language layer for Sal
 - Name Village: names, preferred names, introductions, and occupations
 - Home Hills: origin, residence, family, and explaining that the learner is studying Bisaya
 - Feeling Forest: wellbeing, physical sensations, emotions, and common discomforts
-- 63 course items across the first four regions
-- 37 authored starter exercises, with exactly six tokens in every sentence-builder word bank
+- Question Crossroads: clarification, repetition, slower speech, meanings, essential questions, and requests for help
+- 82 course items across the first five regions
+- 47 authored starter exercises, with exactly six tokens in every sentence-builder word bank
 - Separate progress for each learner and language
 - In-app switching between Tagalog and Bisaya through the learner-profile menu
 
@@ -22,6 +23,7 @@ The remaining regions stay visible on the shared map but remain locked until rev
 - `modules/introductions.json` — Name Village content and dialogue
 - `modules/origin.json` — Home Hills content and dialogue
 - `modules/wellbeing.json` — Feeling Forest content and dialogue
+- `modules/questions.json` — Question Crossroads content and dialogue
 
 Additional regions should be implemented as independent module packs and added to the manifest. This keeps the Cebuano content maintainable while the application engine remains shared with Tagalog.
 
@@ -38,6 +40,7 @@ All lesson material remains marked for fluent or native Cebuano review before a 
 - Questions about marriage and family are taught because they occur in reference phrasebooks, but the lesson notes that they may be too personal in some contexts.
 - Physical and emotional expressions are taught as language patterns, not as medical guidance.
 - Experienced-state forms such as `gikapoy ko`, `gigutom ko`, and `giuhaw ko` are preserved rather than reshaped to imitate English adjective order.
+- Clarification phrases are deliberately repeated across exercises because they are recovery tools that must remain accessible under conversational pressure.
 
 ## Audio policy
 
@@ -65,7 +68,7 @@ The validator checks JavaScript syntax, JSON parsing, map and module integrity, 
 ## Reference material used for drafting
 
 - John U. Wolff, *A Dictionary of Cebuano Visayan* (1972), digitised search edition
-- Bohol.ph Cebuano phrasebook, including biographical, family, wellbeing, and physical-discomfort expressions
+- Bohol.ph Cebuano phrasebook, including biographical, family, wellbeing, clarification, and physical-discomfort expressions
 - Native-speaker-authored contemporary Cebuano learning references used to compare everyday alternatives
 - Omniglot and Wikivoyage Cebuano phrase references for comparison of common forms
 
