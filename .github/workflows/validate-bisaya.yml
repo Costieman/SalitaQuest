@@ -1,0 +1,23 @@
+name: Validate Bisaya edition
+
+on:
+  pull_request:
+  push:
+    branches:
+      - agent/bisaya-edition-foundation
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Validate Bisaya course and scripts
+        run: node scripts/validate-bisaya.mjs
