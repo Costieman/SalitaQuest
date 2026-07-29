@@ -1,0 +1,212 @@
+/* Compact, space-efficient home dashboard for desktop and laptop screens. */
+
+@media (min-width: 1001px) {
+  body[data-current-view="home"] .main-area {
+    padding-bottom: 42px;
+  }
+
+  body[data-current-view="home"] .topbar {
+    min-height: 86px;
+  }
+
+  body[data-current-view="home"] .mastery-rail-shell {
+    margin-bottom: 14px;
+  }
+
+  #homeView.view.active {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px 16px;
+    align-items: stretch;
+  }
+
+  #homeView > .hero-card,
+  #homeView > .activity-hub,
+  #homeView > .mobile-transfer-prompt,
+  #homeView > .journey-section,
+  #homeView > .dashboard-grid,
+  #homeView > .achievement-panel {
+    grid-column: 1 / -1;
+    margin: 0;
+  }
+
+  /* The activity cards already contain the actions, so the hero becomes a concise status strip. */
+  #homeView > .hero-card {
+    min-height: 0;
+    padding: 20px 25px;
+    display: block;
+    border-radius: 23px;
+  }
+
+  #homeView > .hero-card .hero-copy {
+    width: 100%;
+  }
+
+  #homeView > .hero-card .hero-copy h3 {
+    max-width: 900px;
+    margin: 9px 0 6px;
+    font-size: clamp(1.55rem, 2.45vw, 2.25rem);
+    line-height: 1.06;
+  }
+
+  #homeView > .hero-card .hero-copy p {
+    max-width: 940px;
+    margin: 0;
+    font-size: .86rem;
+    line-height: 1.42;
+  }
+
+  #homeView > .hero-card .hero-actions,
+  #homeView > .hero-card .hero-visual {
+    display: none !important;
+  }
+
+  /* Two columns on ordinary laptops. */
+  #homeView > .activity-hub {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 11px;
+  }
+
+  #homeView .activity-main {
+    min-height: 96px;
+    padding: 12px 13px;
+    grid-template-columns: 48px minmax(0, 1fr) auto;
+    gap: 10px;
+  }
+
+  #homeView .activity-art {
+    width: 46px;
+    height: 46px;
+    border-radius: 15px;
+  }
+
+  #homeView .activity-art .pictogram {
+    width: 34px;
+    height: 34px;
+  }
+
+  #homeView .activity-copy strong {
+    font-size: .9rem;
+  }
+
+  #homeView .activity-copy em {
+    font-size: .66rem;
+  }
+
+  /* Let the two momentum cards join the parent grid beside Daily Quests. */
+  #homeView > .game-dashboard {
+    display: contents;
+  }
+
+  #homeView .player-card,
+  #homeView .week-card,
+  #homeView > .daily-quests-card {
+    min-width: 0;
+    min-height: 0;
+    margin: 0;
+    align-self: stretch;
+  }
+
+  #homeView .player-card,
+  #homeView .week-card {
+    padding: 17px;
+  }
+
+  #homeView > .daily-quests-card {
+    grid-column: 1 / -1;
+    padding: 16px;
+  }
+
+  #homeView .quest-card-header {
+    margin-bottom: 10px;
+  }
+
+  #homeView .quest-card-header h3 {
+    margin: 4px 0;
+    font-size: 1.05rem;
+  }
+
+  #homeView .quest-card-header p:last-child,
+  #homeView .daily-quest-copy small {
+    display: none;
+  }
+
+  #homeView .daily-quest-list {
+    gap: 7px;
+  }
+
+  #homeView .daily-quest {
+    padding: 9px 10px;
+    gap: 8px;
+  }
+
+  #homeView .daily-quest-icon {
+    width: 34px;
+    height: 34px;
+  }
+
+  #homeView .quest-chest {
+    margin-top: 8px;
+    padding: 9px 10px;
+  }
+
+  #homeView > .conversation-spotlight,
+  #homeView > .home-topic-review {
+    min-width: 0;
+    margin: 0;
+  }
+
+  #homeView > .dashboard-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+}
+
+@media (min-width: 1320px) {
+  #homeView.view.active {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  #homeView > .activity-hub {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  #homeView > .daily-quests-card {
+    grid-column: auto;
+  }
+
+  #homeView > .home-topic-review {
+    grid-column: span 2;
+  }
+
+  #homeView > .dashboard-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1001px) and (max-height: 820px) {
+  #homeView > .hero-card {
+    padding: 16px 21px;
+  }
+
+  #homeView > .hero-card .hero-copy h3 {
+    margin: 7px 0 4px;
+    font-size: clamp(1.4rem, 2.1vw, 1.9rem);
+  }
+
+  #homeView > .activity-hub {
+    gap: 9px;
+  }
+
+  #homeView .activity-main {
+    min-height: 84px;
+    padding: 9px 11px;
+  }
+}
+
+/* Below desktop width, retain the established stacked mobile experience. */
+@media (max-width: 1000px) {
+  #homeView.view.active {
+    display: block;
+  }
+}
