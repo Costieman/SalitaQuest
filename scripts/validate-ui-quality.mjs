@@ -6,7 +6,7 @@ const root = process.cwd();
 const read = file => fs.readFileSync(path.join(root, file), "utf8");
 const fail = message => { throw new Error(message); };
 
-for (const file of ["ui-quality-fixes.js", "incorrect-order-feedback.js", "compact-desktop-layout.js", "mastery-feedback.js", "service-worker.js"]) {
+for (const file of ["ui-quality-fixes.js", "incorrect-order-feedback.js", "compact-desktop-layout.js", "mastery-feedback.js", "lesson-side-launcher.js", "service-worker.js"]) {
   new vm.Script(read(file), {filename:file});
 }
 
@@ -152,6 +152,49 @@ for (const marker of [
   if (!masteryConsoleCss.includes(marker)) fail(`Missing mastery-console centring style: ${marker}`);
 }
 
+const launcherRuntime = read("lesson-side-launcher.js");
+for (const marker of [
+  "__salitaQuestLessonSideLauncherInstalled",
+  'className = "lesson-mode-launcher"',
+  'data-launch-tab="daily"',
+  'data-launch-tab="quick"',
+  'data-start-mode="daily"',
+  'data-start-mode="quick"',
+  'startSession("quick", false, {length})',
+  'startSession("daily")',
+  'function activeSession()',
+  'session-console-active',
+  'session-console-idle',
+  'function phraseForCurrentExercise()',
+  'currentExercise?.audio || item.example || item.term',
+  'longTerm.insertAdjacentElement("afterend", audioButton)',
+  'renderFeedbackWithPersistentPronunciation',
+  'switchViewWithLessonLauncher'
+]) {
+  if (!launcherRuntime.includes(marker)) fail(`Missing contextual lesson-console marker: ${marker}`);
+}
+
+const launcherCss = read("lesson-side-launcher.css");
+for (const marker of [
+  ".lesson-mode-launcher",
+  ".lesson-launcher-tabs",
+  ".lesson-launcher-tab.active",
+  ".lesson-launcher-panel",
+  ".lesson-empty-state",
+  ".session-console-active > .session-console-heading",
+  ".session-console-active > .session-score",
+  ".session-console-idle > :not(.lesson-mode-launcher)",
+  ".lesson-session-idle .lesson-content > :not(.lesson-empty-state)",
+  ".audio-btn.lesson-audio-square:not(.hidden)",
+  "width: 156px",
+  "height: 156px",
+  'content: "Hear pronunciation"',
+  "max-height: 800px",
+  "prefers-reduced-motion"
+]) {
+  if (!launcherCss.includes(marker)) fail(`Missing contextual lesson-console style: ${marker}`);
+}
+
 for (const htmlFile of ["app.html", "bisaya.html"]) {
   const html = read(htmlFile);
   for (const asset of [
@@ -164,9 +207,16 @@ for (const htmlFile of ["app.html", "bisaya.html"]) {
     "compact-desktop-layout.css",
     "mastery-feedback.js",
     "mastery-feedback.css",
-    "mastery-console-overrides.css"
+    "mastery-console-overrides.css",
+    "lesson-side-launcher.js?v=5.4.18",
+    "lesson-side-launcher.css?v=5.4.18"
   ]) {
     if (!html.includes(asset)) fail(`${htmlFile} does not load ${asset}`);
+  }
+  const masteryIndex = html.indexOf("mastery-feedback.js?v=5.4.18");
+  const launcherIndex = html.indexOf("lesson-side-launcher.js?v=5.4.18");
+  if (!(masteryIndex >= 0 && launcherIndex > masteryIndex)) {
+    fail(`${htmlFile} must load the lesson launcher after mastery feedback so audio can sit below long-term mastery`);
   }
 }
 
@@ -181,9 +231,14 @@ for (const asset of [
   "./compact-desktop-layout.css",
   "./mastery-feedback.js",
   "./mastery-feedback.css",
-  "./mastery-console-overrides.css"
+  "./mastery-console-overrides.css",
+  "./lesson-side-launcher.js",
+  "./lesson-side-launcher.css"
 ]) {
   if (!serviceWorker.includes(asset)) fail(`Offline cache is missing ${asset}`);
 }
+if (!serviceWorker.includes("salita-quest-v5-4-lesson-console-r31")) {
+  fail("Service-worker cache was not bumped for the contextual lesson console release");
+}
 
-console.log("Validated dark-mode contrast, answer feedback, daily reviews, word breakdowns, animated correction of failed sentence builders, responsive desktop side console, single-screen lesson fitting, item mastery transitions, three-day long-term recall mastery, centred five-stage labels, mobile restoration, and offline assets.");
+console.log("Validated dark-mode contrast, answer feedback, daily reviews, word breakdowns, failed-sentence correction, single-screen lesson fitting, contextual Daily Session and Quick Review tabs, removal of duplicate desktop score rows, persistent square phrase pronunciation below long-term mastery, item mastery transitions, three-day durable recall, both language loaders, mobile restoration, and offline assets.");
