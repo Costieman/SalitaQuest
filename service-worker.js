@@ -1,6 +1,6 @@
-const CACHE_NAME = "salita-quest-v5-4-bisaya-review-regions-r18";
+const CACHE_NAME = "salita-quest-v5-4-ui-quality-r19";
 const STATIC_FILES = [
-  "./", "./index.html", "./app.html", "./bisaya.html", "./bisaya-app-loader.js", "./bisaya-review-regions.js", "./bisaya-review-regions.css", "./profile-shell.css", "./profile-app.js", "./progression-v54.js", "./exercise-fixes-v545.js",
+  "./", "./index.html", "./app.html", "./bisaya.html", "./bisaya-app-loader.js", "./bisaya-review-regions.js", "./bisaya-review-regions.css", "./ui-quality-fixes.js", "./ui-quality-fixes.css", "./ui-answer-breakdown.css", "./profile-shell.css", "./profile-app.js", "./progression-v54.js", "./exercise-fixes-v545.js",
   "./style.css", "./app.js", "./languages/cebuano/course.json", "./languages/cebuano/README.md", "./languages/cebuano/modules/manifest.json", "./languages/cebuano/modules/introductions.json", "./languages/cebuano/modules/origin.json", "./languages/cebuano/modules/wellbeing.json", "./languages/cebuano/modules/questions.json", "./languages/cebuano/modules/food.json", "./languages/cebuano/modules/grammar.json", "./languages/cebuano/modules/verbs.json", "./languages/cebuano/modules/spanish.json", "./languages/cebuano/modules/code-switching.json", "./manifest.webmanifest", "./icons/icon-192.png", "./icons/icon-512.png",
   "./avatars/tarsier.png", "./avatars/eagle.png", "./avatars/tamaraw.png", "./avatars/peacock.png",
   "./avatars/orchid.png", "./avatars/jade.png", "./avatars/rafflesia.png", "./avatars/anahaw.png"
