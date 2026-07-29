@@ -6,7 +6,7 @@ const root = process.cwd();
 const read = file => fs.readFileSync(path.join(root, file), "utf8");
 const fail = message => { throw new Error(message); };
 
-for (const file of ["ui-quality-fixes.js", "incorrect-order-feedback.js", "compact-desktop-layout.js", "mastery-feedback.js", "lesson-side-launcher.js", "service-worker.js"]) {
+for (const file of ["ui-quality-fixes.js", "incorrect-order-feedback.js", "compact-desktop-layout.js", "mastery-feedback.js", "lesson-side-launcher.js", "mobile-session-refinement.js", "service-worker.js"]) {
   new vm.Script(read(file), {filename:file});
 }
 
@@ -208,15 +208,18 @@ for (const htmlFile of ["app.html", "bisaya.html"]) {
     "mastery-feedback.js",
     "mastery-feedback.css",
     "mastery-console-overrides.css",
-    "lesson-side-launcher.js?v=5.4.18",
-    "lesson-side-launcher.css?v=5.4.18"
+    "lesson-side-launcher.js?v=5.4.19",
+    "lesson-side-launcher.css?v=5.4.19",
+    "mobile-session-refinement.js?v=5.4.19",
+    "mobile-session-refinement.css?v=5.4.19"
   ]) {
     if (!html.includes(asset)) fail(`${htmlFile} does not load ${asset}`);
   }
-  const masteryIndex = html.indexOf("mastery-feedback.js?v=5.4.18");
-  const launcherIndex = html.indexOf("lesson-side-launcher.js?v=5.4.18");
-  if (!(masteryIndex >= 0 && launcherIndex > masteryIndex)) {
-    fail(`${htmlFile} must load the lesson launcher after mastery feedback so audio can sit below long-term mastery`);
+  const masteryIndex = html.indexOf("mastery-feedback.js?v=5.4.19");
+  const launcherIndex = html.indexOf("lesson-side-launcher.js?v=5.4.19");
+  const mobileIndex = html.indexOf("mobile-session-refinement.js?v=5.4.19");
+  if (!(masteryIndex >= 0 && launcherIndex > masteryIndex && mobileIndex > launcherIndex)) {
+    fail(`${htmlFile} must load mastery feedback, lesson launcher and mobile refinement in dependency order`);
   }
 }
 
@@ -233,12 +236,14 @@ for (const asset of [
   "./mastery-feedback.css",
   "./mastery-console-overrides.css",
   "./lesson-side-launcher.js",
-  "./lesson-side-launcher.css"
+  "./lesson-side-launcher.css",
+  "./mobile-session-refinement.js",
+  "./mobile-session-refinement.css"
 ]) {
   if (!serviceWorker.includes(asset)) fail(`Offline cache is missing ${asset}`);
 }
-if (!serviceWorker.includes("salita-quest-v5-4-lesson-console-r31")) {
-  fail("Service-worker cache was not bumped for the contextual lesson console release");
+if (!serviceWorker.includes("salita-quest-v5-4-mobile-refinement-r32")) {
+  fail("Service-worker cache was not bumped for the mobile refinement release");
 }
 
-console.log("Validated dark-mode contrast, answer feedback, daily reviews, word breakdowns, failed-sentence correction, single-screen lesson fitting, contextual Daily Session and Quick Review tabs, removal of duplicate desktop score rows, persistent square phrase pronunciation below long-term mastery, item mastery transitions, three-day durable recall, both language loaders, mobile restoration, and offline assets.");
+console.log("Validated dark-mode contrast, answer feedback, daily reviews, word breakdowns, failed-sentence correction, desktop lesson fitting, contextual Daily Session and Quick Review tabs, persistent square pronunciation, item mastery transitions, three-day durable recall, mobile refinement load order, both language loaders, and offline assets.");
