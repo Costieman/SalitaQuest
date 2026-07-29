@@ -6,7 +6,7 @@ const root = process.cwd();
 const read = file => fs.readFileSync(path.join(root, file), "utf8");
 const fail = message => { throw new Error(message); };
 
-for (const file of ["ui-quality-fixes.js", "compact-desktop-layout.js", "service-worker.js"]) {
+for (const file of ["ui-quality-fixes.js", "compact-desktop-layout.js", "mastery-feedback.js", "service-worker.js"]) {
   new vm.Script(read(file), {filename:file});
 }
 
@@ -78,6 +78,38 @@ for (const marker of [
   if (!compactCss.includes(marker)) fail(`Missing single-screen lesson style: ${marker}`);
 }
 
+const masteryRuntime = read("mastery-feedback.js");
+for (const marker of [
+  "MIN_DURABLE_GAP_MS = 3 * 24 * 60 * 60 * 1000",
+  "longTermMastery",
+  "longTermRecalls",
+  "retentionGainForGap",
+  "mastery-stage-bar",
+  "long-term-mastery-card",
+  "renderFeedbackWithMasteryProgress",
+  "Built only by correct recall after 3+ days away."
+]) {
+  if (!masteryRuntime.includes(marker)) fail(`Missing mastery-feedback runtime marker: ${marker}`);
+}
+if (masteryRuntime.includes("12+ hours") || masteryRuntime.includes("12 hours away")) {
+  fail("Long-term mastery must require a three-day gap, not twelve hours.");
+}
+
+const masteryCss = read("mastery-feedback.css");
+for (const marker of [
+  ".mastery-stage-bar",
+  "grid-template-columns: repeat(5",
+  "justify-content: center",
+  ".mastery-stage-bar > span.active",
+  ".mastery-stage-arrive",
+  ".long-term-mastery-track",
+  ".long-term-mastery-fill",
+  ".long-term-mastery-card.true-mastery",
+  "prefers-reduced-motion"
+]) {
+  if (!masteryCss.includes(marker)) fail(`Missing mastery-feedback style: ${marker}`);
+}
+
 for (const htmlFile of ["app.html", "bisaya.html"]) {
   const html = read(htmlFile);
   for (const asset of [
@@ -85,7 +117,9 @@ for (const htmlFile of ["app.html", "bisaya.html"]) {
     "ui-quality-fixes.css",
     "ui-answer-breakdown.css",
     "compact-desktop-layout.js",
-    "compact-desktop-layout.css"
+    "compact-desktop-layout.css",
+    "mastery-feedback.js",
+    "mastery-feedback.css"
   ]) {
     if (!html.includes(asset)) fail(`${htmlFile} does not load ${asset}`);
   }
@@ -97,9 +131,11 @@ for (const asset of [
   "./ui-quality-fixes.css",
   "./ui-answer-breakdown.css",
   "./compact-desktop-layout.js",
-  "./compact-desktop-layout.css"
+  "./compact-desktop-layout.css",
+  "./mastery-feedback.js",
+  "./mastery-feedback.css"
 ]) {
   if (!serviceWorker.includes(asset)) fail(`Offline cache is missing ${asset}`);
 }
 
-console.log("Validated dark-mode contrast, answer feedback, daily reviews, word breakdowns, responsive desktop side console, single-screen lesson fitting, mobile restoration, and offline assets.");
+console.log("Validated dark-mode contrast, answer feedback, daily reviews, word breakdowns, responsive desktop side console, single-screen lesson fitting, item mastery transitions, three-day long-term recall mastery, centred stage labels, mobile restoration, and offline assets.");
