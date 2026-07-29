@@ -6,6 +6,7 @@ on:
     branches:
       - main
       - "agent/bisaya-**"
+      - "agent/dark-mode-**"
 
 permissions:
   contents: read
@@ -22,3 +23,5 @@ jobs:
           node-version: "20"
       - name: Validate Bisaya course and scripts
         run: node scripts/validate-bisaya.mjs
+      - name: Validate shared UI quality release
+        run: node scripts/validate-ui-quality.mjs
