@@ -53,24 +53,29 @@ for (const marker of [
 
 const compactRuntime = read("compact-desktop-layout.js");
 for (const marker of [
-  "session-rewards-strip",
-  "lessonCard.insertBefore(rewards, footer)",
-  "data-current-view",
-  "MutationObserver"
+  "desktop-session-console",
+  "lessonTopline.insertAdjacentElement",
+  "sessionPanel.insertBefore",
+  "matchMedia",
+  "lesson-topline-home",
+  "session-panel-home"
 ]) {
-  if (!compactRuntime.includes(marker)) fail(`Missing compact-layout runtime marker: ${marker}`);
+  if (!compactRuntime.includes(marker)) fail(`Missing desktop-console runtime marker: ${marker}`);
 }
 
 const compactCss = read("compact-desktop-layout.css");
 for (const marker of [
-  'body[data-current-view]:not([data-current-view="home"]) .mastery-milestones',
-  'body[data-current-view="learn"] .session-rewards-strip',
-  'body[data-current-view="learn"] .lesson-footer',
-  "position: sticky",
-  "bottom: 0",
-  "grid-template-columns: auto repeat(3"
+  'body[data-current-view="learn"] .topbar',
+  'body[data-current-view="learn"] .mastery-rail-shell',
+  'body[data-current-view="learn"] .learn-layout',
+  "grid-template-columns: minmax(0, 1fr) minmax(270px, 315px)",
+  'body[data-current-view="learn"] .desktop-session-console',
+  "height: 100dvh",
+  "overflow: hidden",
+  "position: static",
+  "max-height: 800px"
 ]) {
-  if (!compactCss.includes(marker)) fail(`Missing compact-layout style: ${marker}`);
+  if (!compactCss.includes(marker)) fail(`Missing single-screen lesson style: ${marker}`);
 }
 
 for (const htmlFile of ["app.html", "bisaya.html"]) {
@@ -97,4 +102,4 @@ for (const asset of [
   if (!serviceWorker.includes(asset)) fail(`Offline cache is missing ${asset}`);
 }
 
-console.log("Validated dark-mode contrast, answer feedback, daily reviews, word breakdowns, compact non-home progress, horizontal lesson rewards, sticky lesson actions, and offline assets.");
+console.log("Validated dark-mode contrast, answer feedback, daily reviews, word breakdowns, responsive desktop side console, single-screen lesson fitting, mobile restoration, and offline assets.");

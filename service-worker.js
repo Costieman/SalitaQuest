@@ -1,4 +1,4 @@
-const CACHE_NAME = "salita-quest-v5-4-compact-desktop-r20";
+const CACHE_NAME = "salita-quest-v5-4-single-screen-lessons-r21";
 const STATIC_FILES = [
   "./", "./index.html", "./app.html", "./bisaya.html", "./bisaya-app-loader.js", "./bisaya-review-regions.js", "./bisaya-review-regions.css", "./ui-quality-fixes.js", "./ui-quality-fixes.css", "./ui-answer-breakdown.css", "./compact-desktop-layout.js", "./compact-desktop-layout.css", "./profile-shell.css", "./profile-app.js", "./progression-v54.js", "./exercise-fixes-v545.js",
   "./style.css", "./app.js", "./languages/cebuano/course.json", "./languages/cebuano/README.md", "./languages/cebuano/modules/manifest.json", "./languages/cebuano/modules/introductions.json", "./languages/cebuano/modules/origin.json", "./languages/cebuano/modules/wellbeing.json", "./languages/cebuano/modules/questions.json", "./languages/cebuano/modules/food.json", "./languages/cebuano/modules/grammar.json", "./languages/cebuano/modules/verbs.json", "./languages/cebuano/modules/spanish.json", "./languages/cebuano/modules/code-switching.json", "./manifest.webmanifest", "./icons/icon-192.png", "./icons/icon-512.png",
