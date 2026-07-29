@@ -159,6 +159,72 @@
       return Boolean(home?.classList.contains("active")) && document.body.dataset.currentView !== "learn";
     }
 
+    function playDailyKeyChime() {
+      try {
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContextClass) return;
+        const context = new AudioContextClass();
+        const notes = [659.25, 783.99, 1046.5];
+        const start = context.currentTime + 0.04;
+        notes.forEach((frequency, index) => {
+          const oscillator = context.createOscillator();
+          const gain = context.createGain();
+          oscillator.type = index === 2 ? "triangle" : "sine";
+          oscillator.frequency.setValueAtTime(frequency, start + index * 0.13);
+          gain.gain.setValueAtTime(0.0001, start + index * 0.13);
+          gain.gain.exponentialRampToValueAtTime(index === 2 ? 0.16 : 0.11, start + index * 0.13 + 0.025);
+          gain.gain.exponentialRampToValueAtTime(0.0001, start + index * 0.13 + 0.42);
+          oscillator.connect(gain);
+          gain.connect(context.destination);
+          oscillator.start(start + index * 0.13);
+          oscillator.stop(start + index * 0.13 + 0.46);
+        });
+        window.setTimeout(() => context.close().catch(() => {}), 1200);
+      } catch {}
+    }
+
+    function createCelebrationLayer(count) {
+      document.querySelector(".daily-key-celebration")?.remove();
+      const layer = document.createElement("div");
+      layer.className = "daily-key-celebration";
+      layer.setAttribute("aria-live", "polite");
+      layer.innerHTML = `
+        <div class="daily-key-celebration-glow" aria-hidden="true"></div>
+        <div class="daily-key-celebration-banner" role="status">
+          <span>Daily Key earned!</span>
+          <strong>${count} of ${KEY_TARGET} keys this week</strong>
+        </div>
+        <div class="daily-key-spark-field" aria-hidden="true"></div>`;
+      document.body.appendChild(layer);
+
+      const field = layer.querySelector(".daily-key-spark-field");
+      for (let index = 0; index < 22; index += 1) {
+        const spark = document.createElement("i");
+        const angle = (360 / 22) * index + (index % 2 ? 7 : -4);
+        const distance = 105 + (index % 5) * 18;
+        spark.style.setProperty("--spark-angle", `${angle}deg`);
+        spark.style.setProperty("--spark-distance", `${distance}px`);
+        spark.style.setProperty("--spark-delay", `${(index % 6) * 22}ms`);
+        field.appendChild(spark);
+      }
+      requestAnimationFrame(() => layer.classList.add("show"));
+      return layer;
+    }
+
+    function burstImpact(target) {
+      const rect = target.getBoundingClientRect();
+      const burst = document.createElement("div");
+      burst.className = "daily-key-impact-burst";
+      burst.style.left = `${rect.left + rect.width / 2}px`;
+      burst.style.top = `${rect.top + rect.height / 2}px`;
+      burst.innerHTML = Array.from({length:12}, (_, index) => {
+        const angle = index * 30;
+        return `<i style="--impact-angle:${angle}deg"></i>`;
+      }).join("");
+      document.body.appendChild(burst);
+      window.setTimeout(() => burst.remove(), 900);
+    }
+
     function restoreTargetSlot(target) {
       target.textContent = "🔑";
       target.classList.add("collected");
@@ -166,7 +232,19 @@
       target.classList.remove("key-arrival");
       void target.offsetWidth;
       target.classList.add("key-arrival");
-      window.setTimeout(() => target.classList.remove("key-arrival"), 850);
+      const meter = target.closest(".weekly-key-meter");
+      const chest = target.closest(".quest-chest");
+      meter?.classList.remove("key-meter-impact");
+      chest?.classList.remove("key-chest-impact");
+      void target.offsetWidth;
+      meter?.classList.add("key-meter-impact");
+      chest?.classList.add("key-chest-impact");
+      burstImpact(target);
+      window.setTimeout(() => {
+        target.classList.remove("key-arrival");
+        meter?.classList.remove("key-meter-impact");
+        chest?.classList.remove("key-chest-impact");
+      }, 1100);
     }
 
     function animateDailyKeyAward(count) {
@@ -182,26 +260,29 @@
         target.textContent = "";
 
         const reduced = Boolean(state.settings?.reducedMotion) || window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
+        const layer = createCelebrationLayer(count);
+        playDailyKeyChime();
+
         if (reduced) {
           window.setTimeout(() => {
             restoreTargetSlot(target);
+            layer.classList.add("leaving");
+            window.setTimeout(() => layer.remove(), 420);
             resolve(true);
-          }, 260);
+          }, 900);
           return;
         }
 
-        const source = document.querySelector(".daily-quest:last-child") || document.getElementById("questChest");
-        const sourceRect = source?.getBoundingClientRect() || {left:window.innerWidth / 2,top:window.innerHeight / 2,width:0,height:0};
         const targetRect = target.getBoundingClientRect();
-        const startX = sourceRect.left + sourceRect.width / 2;
-        const startY = sourceRect.top + sourceRect.height / 2;
+        const startX = window.innerWidth / 2;
+        const startY = Math.min(window.innerHeight * 0.48, targetRect.top - 95);
         const endX = targetRect.left + targetRect.width / 2;
         const endY = targetRect.top + targetRect.height / 2;
         const dx = endX - startX;
         const dy = endY - startY;
 
         const key = document.createElement("div");
-        key.className = "daily-key-award";
+        key.className = "daily-key-award daily-key-award-grand";
         key.textContent = "🔑";
         key.setAttribute("aria-hidden", "true");
         key.style.left = `${startX}px`;
@@ -209,16 +290,23 @@
         document.body.appendChild(key);
 
         const animation = key.animate([
-          {opacity:0,transform:"translate(-50%,-25%) scale(.35) rotate(-20deg)",filter:"brightness(1)"},
-          {opacity:1,transform:"translate(-50%,-115%) scale(1.55) rotate(9deg)",filter:"brightness(1.65)",offset:.32},
-          {opacity:1,transform:`translate(calc(-50% + ${dx * .18}px),calc(-115% + ${dy * .18}px)) scale(1.7) rotate(-7deg)`,filter:"brightness(1.9)",offset:.48},
-          {opacity:1,transform:`translate(calc(-50% + ${dx}px),calc(-50% + ${dy}px)) scale(.72) rotate(350deg)`,filter:"brightness(1.25)",offset:.88},
-          {opacity:0,transform:`translate(calc(-50% + ${dx}px),calc(-50% + ${dy}px)) scale(.2) rotate(390deg)`,filter:"brightness(2)"}
-        ],{duration:1450,easing:"cubic-bezier(.2,.8,.2,1)",fill:"forwards"});
+          {opacity:0,transform:"translate(-50%,-50%) scale(.15) rotate(-28deg)",filter:"brightness(1) blur(2px)"},
+          {opacity:1,transform:"translate(-50%,-50%) scale(1.38) rotate(8deg)",filter:"brightness(2.05) blur(0)",offset:.18},
+          {opacity:1,transform:"translate(-50%,-58%) scale(1.12) rotate(-6deg)",filter:"brightness(1.5)",offset:.34},
+          {opacity:1,transform:"translate(-50%,-54%) scale(1.24) rotate(5deg)",filter:"brightness(1.72)",offset:.46},
+          {opacity:1,transform:`translate(calc(-50% + ${dx * .25}px),calc(-54% + ${dy * .12}px)) scale(1.02) rotate(32deg)`,filter:"brightness(1.6)",offset:.62},
+          {opacity:1,transform:`translate(calc(-50% + ${dx * .72}px),calc(-54% + ${dy * .62}px)) scale(.76) rotate(235deg)`,filter:"brightness(1.45)",offset:.82},
+          {opacity:1,transform:`translate(calc(-50% + ${dx}px),calc(-50% + ${dy}px)) scale(.42) rotate(360deg)`,filter:"brightness(2.2)",offset:.94},
+          {opacity:0,transform:`translate(calc(-50% + ${dx}px),calc(-50% + ${dy}px)) scale(.12) rotate(390deg)`,filter:"brightness(2.8)"}
+        ],{duration:2350,easing:"cubic-bezier(.18,.78,.18,1)",fill:"forwards"});
+
+        window.setTimeout(() => layer.classList.add("key-in-flight"), 1080);
+        window.setTimeout(() => layer.classList.add("leaving"), 1850);
 
         animation.finished.catch(() => {}).finally(() => {
           key.remove();
           restoreTargetSlot(target);
+          window.setTimeout(() => layer.remove(), 500);
           resolve(true);
         });
       });
@@ -246,17 +334,17 @@
 
       playingPendingAward = true;
       renderDailyQuests();
-      await new Promise(resolve => window.setTimeout(resolve, 260));
+      await new Promise(resolve => window.setTimeout(resolve, 320));
       const played = await animateDailyKeyAward(award.count);
       if (played) markAwardPlayed(award);
       playingPendingAward = false;
 
       if (currentWeekPendingAward() && isHomeActive()) {
-        pendingPlaybackTimer = window.setTimeout(playPendingAwardOnHome, 450);
+        pendingPlaybackTimer = window.setTimeout(playPendingAwardOnHome, 600);
       }
     }
 
-    function schedulePendingPlayback(delay = 280) {
+    function schedulePendingPlayback(delay = 320) {
       window.clearTimeout(pendingPlaybackTimer);
       pendingPlaybackTimer = window.setTimeout(playPendingAwardOnHome, delay);
     }
@@ -275,7 +363,7 @@
       }
       if (changed) saveState();
 
-      if (valid && after > before && isHomeActive()) schedulePendingPlayback(320);
+      if (valid && after > before && isHomeActive()) schedulePendingPlayback(420);
       return result;
     };
 
@@ -288,7 +376,7 @@
     const baseSwitchView = switchView;
     switchView = function switchViewWithPendingKeyAward(view) {
       const result = baseSwitchView.apply(this, arguments);
-      if (view === "home") schedulePendingPlayback(360);
+      if (view === "home") schedulePendingPlayback(480);
       return result;
     };
 
@@ -297,7 +385,7 @@
     if (changed) saveState();
     setFourWinsHeading();
     renderDailyQuests();
-    if (isHomeActive()) schedulePendingPlayback(420);
+    if (isHomeActive()) schedulePendingPlayback(520);
   }
 
   installPolish();
