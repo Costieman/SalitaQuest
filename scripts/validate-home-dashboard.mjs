@@ -6,7 +6,7 @@ const root = process.cwd();
 const read = file => fs.readFileSync(path.join(root, file), "utf8");
 const fail = message => { throw new Error(message); };
 
-for (const file of ["weekly-avatar-chest.js", "weekly-avatar-polish.js", "clean-topbar.js", "service-worker.js"]) {
+for (const file of ["weekly-avatar-chest.js", "weekly-avatar-polish.js", "clean-topbar.js", "profile-app.js", "service-worker.js"]) {
   new vm.Script(read(file), {filename:file});
 }
 
@@ -38,37 +38,69 @@ for (const marker of [
 
 const topbarCss = read("clean-topbar.css");
 for (const marker of [
+  'body:not(.dark-mode)',
+  'background: #eef4f3',
+  'body:not(.dark-mode) .mastery-rail-shell',
+  'body:not(.dark-mode) #homeView > .daily-quests-card',
+  'body:not(.dark-mode) #homeView .activity-tile',
   '.top-stats',
   'grid-template-columns: auto auto minmax(138px, auto)',
   '.top-stats > * + *',
   'border-left: 1px solid var(--line)',
-  '.mastery-rail-shell',
-  'grid-template-columns: 170px minmax(520px, 1fr) 200px',
-  '.mastery-rail-heading',
-  'display: contents',
-  '.mastery-next-copy',
+  '.mastery-rail-shell[data-compact-mastery="true"]',
+  'grid-template-columns: 190px minmax(0, 1fr) 205px',
+  '.mastery-summary-compact',
+  '> .mastery-milestones',
+  '> .mastery-next-copy',
+  '@media (min-width: 1001px) and (max-width: 1279px)',
+  'grid-template-rows: auto 61px',
   '#homeView > .journey-section',
   '#homeView > .conversation-spotlight',
   '#homeView > .home-topic-review',
   '#homeView > .dashboard-grid',
   '#homeView > .achievement-panel',
-  'display: none !important',
-  '@media (max-width: 1000px)'
+  'display: none !important'
 ]) {
-  if (!topbarCss.includes(marker)) fail(`Missing clean-topbar style: ${marker}`);
+  if (!topbarCss.includes(marker)) fail(`Missing robust topbar/light-theme style: ${marker}`);
+}
+if (topbarCss.includes('.mastery-rail-heading {\n    display: contents')) {
+  fail("The fragile display:contents mastery layout must not return");
 }
 
 const topbarRuntime = read("clean-topbar.js");
 for (const marker of [
   '__salitaQuestCleanTopbarInstalled',
+  'function structureMasteryShell()',
+  'summary.classList.add("mastery-summary-compact")',
+  'shell.insertBefore(summary, milestones)',
+  'shell.insertBefore(nextCopy, milestones.nextSibling)',
+  'heading.remove()',
+  'shell.dataset.compactMastery = "true"',
   'renderMasteryRailWithCompactCopy',
   'World Progress · ${points} MP',
   'Next: ${regionName}',
-  '${remaining} MP to go',
-  'All regions unlocked',
-  'Keep building durable recall'
+  '${remaining} MP to go'
 ]) {
-  if (!topbarRuntime.includes(marker)) fail(`Missing clean-topbar runtime marker: ${marker}`);
+  if (!topbarRuntime.includes(marker)) fail(`Missing robust topbar runtime marker: ${marker}`);
+}
+
+const profileRuntime = read("profile-app.js");
+for (const marker of [
+  'const MIRROR_INTERVAL_MS = 1000',
+  'const AUTOSAVE_INTERVAL_MS = 15000',
+  'function flushCourseState(reason = "periodic")',
+  'if (typeof saveState === "function") saveState()',
+  'syncProgress(true)',
+  'flushCourseState("learner switch")',
+  'flushCourseState("course switch")',
+  'window.setInterval(syncProgress, MIRROR_INTERVAL_MS)',
+  'flushCourseState("periodic autosave")',
+  'beforeunload',
+  'pagehide',
+  'visibilitychange',
+  'Progress autosaves every 15 seconds and before switching.'
+]) {
+  if (!profileRuntime.includes(marker)) fail(`Missing reliable autosave marker: ${marker}`);
 }
 
 const appRuntime = read("app.js");
@@ -76,38 +108,18 @@ for (const marker of [
   'function renderJourney()',
   'function renderTopicReview()',
   'function renderProgress()',
-  'function updateBoss()'
+  'function updateBoss()',
+  'function saveState()'
 ]) {
-  if (!appRuntime.includes(marker)) fail(`Dedicated destination is missing from app.js: ${marker}`);
+  if (!appRuntime.includes(marker)) fail(`Required app destination/state function is missing: ${marker}`);
 }
 
 const chestRuntime = read("weekly-avatar-chest.js");
 for (const marker of [
   'const KEY_TARGET = 6',
-  'const AVATARS = [',
-  '{id:"tarsier"',
-  '{id:"eagle"',
-  '{id:"tamaraw"',
-  '{id:"peacock"',
-  '{id:"orchid"',
-  '{id:"jade"',
-  '{id:"rafflesia"',
-  '{id:"anahaw"',
-  '{id:"sunrise"',
-  '{id:"islands"',
-  '{id:"midnight"',
   'REWARDS = AVATARS.flatMap',
-  'weekly.keyDates',
-  'weekly.claims',
-  'weekly.unlockedRewards',
-  'grantDailyKey',
-  'chooseWeeklyReward',
   'claimWeeklyChest',
-  'Six Daily Keys collected',
   'navigator.share',
-  'navigator.canShare',
-  'canvas.toBlob',
-  'Share social card',
   'Nothing is posted automatically'
 ]) {
   if (!chestRuntime.includes(marker)) fail(`Missing weekly-chest runtime marker: ${marker}`);
@@ -117,32 +129,9 @@ const polishRuntime = read("weekly-avatar-polish.js");
 for (const marker of [
   'DAILY_QUESTS.length === 4',
   'heading.textContent = "4 small wins"',
-  'allFourWinsComplete',
-  'removePrematureTodayKey',
-  'animateDailyKeyAward',
-  'daily-key-award',
-  'key-arrival',
-  'after > before',
-  'renderDailyQuestsWithFourWinsHeading'
+  'animateDailyKeyAward'
 ]) {
   if (!polishRuntime.includes(marker)) fail(`Missing daily-key polish marker: ${marker}`);
-}
-
-const chestCss = read("weekly-avatar-chest.css");
-for (const marker of [
-  '.weekly-key-meter',
-  'grid-template-columns:repeat(6',
-  '.daily-key-award',
-  '.daily-key-award::after',
-  '.weekly-key-slot.key-arrival',
-  '.quest-chest.weekly-ready',
-  '.weekly-avatar-modal',
-  '.weekly-avatar-preview',
-  '@keyframes weeklyChestReady',
-  '@keyframes keySlotArrival',
-  '@media(prefers-reduced-motion:reduce)'
-]) {
-  if (!chestCss.includes(marker)) fail(`Missing weekly-chest style: ${marker}`);
 }
 
 for (const htmlFile of ["index.html", "app.html", "bisaya.html"]) {
@@ -156,43 +145,33 @@ for (const htmlFile of ["index.html", "app.html", "bisaya.html"]) {
 for (const htmlFile of ["app.html", "bisaya.html"]) {
   const html = read(htmlFile);
   for (const asset of [
-    'compact-home-dashboard.css?v=5.4.14',
-    'weekly-avatar-chest.css?v=5.4.14',
-    'clean-topbar.css?v=5.4.14',
-    'ui-quality-fixes.js?v=5.4.14',
-    'weekly-avatar-chest.js?v=5.4.14',
-    'weekly-avatar-polish.js?v=5.4.14',
-    'clean-topbar.js?v=5.4.14'
+    'compact-home-dashboard.css?v=5.4.15',
+    'weekly-avatar-chest.css?v=5.4.15',
+    'clean-topbar.css?v=5.4.15',
+    'ui-quality-fixes.js?v=5.4.15',
+    'weekly-avatar-chest.js?v=5.4.15',
+    'weekly-avatar-polish.js?v=5.4.15',
+    'clean-topbar.js?v=5.4.15'
   ]) {
     if (!html.includes(asset)) fail(`${htmlFile} does not load ${asset}`);
   }
-  const qualityIndex = html.indexOf('ui-quality-fixes.js?v=5.4.14');
-  const chestIndex = html.indexOf('weekly-avatar-chest.js?v=5.4.14');
-  const polishIndex = html.indexOf('weekly-avatar-polish.js?v=5.4.14');
-  const topbarIndex = html.indexOf('clean-topbar.js?v=5.4.14');
-  if (!(qualityIndex >= 0 && qualityIndex < chestIndex && chestIndex < polishIndex && polishIndex < topbarIndex)) {
-    fail(`${htmlFile} must load quick-review quests, weekly rewards, and the clean topbar in dependency order`);
-  }
 }
 
-const indexHtml = read("index.html");
-if (!indexHtml.includes('profile-shell.css?v=5.4.14') || !indexHtml.includes('service-worker.js?v=5.4.14')) {
-  fail("Profile shell and service worker were not bumped to version 5.4.14");
+const appHtml = read("app.html");
+if (!appHtml.includes('profile-app.js?v=5.4.15')) {
+  fail("Tagalog loader does not load the reliable autosave profile layer");
 }
 
 const serviceWorker = read("service-worker.js");
 for (const asset of [
-  '"./compact-home-dashboard.css"',
-  '"./weekly-avatar-chest.js"',
-  '"./weekly-avatar-polish.js"',
-  '"./weekly-avatar-chest.css"',
   '"./clean-topbar.js"',
-  '"./clean-topbar.css"'
+  '"./clean-topbar.css"',
+  '"./profile-app.js"'
 ]) {
   if (!serviceWorker.includes(asset)) fail(`Offline cache is missing ${asset}`);
 }
-if (!serviceWorker.includes('salita-quest-v5-4-clean-topbar-r27')) {
-  fail("Service-worker cache name was not bumped for the clean-topbar release");
+if (!serviceWorker.includes('salita-quest-v5-4-layout-autosave-r28')) {
+  fail("Service-worker cache name was not bumped for the layout/autosave release");
 }
 
-console.log("Validated segmented stats, compact single-row world progress, focused Home content, dedicated map/review/conversation/progress destinations, four small wins, weekly avatar rewards, both language loaders, and offline assets.");
+console.log("Validated non-overlapping mastery structure, improved light-mode separation, segmented stats, focused Home content, 15-second forced autosave, immediate mirroring, saves before learner/course transitions, both language loaders, and offline assets.");

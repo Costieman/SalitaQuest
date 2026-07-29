@@ -7,6 +7,8 @@
   const BASE_PROGRESS = "salitaQuestProgress";
   const BASE_OWNER = "salitaQuestBaseProgressOwner";
   const PROFILE_PROGRESS_PREFIX = "salitaQuestProgress.profile.";
+  const MIRROR_INTERVAL_MS = 1000;
+  const AUTOSAVE_INTERVAL_MS = 15000;
   const COURSE = document.body.dataset.course || sessionStorage.getItem(ACTIVE_COURSE) || "tagalog";
 
   function readProfiles() {
@@ -31,21 +33,36 @@
   const legacyTagalogKey = `${PROFILE_PROGRESS_PREFIX}${activeId}`;
   let lastProgress = localStorage.getItem(BASE_PROGRESS);
 
-  function syncProgress() {
-    const progress = localStorage.getItem(BASE_PROGRESS);
-    if (progress === lastProgress) return;
-    if (progress) {
-      localStorage.setItem(profileProgressKey, progress);
-      if (COURSE === "tagalog") localStorage.setItem(legacyTagalogKey, progress);
-    } else {
-      localStorage.removeItem(profileProgressKey);
+  function syncProgress(force = false) {
+    try {
+      const progress = localStorage.getItem(BASE_PROGRESS);
+      if (!force && progress === lastProgress) return false;
+      if (progress) {
+        localStorage.setItem(profileProgressKey, progress);
+        if (COURSE === "tagalog") localStorage.setItem(legacyTagalogKey, progress);
+      } else {
+        localStorage.removeItem(profileProgressKey);
+      }
+      localStorage.setItem(BASE_OWNER, `${activeId}:${COURSE}`);
+      lastProgress = progress;
+      return true;
+    } catch (error) {
+      console.warn("Salita Quest could not mirror learner progress", error);
+      return false;
     }
-    localStorage.setItem(BASE_OWNER, `${activeId}:${COURSE}`);
-    lastProgress = progress;
+  }
+
+  function flushCourseState(reason = "periodic") {
+    try {
+      if (typeof saveState === "function") saveState();
+    } catch (error) {
+      console.warn(`Salita Quest could not flush course state during ${reason}`, error);
+    }
+    syncProgress(true);
   }
 
   function finishSession() {
-    syncProgress();
+    flushCourseState("learner switch");
     sessionStorage.removeItem(ACTIVE_PROFILE);
     sessionStorage.removeItem(ACTIVE_COURSE);
     localStorage.removeItem(BASE_PROGRESS);
@@ -54,7 +71,7 @@
   }
 
   function switchCourse() {
-    syncProgress();
+    flushCourseState("course switch");
     const nextCourse = COURSE === "cebuano" ? "tagalog" : "cebuano";
     const nextKey = `${PROFILE_PROGRESS_PREFIX}${activeId}.${nextCourse}`;
     const nextProgress = localStorage.getItem(nextKey) || (nextCourse === "tagalog" ? localStorage.getItem(legacyTagalogKey) : null);
@@ -83,6 +100,7 @@
       .sq-profile-identity img{width:40px;height:40px;object-fit:contain;image-rendering:pixelated;border-radius:11px;background:#edf5f1}
       .sq-profile-identity small,.sq-profile-identity strong,.sq-profile-identity em{display:block}.sq-profile-identity small{font-size:9px;letter-spacing:.12em;color:#607773;font-weight:800}.sq-profile-identity strong{font-size:14px;color:#173a37;max-width:145px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.sq-profile-identity em{font-size:11px;color:#0b6f67;font-style:normal;font-weight:800;margin-top:2px}
       .sq-profile-action{width:100%;border:0;border-radius:10px;padding:10px 11px;text-align:left;background:transparent;color:#173a37;font-weight:750;cursor:pointer}.sq-profile-action:hover{background:#edf7f3}.sq-profile-action.course{color:#0b6f67}.sq-profile-action.danger{color:#9b3434}
+      .sq-profile-save-note{display:block;padding:7px 9px 3px;color:#72817e;font-size:9px;line-height:1.35}
       @media(max-width:760px){.sq-profile-control{right:12px;bottom:calc(76px + env(safe-area-inset-bottom))}.sq-profile-button{width:46px;height:46px;border-radius:14px}.sq-profile-button img{width:36px;height:36px}}
     `;
     document.head.appendChild(style);
@@ -103,6 +121,7 @@
         <button class="sq-profile-action course" type="button" data-course>Switch to ${nextCourseName}</button>
         <button class="sq-profile-action" type="button" data-change>Change learner</button>
         <button class="sq-profile-action danger" type="button" data-logout>Log out</button>
+        <small class="sq-profile-save-note">Progress autosaves every 15 seconds and before switching.</small>
       </div>`;
 
     control.querySelector(".sq-profile-identity strong").textContent = profile.name;
@@ -114,6 +133,7 @@
       const opening = menu.hidden;
       menu.hidden = !opening;
       button.setAttribute("aria-expanded", String(opening));
+      if (opening) flushCourseState("profile menu open");
     });
     control.querySelector("[data-course]").addEventListener("click", switchCourse);
     control.querySelector("[data-change]").addEventListener("click", finishSession);
@@ -143,7 +163,7 @@
     }
 
     const version = document.querySelector(".version-label");
-    if (version) version.textContent = COURSE === "cebuano" ? "Bisaya Foundation 0.3 · 13 regions" : "Version 5.4 Full-Screen Profiles";
+    if (version) version.textContent = COURSE === "cebuano" ? "Bisaya Foundation 0.3 · 13 regions" : "Version 5.4.15 · Reliable Autosave";
   }
 
   function loadCourseEnhancements() {
@@ -155,22 +175,29 @@
     document.body.appendChild(script);
   }
 
-  const timer = window.setInterval(syncProgress, 700);
-  window.addEventListener("beforeunload", syncProgress);
-  window.addEventListener("pagehide", syncProgress);
+  const mirrorTimer = window.setInterval(syncProgress, MIRROR_INTERVAL_MS);
+  const autosaveTimer = window.setInterval(() => flushCourseState("periodic autosave"), AUTOSAVE_INTERVAL_MS);
+
+  window.addEventListener("beforeunload", () => flushCourseState("before unload"));
+  window.addEventListener("pagehide", () => flushCourseState("page hide"));
   document.addEventListener("visibilitychange", () => {
-    if (document.hidden) syncProgress();
+    if (document.hidden) flushCourseState("tab hidden");
   });
 
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", () => {
       installProfileControl();
       loadCourseEnhancements();
+      window.setTimeout(() => flushCourseState("initial autosave"), 1200);
     }, { once: true });
   } else {
     installProfileControl();
     loadCourseEnhancements();
+    window.setTimeout(() => flushCourseState("initial autosave"), 1200);
   }
 
-  window.addEventListener("unload", () => window.clearInterval(timer));
+  window.addEventListener("unload", () => {
+    window.clearInterval(mirrorTimer);
+    window.clearInterval(autosaveTimer);
+  });
 })();

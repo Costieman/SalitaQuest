@@ -199,7 +199,7 @@ function fallbackSpeech(text) {
     source = replaceBlock(source, "async function handsFreeSpeak", "async function startHandsFreeReview", buildHandsFreeSpeechSource());
     source = replaceBlock(source, "async function speakFilipino", "async function checkVoiceService", buildCebuanoSpeechSource());
     source = replaceBlock(source, "async function checkVoiceService", "function toast", buildCebuanoVoiceStatusSource());
-    source = source.replace(/const APP_VERSION = "[^"]+";/, 'const APP_VERSION = "5.4.6-bisaya-foundation";');
+    source = source.replace(/const APP_VERSION = "[^"]+";/, 'const APP_VERSION = "5.4.15-bisaya-foundation";');
     source = source.replaceAll("Tagalog", "Bisaya");
     source = source.replaceAll("Taglish", "Bisaya-English");
     source = source.replaceAll(" Filipino", " Cebuano");
@@ -231,8 +231,8 @@ function fallbackSpeech(text) {
       script.textContent = transformed;
       document.body.appendChild(script);
 
-      await loadScript("./exercise-fixes-v545.js?v=5.4.6-bisaya");
-      await loadScript("./profile-app.js?v=5.4.6-bisaya");
+      await loadScript("./exercise-fixes-v545.js?v=5.4.15-bisaya");
+      await loadScript("./profile-app.js?v=5.4.15-bisaya");
     } catch (error) {
       showError(error);
     }
