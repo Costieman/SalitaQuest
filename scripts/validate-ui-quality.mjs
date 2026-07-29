@@ -6,7 +6,7 @@ const root = process.cwd();
 const read = file => fs.readFileSync(path.join(root, file), "utf8");
 const fail = message => { throw new Error(message); };
 
-for (const file of ["ui-quality-fixes.js", "service-worker.js"]) {
+for (const file of ["ui-quality-fixes.js", "compact-desktop-layout.js", "service-worker.js"]) {
   new vm.Script(read(file), {filename:file});
 }
 
@@ -51,16 +51,50 @@ for (const marker of [
   if (!breakdownCss.includes(marker)) fail(`Missing word-breakdown style: ${marker}`);
 }
 
+const compactRuntime = read("compact-desktop-layout.js");
+for (const marker of [
+  "session-rewards-strip",
+  "lessonCard.insertBefore(rewards, footer)",
+  "data-current-view",
+  "MutationObserver"
+]) {
+  if (!compactRuntime.includes(marker)) fail(`Missing compact-layout runtime marker: ${marker}`);
+}
+
+const compactCss = read("compact-desktop-layout.css");
+for (const marker of [
+  'body[data-current-view]:not([data-current-view="home"]) .mastery-milestones',
+  'body[data-current-view="learn"] .session-rewards-strip',
+  'body[data-current-view="learn"] .lesson-footer',
+  "position: sticky",
+  "bottom: 0",
+  "grid-template-columns: auto repeat(3"
+]) {
+  if (!compactCss.includes(marker)) fail(`Missing compact-layout style: ${marker}`);
+}
+
 for (const htmlFile of ["app.html", "bisaya.html"]) {
   const html = read(htmlFile);
-  for (const asset of ["ui-quality-fixes.js", "ui-quality-fixes.css", "ui-answer-breakdown.css"]) {
+  for (const asset of [
+    "ui-quality-fixes.js",
+    "ui-quality-fixes.css",
+    "ui-answer-breakdown.css",
+    "compact-desktop-layout.js",
+    "compact-desktop-layout.css"
+  ]) {
     if (!html.includes(asset)) fail(`${htmlFile} does not load ${asset}`);
   }
 }
 
 const serviceWorker = read("service-worker.js");
-for (const asset of ["./ui-quality-fixes.js", "./ui-quality-fixes.css", "./ui-answer-breakdown.css"]) {
+for (const asset of [
+  "./ui-quality-fixes.js",
+  "./ui-quality-fixes.css",
+  "./ui-answer-breakdown.css",
+  "./compact-desktop-layout.js",
+  "./compact-desktop-layout.css"
+]) {
   if (!serviceWorker.includes(asset)) fail(`Offline cache is missing ${asset}`);
 }
 
-console.log("Validated dark-mode contrast, vivid answer selection, correct-answer flash, two Quick Review daily quest, and word-by-word feedback assets.");
+console.log("Validated dark-mode contrast, answer feedback, daily reviews, word breakdowns, compact non-home progress, horizontal lesson rewards, sticky lesson actions, and offline assets.");
