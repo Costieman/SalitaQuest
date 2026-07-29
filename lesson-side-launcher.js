@@ -138,7 +138,19 @@
       return Boolean(session && currentExercise && Array.isArray(session.queue) && session.queue.length);
     }
 
+    function phraseForCurrentExercise() {
+      const item = currentExercise?.item || {};
+      return String(currentExercise?.audio || item.example || item.term || "").trim();
+    }
+
     function placeAudioButton() {
+      const phrase = phraseForCurrentExercise();
+      if (phrase) {
+        audioButton.dataset.text = phrase;
+        audioButton.classList.remove("hidden");
+      }
+      audioButton.setAttribute("aria-label", "Hear pronunciation of the current phrase");
+
       if (!window.matchMedia(DESKTOP_QUERY).matches) {
         audioButton.classList.remove("lesson-audio-square");
         return;
