@@ -1,0 +1,227 @@
+/* Unified desktop header and a focused home page. */
+
+/* These features already have dedicated destinations in the main navigation. */
+#homeView > .journey-section,
+#homeView > .conversation-spotlight,
+#homeView > .home-topic-review,
+#homeView > .dashboard-grid,
+#homeView > .achievement-panel {
+  display: none !important;
+}
+
+@media (min-width: 1001px) {
+  .topbar {
+    min-height: 88px;
+    padding: 13px 0 11px;
+    align-items: center;
+  }
+
+  .topbar > div:first-child {
+    display: grid;
+    gap: 2px;
+  }
+
+  .topbar .eyebrow {
+    font-size: .65rem;
+    letter-spacing: .15em;
+  }
+
+  .topbar h2 {
+    margin: 1px 0 0;
+    font-size: clamp(1.55rem, 2.15vw, 2rem);
+    line-height: 1.05;
+  }
+
+  /* Streak, coins, and level read as one segmented control. */
+  .top-stats {
+    display: grid;
+    grid-template-columns: auto auto minmax(138px, auto);
+    align-items: stretch;
+    gap: 0;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    background: var(--paper);
+    box-shadow: 0 8px 22px rgba(20, 33, 61, .065);
+  }
+
+  .top-stats > .stat-chip,
+  .top-stats > .level-chip {
+    min-height: 60px;
+    margin: 0;
+    padding: 10px 16px;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .top-stats > * + * {
+    border-left: 1px solid var(--line);
+  }
+
+  .top-stats > .stat-chip {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    min-width: 86px;
+    font-size: .92rem;
+  }
+
+  .top-stats > .stat-chip strong {
+    font-size: 1.05rem;
+  }
+
+  .top-stats > .level-chip {
+    display: grid;
+    align-content: center;
+    min-width: 138px;
+    font-size: .78rem;
+  }
+
+  .top-stats .mini-progress {
+    width: 100%;
+    height: 5px;
+    margin-top: 7px;
+  }
+
+  /* Mastery points, rail, and next unlock share one compact line. */
+  .mastery-rail-shell {
+    display: grid;
+    grid-template-columns: 170px minmax(520px, 1fr) 200px;
+    align-items: center;
+    gap: 18px;
+    margin: 0 -4px 12px;
+    padding: 10px 18px 12px;
+    border-radius: 20px;
+  }
+
+  .mastery-rail-heading {
+    display: contents;
+    margin: 0;
+  }
+
+  .mastery-rail-heading > div:first-child {
+    grid-column: 1;
+    grid-row: 1;
+    min-width: 0;
+  }
+
+  .mastery-rail-heading > div:first-child .eyebrow {
+    display: none;
+  }
+
+  .mastery-rail-heading strong {
+    font-size: .94rem;
+    line-height: 1.2;
+    white-space: nowrap;
+  }
+
+  .mastery-milestones {
+    grid-column: 2;
+    grid-row: 1;
+    width: 100%;
+    min-width: 0;
+    height: 60px;
+    margin: 0;
+  }
+
+  .mastery-track {
+    top: 20px;
+    height: 7px;
+  }
+
+  .mastery-you {
+    width: 16px;
+    height: 16px;
+    border-width: 4px;
+  }
+
+  .mastery-milestone {
+    width: 72px;
+  }
+
+  .mastery-dot {
+    width: 29px;
+    height: 29px;
+    margin: 4px auto 3px;
+    border-width: 3px;
+  }
+
+  .mastery-label {
+    font-size: .53rem;
+  }
+
+  .mastery-milestone small {
+    font-size: .49rem;
+  }
+
+  .mastery-next-copy {
+    grid-column: 3;
+    grid-row: 1;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    align-items: baseline;
+    gap: 4px 6px;
+    max-width: none;
+    text-align: right;
+  }
+
+  .mastery-next-copy span {
+    font-size: .82rem;
+    line-height: 1.2;
+  }
+
+  .mastery-next-copy small {
+    font-size: .67rem;
+    line-height: 1.2;
+    white-space: nowrap;
+  }
+
+  body.dark-mode .top-stats {
+    background: #172131;
+    border-color: #2c394c;
+  }
+
+  body.dark-mode .top-stats > * + * {
+    border-left-color: #2c394c;
+  }
+}
+
+@media (min-width: 1001px) and (max-width: 1240px) {
+  .mastery-rail-shell {
+    grid-template-columns: 145px minmax(455px, 1fr) 170px;
+    gap: 12px;
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  .mastery-rail-heading strong {
+    font-size: .84rem;
+  }
+
+  .mastery-next-copy span {
+    font-size: .75rem;
+  }
+
+  .mastery-next-copy small {
+    font-size: .61rem;
+  }
+
+  .mastery-milestone {
+    width: 65px;
+  }
+}
+
+@media (max-width: 1000px) {
+  /* Preserve the established mobile header and compact scrollable mastery rail. */
+  #homeView > .journey-section,
+  #homeView > .conversation-spotlight,
+  #homeView > .home-topic-review,
+  #homeView > .dashboard-grid,
+  #homeView > .achievement-panel {
+    display: none !important;
+  }
+}
