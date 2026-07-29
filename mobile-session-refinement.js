@@ -4,6 +4,7 @@
   const INSTALL_FLAG = "__salitaQuestMobileSessionRefinementInstalled";
   const MOBILE_QUERY = "(max-width: 1000px)";
   const MORE_VIEWS = new Set(["audioReview", "skills", "boss", "progress", "settings"]);
+  const RAIL_FREE_MOBILE_VIEWS = new Set(["review", "audioReview"]);
   const STAGE_LABELS = ["New", "Seen", "Familiar", "Usable", "Flexible", "Mastered"];
   let syncTimer = 0;
 
@@ -39,6 +40,7 @@
     const lessonProgress = document.querySelector("#learnView .lesson-progress-track");
     const feedbackBox = document.getElementById("feedbackBox");
     const mobileNav = document.querySelector(".mobile-nav");
+    const masteryRail = document.querySelector(".mastery-rail-shell");
     if (!learnView || !lessonTopline || !lessonProgress || !feedbackBox || !mobileNav) {
       retryInstall();
       return;
@@ -137,10 +139,26 @@
       window.clearTimeout(syncTimer);
       const active = activeSession();
       const view = currentViewName();
-      document.body.classList.toggle("mobile-session-active", media.matches && active && view === "learn");
+      const activeMobileLesson = media.matches && active && view === "learn";
+      document.body.classList.toggle("mobile-session-active", activeMobileLesson);
       document.body.classList.toggle("mobile-session-idle", media.matches && !active && view === "learn");
       learnView.classList.toggle("mobile-session-active", media.matches && active);
       learnView.classList.toggle("mobile-session-idle", media.matches && !active);
+
+      if (masteryRail) {
+        masteryRail.style.display = media.matches && RAIL_FREE_MOBILE_VIEWS.has(view) ? "none" : "";
+      }
+
+      const profileControl = document.querySelector(".sq-profile-control");
+      if (profileControl) profileControl.style.display = activeMobileLesson ? "none" : "";
+
+      const version = document.querySelector(".version-label");
+      if (version) {
+        version.textContent = document.body.dataset.course === "cebuano"
+          ? "Bisaya Foundation 0.3 · Mobile Refined"
+          : "Version 5.4.19 · Mobile Refined";
+      }
+
       updateMoreNavigation(view);
       simplifyMobileRail();
       updatePhraseMastery();
@@ -199,6 +217,8 @@
     observer.observe(learnView, {subtree:true, childList:true, attributes:true, attributeFilter:["class"]});
     media.addEventListener?.("change", () => scheduleSync(20));
     window.addEventListener("resize", () => scheduleSync(40), {passive:true});
+    window.setTimeout(() => scheduleSync(0), 500);
+    window.setTimeout(() => scheduleSync(0), 1400);
 
     syncMobileState();
   }
