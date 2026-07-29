@@ -110,6 +110,19 @@ for (const marker of [
   if (!masteryCss.includes(marker)) fail(`Missing mastery-feedback style: ${marker}`);
 }
 
+const masteryConsoleCss = read("mastery-console-overrides.css");
+for (const marker of [
+  '.desktop-session-console .mastery-stage-bar',
+  "grid-template-columns: repeat(5",
+  ".mastery-stage-bar > span:last-child",
+  "grid-column: auto !important",
+  "align-items: center",
+  "justify-content: center",
+  ".mastery-stage-bar > span.active"
+]) {
+  if (!masteryConsoleCss.includes(marker)) fail(`Missing mastery-console centring style: ${marker}`);
+}
+
 for (const htmlFile of ["app.html", "bisaya.html"]) {
   const html = read(htmlFile);
   for (const asset of [
@@ -119,7 +132,8 @@ for (const htmlFile of ["app.html", "bisaya.html"]) {
     "compact-desktop-layout.js",
     "compact-desktop-layout.css",
     "mastery-feedback.js",
-    "mastery-feedback.css"
+    "mastery-feedback.css",
+    "mastery-console-overrides.css"
   ]) {
     if (!html.includes(asset)) fail(`${htmlFile} does not load ${asset}`);
   }
@@ -133,9 +147,10 @@ for (const asset of [
   "./compact-desktop-layout.js",
   "./compact-desktop-layout.css",
   "./mastery-feedback.js",
-  "./mastery-feedback.css"
+  "./mastery-feedback.css",
+  "./mastery-console-overrides.css"
 ]) {
   if (!serviceWorker.includes(asset)) fail(`Offline cache is missing ${asset}`);
 }
 
-console.log("Validated dark-mode contrast, answer feedback, daily reviews, word breakdowns, responsive desktop side console, single-screen lesson fitting, item mastery transitions, three-day long-term recall mastery, centred stage labels, mobile restoration, and offline assets.");
+console.log("Validated dark-mode contrast, answer feedback, daily reviews, word breakdowns, responsive desktop side console, single-screen lesson fitting, item mastery transitions, three-day long-term recall mastery, centred five-stage labels, mobile restoration, and offline assets.");
