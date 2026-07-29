@@ -16,7 +16,8 @@
         typeof ensureDailyActivity !== "function" ||
         typeof renderDailyQuests !== "function" ||
         typeof finishSession !== "function" ||
-        typeof showAnswerPop !== "function"
+        typeof showAnswerPop !== "function" ||
+        typeof renderFeedback !== "function"
       ) {
         retryInstall();
         return;
@@ -103,6 +104,81 @@
     showAnswerPop = function showAnswerPopWithLightFlash(xpGain, combo) {
       baseShowAnswerPop(xpGain, combo);
       flashCorrectSelection();
+    };
+
+    const COMMON_DIRECT_GLOSSES = {
+      ako: "I", ko: "I / my", ikaw: "you", ka: "you", mo: "your / by you", siya: "he / she",
+      kami: "we (not you)", kita: "we (including you)", kamo: "you all", sila: "they",
+      ang: "subject marker", ng: "object marker", og: "object marker", ug: "and / object marker", sa: "at / in / to",
+      si: "personal-name marker", mga: "plural marker", ba: "question marker", na: "already / now", pa: "still / yet",
+      lang: "only / just", ra: "only / just", rin: "also / too", din: "also / too", pud: "also / too", sad: "also / too",
+      po: "respect marker", man: "conversational particle", gyud: "really / definitely", jud: "really / definitely"
+    };
+
+    function normaliseGlossKey(value) {
+      return String(value || "")
+        .toLocaleLowerCase()
+        .replace(/[.,!?;:“”"'()]/g, "")
+        .replace(/-link$/i, "")
+        .trim();
+    }
+
+    function buildCourseGlossary() {
+      const glossary = new Map(Object.entries(COMMON_DIRECT_GLOSSES));
+      for (const item of ITEMS || []) {
+        for (const pair of item.analysis?.tokens || []) {
+          const key = normaliseGlossKey(pair?.[0]);
+          if (key && pair?.[1] && !glossary.has(key)) glossary.set(key, pair[1]);
+        }
+        const term = normaliseGlossKey(item.term || item.root);
+        if (term && !term.includes(" ") && item.meaning && !glossary.has(term)) glossary.set(term, item.meaning);
+        for (const [aspect, form] of Object.entries(item.forms || {})) {
+          const key = normaliseGlossKey(form);
+          if (!key || key.includes(" ")) continue;
+          const aspectGloss = aspect === "completed" ? `${item.meaning} · completed` : aspect === "ongoing" ? `${item.meaning} · ongoing` : `${item.meaning} · planned / not yet`;
+          if (!glossary.has(key)) glossary.set(key, aspectGloss);
+        }
+      }
+      return glossary;
+    }
+
+    function directTranslationPairs() {
+      const analysed = currentExercise?.item?.analysis?.tokens;
+      if (Array.isArray(analysed) && analysed.length) return analysed;
+
+      const answer = currentExercise?.answers?.[0] || currentExercise?.item?.example || currentExercise?.item?.term || currentExercise?.item?.root || "";
+      const words = String(answer).replace(/[.,!?;:“”"()]/g, "").trim().split(/\s+/).filter(Boolean);
+      if (!words.length) return [];
+      const glossary = buildCourseGlossary();
+      return words.map(word => [word, glossary.get(normaliseGlossKey(word)) || "part of the expression"]);
+    }
+
+    function renderCorrectWordBreakdown(correct) {
+      const feedback = document.getElementById("feedbackBox");
+      if (!feedback) return;
+      feedback.querySelector(".correct-word-breakdown")?.remove();
+      if (!correct) return;
+
+      const pairs = directTranslationPairs();
+      if (!pairs.length) return;
+      const section = document.createElement("section");
+      section.className = "correct-word-breakdown";
+      section.setAttribute("aria-label", "Word-by-word direct translation");
+      section.innerHTML = `
+        <div class="correct-word-breakdown-heading">
+          <strong>Word by word</strong>
+          <span>Direct translation</span>
+        </div>
+        <div class="correct-word-grid">
+          ${pairs.map(pair => `<span class="correct-word-pair"><strong>${escapeHTML(pair[0])}</strong><small>${escapeHTML(pair[1])}</small></span>`).join("")}
+        </div>`;
+      feedback.appendChild(section);
+    }
+
+    const baseRenderFeedback = renderFeedback;
+    renderFeedback = function renderFeedbackWithWordBreakdown(correct, xpGain, customTitle = null) {
+      baseRenderFeedback(correct, xpGain, customTitle);
+      renderCorrectWordBreakdown(correct);
     };
 
     if (typeof updateAll === "function") updateAll();
