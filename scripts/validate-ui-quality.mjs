@@ -6,7 +6,7 @@ const root = process.cwd();
 const read = file => fs.readFileSync(path.join(root, file), "utf8");
 const fail = message => { throw new Error(message); };
 
-for (const file of ["ui-quality-fixes.js", "compact-desktop-layout.js", "mastery-feedback.js", "service-worker.js"]) {
+for (const file of ["ui-quality-fixes.js", "incorrect-order-feedback.js", "compact-desktop-layout.js", "mastery-feedback.js", "service-worker.js"]) {
   new vm.Script(read(file), {filename:file});
 }
 
@@ -49,6 +49,35 @@ for (const marker of [
   "prefers-reduced-motion"
 ]) {
   if (!breakdownCss.includes(marker)) fail(`Missing word-breakdown style: ${marker}`);
+}
+
+const incorrectOrderRuntime = read("incorrect-order-feedback.js");
+for (const marker of [
+  "correctTargetTokens",
+  "correctTileIds",
+  "match.used = true",
+  "captureSelectedTilePositions",
+  "animateCorrectSentenceOrder",
+  "sentenceBuilderState.selected = orderedIds",
+  "tile.animate",
+  "renderFeedbackWithCorrectSentenceOrder",
+  "if (correct || !sentenceBuilderIsVisible()) return",
+  '"Correct order"'
+]) {
+  if (!incorrectOrderRuntime.includes(marker)) fail(`Missing incorrect-order runtime marker: ${marker}`);
+}
+
+const incorrectOrderCss = read("incorrect-order-feedback.css");
+for (const marker of [
+  ".built-sentence.incorrect-order-correcting",
+  ".built-sentence.correct-order-revealed",
+  "data-correct-order-label",
+  ".correct-order-revealed .selected-word-tile",
+  "body.dark-mode .built-sentence.correct-order-revealed",
+  "@keyframes incorrect-order-depart",
+  "prefers-reduced-motion"
+]) {
+  if (!incorrectOrderCss.includes(marker)) fail(`Missing incorrect-order feedback style: ${marker}`);
 }
 
 const compactRuntime = read("compact-desktop-layout.js");
@@ -129,6 +158,8 @@ for (const htmlFile of ["app.html", "bisaya.html"]) {
     "ui-quality-fixes.js",
     "ui-quality-fixes.css",
     "ui-answer-breakdown.css",
+    "incorrect-order-feedback.js",
+    "incorrect-order-feedback.css",
     "compact-desktop-layout.js",
     "compact-desktop-layout.css",
     "mastery-feedback.js",
@@ -144,6 +175,8 @@ for (const asset of [
   "./ui-quality-fixes.js",
   "./ui-quality-fixes.css",
   "./ui-answer-breakdown.css",
+  "./incorrect-order-feedback.js",
+  "./incorrect-order-feedback.css",
   "./compact-desktop-layout.js",
   "./compact-desktop-layout.css",
   "./mastery-feedback.js",
@@ -153,4 +186,4 @@ for (const asset of [
   if (!serviceWorker.includes(asset)) fail(`Offline cache is missing ${asset}`);
 }
 
-console.log("Validated dark-mode contrast, answer feedback, daily reviews, word breakdowns, responsive desktop side console, single-screen lesson fitting, item mastery transitions, three-day long-term recall mastery, centred five-stage labels, mobile restoration, and offline assets.");
+console.log("Validated dark-mode contrast, answer feedback, daily reviews, word breakdowns, animated correction of failed sentence builders, responsive desktop side console, single-screen lesson fitting, item mastery transitions, three-day long-term recall mastery, centred five-stage labels, mobile restoration, and offline assets.");
