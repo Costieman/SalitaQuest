@@ -89,7 +89,7 @@
         }
       }
 
-      html = html.replace(/<head([^>]*)>/i, '<head$1><base href="./"><link rel="stylesheet" href="bisaya-review-regions.css?v=0.3.2"><link rel="stylesheet" href="ui-quality-fixes.css?v=5.4.12"><link rel="stylesheet" href="ui-answer-breakdown.css?v=5.4.12"><link rel="stylesheet" href="incorrect-order-feedback.css?v=5.4.12"><link rel="stylesheet" href="compact-desktop-layout.css?v=5.4.12"><link rel="stylesheet" href="compact-home-dashboard.css?v=5.4.12"><link rel="stylesheet" href="mastery-feedback.css?v=5.4.12"><link rel="stylesheet" href="mastery-console-overrides.css?v=5.4.12">');
+      html = html.replace(/<head([^>]*)>/i, '<head$1><base href="./"><link rel="stylesheet" href="bisaya-review-regions.css?v=0.3.2"><link rel="stylesheet" href="ui-quality-fixes.css?v=5.4.13"><link rel="stylesheet" href="ui-answer-breakdown.css?v=5.4.13"><link rel="stylesheet" href="incorrect-order-feedback.css?v=5.4.13"><link rel="stylesheet" href="compact-desktop-layout.css?v=5.4.13"><link rel="stylesheet" href="compact-home-dashboard.css?v=5.4.13"><link rel="stylesheet" href="weekly-avatar-chest.css?v=5.4.13"><link rel="stylesheet" href="mastery-feedback.css?v=5.4.13"><link rel="stylesheet" href="mastery-console-overrides.css?v=5.4.13">');
       html = html.replace(/<body([^>]*)>/i, '<body$1 data-course="cebuano">');
       html = html.replaceAll("Tagalog", "Bisaya");
       html = html.replaceAll("Taglish", "Bisaya-English");
@@ -97,7 +97,7 @@
       html = html.replace("kumusta</span>", "kumusta</span>");
       html = html.replace("ako si…</span>", "ako si…</span>");
       html = html.replace("taga-saan?</span>", "taga-asa?</span>");
-      html = html.replace(/<script\s+src=["']app\.js["']\s*><\/script>/i, '<script src="bisaya-app-loader.js?v=0.3.2"><\/script><script src="ui-quality-fixes.js?v=5.4.12"><\/script><script src="incorrect-order-feedback.js?v=5.4.12"><\/script><script src="compact-desktop-layout.js?v=5.4.12"><\/script><script src="mastery-feedback.js?v=5.4.12"><\/script>');
+      html = html.replace(/<script\s+src=["']app\.js["']\s*><\/script>/i, '<script src="bisaya-app-loader.js?v=0.3.2"><\/script><script src="ui-quality-fixes.js?v=5.4.13"><\/script><script src="weekly-avatar-chest.js?v=5.4.13"><\/script><script src="weekly-avatar-polish.js?v=5.4.13"><\/script><script src="incorrect-order-feedback.js?v=5.4.13"><\/script><script src="compact-desktop-layout.js?v=5.4.13"><\/script><script src="mastery-feedback.js?v=5.4.13"><\/script>');
       document.open();
       document.write(html);
       document.close();
