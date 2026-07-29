@@ -2,7 +2,7 @@
   "use strict";
 
   const INSTALL_FLAG = "__salitaQuestMasteryFeedbackInstalled";
-  const MIN_DURABLE_GAP_MS = 12 * 60 * 60 * 1000;
+  const MIN_DURABLE_GAP_MS = 3 * 24 * 60 * 60 * 1000;
   const STAGES = [
     {level:1,label:"Seen"},
     {level:2,label:"Familiar"},
@@ -61,11 +61,10 @@
     function retentionGainForGap(gapMs) {
       const day = 24 * 60 * 60 * 1000;
       if (gapMs < MIN_DURABLE_GAP_MS) return 0;
-      if (gapMs >= 14 * day) return 25;
-      if (gapMs >= 7 * day) return 20;
-      if (gapMs >= 3 * day) return 15;
-      if (gapMs >= day) return 10;
-      return 6;
+      if (gapMs >= 30 * day) return 25;
+      if (gapMs >= 14 * day) return 20;
+      if (gapMs >= 7 * day) return 15;
+      return 10;
     }
 
     function formatGap(gapMs) {
@@ -196,7 +195,7 @@
             <span class="long-term-mastery-fill"></span>
             <i style="left:20%"></i><i style="left:40%"></i><i style="left:60%"></i><i style="left:80%"></i>
           </div>
-          <p class="long-term-mastery-note">Built only by correct recall after 12+ hours away.</p>`;
+          <p class="long-term-mastery-note">Built only by correct recall after 3+ days away.</p>`;
         transitionNote.insertAdjacentElement("afterend", longTerm);
       }
 
@@ -242,11 +241,11 @@
         card.classList.add("retention-loss");
         note.textContent = `Spaced recall missed · ${transition.loss}% adjustment.`;
       } else if (transition?.correct && transition.gapMs > 0 && transition.gapMs < MIN_DURABLE_GAP_MS) {
-        note.textContent = "Current-stage practice; lasting progress starts after 12 hours away.";
+        note.textContent = "Current-stage practice; lasting progress starts after 3 days away.";
       } else if (safeScore >= 100) {
         note.textContent = "Repeatedly recalled after meaningful time away.";
       } else {
-        note.textContent = "Built only by correct recall after 12+ hours away.";
+        note.textContent = "Built only by correct recall after 3+ days away.";
       }
     }
 
