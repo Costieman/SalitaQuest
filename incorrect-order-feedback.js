@@ -11,6 +11,7 @@
   function installIncorrectOrderFeedback() {
     try {
       if (
+        typeof state === "undefined" ||
         typeof currentExercise === "undefined" ||
         typeof sentenceBuilderState === "undefined" ||
         typeof renderFeedback !== "function" ||
@@ -47,10 +48,9 @@
 
     function correctTileIds() {
       const targetTokens = correctTargetTokens();
-      const available = (sentenceBuilderState.tiles || []).map((tile, index) => ({
+      const available = (sentenceBuilderState.tiles || []).map(tile => ({
         id: tile.id,
         key: normaliseToken(tile.word),
-        index,
         used: false
       }));
 
