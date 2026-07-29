@@ -191,26 +191,28 @@ for (const htmlFile of ["index.html", "app.html", "bisaya.html"]) {
 for (const htmlFile of ["app.html", "bisaya.html"]) {
   const html = read(htmlFile);
   for (const asset of [
-    'compact-home-dashboard.css?v=5.4.17',
-    'weekly-avatar-chest.css?v=5.4.17',
-    'clean-topbar.css?v=5.4.17',
-    'ui-quality-fixes.js?v=5.4.17',
-    'weekly-avatar-chest.js?v=5.4.17',
-    'weekly-avatar-polish.js?v=5.4.17',
-    'clean-topbar.js?v=5.4.17'
+    'compact-home-dashboard.css?v=5.4.18',
+    'weekly-avatar-chest.css?v=5.4.18',
+    'clean-topbar.css?v=5.4.18',
+    'ui-quality-fixes.js?v=5.4.18',
+    'weekly-avatar-chest.js?v=5.4.18',
+    'weekly-avatar-polish.js?v=5.4.18',
+    'clean-topbar.js?v=5.4.18',
+    'lesson-side-launcher.css?v=5.4.18',
+    'lesson-side-launcher.js?v=5.4.18'
   ]) {
     if (!html.includes(asset)) fail(`${htmlFile} does not load ${asset}`);
   }
 }
 
 const appHtml = read("app.html");
-if (!appHtml.includes('profile-app.js?v=5.4.17')) {
+if (!appHtml.includes('profile-app.js?v=5.4.18')) {
   fail("Tagalog loader does not load the current reliable autosave profile layer");
 }
 
 const indexHtml = read("index.html");
 if (!indexHtml.includes('profile-shell.css?v=5.4.17') || !indexHtml.includes('service-worker.js?v=5.4.17')) {
-  fail("Profile shell and service worker were not bumped for the grand key release");
+  fail("Profile gate must continue loading the installed-app shell and service worker");
 }
 
 const serviceWorker = read("service-worker.js");
@@ -219,12 +221,14 @@ for (const asset of [
   '"./weekly-avatar-chest.css"',
   '"./clean-topbar.js"',
   '"./clean-topbar.css"',
+  '"./lesson-side-launcher.js"',
+  '"./lesson-side-launcher.css"',
   '"./profile-app.js"'
 ]) {
   if (!serviceWorker.includes(asset)) fail(`Offline cache is missing ${asset}`);
 }
-if (!serviceWorker.includes('salita-quest-v5-4-grand-key-r30')) {
-  fail("Service-worker cache name was not bumped for the grand Daily Key release");
+if (!serviceWorker.includes('salita-quest-v5-4-lesson-console-r31')) {
+  fail("Service-worker cache name was not bumped for the contextual lesson-console release");
 }
 
-console.log("Validated a grand Home-only Daily Key celebration with banner, centre-stage key, particles, chime, impact response, reduced-motion fallback, pending persistence and recovery, both language loaders, reliable autosave, and offline assets.");
+console.log("Validated the grand Home-only Daily Key celebration, focused home dashboard, robust top bar, reliable autosave, contextual lesson launcher assets, both language loaders, and offline delivery.");
