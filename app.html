@@ -94,7 +94,7 @@
         }
       }
 
-      html = html.replace(/<head([^>]*)>/i, '<head$1><base href="./"><link rel="stylesheet" href="ui-quality-fixes.css?v=5.4.10"><link rel="stylesheet" href="ui-answer-breakdown.css?v=5.4.10"><link rel="stylesheet" href="compact-desktop-layout.css?v=5.4.10"><link rel="stylesheet" href="mastery-feedback.css?v=5.4.10">');
+      html = html.replace(/<head([^>]*)>/i, '<head$1><base href="./"><link rel="stylesheet" href="ui-quality-fixes.css?v=5.4.10"><link rel="stylesheet" href="ui-answer-breakdown.css?v=5.4.10"><link rel="stylesheet" href="compact-desktop-layout.css?v=5.4.10"><link rel="stylesheet" href="mastery-feedback.css?v=5.4.10"><link rel="stylesheet" href="mastery-console-overrides.css?v=5.4.10">');
       html = html.replace(/<body([^>]*)>/i, '<body$1 data-course="tagalog">');
       html = html.replace(/<\/body>/i, '<script src="progression-v54.js?v=5.4.10"><\/script><script src="exercise-fixes-v545.js?v=5.4.10"><\/script><script src="ui-quality-fixes.js?v=5.4.10"><\/script><script src="compact-desktop-layout.js?v=5.4.10"><\/script><script src="mastery-feedback.js?v=5.4.10"><\/script><script src="profile-app.js?v=5.4.10"><\/script></body>');
       document.open();
