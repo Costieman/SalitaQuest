@@ -97,7 +97,7 @@
       html = html.replace("kumusta</span>", "kumusta</span>");
       html = html.replace("ako si…</span>", "ako si…</span>");
       html = html.replace("taga-saan?</span>", "taga-asa?</span>");
-      html = html.replace(/<script\s+src=["']app\.js["']\s*><\/script>/i, '<script src="bisaya-app-loader.js?v=0.3.1"><\/script>');
+      html = html.replace(/<script\s+src=["']app\.js["']\s*><\/script>/i, '<script src="bisaya-app-loader.js?v=0.3.1"><\/script><script src="ui-quality-fixes.js?v=5.4.7"><\/script>');
       document.open();
       document.write(html);
       document.close();
