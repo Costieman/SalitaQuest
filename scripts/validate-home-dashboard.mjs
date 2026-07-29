@@ -109,7 +109,8 @@ for (const marker of [
   'function renderTopicReview()',
   'function renderProgress()',
   'function updateBoss()',
-  'function saveState()'
+  'function saveState()',
+  'function switchView(view)'
 ]) {
   if (!appRuntime.includes(marker)) fail(`Required app destination/state function is missing: ${marker}`);
 }
@@ -129,9 +130,30 @@ const polishRuntime = read("weekly-avatar-polish.js");
 for (const marker of [
   'DAILY_QUESTS.length === 4',
   'heading.textContent = "4 small wins"',
+  'weekly.pendingKeyAwards',
+  'weekly.animatedKeyDates',
+  'function queuePendingKeyAward',
+  'function recoverMissedTodayAnimation',
+  'function isHomeActive()',
+  'function playPendingAwardOnHome()',
+  'switchViewWithPendingKeyAward',
+  'if (view === "home") schedulePendingPlayback',
+  'target.classList.add("pending-key-arrival")',
+  'target.textContent = ""',
+  'markAwardPlayed(award)',
   'animateDailyKeyAward'
 ]) {
-  if (!polishRuntime.includes(marker)) fail(`Missing daily-key polish marker: ${marker}`);
+  if (!polishRuntime.includes(marker)) fail(`Missing deferred Daily Key marker: ${marker}`);
+}
+
+const chestCss = read("weekly-avatar-chest.css");
+for (const marker of [
+  '.weekly-key-slot.pending-key-arrival',
+  '@keyframes pendingKeySlot',
+  '.dark-mode .weekly-key-slot.pending-key-arrival',
+  '.daily-key-award'
+]) {
+  if (!chestCss.includes(marker)) fail(`Missing deferred key landing style: ${marker}`);
 }
 
 for (const htmlFile of ["index.html", "app.html", "bisaya.html"]) {
@@ -145,33 +167,40 @@ for (const htmlFile of ["index.html", "app.html", "bisaya.html"]) {
 for (const htmlFile of ["app.html", "bisaya.html"]) {
   const html = read(htmlFile);
   for (const asset of [
-    'compact-home-dashboard.css?v=5.4.15',
-    'weekly-avatar-chest.css?v=5.4.15',
-    'clean-topbar.css?v=5.4.15',
-    'ui-quality-fixes.js?v=5.4.15',
-    'weekly-avatar-chest.js?v=5.4.15',
-    'weekly-avatar-polish.js?v=5.4.15',
-    'clean-topbar.js?v=5.4.15'
+    'compact-home-dashboard.css?v=5.4.16',
+    'weekly-avatar-chest.css?v=5.4.16',
+    'clean-topbar.css?v=5.4.16',
+    'ui-quality-fixes.js?v=5.4.16',
+    'weekly-avatar-chest.js?v=5.4.16',
+    'weekly-avatar-polish.js?v=5.4.16',
+    'clean-topbar.js?v=5.4.16'
   ]) {
     if (!html.includes(asset)) fail(`${htmlFile} does not load ${asset}`);
   }
 }
 
 const appHtml = read("app.html");
-if (!appHtml.includes('profile-app.js?v=5.4.15')) {
-  fail("Tagalog loader does not load the reliable autosave profile layer");
+if (!appHtml.includes('profile-app.js?v=5.4.16')) {
+  fail("Tagalog loader does not load the current reliable autosave profile layer");
+}
+
+const indexHtml = read("index.html");
+if (!indexHtml.includes('profile-shell.css?v=5.4.16') || !indexHtml.includes('service-worker.js?v=5.4.16')) {
+  fail("Profile shell and service worker were not bumped for the deferred key release");
 }
 
 const serviceWorker = read("service-worker.js");
 for (const asset of [
+  '"./weekly-avatar-polish.js"',
+  '"./weekly-avatar-chest.css"',
   '"./clean-topbar.js"',
   '"./clean-topbar.css"',
   '"./profile-app.js"'
 ]) {
   if (!serviceWorker.includes(asset)) fail(`Offline cache is missing ${asset}`);
 }
-if (!serviceWorker.includes('salita-quest-v5-4-layout-autosave-r28')) {
-  fail("Service-worker cache name was not bumped for the layout/autosave release");
+if (!serviceWorker.includes('salita-quest-v5-4-home-key-r29')) {
+  fail("Service-worker cache name was not bumped for the deferred Home key release");
 }
 
-console.log("Validated non-overlapping mastery structure, improved light-mode separation, segmented stats, focused Home content, 15-second forced autosave, immediate mirroring, saves before learner/course transitions, both language loaders, and offline assets.");
+console.log("Validated pending Daily Key persistence, missed-animation recovery, Home-only one-time playback, empty-slot landing animation, non-overlapping mastery structure, light-mode separation, reliable autosave, both language loaders, and offline assets.");
