@@ -7,7 +7,30 @@
     window.setTimeout(installCleanTopbar, 60);
   }
 
+  function structureMasteryShell() {
+    const shell = document.querySelector(".mastery-rail-shell");
+    if (!shell) return false;
+    if (shell.dataset.compactMastery === "true") return true;
+
+    const heading = shell.querySelector(":scope > .mastery-rail-heading");
+    const milestones = shell.querySelector(":scope > .mastery-milestones");
+    if (!heading || !milestones) return false;
+
+    const summary = heading.firstElementChild;
+    const nextCopy = heading.querySelector(".mastery-next-copy");
+    if (!summary || !nextCopy) return false;
+
+    summary.classList.add("mastery-summary-compact");
+    shell.insertBefore(summary, milestones);
+    shell.insertBefore(nextCopy, milestones.nextSibling);
+    heading.remove();
+    shell.dataset.compactMastery = "true";
+    return true;
+  }
+
   function compactMasteryCopy() {
+    structureMasteryShell();
+
     const title = document.getElementById("masteryRailTitle");
     const nextRegion = document.getElementById("masteryNextRegion");
     const nextText = document.getElementById("masteryNextText");
@@ -40,7 +63,7 @@
 
   function installCleanTopbar() {
     try {
-      if (typeof renderMasteryRail !== "function") {
+      if (typeof renderMasteryRail !== "function" || !document.querySelector(".mastery-rail-shell")) {
         retryInstall();
         return;
       }
@@ -51,6 +74,8 @@
 
     if (window[INSTALL_FLAG]) return;
     window[INSTALL_FLAG] = true;
+
+    structureMasteryShell();
 
     const baseRenderMasteryRail = renderMasteryRail;
     renderMasteryRail = function renderMasteryRailWithCompactCopy() {
