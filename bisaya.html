@@ -89,7 +89,7 @@
         }
       }
 
-      html = html.replace(/<head([^>]*)>/i, '<head$1><base href="./"><link rel="stylesheet" href="bisaya-review-regions.css?v=0.3.0">');
+      html = html.replace(/<head([^>]*)>/i, '<head$1><base href="./"><link rel="stylesheet" href="bisaya-review-regions.css?v=0.3.1"><link rel="stylesheet" href="ui-quality-fixes.css?v=5.4.7"><link rel="stylesheet" href="ui-answer-breakdown.css?v=5.4.7">');
       html = html.replace(/<body([^>]*)>/i, '<body$1 data-course="cebuano">');
       html = html.replaceAll("Tagalog", "Bisaya");
       html = html.replaceAll("Taglish", "Bisaya-English");
@@ -97,7 +97,7 @@
       html = html.replace("kumusta</span>", "kumusta</span>");
       html = html.replace("ako si…</span>", "ako si…</span>");
       html = html.replace("taga-saan?</span>", "taga-asa?</span>");
-      html = html.replace(/<script\s+src=["']app\.js["']\s*><\/script>/i, '<script src="bisaya-app-loader.js?v=0.1.0"><\/script>');
+      html = html.replace(/<script\s+src=["']app\.js["']\s*><\/script>/i, '<script src="bisaya-app-loader.js?v=0.3.1"><\/script>');
       document.open();
       document.write(html);
       document.close();
