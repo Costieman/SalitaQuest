@@ -27,3 +27,5 @@ jobs:
         run: node scripts/validate-ui-quality.mjs
       - name: Validate compact home dashboard
         run: node scripts/validate-home-dashboard.mjs
+      - name: Validate mobile session refinement
+        run: node scripts/validate-mobile-refinement.mjs
