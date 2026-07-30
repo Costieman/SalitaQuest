@@ -32,11 +32,28 @@ requireMarkers(posting,[
 
 const connections = read("social-connections-v2.js");
 requireMarkers(connections,[
+  'const DEFAULT_API_BASE = "https://salita-quest-social-share-zvxenj6xcq-as.a.run.app"',
   'fetch(`${base}/health`',
-  "Hosted achievement sharing is active",
-  "salitaQuestSocialApiBase"
-],"Hosted-sharing settings check");
-if (connections.includes("/healthz")) fail("The browser must not use Cloud Run's reserved /healthz path");
+  "Progress sharing is ready.",
+  "No account setup required.",
+  "Choose a platform when you share a badge",
+  "data-open-badges",
+  "developerMode()",
+  'if(!developerMode()) return ""',
+  "oauthAvailable"
+],"Seamless hosted-sharing settings");
+if (connections.includes("/healthz")) fail("The browser must not use Cloud Run's reserved health path");
+if (connections.includes("Share service not configured")) fail("Learners must not see a missing-service configuration state");
+if (connections.includes("Deploy the Salita Quest share service")) fail("Learners must not receive infrastructure setup instructions");
+
+const connectionCss=read("social-connections-v2.css");
+requireMarkers(connectionCss,[
+  ".social-sharing-state.ready",
+  ".social-share-launcher",
+  ".social-destination-list",
+  ".social-future-note",
+  ".social-service-setup"
+],"Compact seamless-sharing styles");
 
 const service = read("services/social-share/index.js");
 requireMarkers(service,[
@@ -59,7 +76,7 @@ requireMarkers(service,[
   'ALLOWED_ORIGINS',
   'Cache-Control'
 ],"Cloud Run Open Graph service");
-if (service.includes('app.get("/healthz"')) fail("The service must avoid Cloud Run's reserved /healthz path");
+if (service.includes('app.get("/healthz"')) fail("The service must avoid Cloud Run's reserved health path");
 
 for (const file of ["services/social-share/index.js","social-posting-v2.js","social-connections-v2.js"]) {
   const check=spawnSync("node",["--check",file],{encoding:"utf8"});
@@ -84,10 +101,9 @@ requireMarkers(deploy,[
   "--ingress=all",
   '"${candidate}/health"',
   "SHARE_BUCKET=",
-  "PUBLIC_APP_URL=",
-  "Settings → Connected accounts → Connection service"
+  "PUBLIC_APP_URL="
 ],"Cloud Shell deployment");
-if (deploy.includes("/healthz")) fail("The deployment script must not test the reserved /healthz path");
+if (deploy.includes("/healthz")) fail("The deployment script must not test the reserved health path");
 
 for(const htmlFile of ["app.html","bisaya.html"]){
   const html=read(htmlFile);
@@ -95,23 +111,23 @@ for(const htmlFile of ["app.html","bisaya.html"]){
   inline.forEach((source,index)=>new vm.Script(source,{filename:`${htmlFile}#inline-${index+1}`}));
   for(const asset of [
     "badge-layout-v3.css?v=5.4.25",
-    "social-connections-v2.css?v=5.4.25",
+    "social-connections-v2.css?v=5.4.27",
     "social-posting-v2.css?v=5.4.25",
-    "social-connections-v2.js?v=5.4.26",
+    "social-connections-v2.js?v=5.4.27",
     "social-posting-v2.js?v=5.4.25"
   ]) if(!html.includes(asset)) fail(`${htmlFile} does not load ${asset}`);
 }
 
 const worker=read("service-worker.js");
 requireMarkers(worker,[
-  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-4-social-posting-audio-r38"',
-  'const CACHE_NAME = "salita-quest-v5-4-hosted-sharing-r39"',
+  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-4-hosted-sharing-r39"',
+  'const CACHE_NAME = "salita-quest-v5-4-seamless-sharing-r40"',
   '"./social-posting-v2.js"',
   '"./social-connections-v2.js"'
-],"Hosted-sharing offline release");
+],"Seamless-sharing offline release");
 
 const index=read("index.html");
-requireMarkers(index,["profile-shell.css?v=5.4.25","service-worker.js?v=5.4.25"],"Profile gate release");
+requireMarkers(index,["profile-shell.css?v=5.4.25","service-worker.js?v=5.4.27"],"Profile gate release");
 
 const readme=read("README.md");
 requireMarkers(readme,[
@@ -124,4 +140,4 @@ requireMarkers(readme,[
 const serviceDocs=read("services/social-share/README.md");
 requireMarkers(serviceDocs,["Open Graph metadata","og:image","Cloud Run","Start learning a Filipino language free"],"Share-service documentation");
 
-console.log("Validated hosted badge/chest previews, non-reserved Cloud Run health checks, exact Open Graph images, CTA artwork, both language loaders and release 5.4.25 hotfix.");
+console.log("Validated seamless built-in progress sharing, hidden developer configuration, hosted badge/chest previews, exact Open Graph images, both language loaders and release 5.4.27.");

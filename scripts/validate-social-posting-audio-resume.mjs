@@ -25,17 +25,23 @@ const connections = read("social-connections-v2.js");
 requireMarkers(connections,[
   "salitaQuestSocialApiBase",
   "SALITA_SOCIAL_API_BASE",
+  "DEFAULT_API_BASE",
   'fetch(`${base}/health`',
+  "No account setup required.",
+  "Progress sharing is ready.",
+  "data-open-badges",
+  "developerMode()",
   "/api/social/connections?profileId=",
   "/oauth/${encodeURIComponent(provider)}/start",
   "/api/social/posts",
   'credentials:"include"',
   "event.origin!==origin",
   "salita-social-oauth",
-  "The connection service must use HTTPS",
   "SalitaQuestSocialConnections"
-],"Connected-account runtime");
-if (connections.includes("/healthz")) fail("Connected-account runtime must avoid Cloud Run's reserved /healthz path");
+],"Seamless connected-account runtime");
+if (connections.includes("/healthz")) fail("Connected-account runtime must avoid Cloud Run's reserved health path");
+if (connections.includes("Share service not configured")) fail("Normal learners must not see service setup errors");
+if (connections.includes("Deploy the Salita Quest share service")) fail("Normal learners must not receive infrastructure instructions");
 
 const posting = read("social-posting-v2.js");
 requireMarkers(posting,[
@@ -67,18 +73,19 @@ for (const htmlFile of ["app.html","bisaya.html"]) {
   const inline=[...html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/gi)].map(match=>match[1].trim()).filter(Boolean);
   inline.forEach((source,index)=>new vm.Script(source,{filename:`${htmlFile}#inline-${index+1}`}));
   for (const asset of [
-    "badge-layout-v3.css?v=5.4.25","social-connections-v2.css?v=5.4.25","social-posting-v2.css?v=5.4.25",
-    "social-connections-v2.js?v=5.4.26","social-posting-v2.js?v=5.4.25"
+    "badge-layout-v3.css?v=5.4.25","social-connections-v2.css?v=5.4.27","social-posting-v2.css?v=5.4.25",
+    "social-connections-v2.js?v=5.4.27","social-posting-v2.js?v=5.4.25"
   ]) if (!html.includes(asset)) fail(`${htmlFile} does not load ${asset}`);
   const oldShare=html.indexOf("badge-sharing-v1.js?v=5.4.23");
-  const connectionsIndex=html.indexOf("social-connections-v2.js?v=5.4.26");
+  const connectionsIndex=html.indexOf("social-connections-v2.js?v=5.4.27");
   const postingIndex=html.indexOf("social-posting-v2.js?v=5.4.25");
-  if (!(oldShare>=0 && connectionsIndex>oldShare && postingIndex>connectionsIndex)) fail(`${htmlFile} must load legacy chest state, connected accounts, then final hosted-posting interception`);
+  if (!(oldShare>=0 && connectionsIndex>oldShare && postingIndex>connectionsIndex)) fail(`${htmlFile} must load legacy chest state, seamless sharing, then final hosted-posting interception`);
 }
 
 const worker=read("service-worker.js");
 requireMarkers(worker,[
   "salita-quest-v5-4-hosted-sharing-r39",
+  "salita-quest-v5-4-seamless-sharing-r40",
   '"./badge-layout-v3.css"',
   '"./social-connections-v2.js"',
   '"./social-connections-v2.css"',
@@ -112,4 +119,4 @@ requireMarkers(audioDocs,["The generator is resumable","punctuation-only aliases
 const readme=read("README.md");
 requireMarkers(readme,["5.4.25 — Hosted Achievement Sharing","Hosted achievement sharing","Connected social accounts","badge-layout-v3.css","validate-social-posting-audio-resume.mjs"],"README release notes");
 
-console.log("Validated non-overlapping badge cards, hosted platform previews, non-reserved Cloud Run health checks, OAuth-ready posting, resumable Cebuano generation and the 5.4.25 hotfix.");
+console.log("Validated non-overlapping badge cards, automatic built-in sharing, hidden developer configuration, hosted platform previews, OAuth-ready posting, resumable Cebuano generation and release 5.4.27.");
