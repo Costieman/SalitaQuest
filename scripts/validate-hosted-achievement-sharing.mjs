@@ -10,7 +10,7 @@ const requireMarkers = (source,markers,label) => markers.forEach(marker => {
   if (!source.includes(marker)) fail(`${label} is missing: ${marker}`);
 });
 
-for (const file of ["social-posting-v2.js","social-connections-v2.js"]) new vm.Script(read(file),{filename:file});
+for (const file of ["social-posting-v2.js","social-connections-v2.js","achievement-sharing-v3.js"]) new vm.Script(read(file),{filename:file});
 
 const posting = read("social-posting-v2.js");
 requireMarkers(posting,[
@@ -29,6 +29,17 @@ requireMarkers(posting,[
   "www.linkedin.com/sharing/share-offsite/?url=",
   "navigator.canShare?.({files:[file]})"
 ],"Browser hosted-sharing client");
+
+const achievement=read("achievement-sharing-v3.js");
+requireMarkers(achievement,[
+  "buildBadgeCard",
+  "buildLevelCard",
+  "badgeIdFromButton",
+  "state?.levelProgressionV2?.pendingLevelUp",
+  "/api/share-cards",
+  "START LEARNING FREE",
+  "www.facebook.com/sharer/sharer.php"
+],"Authoritative achievement-sharing client");
 
 const connections = read("social-connections-v2.js");
 requireMarkers(connections,[
@@ -78,7 +89,7 @@ requireMarkers(service,[
 ],"Cloud Run Open Graph service");
 if (service.includes('app.get("/healthz"')) fail("The service must avoid Cloud Run's reserved health path");
 
-for (const file of ["services/social-share/index.js","social-posting-v2.js","social-connections-v2.js"]) {
+for (const file of ["services/social-share/index.js","social-posting-v2.js","social-connections-v2.js","achievement-sharing-v3.js"]) {
   const check=spawnSync("node",["--check",file],{encoding:"utf8"});
   if(check.status!==0) fail(`${file} failed syntax check: ${check.stderr}`);
 }
@@ -113,21 +124,25 @@ for(const htmlFile of ["app.html","bisaya.html"]){
     "badge-layout-v3.css?v=5.4.25",
     "social-connections-v2.css?v=5.4.27",
     "social-posting-v2.css?v=5.4.25",
+    "achievement-sharing-v3.css?v=5.4.28",
     "social-connections-v2.js?v=5.4.27",
+    "achievement-sharing-v3.js?v=5.4.28",
     "social-posting-v2.js?v=5.4.25"
   ]) if(!html.includes(asset)) fail(`${htmlFile} does not load ${asset}`);
 }
 
 const worker=read("service-worker.js");
 requireMarkers(worker,[
-  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-4-hosted-sharing-r39"',
-  'const CACHE_NAME = "salita-quest-v5-4-seamless-sharing-r40"',
+  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-4-seamless-sharing-r40"',
+  'const CACHE_NAME = "salita-quest-v5-4-achievement-sharing-r41"',
   '"./social-posting-v2.js"',
-  '"./social-connections-v2.js"'
-],"Seamless-sharing offline release");
+  '"./social-connections-v2.js"',
+  '"./achievement-sharing-v3.js"',
+  '"./achievement-sharing-v3.css"'
+],"Achievement-sharing offline release");
 
 const index=read("index.html");
-requireMarkers(index,["profile-shell.css?v=5.4.25","service-worker.js?v=5.4.27"],"Profile gate release");
+requireMarkers(index,["profile-shell.css?v=5.4.25","service-worker.js?v=5.4.28"],"Profile gate release");
 
 const readme=read("README.md");
 requireMarkers(readme,[
@@ -140,4 +155,4 @@ requireMarkers(readme,[
 const serviceDocs=read("services/social-share/README.md");
 requireMarkers(serviceDocs,["Open Graph metadata","og:image","Cloud Run","Start learning a Filipino language free"],"Share-service documentation");
 
-console.log("Validated seamless built-in progress sharing, hidden developer configuration, hosted badge/chest previews, exact Open Graph images, both language loaders and release 5.4.27.");
+console.log("Validated seamless built-in progress sharing, authoritative individual badge and level-up cards, hidden developer configuration, exact Open Graph images, both language loaders and release 5.4.28.");
