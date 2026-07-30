@@ -15,7 +15,7 @@
         typeof DAILY_QUESTS === "undefined" ||
         typeof ensureDailyActivity !== "function" ||
         typeof questProgress !== "function" ||
-        typeof checkAnswer !== "function" ||
+        typeof recordDailyAnswer !== "function" ||
         typeof finishSession !== "function" ||
         typeof saveState !== "function"
       ) {
@@ -82,16 +82,22 @@
     if (!DAILY_QUESTS.every(quest => activity.questsClaimed.includes(quest.id))) activity.chestClaimed = false;
     saveState();
 
-    const baseCheckAnswer = checkAnswer;
-    checkAnswer = function checkAnswerWithQuickItemTracking() {
-      const wasQuick = session?.mode === "quick";
-      const before = Number(session?.answered || 0);
-      const result = baseCheckAnswer.apply(this, arguments);
-      const after = Number(session?.answered || 0);
-      if (wasQuick && after > before) {
+    /*
+      The lesson buttons were bound to the original checkAnswer function before
+      enhancement scripts load. recordDailyAnswer is resolved dynamically from
+      that original function, so this is the reliable one-per-submission hook.
+    */
+    const baseRecordDailyAnswer = recordDailyAnswer;
+    recordDailyAnswer = function recordDailyAnswerWithQuickItemTracking(correct, isReview = false) {
+      const wasQuickReview = session?.mode === "quick";
+      if (wasQuickReview) {
         const current = ensureDailyActivity();
-        current.quickReviewItems += after - before;
-        if (typeof claimDailyQuestRewards === "function") claimDailyQuestRewards(true);
+        current.quickReviewItems = Number(current.quickReviewItems || 0) + 1;
+      }
+
+      const result = baseRecordDailyAnswer.apply(this, arguments);
+
+      if (wasQuickReview) {
         if (typeof renderDailyQuests === "function") renderDailyQuests();
         saveState();
       }
@@ -103,7 +109,7 @@
       const completedDaily = session?.mode === "daily";
       if (completedDaily) {
         const current = ensureDailyActivity();
-        current.dailySessions += 1;
+        current.dailySessions = Number(current.dailySessions || 0) + 1;
       }
       return baseFinishSession.apply(this, arguments);
     };
