@@ -25,10 +25,14 @@ for (const marker of [
   "dailySessions",
   'session?.mode === "quick"',
   'session?.mode === "daily"',
-  "after - before",
+  "recordDailyAnswerWithQuickItemTracking",
+  "baseRecordDailyAnswer.apply(this, arguments)",
   "questProgress(quest) >= quest.target"
 ]) {
   if (!goals.includes(marker)) fail(`Missing harder Daily Quest marker: ${marker}`);
+}
+if (goals.includes("checkAnswerWithQuickItemTracking") || goals.includes("after - before")) {
+  fail("Quick Review items must be counted through recordDailyAnswer, not the stale checkAnswer wrapper.");
 }
 
 const keyRun = read("key-run-refinement.js");
@@ -61,6 +65,10 @@ for (const marker of [
   "visualProgress(points, milestones)",
   "previousUnlock",
   "nextUnlock",
+  "progress-complete",
+  "progress-approaching",
+  "progress-future",
+  "dot.textContent = String(number)",
   'host.dataset.evenSpacing = "true"'
 ]) {
   if (!rail.includes(marker)) fail(`Missing evenly-spaced rail marker: ${marker}`);
@@ -74,8 +82,7 @@ for (const marker of [
   "sq-profile-emblem-trigger",
   "originalButton.click()",
   "positionMenu(anchor)",
-  "Open learner menu",
-  "Version 5.4.20 · Key Run Edition"
+  "Open learner menu"
 ]) {
   if (!emblem.includes(marker)) fail(`Missing profile-emblem marker: ${marker}`);
 }
@@ -96,18 +103,18 @@ for (const marker of [
 for (const htmlFile of ["app.html", "bisaya.html"]) {
   const html = read(htmlFile);
   for (const asset of [
-    "profile-emblem-control.css?v=5.4.20",
-    "daily-goal-refinement.js?v=5.4.20",
-    "key-run-refinement.js?v=5.4.20",
-    "even-progress-rail.js?v=5.4.20",
-    "profile-emblem-control.js?v=5.4.20"
+    "profile-emblem-control.css?v=5.4.21",
+    "daily-goal-refinement.js?v=5.4.21",
+    "key-run-refinement.js?v=5.4.21",
+    "even-progress-rail.js?v=5.4.21",
+    "profile-emblem-control.js?v=5.4.21"
   ]) {
     if (!html.includes(asset)) fail(`${htmlFile} does not load ${asset}`);
   }
-  const dailyIndex = html.indexOf("daily-goal-refinement.js?v=5.4.20");
-  const chestIndex = html.indexOf("weekly-avatar-chest.js?v=5.4.19");
-  const keyRunIndex = html.indexOf("key-run-refinement.js?v=5.4.20");
-  const oldPolishIndex = html.indexOf("weekly-avatar-polish.js?v=5.4.19");
+  const dailyIndex = html.indexOf("daily-goal-refinement.js?v=5.4.21");
+  const chestIndex = html.indexOf("weekly-avatar-chest.js?v=5.4.21");
+  const keyRunIndex = html.indexOf("key-run-refinement.js?v=5.4.21");
+  const oldPolishIndex = html.indexOf("weekly-avatar-polish.js?v=5.4.21");
   if (!(dailyIndex >= 0 && dailyIndex < chestIndex && chestIndex < keyRunIndex && keyRunIndex < oldPolishIndex)) {
     fail(`${htmlFile} must install harder goals before the chest and the key-run layer before the retired weekly animation layer`);
   }
@@ -123,8 +130,8 @@ for (const asset of [
 ]) {
   if (!serviceWorker.includes(asset)) fail(`Offline cache is missing ${asset}`);
 }
-if (!serviceWorker.includes("salita-quest-v5-4-key-run-r33")) {
-  fail("Service-worker cache was not bumped for the key-run release");
+if (!serviceWorker.includes("salita-quest-v5-4-progression-scenarios-r34")) {
+  fail("Service-worker cache was not bumped for the progression and scenario release");
 }
 
-console.log("Validated learner-avatar emblem menus, evenly spaced mastery nodes with threshold-based movement, harder Daily Quests, cumulative Quick Review items, six consecutive Daily Keys, social avatar rewards, both language loaders and offline assets.");
+console.log("Validated learner-avatar emblem menus, evenly spaced mastery nodes with threshold-based movement, repaired cumulative Quick Review item counting, harder Daily Quests, six consecutive Daily Keys, social avatar rewards, both language loaders and offline assets.");
