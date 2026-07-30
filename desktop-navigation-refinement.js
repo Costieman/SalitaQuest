@@ -86,14 +86,13 @@
     if (achievementSummary) badgesView.querySelector(".badges-page-summary").appendChild(achievementSummary);
     if (achievementPanel) badgesView.querySelector(".badges-page-shelf").appendChild(achievementPanel);
 
-    const mobileSheetGrid = document.querySelector(".mobile-sheet-grid");
+    const mobileSheetGrid = document.querySelector(".mobile-more-grid");
     let mobileBadgesButton = null;
     if (mobileSheetGrid) {
       mobileBadgesButton = document.createElement("button");
-      mobileBadgesButton.className = "mobile-sheet-item";
       mobileBadgesButton.type = "button";
       mobileBadgesButton.dataset.view = "badges";
-      mobileBadgesButton.innerHTML = `<span class="mobile-sheet-icon">🏅</span><span><strong>Badges</strong><small>Achievement collection</small></span>`;
+      mobileBadgesButton.innerHTML = `<span>🏅</span><strong>Badges</strong><small>Achievement collection</small>`;
       mobileSheetGrid.appendChild(mobileBadgesButton);
     }
 
