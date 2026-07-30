@@ -11,6 +11,7 @@ on:
       - "agent/audio-**"
       - "agent/placement-**"
       - "agent/social-**"
+      - "agent/hosted-**"
 
 permissions:
   contents: read
@@ -43,3 +44,5 @@ jobs:
         run: node scripts/validate-placement-sharing.mjs
       - name: Validate social posting and resumable Cebuano audio
         run: node scripts/validate-social-posting-audio-resume.mjs
+      - name: Validate hosted achievement sharing
+        run: node scripts/validate-hosted-achievement-sharing.mjs
