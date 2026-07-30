@@ -53,7 +53,7 @@
     const base=apiBase(); const profile=activeProfile();
     if(!base || !profile){ connections={}; hostedSharingAvailable=false; render(); return; }
     try{
-      const health=await fetch(`${base}/healthz`,{headers:{Accept:"application/json"}});
+      const health=await fetch(`${base}/health`,{headers:{Accept:"application/json"}});
       hostedSharingAvailable=health.ok;
       const response=await fetch(`${base}/api/social/connections?profileId=${encodeURIComponent(profile.id)}`,{credentials:"include",headers:{Accept:"application/json"}});
       if(response.status===404 || response.status===501){
