@@ -8,6 +8,7 @@ on:
       - "agent/bisaya-**"
       - "agent/dark-mode-**"
       - "agent/progression-**"
+      - "agent/audio-**"
 
 permissions:
   contents: read
@@ -34,3 +35,5 @@ jobs:
         run: node scripts/validate-key-run-refinement.mjs
       - name: Validate progression scenarios and navigation
         run: node scripts/validate-progression-scenarios-navigation.mjs
+      - name: Validate audio badges and reward coordination
+        run: node scripts/validate-audio-badge-release.mjs
