@@ -100,11 +100,11 @@ for (const htmlFile of ["app.html", "bisaya.html"]) {
 
 const serviceWorker = read("service-worker.js");
 requireMarkers(serviceWorker, [
+  'const CACHE_NAME = "salita-quest-',
   '"./daily-goal-refinement.js"',
   '"./key-run-refinement.js"',
   '"./even-progress-rail.js"',
-  '"./profile-emblem-control.js"',
-  "salita-quest-v5-4-navigation-badges-r35"
+  '"./profile-emblem-control.js"'
 ], "Key-run offline release");
 
 console.log("Validated repaired cumulative Quick Review counting, harder Daily Quests, six consecutive Daily Keys, learner-avatar menus, even mastery nodes, both course loaders, and offline assets.");
