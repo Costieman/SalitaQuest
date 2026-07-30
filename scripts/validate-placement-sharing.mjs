@@ -67,10 +67,10 @@ for (const htmlFile of ["app.html","bisaya.html"]) {
 
 const worker = read("service-worker.js");
 for (const asset of ['"./badge-sharing-v1.js"','"./badge-sharing-v1.css"','"./placement-onboarding-v1.js"','"./placement-onboarding-v1.css"','"./social-links-v1.js"','"./social-links-v1.css"']) if (!worker.includes(asset)) fail(`Offline cache is missing ${asset}`);
-if (!worker.includes("salita-quest-v5-4-hosted-sharing-r39")) fail("Current service-worker cache is missing");
+if (!worker.includes("salita-quest-v5-4-seamless-sharing-r40")) fail("Current service-worker cache is missing");
 
 const index = read("index.html");
-if (!index.includes("profile-shell.css?v=5.4.25") || !index.includes("service-worker.js?v=5.4.25")) fail("Profile gate was not advanced to 5.4.25");
+if (!index.includes("profile-shell.css?v=5.4.25") || !index.includes("service-worker.js?v=5.4.27")) fail("Profile gate was not advanced to the seamless sharing release");
 
 const readme = read("README.md");
 for (const marker of ["5.4.25 — Hosted Achievement Sharing","20-question placement check","content access only","Badge Chest","START LEARNING FREE","Connected social accounts","validate-placement-sharing.mjs"]) if (!readme.includes(marker)) fail(`README is missing: ${marker}`);
