@@ -86,8 +86,8 @@ if (!read("bisaya-app-loader.js").includes('loadScript("./profile-app.js')) fail
 
 const index = read("index.html");
 requireMarkers(index, [
-  'profile-shell.css?v=5.4.24',
-  'service-worker.js?v=5.4.24'
+  'profile-shell.css?v=5.4.25',
+  'service-worker.js?v=5.4.25'
 ], "Profile gate release");
 
 const serviceWorker = read("service-worker.js");

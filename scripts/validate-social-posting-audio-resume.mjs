@@ -37,40 +37,46 @@ requireMarkers(connections,[
 
 const posting = read("social-posting-v2.js");
 requireMarkers(posting,[
-  "node.width=1080",
+  "makeCanvas(width=1080,height=1080)",
+  "makeCanvas(1200,630)",
   "avatarPath()",
   "drawBadgeVisual",
-  "Your pixel avatar is used whenever a custom badge illustration is not available",
+  "buildOpenGraphCard",
+  "START LEARNING FREE",
+  "CHOOSE TAGALOG OR CEBUANO",
+  "createHostedShare",
+  "/api/share-cards",
+  "squareImageDataUrl",
+  "ogImageDataUrl",
   "www.facebook.com/sharer/sharer.php",
   "twitter.com/intent/tweet",
   "www.linkedin.com/sharing/share-offsite",
   "https://wa.me/",
   "navigator.canShare?.({files:[file]})",
   "api.post(provider",
-  "imageDataUrl",
   "event.stopImmediatePropagation()",
   'document.addEventListener("click"',
   "data-social-platform"
-],"Platform posting runtime");
-if (!posting.includes("true);document.addEventListener") && !posting.includes("},true);")) fail("Social posting must capture share clicks before the legacy Windows-share handler");
+],"Hosted platform posting runtime");
+if (!posting.includes("},true);")) fail("Social posting must capture share clicks before the legacy Windows-share handler");
 
 for (const htmlFile of ["app.html","bisaya.html"]) {
   const html=read(htmlFile);
   const inline=[...html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/gi)].map(match=>match[1].trim()).filter(Boolean);
   inline.forEach((source,index)=>new vm.Script(source,{filename:`${htmlFile}#inline-${index+1}`}));
   for (const asset of [
-    "badge-layout-v3.css?v=5.4.24","social-connections-v2.css?v=5.4.24","social-posting-v2.css?v=5.4.24",
-    "social-connections-v2.js?v=5.4.24","social-posting-v2.js?v=5.4.24"
+    "badge-layout-v3.css?v=5.4.25","social-connections-v2.css?v=5.4.25","social-posting-v2.css?v=5.4.25",
+    "social-connections-v2.js?v=5.4.25","social-posting-v2.js?v=5.4.25"
   ]) if (!html.includes(asset)) fail(`${htmlFile} does not load ${asset}`);
   const oldShare=html.indexOf("badge-sharing-v1.js?v=5.4.23");
-  const connectionsIndex=html.indexOf("social-connections-v2.js?v=5.4.24");
-  const postingIndex=html.indexOf("social-posting-v2.js?v=5.4.24");
-  if (!(oldShare>=0 && connectionsIndex>oldShare && postingIndex>connectionsIndex)) fail(`${htmlFile} must load legacy chest state, connected accounts, then final posting interception`);
+  const connectionsIndex=html.indexOf("social-connections-v2.js?v=5.4.25");
+  const postingIndex=html.indexOf("social-posting-v2.js?v=5.4.25");
+  if (!(oldShare>=0 && connectionsIndex>oldShare && postingIndex>connectionsIndex)) fail(`${htmlFile} must load legacy chest state, connected accounts, then final hosted-posting interception`);
 }
 
 const worker=read("service-worker.js");
 requireMarkers(worker,[
-  "salita-quest-v5-4-social-posting-audio-r38",
+  "salita-quest-v5-4-hosted-sharing-r39",
   '"./badge-layout-v3.css"',
   '"./social-connections-v2.js"',
   '"./social-connections-v2.css"',
@@ -102,6 +108,6 @@ requireMarkers(socialDocs,["True connected accounts","w_member_social","TikTok's
 const audioDocs=read("docs/CEBUANO_AUDIO.md");
 requireMarkers(audioDocs,["The generator is resumable","punctuation-only aliases","failed.jsonl","git pull --ff-only origin main"],"Cebuano recovery documentation");
 const readme=read("README.md");
-requireMarkers(readme,["5.4.24 — Social Posting & Resumable Cebuano Audio","Achievement posting","Connected social accounts","badge-layout-v3.css","validate-social-posting-audio-resume.mjs"],"README release notes");
+requireMarkers(readme,["5.4.25 — Hosted Achievement Sharing","Hosted achievement sharing","Connected social accounts","badge-layout-v3.css","validate-social-posting-audio-resume.mjs"],"README release notes");
 
-console.log("Validated non-overlapping badge cards, avatar-backed 1080px social cards, platform-specific public sharing, OAuth-ready connected posting, resumable Cebuano generation, both courses and offline release 5.4.24.");
+console.log("Validated non-overlapping badge cards, avatar-backed square and Open Graph cards, hosted platform previews, OAuth-ready connected posting, resumable Cebuano generation, both courses and offline release 5.4.25.");

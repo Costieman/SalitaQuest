@@ -2,7 +2,7 @@
 
 Salita Quest is a local-first, conversation-focused Tagalog and Cebuano learning app. It combines active recall, spaced repetition, structured mastery, short daily practice, scenario challenges, audio review, learner profiles, collectible rewards and offline installation.
 
-Current application release: **5.4.24 — Social Posting & Resumable Cebuano Audio**.
+Current application release: **5.4.25 — Hosted Achievement Sharing**.
 
 ## Learner onboarding and placement
 
@@ -52,38 +52,58 @@ Badges have their own dedicated navigation page. The catalogue displays:
 2. available but not yet earned badges;
 3. locked badges.
 
-Every badge has a stable ID, category, requirement, status, progress data, earned timestamp and an optional custom image path. Custom art can later be added at `badges/<badge-id>.png`; the current pictogram remains as a fallback.
+Every badge has a stable ID, category, requirement, status, progress data, earned timestamp and an optional custom image path. Custom art can later be added at `badges/<badge-id>.png`; the learner's pixel avatar remains the current fallback.
 
-New badges are celebrated on Home. The **Badge Chest** lets a learner pin and manually order up to six favourite earned badges.
+New badges are celebrated on Home. The **Badge Chest** lets a learner pin and manually order up to six favourite earned badges. `badge-layout-v3.css` keeps artwork, text, progress and controls in separate non-overlapping columns.
 
-Release 5.4.24 fixes the catalogue's internal overlap by enforcing a dedicated artwork column and a separate content column even though the legacy course stylesheet loads later. The grid reduces column counts before cards become cramped.
+## Hosted achievement sharing
 
-## Achievement posting
+Facebook, LinkedIn and X cannot inspect a canvas or `blob:` image that exists only inside the learner's browser. Sharing the ordinary Salita Quest homepage therefore produces a generic link preview rather than the selected badge or Badge Chest.
 
-Selecting **Share badge** or **Share Badge Chest** now opens a Salita Quest posting panel instead of immediately handing a generic PNG to the Windows share sheet.
+Release 5.4.25 adds a small Cloud Run service that creates a unique public share page for each post:
 
-The panel:
+1. the browser renders the actual 1080 × 1080 badge or Badge Chest card;
+2. it also renders a 1200 × 630 Open Graph version;
+3. both PNGs are uploaded to the Salita Quest share service;
+4. the service returns a unique `/share/<id>` page;
+5. that page exposes the exact card through `og:image` and Twitter Card metadata;
+6. the page and artwork both link back to Salita Quest.
 
-- renders a high-quality 1080 × 1080 preview;
-- uses the learner's selected pixel avatar whenever custom badge art is unavailable;
-- offers Facebook, X, LinkedIn and WhatsApp public composers;
-- offers mobile image handoff for Instagram, TikTok and other installed apps;
-- supports download and caption-copy fallbacks;
-- includes a referral link inviting people to **learn Filipino languages for free with Salita Quest**.
+The cards now contain a visible **START LEARNING FREE** call-to-action and **Choose Tagalog or Cebuano** invitation.
 
-Public composer sharing remains user-confirmed. A browser cannot silently attach a locally generated image to every desktop platform.
+Platform behavior:
+
+- **Facebook, LinkedIn and X** share the unique hosted page, allowing their crawlers to display the actual achievement card.
+- **WhatsApp** shares the hosted card link and invitation.
+- **Instagram and TikTok** receive the square PNG through mobile/device sharing, or through a future approved connected-account publishing integration.
+- Each hosted URL is unique, avoiding stale social-preview caches from earlier generic Salita Quest links.
+
+The service lives in [`services/social-share/`](services/social-share/) and can be deployed from Google Cloud Shell:
+
+```bash
+chmod +x services/social-share/deploy-cloud-shell.sh
+./services/social-share/deploy-cloud-shell.sh
+```
+
+After deployment, paste the printed HTTPS URL into:
+
+```text
+Settings → Connected accounts → Connection service
+```
+
+See [`services/social-share/README.md`](services/social-share/README.md).
 
 ## Connected social accounts
 
-Settings now contains an OAuth-ready **Connected accounts** screen for Facebook, Instagram, TikTok, X, LinkedIn and Google.
+Settings contains an OAuth-ready **Connected accounts** screen for Facebook, Instagram, TikTok, X, LinkedIn and Google.
 
-True account connections require a secure HTTPS backend because provider access tokens and client secrets must never be stored in the GitHub Pages app. Once a connection service is deployed, its Cloud Run URL can be saved in Settings. Connected providers can then be used by the posting panel through the documented API contract.
+Hosted previews work through the share service without social access tokens. True connected-account publishing remains a separate layer requiring provider applications, OAuth credentials, secure token storage and approved permissions.
 
 Provider restrictions still apply:
 
-- Facebook personal-profile sharing remains user-confirmed; ordinary apps cannot silently publish arbitrary personal timeline posts.
+- Facebook personal-profile sharing remains user-confirmed.
 - Instagram publishing requires a supported professional account and Meta permissions.
-- TikTok requires a registered app, user OAuth, approved posting scopes and provider review/audit conditions.
+- TikTok requires a registered app, user OAuth, approved posting scopes and provider review conditions.
 - LinkedIn member posting requires OAuth and `w_member_social`.
 - Google is available for identity or future sync, not as a badge-post destination.
 
@@ -103,14 +123,7 @@ See [`docs/SOCIAL_CONNECTIONS.md`](docs/SOCIAL_CONNECTIONS.md).
 
 The repository includes `scripts/generate_cebuano_google_audio.py`, which uses Google Cloud Gemini-TTS with language code `ceb-PH` and the approved `Kore` voice.
 
-The generator is now resumable. It:
-
-- keeps existing clips;
-- updates the manifest after each success;
-- reuses punctuation-equivalent recordings;
-- retries transient Google Cloud errors;
-- logs provider safety rejections in `audio/ceb-PH/failed.jsonl`;
-- continues through the remaining phrases instead of aborting the whole run.
+The generator is resumable. It keeps existing clips, updates the manifest after each success, reuses punctuation-equivalent recordings, retries transient errors, logs rejected phrases in `audio/ceb-PH/failed.jsonl`, and continues through the remaining library.
 
 ```bash
 cd ~/SalitaQuest-current
@@ -145,9 +158,9 @@ This is a local profile lock, not a server-authenticated account. Progress remai
 
 ## Offline installation
 
-Salita Quest is a Progressive Web App. The service worker caches the course engine, language packs, interface assets, avatars and reward runtimes. Release 5.4.24 uses cache `salita-quest-v5-4-social-posting-audio-r38`.
+Salita Quest is a Progressive Web App. The service worker caches the course engine, language packs, interface assets, avatars and reward runtimes. Release 5.4.25 uses cache `salita-quest-v5-4-hosted-sharing-r39`.
 
-After a release, a hard refresh or fully closing and reopening an installed copy may be required once.
+The hosted share pages themselves require a network connection because social-platform crawlers must reach public image and metadata URLs.
 
 ## Repository structure
 
@@ -161,15 +174,16 @@ After a release, a hard refresh or fully closing and reopening an installed copy
 - `badge-catalogue-v2.js` — ordered badge catalogue and celebrations
 - `badge-sharing-v1.js` — Badge Chest state and legacy card helpers
 - `badge-layout-v3.css` — final non-overlapping badge geometry
-- `social-connections-v2.js` — OAuth-ready connection status and service contract
-- `social-posting-v2.js` — card preview, platform picker and connected posting client
+- `social-connections-v2.js` — service configuration and OAuth-ready connection contract
+- `social-posting-v2.js` — square/landscape card generation and hosted-platform sharing
+- `services/social-share/` — Cloud Run Open Graph image and landing-page service
 - `home-reward-coordinator.js` — Home-only Daily Key playback
 - `pronunciation-release-control.js` — release-based pronunciation activation
 - `service-worker.js` — installed/offline delivery
 
 ## Validation
 
-The pull-request workflow validates the courses, shared UI, Home, mobile, key-run, progression/scenarios/navigation, audio/badges, placement/sharing and the current social/audio recovery release.
+The pull-request workflow validates the courses, shared UI, Home, mobile, key-run, progression/scenarios/navigation, audio/badges, placement/sharing, resumable audio and hosted social previews.
 
 ```bash
 node scripts/validate-bisaya.mjs
@@ -181,8 +195,9 @@ node scripts/validate-progression-scenarios-navigation.mjs
 node scripts/validate-audio-badge-release.mjs
 node scripts/validate-placement-sharing.mjs
 node scripts/validate-social-posting-audio-resume.mjs
+node scripts/validate-hosted-achievement-sharing.mjs
 ```
 
 ## Privacy
 
-The static app does not contain Google Cloud credentials, provider client secrets or social access tokens. Public sharing is user-confirmed. Connected posting is enabled only through a separately deployed HTTPS service that is responsible for OAuth security, encrypted token storage, revocation and provider compliance.
+The static app does not contain Google Cloud credentials, provider client secrets or social access tokens. Public share images contain only the learner name, selected language, avatar and achievements already chosen for sharing. The share service stores generated cards for up to 365 days and does not store local progress or PINs.

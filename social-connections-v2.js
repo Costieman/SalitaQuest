@@ -6,15 +6,16 @@
   const ACTIVE_PROFILE = "salitaQuestActiveProfileId";
   const API_STORAGE = "salitaQuestSocialApiBase";
   const PLATFORMS = [
-    {id:"facebook",label:"Facebook",icon:"f",purpose:"Share links and supported connected-account posts"},
+    {id:"facebook",label:"Facebook",icon:"f",purpose:"Hosted card sharing now; direct publishing needs Meta approval"},
     {id:"instagram",label:"Instagram",icon:"◎",purpose:"Professional-account publishing requires Meta approval"},
     {id:"tiktok",label:"TikTok",icon:"♪",purpose:"Photo posting requires TikTok OAuth and approved scopes"},
-    {id:"x",label:"X",icon:"𝕏",purpose:"Share composer now; connected posting needs API access"},
-    {id:"linkedin",label:"LinkedIn",icon:"in",purpose:"Member posting requires the w_member_social scope"},
+    {id:"x",label:"X",icon:"𝕏",purpose:"Hosted card sharing now; connected posting needs API access"},
+    {id:"linkedin",label:"LinkedIn",icon:"in",purpose:"Hosted card sharing now; member posting requires w_member_social"},
     {id:"google",label:"Google",icon:"G",purpose:"Account sign-in only; Google is not a social-post destination"}
   ];
   let connections = {};
   let pendingPopup = null;
+  let hostedSharingAvailable = false;
 
   function retry(){ window.setTimeout(install,100); }
   function esc(value){ return String(value ?? "").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch])); }
@@ -39,38 +40,44 @@
     const card=ensureCard();
     if(!card) return;
     const base=apiBase();
-    card.innerHTML=`<div class="social-connections-heading"><div><p class="eyebrow">SOCIAL ACCOUNTS</p><h3>Connected accounts</h3><p>Connect an account through a secure OAuth service, then use supported providers from the badge sharing panel. Salita Quest never stores provider secrets in the browser.</p></div><span>🔗</span></div>
+    card.innerHTML=`<div class="social-connections-heading"><div><p class="eyebrow">SOCIAL ACCOUNTS</p><h3>Sharing and connected accounts</h3><p>The service hosts the exact badge or Badge Chest image for Facebook, X and LinkedIn previews. Provider OAuth can be added later for supported direct publishing.</p></div><span>🔗</span></div>
       <div class="social-connection-grid">${PLATFORMS.map(platform=>{
         const item=connection(platform.id); const connected=Boolean(item?.connected); const setup=!base;
-        const detail=connected ? `Connected${item.displayName?` as ${esc(item.displayName)}`:""}` : setup ? "Secure connection service not configured" : platform.purpose;
+        const detail=connected ? `Connected${item.displayName?` as ${esc(item.displayName)}`:""}` : setup ? "Share service not configured" : platform.purpose;
         return `<article class="social-connection-row ${connected?"connected":setup?"setup-required":""}" data-provider="${platform.id}"><span class="social-connection-logo">${platform.icon}</span><div class="social-connection-copy"><strong>${platform.label}</strong><small>${detail}</small></div><button class="social-connection-action" type="button" data-social-connect="${platform.id}">${connected?"Disconnect":setup?"Setup":"Connect"}</button></article>`;
       }).join("")}</div>
-      <details class="social-service-setup" ${base?"":"open"}><summary>Connection service</summary><div class="social-service-fields"><input id="socialApiBaseInput" type="url" inputmode="url" value="${esc(base)}" placeholder="https://your-social-service.run.app"><button class="secondary-btn" type="button" data-save-social-api>Save service URL</button></div><p class="social-service-help">This must be a secure backend that performs provider OAuth and stores encrypted access tokens. Facebook personal-profile auto-posting is not offered by Meta; its public Share Dialog remains user-confirmed. Instagram, TikTok and LinkedIn publishing require provider applications and permissions.</p></details><p id="socialConnectionsStatus" class="social-connections-status"></p>`;
+      <details class="social-service-setup" ${base?"":"open"}><summary>Salita Quest social service</summary><div class="social-service-fields"><input id="socialApiBaseInput" type="url" inputmode="url" value="${esc(base)}" placeholder="https://salita-quest-social-share-….run.app"><button class="secondary-btn" type="button" data-save-social-api>Save service URL</button></div><p class="social-service-help">Hosted achievement previews work as soon as the Cloud Run service is saved. Direct account publishing additionally requires provider OAuth applications, permissions and encrypted token storage.</p></details><p id="socialConnectionsStatus" class="social-connections-status"></p>`;
   }
 
   async function refresh(){
     const base=apiBase(); const profile=activeProfile();
-    if(!base || !profile){ connections={}; render(); return; }
+    if(!base || !profile){ connections={}; hostedSharingAvailable=false; render(); return; }
     try{
+      const health=await fetch(`${base}/healthz`,{headers:{Accept:"application/json"}});
+      hostedSharingAvailable=health.ok;
       const response=await fetch(`${base}/api/social/connections?profileId=${encodeURIComponent(profile.id)}`,{credentials:"include",headers:{Accept:"application/json"}});
+      if(response.status===404 || response.status===501){
+        connections={}; render(); status(hostedSharingAvailable?"Hosted achievement sharing is active. Direct social-account connections are not configured yet.":"The hosted-sharing service did not respond.",!hostedSharingAvailable); return;
+      }
       if(!response.ok) throw new Error(`Connection service returned ${response.status}`);
       const data=await response.json();
       connections=data.connections && typeof data.connections==="object" ? data.connections : {};
       render();
-    }catch(error){ connections={}; render(); status(`Connection service unavailable: ${error.message}`,true); }
+      status(hostedSharingAvailable?"Hosted achievement sharing is active.":"");
+    }catch(error){ connections={}; hostedSharingAvailable=false; render(); status(`Social service unavailable: ${error.message}`,true); }
   }
 
   function saveApi(){
     const value=String(document.getElementById("socialApiBaseInput")?.value||"").trim().replace(/\/$/,"");
     if(value && !/^https:\/\//i.test(value)){ status("The connection service must use HTTPS.",true); return; }
     if(value) localStorage.setItem(API_STORAGE,value); else localStorage.removeItem(API_STORAGE);
-    connections={}; render(); refresh();
+    connections={}; hostedSharingAvailable=false; render(); refresh();
   }
 
   function openSetup(){
     const details=document.querySelector(".social-service-setup"); if(details) details.open=true;
     document.getElementById("socialApiBaseInput")?.focus();
-    status("Deploy the Salita Quest social service, then paste its HTTPS Cloud Run URL here.");
+    status("Deploy the Salita Quest share service, then paste its HTTPS Cloud Run URL here.");
   }
 
   function connect(provider){
