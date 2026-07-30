@@ -59,7 +59,8 @@ for (const marker of [
   'New badge earned!',
   'switchViewWithBadgeCelebrations',
   'recordDailyAnswerWithBadgeMetrics',
-  'recordDailySessionWithBadgeMetrics'
+  'recordDailySessionWithBadgeMetrics',
+  'new CustomEvent("salita:badges-rendered"'
 ]) if (!badges.includes(marker)) fail(`Missing badge catalogue marker: ${marker}`);
 
 const badgeCount = (badges.match(/\{id:"/g) || []).length;
@@ -122,7 +123,7 @@ if (compile.status !== 0) fail(`Cebuano generator does not compile: ${compile.st
 
 const readme = read("README.md");
 for (const marker of [
-  '5.4.25 — Hosted Achievement Sharing',
+  '5.4.29 — Badge Stability & Code Consolidation',
   'pointer release',
   'earned badges first, ordered newest to oldest',
   'Google Cloud Gemini-TTS',
