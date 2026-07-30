@@ -87,12 +87,12 @@ for (const htmlFile of ["app.html", "bisaya.html"]) {
 
 const serviceWorker = read("service-worker.js");
 requireMarkers(serviceWorker, [
+  'const CACHE_NAME = "salita-quest-',
   '"./ui-quality-fixes.js"',
   '"./incorrect-order-feedback.js"',
   '"./mastery-feedback.js"',
   '"./lesson-side-launcher.js"',
-  '"./mobile-session-refinement.js"',
-  "salita-quest-v5-4-navigation-badges-r35"
+  '"./mobile-session-refinement.js"'
 ], "Offline shared UI release");
 
 console.log("Validated answer feedback, sentence correction, three-day durable mastery, Daily/Quick launchers, pronunciation hidden during idle and pre-answer production, post-answer audio, both course loaders, and offline delivery.");
