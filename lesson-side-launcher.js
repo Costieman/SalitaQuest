@@ -70,6 +70,7 @@
             <option value="6">6 questions</option>
             <option value="8">8 questions</option>
             <option value="12">12 questions</option>
+            <option value="15">15 questions</option>
             <option value="20">20 questions</option>
           </select>
         </label>
@@ -140,32 +141,62 @@
 
     function phraseForCurrentExercise() {
       const item = currentExercise?.item || {};
-      return String(currentExercise?.audio || item.example || item.term || "").trim();
+      return String(currentExercise?.audio || item.example || item.term || item.root || currentExercise?.answers?.[0] || "").trim();
+    }
+
+    function answerHasBeenGiven() {
+      const nextButton = document.getElementById("nextBtn");
+      const feedback = document.getElementById("feedbackBox");
+      return Boolean(
+        (nextButton && !nextButton.classList.contains("hidden")) ||
+        (feedback && !feedback.classList.contains("hidden")) ||
+        sentenceBuilderState?.locked
+      );
+    }
+
+    function isEnglishToFilipinoProduction() {
+      if (!currentExercise?.sentenceBuilder) return false;
+      return !/listen and build/i.test(String(currentExercise.type || ""));
     }
 
     function placeAudioButton() {
-      const phrase = phraseForCurrentExercise();
-      if (phrase) {
-        audioButton.dataset.text = phrase;
-        audioButton.classList.remove("hidden");
+      if (!activeSession()) {
+        audioButton.classList.add("hidden");
+        audioButton.dataset.text = "";
+        audioButton.classList.remove("lesson-audio-square");
+        return;
       }
-      audioButton.setAttribute("aria-label", "Hear pronunciation of the current phrase");
+
+      const phrase = phraseForCurrentExercise();
+      const answered = answerHasBeenGiven();
+      const productionBeforeAnswer = isEnglishToFilipinoProduction() && !answered;
+      const explicitlyAvailableBeforeAnswer = Boolean(currentExercise?.audio);
+      const shouldShow = Boolean(phrase) && (answered || (!productionBeforeAnswer && explicitlyAvailableBeforeAnswer));
+
+      if (!shouldShow) {
+        audioButton.classList.add("hidden");
+        audioButton.dataset.text = "";
+        audioButton.classList.remove("lesson-audio-square");
+        return;
+      }
+
+      audioButton.dataset.text = phrase;
+      audioButton.classList.remove("hidden");
+      audioButton.setAttribute("aria-label", answered
+        ? "Hear pronunciation of the answer"
+        : "Hear pronunciation of the current phrase");
+      audioButton.textContent = answered ? "🔊 Hear the answer" : "🔊 Hear pronunciation";
 
       if (!window.matchMedia(DESKTOP_QUERY).matches) {
         audioButton.classList.remove("lesson-audio-square");
         return;
       }
+
       const longTerm = panel.querySelector(".long-term-mastery-card");
       if (longTerm && audioButton.previousElementSibling !== longTerm) {
         longTerm.insertAdjacentElement("afterend", audioButton);
       }
       audioButton.classList.add("lesson-audio-square");
-      if (audioButton.dataset.text) {
-        audioButton.classList.remove("hidden");
-        if (!/pronunciation|phrase/i.test(audioButton.textContent)) {
-          audioButton.textContent = "🔊 Hear pronunciation";
-        }
-      }
     }
 
     function syncSidePanel() {
@@ -177,7 +208,7 @@
       panel.classList.toggle("session-console-idle", !active);
       launcher.hidden = active;
       emptyState.hidden = active;
-      if (active) placeAudioButton();
+      placeAudioButton();
     }
 
     function scheduleSync(delay = 0) {
@@ -220,10 +251,8 @@
       return result;
     };
 
-    const observer = new MutationObserver(() => {
-      if (activeSession()) scheduleSync(10);
-    });
-    observer.observe(panel, {childList:true, subtree:true});
+    const observer = new MutationObserver(() => scheduleSync(10));
+    observer.observe(panel, {childList:true, subtree:true, attributes:true, attributeFilter:["class"]});
 
     const media = window.matchMedia(DESKTOP_QUERY);
     media.addEventListener?.("change", () => scheduleSync(30));

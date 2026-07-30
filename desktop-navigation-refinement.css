@@ -1,0 +1,283 @@
+/* Retractable desktop navigation rail and dedicated Badges destination. */
+
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+.desktop-nav-collapse {
+  display: none;
+}
+
+.desktop-badge-nav-art .pictogram {
+  width: 100%;
+  height: 100%;
+}
+
+.badges-view {
+  padding-bottom: 30px;
+}
+
+.badges-page-hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 28px;
+  padding: clamp(24px, 2.4vw, 40px);
+  border: 1px solid var(--line);
+  border-radius: 28px;
+  background: linear-gradient(135deg, color-mix(in srgb, var(--navy) 94%, #f4b942), var(--navy-2));
+  color: white;
+  box-shadow: var(--shadow);
+}
+
+.badges-page-hero h2 {
+  margin: 8px 0 8px;
+  font-size: clamp(1.9rem, 3vw, 3.2rem);
+  line-height: 1;
+}
+
+.badges-page-hero p:not(.eyebrow) {
+  max-width: 760px;
+  margin: 0;
+  color: #dde5f4;
+  line-height: 1.55;
+}
+
+.badges-page-emblem {
+  flex: 0 0 auto;
+  width: clamp(90px, 8vw, 132px);
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255,255,255,.28);
+  border-radius: 30px;
+  background: linear-gradient(145deg, rgba(255,224,122,.22), rgba(255,255,255,.08));
+  color: #ffd36f;
+  box-shadow: inset 0 0 30px rgba(255,211,111,.12);
+}
+
+.badges-page-emblem .pictogram {
+  width: 64%;
+  height: 64%;
+}
+
+.badges-page-summary {
+  margin-top: 18px;
+}
+
+.badges-page-summary .progress-achievement-card {
+  min-height: 0;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 8px 20px;
+  padding: 20px 24px;
+}
+
+.badges-page-summary .progress-achievement-card .eyebrow,
+.badges-page-summary .progress-achievement-card h3,
+.badges-page-summary .progress-achievement-card p {
+  margin: 0;
+}
+
+.badges-page-summary .progress-achievement-card p {
+  grid-column: 2;
+  color: var(--muted);
+}
+
+.badges-page-shelf {
+  margin-top: 16px;
+}
+
+.badges-page-shelf .achievement-panel {
+  display: block !important;
+  margin: 0 !important;
+  padding: clamp(18px, 1.8vw, 30px) !important;
+}
+
+.badges-page-shelf .badge-shelf {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.badges-page-shelf .badge {
+  min-width: 0;
+  min-height: 118px;
+}
+
+body.dark-mode .badges-page-hero {
+  border-color: #30405a;
+}
+
+@media (min-width: 1001px) {
+  .sidebar {
+    overflow: visible !important;
+    transition: width .26s ease, padding .26s ease;
+  }
+
+  .app-shell {
+    transition: grid-template-columns .26s ease;
+  }
+
+  .desktop-nav-collapse {
+    position: absolute;
+    top: 82px;
+    right: -15px;
+    z-index: 30;
+    width: 30px;
+    height: 38px;
+    display: grid;
+    place-items: center;
+    padding: 0;
+    border: 2px solid color-mix(in srgb, white 75%, var(--navy));
+    border-radius: 11px;
+    background: color-mix(in srgb, var(--navy) 88%, white);
+    color: white;
+    font-size: 1.35rem;
+    font-weight: 900;
+    line-height: 1;
+    box-shadow: 0 7px 18px rgba(5,14,31,.24);
+    transition: transform .2s ease, background .2s ease;
+  }
+
+  .desktop-nav-collapse:hover,
+  .desktop-nav-collapse:focus-visible {
+    background: color-mix(in srgb, var(--navy-2) 82%, white);
+    transform: scale(1.07);
+  }
+
+  body.desktop-nav-collapsed .app-shell {
+    grid-template-columns: 78px minmax(0, 1fr) !important;
+  }
+
+  body.desktop-nav-collapsed .sidebar {
+    width: 78px;
+    padding-inline: 10px !important;
+    align-items: stretch;
+  }
+
+  body.desktop-nav-collapsed .sidebar .brand {
+    justify-content: center;
+  }
+
+  body.desktop-nav-collapsed .sidebar .brand > div:last-child,
+  body.desktop-nav-collapsed .sidebar .nav-item > span:last-child,
+  body.desktop-nav-collapsed .sidebar .sidebar-note {
+    display: none !important;
+  }
+
+  body.desktop-nav-collapsed .sidebar .brand-mark {
+    width: 48px !important;
+    height: 48px !important;
+  }
+
+  body.desktop-nav-collapsed .sidebar .nav-list {
+    width: 100%;
+    justify-items: stretch;
+  }
+
+  body.desktop-nav-collapsed .sidebar .nav-item {
+    position: relative;
+    width: 100%;
+    min-height: 48px;
+    justify-content: center;
+    gap: 0 !important;
+    padding: 10px !important;
+  }
+
+  body.desktop-nav-collapsed .sidebar .nav-art {
+    width: 25px;
+    height: 25px;
+    flex: 0 0 25px;
+  }
+
+  body.desktop-nav-collapsed .sidebar .nav-item::after {
+    content: attr(aria-label);
+    position: absolute;
+    left: calc(100% + 12px);
+    top: 50%;
+    z-index: 80;
+    transform: translate(-5px,-50%);
+    padding: 7px 10px;
+    border: 1px solid rgba(255,255,255,.15);
+    border-radius: 9px;
+    background: #0c1730;
+    color: white;
+    font-size: .72rem;
+    font-weight: 800;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    box-shadow: 0 8px 22px rgba(0,0,0,.25);
+    transition: opacity .16s ease, transform .16s ease, visibility .16s ease;
+  }
+
+  body.desktop-nav-collapsed .sidebar .nav-item:hover::after,
+  body.desktop-nav-collapsed .sidebar .nav-item:focus-visible::after {
+    opacity: 1;
+    visibility: visible;
+    transform: translate(0,-50%);
+  }
+
+  body.desktop-nav-collapsed .desktop-nav-collapse {
+    right: -15px;
+  }
+}
+
+@media (max-width: 1320px) and (min-width: 1001px) {
+  .badges-page-shelf .badge-shelf {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 1000px) {
+  .badges-page-hero {
+    padding: 20px;
+  }
+
+  .badges-page-emblem {
+    width: 82px;
+    border-radius: 22px;
+  }
+
+  .badges-page-shelf .badge-shelf {
+    grid-template-columns: 1fr;
+  }
+
+  .badges-page-summary .progress-achievement-card {
+    grid-template-columns: 1fr;
+  }
+
+  .badges-page-summary .progress-achievement-card p {
+    grid-column: 1;
+  }
+}
+
+@media (max-width: 520px) {
+  .badges-page-hero {
+    align-items: flex-start;
+  }
+
+  .badges-page-emblem {
+    width: 64px;
+    border-radius: 18px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app-shell,
+  .sidebar,
+  .desktop-nav-collapse {
+    transition: none !important;
+  }
+}

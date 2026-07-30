@@ -3,7 +3,7 @@
 
   const INSTALL_FLAG = "__salitaQuestMobileSessionRefinementInstalled";
   const MOBILE_QUERY = "(max-width: 1000px)";
-  const MORE_VIEWS = new Set(["audioReview", "skills", "boss", "progress", "settings"]);
+  const MORE_VIEWS = new Set(["audioReview", "skills", "boss", "progress", "badges", "settings"]);
   const RAIL_FREE_MOBILE_VIEWS = new Set(["review", "audioReview"]);
   const STAGE_LABELS = ["New", "Seen", "Familiar", "Usable", "Flexible", "Mastered"];
   let syncTimer = 0;
@@ -172,14 +172,14 @@
     const baseRenderMasteryRail = renderMasteryRail;
     renderMasteryRail = function renderMasteryRailForMobile() {
       const result = baseRenderMasteryRail.apply(this, arguments);
-      simplifyMobileRail();
+      scheduleSync(0);
       return result;
     };
 
     const baseSwitchView = switchView;
     switchView = function switchViewWithMobileState(view) {
       const result = baseSwitchView.apply(this, arguments);
-      scheduleSync(10);
+      scheduleSync(0);
       return result;
     };
 
@@ -193,16 +193,8 @@
     const baseRenderFeedback = renderFeedback;
     renderFeedback = function renderFeedbackForMobile() {
       const result = baseRenderFeedback.apply(this, arguments);
-      scheduleSync(0);
-      if (media.matches) {
-        window.requestAnimationFrame(() => {
-          const rect = feedbackBox.getBoundingClientRect();
-          const footerHeight = document.querySelector("#learnView .lesson-footer")?.offsetHeight || 92;
-          if (rect.bottom > window.innerHeight - footerHeight - 12 || rect.top < lessonTopline.offsetHeight) {
-            feedbackBox.scrollIntoView({block:"center", behavior:"smooth"});
-          }
-        });
-      }
+      scheduleSync(20);
+      if (media.matches) window.setTimeout(() => feedbackBox.scrollIntoView({block:"nearest", behavior:"smooth"}), 80);
       return result;
     };
 
@@ -213,14 +205,9 @@
       return result;
     };
 
-    const observer = new MutationObserver(() => scheduleSync(20));
-    observer.observe(learnView, {subtree:true, childList:true, attributes:true, attributeFilter:["class"]});
     media.addEventListener?.("change", () => scheduleSync(20));
-    window.addEventListener("resize", () => scheduleSync(40), {passive:true});
-    window.setTimeout(() => scheduleSync(0), 500);
-    window.setTimeout(() => scheduleSync(0), 1400);
-
-    syncMobileState();
+    window.addEventListener("resize", () => scheduleSync(20), {passive:true});
+    scheduleSync(0);
   }
 
   installMobileSessionRefinement();
