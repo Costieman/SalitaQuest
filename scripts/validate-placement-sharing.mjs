@@ -73,6 +73,6 @@ const index = read("index.html");
 if (!index.includes("profile-shell.css?v=5.4.25") || !index.includes("service-worker.js?v=5.4.25")) fail("Profile gate was not advanced to 5.4.25");
 
 const readme = read("README.md");
-for (const marker of ["5.4.25 — Hosted Achievement Sharing","20-question placement check","content access only","Badge Chest","Start learning a Filipino language free","Connected social accounts","validate-placement-sharing.mjs"]) if (!readme.includes(marker)) fail(`README is missing: ${marker}`);
+for (const marker of ["5.4.25 — Hosted Achievement Sharing","20-question placement check","content access only","Badge Chest","START LEARNING FREE","Connected social accounts","validate-placement-sharing.mjs"]) if (!readme.includes(marker)) fail(`README is missing: ${marker}`);
 
 console.log("Validated 20-question placement, beginner-mode retake, non-destructive content access, ordered Badge Chest state, legacy compatibility, both language loaders and current offline release.");
