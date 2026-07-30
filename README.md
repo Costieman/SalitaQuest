@@ -2,7 +2,7 @@
 
 Salita Quest is a local-first, conversation-focused Tagalog and Cebuano learning app. It combines active recall, spaced repetition, structured mastery, short daily practice, scenario challenges, audio review, learner profiles, collectible rewards and offline installation.
 
-Current application release: **5.4.29 — Badge Stability & Code Consolidation**.
+Current application release: **5.5.0 — Avatar Collection & Choice-Based Progression**.
 
 ## Learner onboarding and placement
 
@@ -35,7 +35,7 @@ Each day contains four goals:
 3. strengthen three learned items;
 4. complete 15 Quick Review items.
 
-Completing all four goals awards one Daily Key. Six keys earned on consecutive days unlock a random collectible avatar reward. The key is stored immediately but its animation waits until Home is visible.
+Completing all four goals awards one Daily Key. Six keys earned in the weekly run unlock a learner-directed avatar reward: an immediate common unlock, 50 uncommon shards, or 25 rare-animal shards. The key is stored immediately but its animation waits until Home is visible.
 
 ## Levels
 
@@ -44,6 +44,21 @@ Completing all four goals awards one Daily Key. Six keys earned on consecutive d
 - Later levels require increasingly more XP.
 - Level-up celebrations are queued and shown when Home is visible.
 - After a genuine level-up, learners can share an avatar-backed level card or continue without sharing.
+
+## Avatar Collection and account progression
+
+The account-wide Avatar Collection contains 48 Philippine flora, cultural-object and wildlife avatars shared between Tagalog and Cebuano. New learners choose one of four equal-status flora starters: Anahaw, Waling-Waling Orchid, Jade Vine or Philippine Rafflesia.
+
+- Locked avatars remain visible in grey.
+- Partially collected avatars reveal colour according to their shard progress.
+- Learners freely choose which eligible avatar receives each weekly reward.
+- Common avatars receive 100 shards, uncommon avatars receive 50 and rare animals receive 25.
+- Levels 10, 20, 30, 40, 50, 60, 70, 80 and 90 award common or uncommon avatars.
+- Level 99 awards the Golden Salita Crest.
+- Any unlocked avatar can be equipped and becomes the identity used by profile controls and future achievement cards.
+- Existing profile avatars and legacy weekly rewards migrate without changing course progress.
+
+See [`docs/AVATAR_PROGRESSION_PATCH.md`](docs/AVATAR_PROGRESSION_PATCH.md) and [`docs/RELEASE_5_5_0.md`](docs/RELEASE_5_5_0.md).
 
 ## Badges and Badge Chest
 
@@ -146,7 +161,7 @@ This is a local profile lock, not a server-authenticated account. Progress remai
 ## Interface
 
 - Responsive desktop dashboard with a retractable symbol-only navigation rail.
-- Dedicated Home, Learn, Topic Review, Hands-Free Review, Dictionary, Journey Map, Challenges, Progress, Badges and Settings destinations.
+- Dedicated Home, Learn, Topic Review, Hands-Free Review, Dictionary, Journey Map, Challenges, Avatars, Progress, Badges and Settings destinations.
 - Responsive badge catalogue, six-slot Badge Chest and full badge picker.
 - Compact mobile practice mode with fixed Skip, Check and Continue controls.
 - Mobile World Progress uses numbered nodes without overlapping region labels.
@@ -155,7 +170,7 @@ This is a local profile lock, not a server-authenticated account. Progress remai
 
 ## Offline installation
 
-Salita Quest is a Progressive Web App. The service worker caches the course engine, language packs, interface assets, avatars and reward runtimes. Release 5.4.29 uses cache `salita-quest-v5-4-badge-stability-r42` and excludes the superseded badge and sharing handlers.
+Salita Quest is a Progressive Web App. The service worker caches the course engine, language packs, interface assets, the complete avatar sprite and reward runtimes. Release 5.5.0 uses cache `salita-quest-v5-5-avatar-collection-r43`.
 
 Hosted share pages themselves require a network connection because social-platform crawlers must reach public image and metadata URLs.
 
@@ -172,6 +187,10 @@ Hosted share pages themselves require a network connection because social-platfo
 - `badge-chest-v2.js` — six-slot selection, picker, ordering and persistence
 - `badge-layout-v3.css` — non-overlapping badge geometry
 - `achievement-sharing-v4.js` — badge, chest and level-up cards and platform sharing
+- `avatar-assets-v1.js` — stable 48-avatar catalogue, rarity and milestone metadata
+- `avatar-sprite-assembler-v1.js` — 128 × 128 artwork extraction from the transparent WebP atlas
+- `avatar-collection-v1.js` / `avatar-collection-v1.css` — ownership, shards, reward choice, collection UI and unlock celebrations
+- `avatar-image-shim-v1.js` — equipped-avatar compatibility for existing profile and sharing code
 - `social-connections-v2.js` — built-in service status and OAuth-ready connection contract
 - `services/social-share/` — Cloud Run Open Graph image and landing-page service
 - `home-reward-coordinator.js` — Home-only Daily Key playback
@@ -201,6 +220,7 @@ node scripts/validate-placement-sharing.mjs
 node scripts/validate-social-posting-audio-resume.mjs
 node scripts/validate-hosted-achievement-sharing.mjs
 node scripts/validate-badge-stability.mjs
+node scripts/validate-avatar-collection.mjs
 ```
 
 ## Privacy
