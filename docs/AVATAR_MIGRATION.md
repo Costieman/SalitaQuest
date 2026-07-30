@@ -1,0 +1,1 @@
+Existing learners keep their current profile avatar as an owned avatar. Legacy weekly random rewards are converted to completed ownership. Course mastery, XP, coins, streaks, due dates, item history, backups and transfer codes are not modified by the avatar migration.
