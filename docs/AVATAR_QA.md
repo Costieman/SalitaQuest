@@ -1,0 +1,1 @@
+Avatar QA checks include catalogue count, starter count, level milestones, rarity rules, shard increments, sprite integrity, runtime syntax, Tagalog and Bisaya loading, profile creation, and offline cache coverage.
