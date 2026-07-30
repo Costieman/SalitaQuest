@@ -17,75 +17,96 @@ Because Gemini-TTS and Cebuano support are Preview features, availability, prici
 
 1. Create or choose a Google Cloud project.
 2. Enable billing.
-3. Enable Cloud Text-to-Speech.
-4. Install and initialise the Google Cloud CLI.
-5. Authenticate Application Default Credentials:
+3. Enable Cloud Text-to-Speech and Vertex AI.
+4. Give the authenticated user `roles/aiplatform.user`.
+5. Set the project:
+
+```bash
+export GOOGLE_CLOUD_PROJECT="$(gcloud config get-value project)"
+export GOOGLE_CLOUD_REGION="global"
+```
+
+Cloud Shell already supplies Google credentials. On a normal computer, authenticate Application Default Credentials with:
 
 ```bash
 gcloud auth application-default login
 ```
 
-6. Give the authenticated user `roles/aiplatform.user`. Gemini-TTS requires the `aiplatform.endpoints.predict` permission.
-7. Set the project:
-
-```bash
-export GOOGLE_CLOUD_PROJECT="your-project-id"
-export GOOGLE_CLOUD_REGION="global"
-```
-
 ## Install the Python client
 
 ```bash
-python -m pip install "google-cloud-texttospeech>=2.29.0"
+python3 -m pip install --upgrade "google-cloud-texttospeech>=2.29.0"
 ```
 
-## Preview the generation list
+## Preview or test
 
 ```bash
-python scripts/generate_cebuano_google_audio.py --dry-run
+python3 scripts/generate_cebuano_google_audio.py --dry-run
+python3 scripts/generate_cebuano_google_audio.py --limit 5
 ```
 
-## Test a small batch
+Listen to the test clips and confirm accent, pacing and word stress before generating the complete library.
 
-Generate only the first five missing clips:
+## Generate or resume every missing clip
 
 ```bash
-python scripts/generate_cebuano_google_audio.py --limit 5
+python3 scripts/generate_cebuano_google_audio.py
 ```
 
-Listen to those clips and confirm the accent, pacing and word stress before generating the complete library.
+The generator is resumable. It:
 
-## Generate every missing clip
+- leaves existing MP3 files untouched unless `--force` is used;
+- updates `audio/audio_manifest.json` after every generated or reused entry;
+- maps punctuation-only aliases such as `Palihug` and `Palihug.` to the same recording where possible;
+- retries temporary rate-limit, service and timeout failures;
+- retries terminal-punctuation safety false positives with normalised text and a neutral reading prompt;
+- records phrases that still fail in `audio/ceb-PH/failed.jsonl`;
+- continues through the rest of the library rather than terminating the whole run.
+
+At the end it prints a summary such as:
+
+```text
+Summary: 218 generated, 129 aliases reused, 3 skipped
+Review skipped phrases in audio/ceb-PH/failed.jsonl
+```
+
+A non-empty failure log should be reviewed before committing the library. The file contains phrase text and Google support codes but no credentials.
+
+## Recover after the earlier aborting generator
+
+Update the repository before resuming:
 
 ```bash
-python scripts/generate_cebuano_google_audio.py
+cd ~/SalitaQuest-current
+git pull --ff-only origin main
+python3 scripts/generate_cebuano_google_audio.py
 ```
 
-The generator:
-
-- reads Cebuano course items and dialogue lines;
-- removes duplicate text;
-- writes deterministic files beneath `audio/ceb-PH/`;
-- updates `audio/audio_manifest.json` after each successful clip;
-- leaves existing clips untouched unless `--force` is used.
+Previously completed files are detected automatically. Do not use `--force` unless the approved voice or delivery should be regenerated.
 
 ## Voice and delivery controls
 
 Choose another Gemini-TTS voice:
 
 ```bash
-python scripts/generate_cebuano_google_audio.py --voice Callirrhoe
+python3 scripts/generate_cebuano_google_audio.py --voice Callirrhoe
 ```
 
 Adjust the delivery prompt:
 
 ```bash
-python scripts/generate_cebuano_google_audio.py \
+python3 scripts/generate_cebuano_google_audio.py \
   --prompt "Speak natural conversational Cebuano from the Philippines slowly and clearly for a beginner learner. Do not translate."
 ```
 
-## Safety and credentials
+## Verification and GitHub upload
 
-Do not commit service-account keys, access tokens, downloaded credential JSON, or `.env` files. The generator uses Application Default Credentials and does not place credentials in the app or its static files.
+```bash
+find audio/ceb-PH -type f -name "*.mp3" | wc -l
+cat audio/ceb-PH/failed.jsonl 2>/dev/null || true
+git status --short audio/ceb-PH audio/audio_manifest.json
+```
+
+Commit the MP3 files and manifest on a separate audio branch. Do not commit service-account keys, access tokens, downloaded credential JSON or `.env` files.
 
 The browser app only receives generated MP3 files. It never receives a Google Cloud API key.
