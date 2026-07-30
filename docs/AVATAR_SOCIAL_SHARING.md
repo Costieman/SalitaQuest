@@ -1,0 +1,1 @@
+Achievement cards resolve the learner's currently equipped account avatar. Changing the equipped avatar updates future badge, Badge Chest and level-up cards without rewriting previously generated shares.
