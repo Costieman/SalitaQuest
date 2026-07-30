@@ -55,11 +55,12 @@ for (const htmlFile of ["app.html", "bisaya.html"]) {
   ], `${htmlFile} mobile assets`);
   const launcher = html.indexOf('lesson-side-launcher.js?v=5.4.21');
   const mobile = html.indexOf('mobile-session-refinement.js?v=5.4.21');
-  const profile = html.indexOf('profile-app.js?v=5.4.21');
-  if (!(launcher >= 0 && mobile > launcher && profile > mobile)) {
-    fail(`${htmlFile} must load mobile refinement after the lesson launcher and before profile controls.`);
-  }
+  if (!(launcher >= 0 && mobile > launcher)) fail(`${htmlFile} must load mobile refinement after the lesson launcher.`);
 }
+const appProfile = read("app.html").indexOf('profile-app.js?v=5.4.21');
+const appMobile = read("app.html").indexOf('mobile-session-refinement.js?v=5.4.21');
+if (!(appProfile > appMobile)) fail("Tagalog must load profile controls after mobile refinement.");
+if (!read("bisaya-app-loader.js").includes('loadScript("./profile-app.js')) fail("Bisaya must load profile controls through its course loader.");
 
 const serviceWorker = read("service-worker.js");
 requireMarkers(serviceWorker, [
@@ -72,4 +73,4 @@ requireMarkers(serviceWorker, [
 const index = read("index.html");
 if (!index.includes('service-worker.js?v=5.4.21')) fail("The profile gate does not request the current service worker.");
 
-console.log("Validated numbered-only mobile World Progress, rail-free review screens, fixed lesson actions, compact mastery, More navigation including Badges, feedback scrolling, both courses, and offline delivery.");
+console.log("Validated numbered-only mobile World Progress, rail-free review screens, fixed lesson actions, compact mastery, More navigation including Badges, profile controls in both course architectures, and offline delivery.");
