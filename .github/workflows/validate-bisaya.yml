@@ -29,3 +29,5 @@ jobs:
         run: node scripts/validate-home-dashboard.mjs
       - name: Validate mobile session refinement
         run: node scripts/validate-mobile-refinement.mjs
+      - name: Validate key-run progression refinement
+        run: node scripts/validate-key-run-refinement.mjs
