@@ -13,6 +13,7 @@ on:
       - "agent/social-**"
       - "agent/hosted-**"
       - "agent/individual-**"
+      - "agent/badge-**"
 
 permissions:
   contents: read
@@ -41,11 +42,11 @@ jobs:
         run: node scripts/validate-progression-scenarios-navigation.mjs
       - name: Validate audio badges and reward coordination
         run: node scripts/validate-audio-badge-release.mjs
-      - name: Validate placement and social badge sharing
+      - name: Validate placement and badge catalogue
         run: node scripts/validate-placement-sharing.mjs
-      - name: Validate social posting and resumable Cebuano audio
+      - name: Validate social service and resumable Cebuano audio
         run: node scripts/validate-social-posting-audio-resume.mjs
-      - name: Validate hosted achievement sharing
+      - name: Validate hosted achievement previews
         run: node scripts/validate-hosted-achievement-sharing.mjs
-      - name: Validate individual badge and level-up sharing
-        run: node scripts/validate-achievement-sharing-v3.mjs
+      - name: Validate Badge Chest and achievement sharing stability
+        run: node scripts/validate-badge-stability.mjs

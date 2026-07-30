@@ -2,7 +2,7 @@
 
 Salita Quest is a local-first, conversation-focused Tagalog and Cebuano learning app. It combines active recall, spaced repetition, structured mastery, short daily practice, scenario challenges, audio review, learner profiles, collectible rewards and offline installation.
 
-Current application release: **5.4.25 — Hosted Achievement Sharing**.
+Current application release: **5.4.29 — Badge Stability & Code Consolidation**.
 
 ## Learner onboarding and placement
 
@@ -43,6 +43,7 @@ Completing all four goals awards one Daily Key. Six keys earned on consecutive d
 - Existing learners keep their current level when the progressive curve is introduced.
 - Later levels require increasingly more XP.
 - Level-up celebrations are queued and shown when Home is visible.
+- After a genuine level-up, learners can share an avatar-backed level card or continue without sharing.
 
 ## Badges and Badge Chest
 
@@ -54,22 +55,24 @@ Badges have their own dedicated navigation page. The catalogue displays:
 
 Every badge has a stable ID, category, requirement, status, progress data, earned timestamp and an optional custom image path. Custom art can later be added at `badges/<badge-id>.png`; the learner's pixel avatar remains the current fallback.
 
-New badges are celebrated on Home. The **Badge Chest** lets a learner pin and manually order up to six favourite earned badges. `badge-layout-v3.css` keeps artwork, text, progress and controls in separate non-overlapping columns.
+New badges are celebrated on Home. The **Badge Chest** lets a learner choose, replace and manually order up to six favourite earned badges. Existing chest selections are preserved. An unconfigured chest is no longer silently filled, and the explicit **Choose badges** editor is the main replacement workflow.
+
+`badge-catalogue-v2.js` owns badge definitions, earned state and catalogue rendering. It emits one `salita:badges-rendered` event after the shelf is complete. `badge-chest-v2.js` owns selection, ordering and persistence and does not use a shelf `MutationObserver`.
 
 ## Hosted achievement sharing
 
-Facebook, LinkedIn and X cannot inspect a canvas or `blob:` image that exists only inside the learner's browser. Sharing the ordinary Salita Quest homepage therefore produces a generic link preview rather than the selected badge or Badge Chest.
+Facebook, LinkedIn and X cannot inspect a canvas or `blob:` image that exists only inside the learner's browser. Sharing the ordinary Salita Quest homepage therefore produces a generic link preview rather than the selected badge, Badge Chest or level-up card.
 
-Release 5.4.25 adds a small Cloud Run service that creates a unique public share page for each post:
+The Cloud Run share service creates a unique public page for each post:
 
-1. the browser renders the actual 1080 × 1080 badge or Badge Chest card;
+1. the browser renders the actual 1080 × 1080 achievement card;
 2. it also renders a 1200 × 630 Open Graph version;
 3. both PNGs are uploaded to the Salita Quest share service;
 4. the service returns a unique `/share/<id>` page;
 5. that page exposes the exact card through `og:image` and Twitter Card metadata;
 6. the page and artwork both link back to Salita Quest.
 
-The cards now contain a visible **START LEARNING FREE** call-to-action and **Choose Tagalog or Cebuano** invitation.
+The cards contain a visible **START LEARNING FREE** call-to-action and **Choose Tagalog or Cebuano** invitation.
 
 Platform behavior:
 
@@ -78,6 +81,8 @@ Platform behavior:
 - **Instagram and TikTok** receive the square PNG through mobile/device sharing, or through a future approved connected-account publishing integration.
 - Each hosted URL is unique, avoiding stale social-preview caches from earlier generic Salita Quest links.
 
+`achievement-sharing-v4.js` is the single owner of individual badge, Badge Chest and level-up card generation and external platform hand-off. It replaces the competing badge/share handlers used in earlier releases.
+
 The service lives in [`services/social-share/`](services/social-share/) and can be deployed from Google Cloud Shell:
 
 ```bash
@@ -85,27 +90,19 @@ chmod +x services/social-share/deploy-cloud-shell.sh
 ./services/social-share/deploy-cloud-shell.sh
 ```
 
-After deployment, paste the printed HTTPS URL into:
-
-```text
-Settings → Connected accounts → Connection service
-```
-
-See [`services/social-share/README.md`](services/social-share/README.md).
+The production HTTPS service URL is built into the app. Learners do not paste or configure infrastructure addresses. See [`services/social-share/README.md`](services/social-share/README.md).
 
 ## Connected social accounts
 
-Settings contains an OAuth-ready **Connected accounts** screen for Facebook, Instagram, TikTok, X, LinkedIn and Google.
+Settings contains a compact sharing-status screen. Hosted previews work without account setup or social access tokens.
 
-Hosted previews work through the share service without social access tokens. True connected-account publishing remains a separate layer requiring provider applications, OAuth credentials, secure token storage and approved permissions.
-
-Provider restrictions still apply:
+True connected-account publishing remains a separate layer requiring provider applications, OAuth credentials, secure token storage and approved permissions. Provider restrictions still apply:
 
 - Facebook personal-profile sharing remains user-confirmed.
 - Instagram publishing requires a supported professional account and Meta permissions.
 - TikTok requires a registered app, user OAuth, approved posting scopes and provider review conditions.
 - LinkedIn member posting requires OAuth and `w_member_social`.
-- Google is available for identity or future sync, not as a badge-post destination.
+- Google can support identity or future sync, but is not a badge-post destination.
 
 See [`docs/SOCIAL_CONNECTIONS.md`](docs/SOCIAL_CONNECTIONS.md).
 
@@ -150,7 +147,7 @@ This is a local profile lock, not a server-authenticated account. Progress remai
 
 - Responsive desktop dashboard with a retractable symbol-only navigation rail.
 - Dedicated Home, Learn, Topic Review, Hands-Free Review, Dictionary, Journey Map, Challenges, Progress, Badges and Settings destinations.
-- Responsive Badge catalogue and Badge Chest.
+- Responsive badge catalogue, six-slot Badge Chest and full badge picker.
 - Compact mobile practice mode with fixed Skip, Check and Continue controls.
 - Mobile World Progress uses numbered nodes without overlapping region labels.
 - Light and dark themes are supported.
@@ -158,9 +155,9 @@ This is a local profile lock, not a server-authenticated account. Progress remai
 
 ## Offline installation
 
-Salita Quest is a Progressive Web App. The service worker caches the course engine, language packs, interface assets, avatars and reward runtimes. Release 5.4.25 uses cache `salita-quest-v5-4-hosted-sharing-r39`.
+Salita Quest is a Progressive Web App. The service worker caches the course engine, language packs, interface assets, avatars and reward runtimes. Release 5.4.29 uses cache `salita-quest-v5-4-badge-stability-r42` and excludes the superseded badge and sharing handlers.
 
-The hosted share pages themselves require a network connection because social-platform crawlers must reach public image and metadata URLs.
+Hosted share pages themselves require a network connection because social-platform crawlers must reach public image and metadata URLs.
 
 ## Repository structure
 
@@ -171,19 +168,26 @@ The hosted share pages themselves require a network connection because social-pl
 - `audio/audio_manifest.json` — static audio index
 - `scripts/generate_cebuano_google_audio.py` — resumable Google Cloud generator
 - `placement-onboarding-v1.js` — beginner choice and placement check
-- `badge-catalogue-v2.js` — ordered badge catalogue and celebrations
-- `badge-sharing-v1.js` — Badge Chest state and legacy card helpers
-- `badge-layout-v3.css` — final non-overlapping badge geometry
-- `social-connections-v2.js` — service configuration and OAuth-ready connection contract
-- `social-posting-v2.js` — square/landscape card generation and hosted-platform sharing
+- `badge-catalogue-v2.js` — ordered badge catalogue, earned state and celebrations
+- `badge-chest-v2.js` — six-slot selection, picker, ordering and persistence
+- `badge-layout-v3.css` — non-overlapping badge geometry
+- `achievement-sharing-v4.js` — badge, chest and level-up cards and platform sharing
+- `social-connections-v2.js` — built-in service status and OAuth-ready connection contract
 - `services/social-share/` — Cloud Run Open Graph image and landing-page service
 - `home-reward-coordinator.js` — Home-only Daily Key playback
 - `pronunciation-release-control.js` — release-based pronunciation activation
 - `service-worker.js` — installed/offline delivery
+- `docs/CODE_AUDIT_2026-07-30.md` — current architecture findings and staged simplification plan
+
+## Code audit and consolidation
+
+Release 5.4.29 removes the active dependency on `badge-sharing-v1`, `social-posting-v2`, `achievement-sharing-v3` and `social-links-v1`. Their responsibilities were duplicated, misleading or dependent on event interception order.
+
+The audit also records deferred structural work: replacing the pinned raw-document loader, reducing global function wrapping, centralising release versions, consolidating patch CSS and adding Playwright browser smoke tests. See [`docs/CODE_AUDIT_2026-07-30.md`](docs/CODE_AUDIT_2026-07-30.md).
 
 ## Validation
 
-The pull-request workflow validates the courses, shared UI, Home, mobile, key-run, progression/scenarios/navigation, audio/badges, placement/sharing, resumable audio and hosted social previews.
+The pull-request workflow validates the courses, shared UI, Home, mobile, key-run, progression/scenarios/navigation, audio/badges, placement, hosted previews, resumable audio and deterministic Badge Chest state.
 
 ```bash
 node scripts/validate-bisaya.mjs
@@ -196,8 +200,9 @@ node scripts/validate-audio-badge-release.mjs
 node scripts/validate-placement-sharing.mjs
 node scripts/validate-social-posting-audio-resume.mjs
 node scripts/validate-hosted-achievement-sharing.mjs
+node scripts/validate-badge-stability.mjs
 ```
 
 ## Privacy
 
-The static app does not contain Google Cloud credentials, provider client secrets or social access tokens. Public share images contain only the learner name, selected language, avatar and achievements already chosen for sharing. The share service stores generated cards for up to 365 days and does not store local progress or PINs.
+The static app does not contain Google Cloud credentials, provider client secrets or social access tokens. Public share images contain only the learner name, selected language, avatar and achievements deliberately chosen for sharing. The share service stores generated cards for up to 365 days and does not store local progress or PINs.

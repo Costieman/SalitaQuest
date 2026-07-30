@@ -1,25 +1,40 @@
 (() => {
   "use strict";
 
-  const INSTALL_FLAG = "__salitaQuestAchievementSharingV3Installed";
+  const INSTALL_FLAG = "__salitaQuestAchievementSharingV4Installed";
   const PROFILE_STORE = "salitaQuestLocalProfilesV1";
   const ACTIVE_PROFILE = "salitaQuestActiveProfileId";
-  const PROMPT_ID = "levelSharePromptV3";
+  const MODAL_ID = "achievementShareModalV4";
+  const PROMPT_ID = "levelSharePromptV4";
+
   const PLATFORM_META = {
-    facebook: {label: "Facebook", icon: "f", publicLabel: "Post the hosted achievement card"},
-    instagram: {label: "Instagram", icon: "◎", publicLabel: "Send the square image to the app"},
-    tiktok: {label: "TikTok", icon: "♪", publicLabel: "Send the square image to the app"},
-    x: {label: "X", icon: "𝕏", publicLabel: "Post the hosted achievement card"},
-    linkedin: {label: "LinkedIn", icon: "in", publicLabel: "Post the hosted achievement card"},
-    whatsapp: {label: "WhatsApp", icon: "◉", publicLabel: "Send the hosted card and invitation"}
+    facebook: {label: "Facebook", icon: "f", detail: "Post the hosted achievement card"},
+    instagram: {label: "Instagram", icon: "◎", detail: "Share the square image to the app"},
+    tiktok: {label: "TikTok", icon: "♪", detail: "Share the square image to the app"},
+    x: {label: "X", icon: "𝕏", detail: "Post the hosted achievement card"},
+    linkedin: {label: "LinkedIn", icon: "in", detail: "Post the hosted achievement card"},
+    whatsapp: {label: "WhatsApp", icon: "◉", detail: "Send the hosted card and invitation"}
   };
 
   let activeShare = null;
   let lastPromptedLevel = 0;
 
+  function notify(message) {
+    try {
+      if (typeof toast === "function") {
+        toast(message);
+        return;
+      }
+    } catch {}
+    console.info(message);
+  }
+
   function readStore() {
-    try { return JSON.parse(localStorage.getItem(PROFILE_STORE) || "null") || {profiles: []}; }
-    catch { return {profiles: []}; }
+    try {
+      return JSON.parse(localStorage.getItem(PROFILE_STORE) || "null") || {profiles: []};
+    } catch {
+      return {profiles: []};
+    }
   }
 
   function activeProfile() {
@@ -52,26 +67,34 @@
   }
 
   function badgeById(id) {
-    try { return BADGES.find(badge => badge.id === id) || null; }
-    catch { return null; }
+    try {
+      return BADGES.find(badge => badge.id === id) || null;
+    } catch {
+      return null;
+    }
   }
 
   function isEarned(badge) {
-    try { return Boolean(badge?.test?.(state)); }
-    catch { return false; }
+    try {
+      return Boolean(badge?.test?.(state));
+    } catch {
+      return false;
+    }
   }
 
-  function notify(message) {
-    try {
-      if (typeof toast === "function") { toast(message); return; }
-      if (typeof showRewardBurst === "function") { showRewardBurst("🏅", message, false); return; }
-    } catch {}
-    console.info(message);
+  function chestBadges() {
+    const api = window.SalitaQuestBadgeChest;
+    if (api?.getBadges) return api.getBadges();
+    const ids = Array.isArray(state?.badgeProgress?.chestIds) ? state.badgeProgress.chestIds : [];
+    return ids.slice(0, 6).map(badgeById).filter(badge => badge && isEarned(badge));
   }
 
   function loadImage(src) {
     return new Promise(resolve => {
-      if (!src) { resolve(null); return; }
+      if (!src) {
+        resolve(null);
+        return;
+      }
       const image = new Image();
       image.onload = () => resolve(image);
       image.onerror = () => resolve(null);
@@ -102,11 +125,13 @@
     const lines = [];
     let line = "";
     for (const word of words) {
-      const test = line ? `${line} ${word}` : word;
-      if (line && context.measureText(test).width > maxWidth) {
+      const next = line ? `${line} ${word}` : word;
+      if (line && context.measureText(next).width > maxWidth) {
         lines.push(line);
         line = word;
-      } else line = test;
+      } else {
+        line = next;
+      }
     }
     if (line) lines.push(line);
     lines.slice(0, maxLines).forEach((value, index) => context.fillText(value, x, y + index * lineHeight));
@@ -146,6 +171,7 @@
   function drawCallToAction(context, campaign) {
     const display = shareRoot(campaign).replace(/^https?:\/\//, "").replace(/\?.*$/, "").replace(/\/$/, "");
     context.textAlign = "center";
+    context.textBaseline = "alphabetic";
     context.fillStyle = "rgba(255,255,255,.72)";
     context.font = "800 17px system-ui,sans-serif";
     context.fillText("CHOOSE TAGALOG OR CEBUANO", 540, 944);
@@ -170,8 +196,9 @@
     context.lineWidth = Math.max(5, size * .03);
     context.stroke();
     context.clip();
-    if (custom) context.drawImage(custom, x, y, size, size);
-    else if (avatar) {
+    if (custom) {
+      context.drawImage(custom, x, y, size, size);
+    } else if (avatar) {
       context.imageSmoothingEnabled = false;
       context.drawImage(avatar, x, y, size, size);
       context.fillStyle = "rgba(6,20,42,.76)";
@@ -183,6 +210,12 @@
       context.textAlign = "center";
       context.textBaseline = "middle";
       context.fillText(badge?.icon || "★", x + size * .76, y + size * .76);
+    } else {
+      context.fillStyle = "#10213b";
+      context.font = `900 ${Math.round(size * .38)}px system-ui,sans-serif`;
+      context.textAlign = "center";
+      context.textBaseline = "middle";
+      context.fillText(badge?.icon || "★", x + size / 2, y + size / 2);
     }
     context.restore();
   }
@@ -209,19 +242,64 @@
     return canvas;
   }
 
+  async function buildChestCard(badges) {
+    const canvas = makeCanvas();
+    const context = canvas.getContext("2d");
+    drawBackground(context);
+    drawBrand(context, "MY BADGE CHEST");
+    const avatar = await loadImage(avatarPath());
+    if (avatar) {
+      context.save();
+      roundRect(context, 856, 44, 138, 138, 34);
+      context.fillStyle = "#e9f6f1";
+      context.fill();
+      context.clip();
+      context.imageSmoothingEnabled = false;
+      context.drawImage(avatar, 856, 44, 138, 138);
+      context.restore();
+    }
+    const positions = [[62, 220], [386, 220], [710, 220], [62, 536], [386, 536], [710, 536]];
+    for (let index = 0; index < 6; index += 1) {
+      const [x, y] = positions[index];
+      const badge = badges[index];
+      context.save();
+      roundRect(context, x, y, 290, 282, 27);
+      context.fillStyle = "rgba(7,18,37,.72)";
+      context.fill();
+      context.strokeStyle = badge ? "rgba(247,201,72,.52)" : "rgba(255,255,255,.14)";
+      context.lineWidth = 3;
+      context.stroke();
+      context.restore();
+      if (badge) {
+        await drawBadgeVisual(context, badge, x + 69, y + 18, 152, avatar);
+        context.textAlign = "center";
+        context.textBaseline = "alphabetic";
+        context.fillStyle = "#fff";
+        context.font = "900 22px system-ui,sans-serif";
+        wrapText(context, badge.name, x + 145, y + 212, 248, 26, 2);
+      } else {
+        context.textAlign = "center";
+        context.fillStyle = "rgba(255,255,255,.25)";
+        context.font = "900 58px system-ui,sans-serif";
+        context.fillText("＋", x + 145, y + 138);
+      }
+    }
+    drawCallToAction(context, "badge-chest");
+    return canvas;
+  }
+
   async function buildLevelCard(levelData) {
     const canvas = makeCanvas();
     const context = canvas.getContext("2d");
     drawBackground(context);
     drawBrand(context, "LEVEL UP!");
     const avatar = await loadImage(levelData.imageSource || avatarPath());
-
     context.save();
     roundRect(context, 305, 220, 470, 420, 78);
-    const panelGradient = context.createLinearGradient(305, 220, 775, 640);
-    panelGradient.addColorStop(0, "#fff7d9");
-    panelGradient.addColorStop(1, "#f7c948");
-    context.fillStyle = panelGradient;
+    const panel = context.createLinearGradient(305, 220, 775, 640);
+    panel.addColorStop(0, "#fff7d9");
+    panel.addColorStop(1, "#f7c948");
+    context.fillStyle = panel;
     context.fill();
     context.strokeStyle = "rgba(255,255,255,.95)";
     context.lineWidth = 10;
@@ -232,7 +310,6 @@
       context.drawImage(avatar, 370, 250, 340, 340);
     }
     context.restore();
-
     context.beginPath();
     context.arc(735, 595, 92, 0, Math.PI * 2);
     context.fillStyle = "#0f766e";
@@ -245,7 +322,6 @@
     context.textAlign = "center";
     context.textBaseline = "middle";
     context.fillText(String(levelData.level), 735, 597);
-
     context.textBaseline = "alphabetic";
     context.fillStyle = "#f7c948";
     context.font = "900 28px system-ui,sans-serif";
@@ -313,37 +389,56 @@
   }
 
   function ensureModal() {
-    let modal = document.getElementById("socialPostModal");
+    let modal = document.getElementById(MODAL_ID);
     if (modal) return modal;
     modal = document.createElement("div");
-    modal.id = "socialPostModal";
-    modal.className = "social-post-modal";
+    modal.id = MODAL_ID;
+    modal.className = "achievement-share-modal";
     modal.hidden = true;
-    modal.innerHTML = `<div class="social-post-backdrop" data-social-close></div><section class="social-post-card" role="dialog" aria-modal="true" aria-labelledby="socialPostTitle"><button class="social-post-close" type="button" data-social-close aria-label="Close">×</button><div class="social-post-preview"><img id="socialPostPreview" alt="Generated Salita Quest social card"><small>This complete card is hosted for Facebook, X and LinkedIn previews. Instagram and TikTok receive the square image.</small></div><div class="social-post-content"><p class="eyebrow">SHARE YOUR PROGRESS</p><h2 id="socialPostTitle">Post achievement</h2><p id="socialPostDescription"></p><div id="socialPlatformGrid" class="social-platform-grid"></div><div class="social-post-secondary"><button type="button" data-social-native>Share image to an app</button><button type="button" data-social-download>Download card</button><button type="button" data-social-copy>Copy hosted link</button></div><p id="socialPostStatus" class="social-post-status"></p></div></section>`;
+    modal.innerHTML = `
+      <div class="achievement-share-backdrop" data-close-achievement-share></div>
+      <section class="achievement-share-card" role="dialog" aria-modal="true" aria-labelledby="achievementShareTitle">
+        <button class="achievement-share-close" type="button" data-close-achievement-share aria-label="Close">×</button>
+        <div class="achievement-share-preview">
+          <img id="achievementSharePreview" alt="Generated Salita Quest achievement card">
+          <small>Facebook, X and LinkedIn receive a hosted preview. Instagram and TikTok receive the square image through device sharing.</small>
+        </div>
+        <div class="achievement-share-content">
+          <p class="eyebrow">SHARE YOUR PROGRESS</p>
+          <h2 id="achievementShareTitle">Share achievement</h2>
+          <p id="achievementShareDescription"></p>
+          <div id="achievementSharePlatforms" class="achievement-share-platforms"></div>
+          <div class="achievement-share-secondary">
+            <button type="button" data-achievement-native>Share image to an app</button>
+            <button type="button" data-achievement-download>Download card</button>
+            <button type="button" data-achievement-copy>Copy hosted link</button>
+          </div>
+          <p id="achievementShareStatus" class="achievement-share-status" role="status"></p>
+        </div>
+      </section>`;
     document.body.appendChild(modal);
     return modal;
   }
 
   function setStatus(message, error = false) {
-    const node = document.getElementById("socialPostStatus");
-    if (node) {
-      node.textContent = message || "";
-      node.style.color = error ? "#ff8c8c" : "#f7c948";
-    }
+    const node = document.getElementById("achievementShareStatus");
+    if (!node) return;
+    node.textContent = message || "";
+    node.classList.toggle("error", Boolean(error));
+  }
+
+  function renderPlatforms() {
+    const grid = document.getElementById("achievementSharePlatforms");
+    if (!grid) return;
+    grid.innerHTML = Object.entries(PLATFORM_META).map(([id, meta]) => `
+      <button class="achievement-platform-action" type="button" data-achievement-platform="${id}">
+        <span class="achievement-platform-icon">${meta.icon}</span>
+        <span><strong>${meta.label}</strong><small>${meta.detail}</small></span>
+      </button>`).join("");
   }
 
   function connectionApi() {
     return window.SalitaQuestSocialConnections || null;
-  }
-
-  function platformButton(provider) {
-    const meta = PLATFORM_META[provider];
-    return `<button class="social-platform-action" type="button" data-social-platform="${provider}"><span class="social-platform-icon">${meta.icon}</span><span><strong>${meta.label}</strong><small>${meta.publicLabel}</small></span></button>`;
-  }
-
-  function renderModal() {
-    const grid = document.getElementById("socialPlatformGrid");
-    if (grid) grid.innerHTML = Object.keys(PLATFORM_META).map(platformButton).join("");
   }
 
   async function createHostedShare() {
@@ -351,9 +446,9 @@
     if (activeShare.hosted) return activeShare.hosted;
     if (activeShare.hostedPromise) return activeShare.hostedPromise;
     const base = connectionApi()?.apiBase?.();
-    if (!base) throw new Error("Hosted sharing is temporarily unavailable.");
+    if (!base) throw new Error("Progress sharing is temporarily unavailable.");
     activeShare.hostedPromise = (async () => {
-      setStatus("Publishing a secure public preview of this exact card…");
+      setStatus("Creating the public preview…");
       const [squareImageDataUrl, ogImageDataUrl] = await Promise.all([
         blobToDataUrl(activeShare.blob),
         blobToDataUrl(activeShare.ogBlob)
@@ -378,7 +473,7 @@
       activeShare.hosted = data;
       activeShare.url = data.shareUrl;
       activeShare.caption = `${activeShare.text} Start learning a Filipino language free with Salita Quest: ${data.shareUrl}`;
-      setStatus("Hosted image preview ready. Choose a platform.");
+      setStatus("Your hosted achievement card is ready.");
       return data;
     })().catch(error => {
       if (activeShare) activeShare.hostedPromise = null;
@@ -390,38 +485,36 @@
   async function prepareShare({type, title, text, fileName, campaign, canvas}) {
     const modal = ensureModal();
     modal.hidden = false;
-    document.body.classList.add("social-post-busy");
-    setStatus("Preparing the square card and social preview…");
-    try {
-      const openGraph = buildOpenGraphCard(canvas, title, text);
-      const [blob, ogBlob] = await Promise.all([canvasBlob(canvas), canvasBlob(openGraph)]);
-      const fallbackUrl = shareRoot(campaign);
-      activeShare = {
-        type,
-        title,
-        text,
-        fileName,
-        campaign,
-        blob,
-        ogBlob,
-        url: fallbackUrl,
-        caption: `${text} Start learning a Filipino language free with Salita Quest: ${fallbackUrl}`,
-        hosted: null,
-        hostedPromise: null
-      };
-      const preview = document.getElementById("socialPostPreview");
-      if (preview?.src?.startsWith("blob:")) URL.revokeObjectURL(preview.src);
-      if (preview) preview.src = URL.createObjectURL(blob);
-      document.getElementById("socialPostTitle").textContent = title;
-      document.getElementById("socialPostDescription").textContent = text;
-      renderModal();
-      createHostedShare().catch(error => setStatus(error.message, true));
-    } finally {
-      document.body.classList.remove("social-post-busy");
-    }
+    document.body.classList.add("achievement-share-open");
+    setStatus("Preparing your achievement card…");
+    const openGraph = buildOpenGraphCard(canvas, title, text);
+    const [blob, ogBlob] = await Promise.all([canvasBlob(canvas), canvasBlob(openGraph)]);
+    const fallbackUrl = shareRoot(campaign);
+    activeShare = {
+      type,
+      title,
+      text,
+      fileName,
+      campaign,
+      blob,
+      ogBlob,
+      url: fallbackUrl,
+      caption: `${text} Start learning a Filipino language free with Salita Quest: ${fallbackUrl}`,
+      hosted: null,
+      hostedPromise: null
+    };
+    const preview = document.getElementById("achievementSharePreview");
+    if (preview?.src?.startsWith("blob:")) URL.revokeObjectURL(preview.src);
+    if (preview) preview.src = URL.createObjectURL(blob);
+    const titleNode = document.getElementById("achievementShareTitle");
+    const descriptionNode = document.getElementById("achievementShareDescription");
+    if (titleNode) titleNode.textContent = title;
+    if (descriptionNode) descriptionNode.textContent = text;
+    renderPlatforms();
+    createHostedShare().catch(error => setStatus(error.message, true));
   }
 
-  async function openBadge(id, button) {
+  async function openBadge(id, button = null) {
     const badge = badgeById(id);
     if (!badge || !isEarned(badge)) {
       notify("This badge is not available to share yet.");
@@ -433,14 +526,13 @@
       button.textContent = "Preparing…";
     }
     try {
-      const canvas = await buildBadgeCard(badge);
       await prepareShare({
         type: "badge",
         title: `My ${badge.name} badge`,
         text: `I earned the ${badge.name} badge while learning ${courseLabel()} with Salita Quest.`,
         fileName: `salita-quest-${badge.id}.png`,
         campaign: "badge-share",
-        canvas
+        canvas: await buildBadgeCard(badge)
       });
     } catch (error) {
       console.error(error);
@@ -453,16 +545,47 @@
     }
   }
 
+  async function openChest(button = null) {
+    const badges = chestBadges();
+    if (!badges.length) {
+      notify("Choose at least one badge before sharing your Badge Chest.");
+      window.SalitaQuestBadgeChest?.openPicker?.();
+      return;
+    }
+    const original = button?.textContent;
+    if (button) {
+      button.disabled = true;
+      button.textContent = "Preparing…";
+    }
+    try {
+      await prepareShare({
+        type: "chest",
+        title: "My Salita Quest Badge Chest",
+        text: `These are my proudest achievements while learning ${courseLabel()} with Salita Quest.`,
+        fileName: "salita-quest-badge-chest.png",
+        campaign: "badge-chest",
+        canvas: await buildChestCard(badges)
+      });
+    } catch (error) {
+      console.error(error);
+      notify("Your Badge Chest could not be prepared for sharing.");
+    } finally {
+      if (button) {
+        button.disabled = false;
+        button.textContent = original || "Share Badge Chest";
+      }
+    }
+  }
+
   async function openLevel(levelData) {
     try {
-      const canvas = await buildLevelCard(levelData);
       await prepareShare({
         type: "level",
         title: `I reached Level ${levelData.level} in Salita Quest`,
         text: `I reached Level ${levelData.level} · ${levelData.title} while learning ${courseLabel()} with Salita Quest.`,
         fileName: `salita-quest-level-${levelData.level}.png`,
         campaign: "level-up",
-        canvas
+        canvas: await buildLevelCard(levelData)
       });
     } catch (error) {
       console.error(error);
@@ -470,19 +593,20 @@
     }
   }
 
-  function closeActiveShare() {
-    const modal = document.getElementById("socialPostModal");
+  function closeShare() {
+    const modal = document.getElementById(MODAL_ID);
     if (modal) modal.hidden = true;
-    const preview = document.getElementById("socialPostPreview");
+    const preview = document.getElementById("achievementSharePreview");
     if (preview?.src?.startsWith("blob:")) {
       URL.revokeObjectURL(preview.src);
       preview.removeAttribute("src");
     }
     activeShare = null;
+    document.body.classList.remove("achievement-share-open");
   }
 
   function blankPopup() {
-    return window.open("about:blank", "salitaSocialPost", "popup=yes,width=720,height=760");
+    return window.open("about:blank", "salitaAchievementPost", "popup=yes,width=720,height=760");
   }
 
   async function publicComposer(provider) {
@@ -497,15 +621,18 @@
       const hosted = await createHostedShare();
       const encodedUrl = encodeURIComponent(hosted.shareUrl);
       const encodedText = encodeURIComponent(activeShare.caption);
-      let url = "";
-      if (provider === "facebook") url = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`;
-      else if (provider === "x") url = `https://twitter.com/intent/tweet?text=${encodedText}`;
-      else if (provider === "linkedin") url = `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`;
-      else if (provider === "whatsapp") url = `https://wa.me/?text=${encodedText}`;
-      popup.location.replace(url);
-      setStatus(`${PLATFORM_META[provider].label} opened with the hosted achievement card.`);
+      let destination = "";
+      if (provider === "facebook") destination = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`;
+      else if (provider === "x") destination = `https://twitter.com/intent/tweet?text=${encodedText}`;
+      else if (provider === "linkedin") destination = `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`;
+      else if (provider === "whatsapp") destination = `https://wa.me/?text=${encodedText}`;
+      if (!destination) throw new Error("This platform does not support a public web composer.");
+      popup.location.replace(destination);
+      setStatus(`${PLATFORM_META[provider].label} opened with your hosted achievement card.`);
     } catch (error) {
-      try { popup.close(); } catch {}
+      try {
+        popup.close();
+      } catch {}
       setStatus(error.message || "The hosted post could not be prepared.", true);
     }
   }
@@ -513,8 +640,14 @@
   async function nativeShare() {
     if (!activeShare) return;
     if (!navigator.share) throw new Error("This browser does not provide app sharing.");
-    const file = typeof File === "function" ? new File([activeShare.blob], activeShare.fileName, {type: "image/png"}) : null;
-    const payload = {title: activeShare.title, text: activeShare.text, url: activeShare.hosted?.shareUrl || activeShare.url};
+    const file = typeof File === "function"
+      ? new File([activeShare.blob], activeShare.fileName, {type: "image/png"})
+      : null;
+    const payload = {
+      title: activeShare.title,
+      text: activeShare.text,
+      url: activeShare.hosted?.shareUrl || activeShare.url
+    };
     if (file && navigator.canShare?.({files: [file]})) payload.files = [file];
     await navigator.share(payload);
   }
@@ -525,12 +658,15 @@
       return;
     }
     if (["instagram", "tiktok"].includes(provider)) {
-      try { await nativeShare(); }
-      catch { setStatus(`${PLATFORM_META[provider].label} needs mobile image sharing.`, true); }
+      try {
+        await nativeShare();
+      } catch {
+        setStatus(`${PLATFORM_META[provider].label} needs mobile or device image sharing.`, true);
+      }
     }
   }
 
-  function download() {
+  function downloadCard() {
     if (!activeShare) return;
     const link = document.createElement("a");
     link.href = URL.createObjectURL(activeShare.blob);
@@ -539,10 +675,10 @@
     link.click();
     link.remove();
     window.setTimeout(() => URL.revokeObjectURL(link.href), 1500);
-    setStatus("Square social card downloaded.");
+    setStatus("Square achievement card downloaded.");
   }
 
-  async function copyCaption() {
+  async function copyHostedLink() {
     if (!activeShare) return;
     try {
       await createHostedShare();
@@ -567,25 +703,42 @@
     document.getElementById(PROMPT_ID)?.remove();
     const prompt = document.createElement("aside");
     prompt.id = PROMPT_ID;
-    prompt.className = "level-share-prompt-v3";
+    prompt.className = "level-share-prompt-v4";
     prompt.setAttribute("role", "dialog");
     prompt.setAttribute("aria-label", `Share Level ${levelData.level}`);
     prompt.__levelData = levelData;
-    prompt.innerHTML = `<img src="${levelData.imageSource || avatarPath()}" alt=""><div class="level-share-prompt-copy"><span>LEVEL UP!</span><strong>Level ${levelData.level} · ${levelData.title}</strong><small>Share this milestone with your achievement card.</small></div><div class="level-share-prompt-actions"><button type="button" data-share-level-v3>Share level up</button><button type="button" data-dismiss-level-v3>Continue</button></div>`;
+    prompt.innerHTML = `
+      <img src="${levelData.imageSource || avatarPath()}" alt="">
+      <div class="level-share-prompt-copy">
+        <span>LEVEL UP!</span>
+        <strong>Level ${levelData.level} · ${levelData.title}</strong>
+        <small>Share this milestone, or continue learning.</small>
+      </div>
+      <div class="level-share-prompt-actions">
+        <button type="button" data-share-level-v4>Share level up</button>
+        <button type="button" data-dismiss-level-v4>Continue</button>
+      </div>`;
     document.body.appendChild(prompt);
     requestAnimationFrame(() => prompt.classList.add("show"));
-    prompt.__dismissTimer = window.setTimeout(removeLevelPrompt, 20000);
+    prompt.__dismissTimer = window.setTimeout(removeLevelPrompt, 30000);
   }
 
   function captureLevelCelebration(layer) {
     let pending = null;
-    try { pending = state?.levelProgressionV2?.pendingLevelUp; } catch {}
+    try {
+      pending = state?.levelProgressionV2?.pendingLevelUp;
+    } catch {}
     const level = Number(pending?.to || layer.querySelector(".level-up-avatar b")?.textContent || 0);
     if (!level || level <= lastPromptedLevel) return;
     const title = String(layer.querySelector(".level-up-banner small")?.textContent || "Language Explorer").trim();
     const imageSource = layer.querySelector(".level-up-avatar img")?.src || avatarPath();
-    const subtitle = `Another milestone on the ${courseLabel()} learning journey.`;
-    const levelData = {level, from: Number(pending?.from || Math.max(1, level - 1)), title, subtitle, imageSource};
+    const levelData = {
+      level,
+      from: Number(pending?.from || Math.max(1, level - 1)),
+      title,
+      subtitle: `Another milestone on the ${courseLabel()} learning journey.`,
+      imageSource
+    };
     window.setTimeout(() => showLevelPrompt(levelData), 3100);
   }
 
@@ -594,7 +747,9 @@
       for (const record of records) {
         for (const node of record.addedNodes) {
           if (!(node instanceof Element)) continue;
-          const layer = node.matches(".level-up-celebration") ? node : node.querySelector(".level-up-celebration");
+          const layer = node.matches(".level-up-celebration")
+            ? node
+            : node.querySelector(".level-up-celebration");
           if (layer) captureLevelCelebration(layer);
         }
       }
@@ -606,82 +761,84 @@
     return button?.dataset.shareBadge || button?.closest("[data-badge-id]")?.dataset.badgeId || "";
   }
 
+  function handleClick(event) {
+    const badgeButton = event.target.closest?.("[data-share-badge]");
+    if (badgeButton) {
+      const id = badgeIdFromButton(badgeButton);
+      if (!id) return;
+      event.preventDefault();
+      openBadge(id, badgeButton);
+      return;
+    }
+
+    const chestButton = event.target.closest?.("[data-share-badge-chest]");
+    if (chestButton) {
+      event.preventDefault();
+      openChest(chestButton);
+      return;
+    }
+
+    const levelButton = event.target.closest?.("[data-share-level-v4]");
+    if (levelButton) {
+      const prompt = levelButton.closest(`#${PROMPT_ID}`);
+      const levelData = prompt?.__levelData;
+      event.preventDefault();
+      removeLevelPrompt();
+      if (levelData) openLevel(levelData);
+      return;
+    }
+
+    if (event.target.closest?.("[data-dismiss-level-v4]")) {
+      event.preventDefault();
+      removeLevelPrompt();
+      return;
+    }
+
+    if (!activeShare) return;
+
+    if (event.target.closest?.("[data-close-achievement-share]")) {
+      event.preventDefault();
+      closeShare();
+      return;
+    }
+
+    const platform = event.target.closest?.("[data-achievement-platform]");
+    if (platform) {
+      event.preventDefault();
+      platformAction(platform.dataset.achievementPlatform);
+      return;
+    }
+
+    if (event.target.closest?.("[data-achievement-native]")) {
+      event.preventDefault();
+      nativeShare().catch(error => setStatus(error.message, true));
+      return;
+    }
+
+    if (event.target.closest?.("[data-achievement-download]")) {
+      event.preventDefault();
+      downloadCard();
+      return;
+    }
+
+    if (event.target.closest?.("[data-achievement-copy]")) {
+      event.preventDefault();
+      copyHostedLink();
+    }
+  }
+
   function install() {
     if (window[INSTALL_FLAG]) return;
     window[INSTALL_FLAG] = true;
-
-    document.addEventListener("click", event => {
-      const badgeButton = event.target.closest?.("[data-share-badge]");
-      if (badgeButton) {
-        const id = badgeIdFromButton(badgeButton);
-        if (!id) return;
-        event.preventDefault();
-        event.stopImmediatePropagation();
-        openBadge(id, badgeButton);
-        return;
-      }
-
-      const levelButton = event.target.closest?.("[data-share-level-v3]");
-      if (levelButton) {
-        const prompt = levelButton.closest(`#${PROMPT_ID}`);
-        const levelData = prompt?.__levelData;
-        event.preventDefault();
-        event.stopImmediatePropagation();
-        removeLevelPrompt();
-        if (levelData) openLevel(levelData);
-        return;
-      }
-
-      if (event.target.closest?.("[data-dismiss-level-v3]")) {
-        event.preventDefault();
-        event.stopImmediatePropagation();
-        removeLevelPrompt();
-        return;
-      }
-
-      if (!activeShare) return;
-      if (event.target.closest?.("[data-social-close]")) {
-        event.preventDefault();
-        event.stopImmediatePropagation();
-        closeActiveShare();
-        return;
-      }
-      const platform = event.target.closest?.("[data-social-platform]");
-      if (platform) {
-        event.preventDefault();
-        event.stopImmediatePropagation();
-        platformAction(platform.dataset.socialPlatform);
-        return;
-      }
-      if (event.target.closest?.("[data-social-native]")) {
-        event.preventDefault();
-        event.stopImmediatePropagation();
-        nativeShare().catch(error => setStatus(error.message, true));
-        return;
-      }
-      if (event.target.closest?.("[data-social-download]")) {
-        event.preventDefault();
-        event.stopImmediatePropagation();
-        download();
-        return;
-      }
-      if (event.target.closest?.("[data-social-copy]")) {
-        event.preventDefault();
-        event.stopImmediatePropagation();
-        copyCaption();
-      }
-    }, true);
-
+    ensureModal();
+    document.addEventListener("click", handleClick);
     document.addEventListener("keydown", event => {
       if (event.key !== "Escape") return;
-      if (activeShare) {
-        event.stopImmediatePropagation();
-        closeActiveShare();
-      } else if (document.getElementById(PROMPT_ID)) removeLevelPrompt();
-    }, true);
-
+      if (activeShare) closeShare();
+      else if (document.getElementById(PROMPT_ID)) removeLevelPrompt();
+    });
     observeLevelUps();
-    window.SalitaQuestAchievementSharingV3 = {openBadge, openLevel};
+    window.SalitaQuestAchievementSharing = {openBadge, openChest, openLevel};
   }
 
   install();
