@@ -10,7 +10,7 @@ const requireMarkers = (source,markers,label) => markers.forEach(marker => {
   if (!source.includes(marker)) fail(`${label} is missing: ${marker}`);
 });
 
-new vm.Script(read("social-posting-v2.js"),{filename:"social-posting-v2.js"});
+for (const file of ["social-posting-v2.js","social-connections-v2.js"]) new vm.Script(read(file),{filename:file});
 
 const posting = read("social-posting-v2.js");
 requireMarkers(posting,[
@@ -30,8 +30,17 @@ requireMarkers(posting,[
   "navigator.canShare?.({files:[file]})"
 ],"Browser hosted-sharing client");
 
+const connections = read("social-connections-v2.js");
+requireMarkers(connections,[
+  'fetch(`${base}/health`',
+  "Hosted achievement sharing is active",
+  "salitaQuestSocialApiBase"
+],"Hosted-sharing settings check");
+if (connections.includes("/healthz")) fail("The browser must not use Cloud Run's reserved /healthz path");
+
 const service = read("services/social-share/index.js");
 requireMarkers(service,[
+  'app.get("/health"',
   'app.post("/api/share-cards"',
   'decodePngDataUrl(req.body.squareImageDataUrl, "squareImageDataUrl", 1080, 1080)',
   'decodePngDataUrl(req.body.ogImageDataUrl, "ogImageDataUrl", 1200, 630)',
@@ -50,8 +59,9 @@ requireMarkers(service,[
   'ALLOWED_ORIGINS',
   'Cache-Control'
 ],"Cloud Run Open Graph service");
+if (service.includes('app.get("/healthz"')) fail("The service must avoid Cloud Run's reserved /healthz path");
 
-for (const file of ["services/social-share/index.js","social-posting-v2.js"]) {
+for (const file of ["services/social-share/index.js","social-posting-v2.js","social-connections-v2.js"]) {
   const check=spawnSync("node",["--check",file],{encoding:"utf8"});
   if(check.status!==0) fail(`${file} failed syntax check: ${check.stderr}`);
 }
@@ -68,11 +78,16 @@ requireMarkers(deploy,[
   "--uniform-bucket-level-access",
   '"age": 365',
   "roles/storage.objectAdmin",
+  "roles/run.builder",
   "--allow-unauthenticated",
+  "--default-url",
+  "--ingress=all",
+  '"${candidate}/health"',
   "SHARE_BUCKET=",
   "PUBLIC_APP_URL=",
   "Settings → Connected accounts → Connection service"
 ],"Cloud Shell deployment");
+if (deploy.includes("/healthz")) fail("The deployment script must not test the reserved /healthz path");
 
 for(const htmlFile of ["app.html","bisaya.html"]){
   const html=read(htmlFile);
@@ -82,7 +97,7 @@ for(const htmlFile of ["app.html","bisaya.html"]){
     "badge-layout-v3.css?v=5.4.25",
     "social-connections-v2.css?v=5.4.25",
     "social-posting-v2.css?v=5.4.25",
-    "social-connections-v2.js?v=5.4.25",
+    "social-connections-v2.js?v=5.4.26",
     "social-posting-v2.js?v=5.4.25"
   ]) if(!html.includes(asset)) fail(`${htmlFile} does not load ${asset}`);
 }
@@ -109,4 +124,4 @@ requireMarkers(readme,[
 const serviceDocs=read("services/social-share/README.md");
 requireMarkers(serviceDocs,["Open Graph metadata","og:image","Cloud Run","Start learning a Filipino language free"],"Share-service documentation");
 
-console.log("Validated unique hosted badge/chest pages, exact 1200×630 Open Graph images, square app-sharing images, CTA artwork and landing pages, Cloud Run deployment, both languages and release 5.4.25.");
+console.log("Validated hosted badge/chest previews, non-reserved Cloud Run health checks, exact Open Graph images, CTA artwork, both language loaders and release 5.4.25 hotfix.");
