@@ -8,7 +8,7 @@ const read = file => fs.readFileSync(path.join(root,file),"utf8");
 const fail = message => { throw new Error(message); };
 const requireMarkers = (source, markers, label) => markers.forEach(marker => { if (!source.includes(marker)) fail(`${label} is missing: ${marker}`); });
 
-for (const file of ["social-connections-v2.js","social-posting-v2.js","service-worker.js"]) new vm.Script(read(file),{filename:file});
+for (const file of ["social-connections-v2.js","achievement-sharing-v3.js","social-posting-v2.js","service-worker.js"]) new vm.Script(read(file),{filename:file});
 
 const layout = read("badge-layout-v3.css");
 requireMarkers(layout,[
@@ -73,22 +73,25 @@ for (const htmlFile of ["app.html","bisaya.html"]) {
   const inline=[...html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/gi)].map(match=>match[1].trim()).filter(Boolean);
   inline.forEach((source,index)=>new vm.Script(source,{filename:`${htmlFile}#inline-${index+1}`}));
   for (const asset of [
-    "badge-layout-v3.css?v=5.4.25","social-connections-v2.css?v=5.4.27","social-posting-v2.css?v=5.4.25",
-    "social-connections-v2.js?v=5.4.27","social-posting-v2.js?v=5.4.25"
+    "badge-layout-v3.css?v=5.4.25","social-connections-v2.css?v=5.4.27","social-posting-v2.css?v=5.4.25","achievement-sharing-v3.css?v=5.4.28",
+    "social-connections-v2.js?v=5.4.27","achievement-sharing-v3.js?v=5.4.28","social-posting-v2.js?v=5.4.25"
   ]) if (!html.includes(asset)) fail(`${htmlFile} does not load ${asset}`);
   const oldShare=html.indexOf("badge-sharing-v1.js?v=5.4.23");
   const connectionsIndex=html.indexOf("social-connections-v2.js?v=5.4.27");
+  const achievementIndex=html.indexOf("achievement-sharing-v3.js?v=5.4.28");
   const postingIndex=html.indexOf("social-posting-v2.js?v=5.4.25");
-  if (!(oldShare>=0 && connectionsIndex>oldShare && postingIndex>connectionsIndex)) fail(`${htmlFile} must load legacy chest state, seamless sharing, then final hosted-posting interception`);
+  if (!(oldShare>=0 && connectionsIndex>oldShare && achievementIndex>connectionsIndex && postingIndex>achievementIndex)) fail(`${htmlFile} must load legacy chest state, seamless sharing, authoritative achievement sharing, then legacy hosted-posting compatibility`);
 }
 
 const worker=read("service-worker.js");
 requireMarkers(worker,[
-  "salita-quest-v5-4-hosted-sharing-r39",
   "salita-quest-v5-4-seamless-sharing-r40",
+  "salita-quest-v5-4-achievement-sharing-r41",
   '"./badge-layout-v3.css"',
   '"./social-connections-v2.js"',
   '"./social-connections-v2.css"',
+  '"./achievement-sharing-v3.js"',
+  '"./achievement-sharing-v3.css"',
   '"./social-posting-v2.js"',
   '"./social-posting-v2.css"'
 ],"Offline social release");
@@ -119,4 +122,4 @@ requireMarkers(audioDocs,["The generator is resumable","punctuation-only aliases
 const readme=read("README.md");
 requireMarkers(readme,["5.4.25 — Hosted Achievement Sharing","Hosted achievement sharing","Connected social accounts","badge-layout-v3.css","validate-social-posting-audio-resume.mjs"],"README release notes");
 
-console.log("Validated non-overlapping badge cards, automatic built-in sharing, hidden developer configuration, hosted platform previews, OAuth-ready posting, resumable Cebuano generation and release 5.4.27.");
+console.log("Validated non-overlapping badge cards, automatic built-in sharing, authoritative individual badge and level-up sharing, hosted platform previews, OAuth-ready posting, resumable Cebuano generation and release 5.4.28.");
