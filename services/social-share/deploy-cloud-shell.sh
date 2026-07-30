@@ -82,6 +82,7 @@ gcloud run deploy "${SERVICE_NAME}" \
   --service-account="${SERVICE_ACCOUNT}" \
   --allow-unauthenticated \
   --default-url \
+  --ingress=all \
   --set-env-vars="SHARE_BUCKET=${BUCKET_NAME},PUBLIC_APP_URL=${APP_URL},ALLOWED_ORIGINS=${ALLOWED_ORIGINS},MAX_UPLOADS_PER_HOUR=30" \
   --memory="512Mi" \
   --cpu="1" \
@@ -93,9 +94,10 @@ SERVICE_URL=""
 
 # Cloud Run can report both a deterministic URL and a hashed legacy URL. Verify
 # the endpoint instead of assuming every reported hostname is routed correctly.
-for candidate in "${DETERMINISTIC_URL}" "${DESCRIBED_URL}"; do
+# Use a health route that does not end with a reserved suffix.
+for candidate in "${DESCRIBED_URL}" "${DETERMINISTIC_URL}"; do
   [[ -n "${candidate}" ]] || continue
-  if curl --fail --silent --show-error --max-time 30 "${candidate}/healthz" >/tmp/salita-share-health.json 2>/dev/null; then
+  if curl --fail --silent --show-error --max-time 30 "${candidate}/health" >/tmp/salita-share-health.json 2>/dev/null; then
     SERVICE_URL="${candidate}"
     break
   fi
@@ -103,7 +105,7 @@ done
 
 if [[ -z "${SERVICE_URL}" ]]; then
   echo "Deployment completed, but neither Cloud Run URL passed the health check." >&2
-  echo "Try: curl --fail ${DETERMINISTIC_URL}/healthz" >&2
+  echo "Try: curl --fail ${DESCRIBED_URL}/health" >&2
   exit 1
 fi
 

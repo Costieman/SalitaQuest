@@ -117,7 +117,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get("/healthz", (_req, res) => {
+app.get("/health", (_req, res) => {
   res.json({ok: true, bucketConfigured: Boolean(bucket)});
 });
 
