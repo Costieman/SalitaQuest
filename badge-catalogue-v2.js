@@ -149,6 +149,7 @@
     if (countEl) countEl.textContent = String(count);
     const summary = document.querySelector("#badgesView .badges-page-summary h3");
     if (summary) summary.textContent = `${count} of ${BADGES.length} earned`;
+    window.dispatchEvent(new CustomEvent("salita:badges-rendered", {detail:{earned:count,total:BADGES.length}}));
   }
 
   function homeVisible() {
