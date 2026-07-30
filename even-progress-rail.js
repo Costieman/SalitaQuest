@@ -45,15 +45,28 @@
       const milestones = MODULES.filter((module, index) => index > 0);
       const nodes = [...host.querySelectorAll(".mastery-milestone")];
       const count = Math.max(1, nodes.length);
+
       nodes.forEach((node, index) => {
+        const number = index + 2;
         node.style.left = `${(index + 1) / count * 100}%`;
-        node.dataset.evenMilestone = String(index + 2);
+        node.dataset.evenMilestone = String(number);
+        node.classList.remove("progress-complete", "progress-approaching", "progress-future");
+        node.classList.add(node.classList.contains("done")
+          ? "progress-complete"
+          : node.classList.contains("next")
+            ? "progress-approaching"
+            : "progress-future");
+
+        const dot = node.querySelector(".mastery-dot");
+        if (dot) dot.textContent = String(number);
       });
+
       const progress = visualProgress(totalLearningPoints(), milestones);
       const fill = host.querySelector(".mastery-track-fill");
       const marker = host.querySelector(".mastery-you");
       if (fill) fill.style.width = `${progress}%`;
       if (marker) marker.style.left = `${progress}%`;
+      host.style.setProperty("--world-progress", `${progress}%`);
       host.dataset.evenSpacing = "true";
     }
 
