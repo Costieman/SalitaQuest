@@ -24,8 +24,6 @@ for (const marker of [
   'mobile-session-idle',
   'masteryRail.style.display',
   'profileControl.style.display = activeMobileLesson ? "none" : ""',
-  'Version 5.4.19 · Mobile Refined',
-  'Bisaya Foundation 0.3 · Mobile Refined',
   'renderMasteryRailForMobile',
   'switchViewWithMobileState',
   'renderExerciseForMobile',
@@ -74,14 +72,14 @@ if (css.includes('body.mobile-session-active .lesson-card {\n    min-height: 100
 for (const htmlFile of ["app.html", "bisaya.html"]) {
   const html = read(htmlFile);
   for (const asset of [
-    'mobile-session-refinement.css?v=5.4.19',
-    'mobile-session-refinement.js?v=5.4.19'
+    'mobile-session-refinement.css?v=5.4.21',
+    'mobile-session-refinement.js?v=5.4.21'
   ]) {
     if (!html.includes(asset)) fail(`${htmlFile} does not load ${asset}`);
   }
-  const launcher = html.indexOf('lesson-side-launcher.js?v=5.4.19');
-  const mobile = html.indexOf('mobile-session-refinement.js?v=5.4.19');
-  const profile = html.indexOf('profile-app.js?v=5.4.19');
+  const launcher = html.indexOf('lesson-side-launcher.js?v=5.4.21');
+  const mobile = html.indexOf('mobile-session-refinement.js?v=5.4.21');
+  const profile = html.indexOf('profile-app.js?v=5.4.21');
   if (!(launcher >= 0 && mobile > launcher && (profile < 0 || profile > mobile))) {
     fail(`${htmlFile} must load the mobile refinement after the launcher and before profile controls`);
   }
@@ -94,13 +92,13 @@ for (const asset of [
 ]) {
   if (!serviceWorker.includes(asset)) fail(`Offline cache is missing ${asset}`);
 }
-if (!serviceWorker.includes('salita-quest-v5-4-mobile-refinement-r32')) {
-  fail("Mobile refinement cache name is missing");
+if (!serviceWorker.includes('salita-quest-v5-4-progression-scenarios-r34')) {
+  fail("Current release cache name is missing from the mobile validation path");
 }
 
 const indexHtml = read("index.html");
-if (!indexHtml.includes('service-worker.js?v=5.4.19')) {
-  fail("The profile gate does not request the mobile refinement service-worker release");
+if (!indexHtml.includes('service-worker.js?v=5.4.21')) {
+  fail("The profile gate does not request the current service-worker release");
 }
 
-console.log("Validated numbered-only mobile world progress, rail-free practice screens, idle Daily/Quick tabs, fixed lesson actions, compact phrase mastery, accessible More navigation, feedback scrolling, dark mode, both courses, and offline delivery.");
+console.log("Validated numbered-only mobile world progress, rail-free practice screens, idle Daily/Quick tabs, fixed lesson actions, compact phrase mastery, accessible More navigation, feedback scrolling, dark mode, both courses, and current offline delivery.");
