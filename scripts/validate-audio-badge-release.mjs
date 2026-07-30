@@ -122,7 +122,7 @@ if (compile.status !== 0) fail(`Cebuano generator does not compile: ${compile.st
 
 const readme = read("README.md");
 for (const marker of [
-  '5.4.23 — Placement & Social Badge Chest',
+  '5.4.24 — Social Posting & Resumable Cebuano Audio',
   'pointer release',
   'earned badges first, ordered newest to oldest',
   'Google Cloud Gemini-TTS',

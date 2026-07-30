@@ -10,6 +10,7 @@ on:
       - "agent/progression-**"
       - "agent/audio-**"
       - "agent/placement-**"
+      - "agent/social-**"
 
 permissions:
   contents: read
@@ -40,3 +41,5 @@ jobs:
         run: node scripts/validate-audio-badge-release.mjs
       - name: Validate placement and social badge sharing
         run: node scripts/validate-placement-sharing.mjs
+      - name: Validate social posting and resumable Cebuano audio
+        run: node scripts/validate-social-posting-audio-resume.mjs
