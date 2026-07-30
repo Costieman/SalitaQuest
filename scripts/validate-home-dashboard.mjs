@@ -78,10 +78,11 @@ for (const htmlFile of ["app.html", "bisaya.html"]) {
     'compact-home-dashboard.css?v=5.4.21',
     'weekly-avatar-chest.css?v=5.4.21',
     'clean-topbar.css?v=5.4.21',
-    'weekly-avatar-polish.js?v=5.4.21',
-    'profile-app.js?v=5.4.21'
+    'weekly-avatar-polish.js?v=5.4.21'
   ], `${htmlFile} Home release assets`);
 }
+if (!read("app.html").includes('profile-app.js?v=5.4.21')) fail("Tagalog does not load the shared profile runtime directly.");
+if (!read("bisaya-app-loader.js").includes('loadScript("./profile-app.js')) fail("Bisaya does not load the shared profile runtime through its course loader.");
 
 const index = read("index.html");
 requireMarkers(index, [
@@ -98,4 +99,4 @@ requireMarkers(serviceWorker, [
   'salita-quest-v5-4-navigation-badges-r35'
 ], "Home offline release");
 
-console.log("Validated the focused Home dashboard, compact World Progress header, reliable profile autosave, Home-only Daily Key celebration, both course loaders, and current offline release.");
+console.log("Validated the focused Home dashboard, compact World Progress header, reliable profile autosave in both course architectures, Home-only Daily Key celebration, and current offline release.");
