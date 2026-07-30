@@ -22,7 +22,7 @@ for (const marker of [
   "basic:12,intermediate:6,advanced:2",
   "basic:2,intermediate:6,advanced:12",
   "No XP or mastery is awarded during placement",
-  "Placement changes content access",
+  "Earlier regions remain available",
   "data.accessPoints = moduleAccessFor(level)",
   "Math.max(actual,access)",
   "state.settings.beginnerMode = level === \"beginner\"",
