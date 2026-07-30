@@ -1,0 +1,15 @@
+.social-links-card {display:grid;gap:18px}
+.social-links-heading {display:flex;align-items:flex-start;justify-content:space-between;gap:20px}
+.social-links-heading h3 {margin:4px 0 6px}
+.social-links-heading p:not(.eyebrow) {margin:0;max-width:760px;color:var(--muted);line-height:1.5}
+.social-links-heading > span {font-size:2rem}
+.social-links-grid {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.social-link-field {display:grid;gap:6px;min-width:0}
+.social-link-field span,.social-links-footer label > span {font-size:.7rem;font-weight:900;color:var(--muted)}
+.social-link-field input,.social-links-footer select {width:100%;min-width:0;box-sizing:border-box;padding:11px 12px;border:1px solid var(--line);border-radius:12px;background:var(--paper);color:var(--text);font:inherit}
+.social-links-footer {display:flex;align-items:end;justify-content:space-between;gap:16px;margin-top:14px}
+.social-links-footer label {display:grid;gap:6px;min-width:min(100%,320px)}
+.social-links-footer button {flex:0 0 auto}
+.social-links-status {min-height:1.2em;margin:0;color:var(--green);font-size:.72rem;font-weight:800}
+body.dark-mode .social-link-field input,body.dark-mode .social-links-footer select {background:#111b2b;border-color:#34425a;color:#fff}
+@media (max-width:760px){.social-links-grid{grid-template-columns:1fr}.social-links-footer{align-items:stretch;flex-direction:column}.social-links-footer button{width:100%}}

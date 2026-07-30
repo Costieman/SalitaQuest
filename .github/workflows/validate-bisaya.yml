@@ -9,6 +9,7 @@ on:
       - "agent/dark-mode-**"
       - "agent/progression-**"
       - "agent/audio-**"
+      - "agent/placement-**"
 
 permissions:
   contents: read
@@ -37,3 +38,5 @@ jobs:
         run: node scripts/validate-progression-scenarios-navigation.mjs
       - name: Validate audio badges and reward coordination
         run: node scripts/validate-audio-badge-release.mjs
+      - name: Validate placement and social badge sharing
+        run: node scripts/validate-placement-sharing.mjs

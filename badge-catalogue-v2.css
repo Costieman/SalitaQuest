@@ -1,6 +1,22 @@
+#badgesView,
+#badgesView .badges-page-hero,
+#badgesView .badges-page-summary,
+#badgesView .badges-page-shelf,
+#badgesView .achievement-panel,
+#badgesView .badge-shelf.badge-catalogue-grid {
+  width:100%;
+  min-width:0;
+  max-width:100%;
+  box-sizing:border-box;
+}
+
+#badgesView {
+  overflow-x:hidden;
+}
+
 #badgesView .badge-shelf.badge-catalogue-grid {
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+  grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));
   gap:16px;
   align-items:stretch;
 }
@@ -9,6 +25,9 @@
   display:grid !important;
   grid-template-columns:88px minmax(0,1fr);
   gap:14px;
+  width:100%;
+  min-width:0;
+  max-width:100%;
   min-height:142px;
   padding:16px !important;
   border:1px solid var(--line) !important;
@@ -17,6 +36,7 @@
   opacity:1 !important;
   filter:none !important;
   overflow:hidden;
+  box-sizing:border-box;
 }
 
 .badge-catalogue-card.earned {border-color:rgba(20,160,139,.5) !important;box-shadow:0 14px 34px rgba(20,160,139,.12)}
@@ -42,15 +62,15 @@
 .badge-fallback-art {display:grid;place-items:center;width:68px;height:68px;font-size:34px}
 .badge-fallback-art .custom-badge {width:64px;height:64px}
 
-.badge-catalogue-copy {display:flex;flex-direction:column;min-width:0}
-.badge-catalogue-topline {display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:6px}
-.badge-catalogue-topline span {font-size:.62rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
-.badge-catalogue-topline em {font-style:normal;font-size:.58rem;font-weight:900;letter-spacing:.08em;padding:4px 7px;border-radius:999px;background:var(--soft)}
+.badge-catalogue-copy {display:flex;flex-direction:column;min-width:0;max-width:100%;overflow:hidden}
+.badge-catalogue-topline {display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:6px;min-width:0}
+.badge-catalogue-topline span {min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.62rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.badge-catalogue-topline em {flex:0 0 auto;font-style:normal;font-size:.58rem;font-weight:900;letter-spacing:.08em;padding:4px 7px;border-radius:999px;background:var(--soft)}
 .badge-catalogue-card.earned .badge-catalogue-topline em {color:#087266;background:rgba(20,160,139,.15)}
 .badge-catalogue-card.available .badge-catalogue-topline em {color:#8b5b00;background:rgba(247,201,72,.2)}
 .badge-catalogue-card.locked .badge-catalogue-topline em {color:#845252;background:rgba(132,62,62,.12)}
-.badge-catalogue-copy > strong {font-size:1rem;line-height:1.2;margin-bottom:5px}
-.badge-catalogue-copy > small {font-size:.76rem;line-height:1.4;color:var(--muted)}
+.badge-catalogue-copy > strong {font-size:1rem;line-height:1.2;margin-bottom:5px;overflow-wrap:anywhere}
+.badge-catalogue-copy > small {font-size:.76rem;line-height:1.4;color:var(--muted);overflow-wrap:anywhere}
 .badge-catalogue-copy time {font-size:.65rem;font-weight:800;color:var(--green);margin-top:auto;padding-top:8px}
 .badge-catalogue-copy > p {margin:4px 0 0;font-size:.64rem;font-weight:800;color:var(--muted);text-align:right}
 .badge-progress {height:7px;border-radius:999px;background:var(--soft);overflow:hidden;margin-top:10px}
@@ -76,6 +96,18 @@
 body.dark-mode .badge-catalogue-card {background:#172131 !important;border-color:#34425a !important}
 body.dark-mode .badge-catalogue-card.available {background:linear-gradient(145deg,#172131,rgba(247,201,72,.1)) !important}
 body.dark-mode .badge-catalogue-card.locked {background:linear-gradient(145deg,#172131,rgba(148,69,69,.12)) !important}
+
+@media (min-width:1001px) and (max-width:1460px) {
+  #badgesView .badge-shelf.badge-catalogue-grid {
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+}
+
+@media (min-width:1001px) and (max-width:1160px) {
+  #badgesView .badge-shelf.badge-catalogue-grid {
+    grid-template-columns:1fr;
+  }
+}
 
 @media (max-width:1000px) {
   #badgesView .badge-shelf.badge-catalogue-grid {grid-template-columns:1fr;gap:12px}

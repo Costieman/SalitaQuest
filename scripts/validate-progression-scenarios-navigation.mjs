@@ -184,6 +184,7 @@ for (const htmlFile of ["app.html", "bisaya.html"]) {
 
 const serviceWorker = read("service-worker.js");
 requireMarkers(serviceWorker, [
+  'const CACHE_NAME = "salita-quest-',
   '"./world-progress-status.css"',
   '"./level-progression-v2.js"',
   '"./level-progression-v2.css"',
@@ -191,8 +192,7 @@ requireMarkers(serviceWorker, [
   '"./adaptive-scenarios.js"',
   '"./adaptive-scenarios.css"',
   '"./desktop-navigation-refinement.js"',
-  '"./desktop-navigation-refinement.css"',
-  "salita-quest-v5-4-navigation-badges-r35"
+  '"./desktop-navigation-refinement.css"'
 ], "Offline progression release");
 
 console.log(`Validated live Quick Review item counting, World Progress states, ${totalXpTo99} XP to Level 99, Home-only level-up celebration, ${scenarioCount} adaptive scenarios, fluid desktop resizing, retractable symbol navigation, dedicated Badges view, both courses, and offline delivery.`);

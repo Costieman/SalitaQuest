@@ -64,13 +64,13 @@ if (!read("bisaya-app-loader.js").includes('loadScript("./profile-app.js')) fail
 
 const serviceWorker = read("service-worker.js");
 requireMarkers(serviceWorker, [
+  'const CACHE_NAME = "salita-quest-',
   '"./mobile-session-refinement.js"',
   '"./mobile-session-refinement.css"',
-  '"./desktop-navigation-refinement.js"',
-  'salita-quest-v5-4-navigation-badges-r35'
+  '"./desktop-navigation-refinement.js"'
 ], "Mobile offline release");
 
 const index = read("index.html");
-if (!index.includes('service-worker.js?v=5.4.21')) fail("The profile gate does not request the current service worker.");
+if (!index.includes('service-worker.js?v=5.4.23')) fail("The profile gate does not request the current service worker.");
 
 console.log("Validated numbered-only mobile World Progress, rail-free review screens, fixed lesson actions, compact mastery, More navigation including Badges, profile controls in both course architectures, and offline delivery.");

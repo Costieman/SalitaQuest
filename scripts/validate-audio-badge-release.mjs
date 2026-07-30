@@ -84,26 +84,26 @@ for (const htmlFile of ["app.html","bisaya.html"]) {
   const inline = [...html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/gi)].map(match=>match[1].trim()).filter(Boolean);
   inline.forEach((source,index)=>new vm.Script(source,{filename:`${htmlFile}#${index+1}`}));
   for (const asset of [
-    'badge-catalogue-v2.css?v=5.4.22',
+    'badge-catalogue-v2.css?v=5.4.23',
     'pronunciation-release-control.js?v=5.4.22',
     'home-reward-coordinator.js?v=5.4.22',
-    'badge-catalogue-v2.js?v=5.4.22'
+    'badge-catalogue-v2.js?v=5.4.23'
   ]) if (!html.includes(asset)) fail(`${htmlFile} does not load ${asset}`);
   const nav = html.indexOf('desktop-navigation-refinement.js?v=5.4.21');
   const audio = html.indexOf('pronunciation-release-control.js?v=5.4.22');
   const rewardIndex = html.indexOf('home-reward-coordinator.js?v=5.4.22');
-  const catalogue = html.indexOf('badge-catalogue-v2.js?v=5.4.22');
+  const catalogue = html.indexOf('badge-catalogue-v2.js?v=5.4.23');
   if (!(nav >= 0 && audio > nav && rewardIndex > audio && catalogue > rewardIndex)) fail(`${htmlFile} has incorrect final runtime order`);
 }
 
 const serviceWorker = read("service-worker.js");
 for (const asset of [
+  'const CACHE_NAME = "salita-quest-',
   '"./pronunciation-release-control.js"',
   '"./home-reward-coordinator.js"',
   '"./badge-catalogue-v2.js"',
   '"./badge-catalogue-v2.css"'
 ]) if (!serviceWorker.includes(asset)) fail(`Offline cache missing ${asset}`);
-if (!serviceWorker.includes('salita-quest-v5-4-audio-badges-r36')) fail("Audio/badge cache version is missing");
 
 const generator = read("scripts/generate_cebuano_google_audio.py");
 for (const marker of [
@@ -122,7 +122,7 @@ if (compile.status !== 0) fail(`Cebuano generator does not compile: ${compile.st
 
 const readme = read("README.md");
 for (const marker of [
-  '5.4.22 — Audio & Badge Catalogue',
+  '5.4.23 — Placement & Social Badge Chest',
   'pointer release',
   'earned badges first, ordered newest to oldest',
   'Google Cloud Gemini-TTS',

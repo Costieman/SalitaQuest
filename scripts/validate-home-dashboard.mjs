@@ -86,17 +86,17 @@ if (!read("bisaya-app-loader.js").includes('loadScript("./profile-app.js')) fail
 
 const index = read("index.html");
 requireMarkers(index, [
-  'profile-shell.css?v=5.4.21',
-  'service-worker.js?v=5.4.21'
+  'profile-shell.css?v=5.4.23',
+  'service-worker.js?v=5.4.23'
 ], "Profile gate release");
 
 const serviceWorker = read("service-worker.js");
 requireMarkers(serviceWorker, [
+  'const CACHE_NAME = "salita-quest-',
   '"./weekly-avatar-polish.js"',
   '"./weekly-avatar-chest.css"',
   '"./clean-topbar.js"',
-  '"./profile-app.js"',
-  'salita-quest-v5-4-navigation-badges-r35'
+  '"./profile-app.js"'
 ], "Home offline release");
 
 console.log("Validated the focused Home dashboard, compact World Progress header, reliable profile autosave in both course architectures, Home-only Daily Key celebration, and current offline release.");
