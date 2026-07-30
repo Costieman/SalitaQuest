@@ -94,7 +94,7 @@ SERVICE_URL=""
 
 # Cloud Run can report both a deterministic URL and a hashed legacy URL. Verify
 # the endpoint instead of assuming every reported hostname is routed correctly.
-# Avoid /healthz: Cloud Run documents some paths ending in z as reserved.
+# Use a health route that does not end with a reserved suffix.
 for candidate in "${DESCRIBED_URL}" "${DETERMINISTIC_URL}"; do
   [[ -n "${candidate}" ]] || continue
   if curl --fail --silent --show-error --max-time 30 "${candidate}/health" >/tmp/salita-share-health.json 2>/dev/null; then
