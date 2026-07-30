@@ -2,7 +2,25 @@
 
 Salita Quest is a local-first, conversation-focused Tagalog and Cebuano learning app. It combines active recall, spaced repetition, structured mastery, short daily practice, scenario challenges, audio review, learner profiles, collectible rewards and offline installation.
 
-Current application release: **5.4.22 — Audio & Badge Catalogue**.
+Current application release: **5.4.23 — Placement & Social Badge Chest**.
+
+## Learner onboarding and placement
+
+A new learner chooses one of two routes when first opening a language course:
+
+1. **Complete beginner** — begins at the first region and automatically enables Complete Beginner mode.
+2. **Estimated level** — chooses A1, A2, A3, B1, B2 or B3 and completes a 20-question placement check.
+
+The self-estimate changes the mix of basic, intermediate and advanced questions, but the final recommendation is based on the answers. A3 and B3 are internal Salita Quest progression bands rather than official CEFR labels.
+
+Placement changes **content access only**. It does not:
+
+- award XP;
+- create false mastery;
+- add review history;
+- mark unseen phrases as encountered.
+
+The learner starts around the recommended region while earlier regions remain available. Existing learners retain their current journey and are not forced through the test. The placement check can be retaken from Settings. Turning off Complete Beginner mode also offers the test again.
 
 ## Learning model
 
@@ -33,7 +51,7 @@ Completing all four goals awards one Daily Key. Six keys earned on consecutive d
 - Later levels require increasingly more XP.
 - Level-up celebrations are queued and shown when Home is visible.
 
-## Badges
+## Badges and Badge Chest
 
 Badges have their own dedicated navigation page.
 
@@ -46,6 +64,28 @@ The catalogue displays:
 Every badge has a stable ID, category, requirement, status, progress data, earned timestamp and an optional custom image path. Custom art can later be added at `badges/<badge-id>.png`; the current pictogram remains as a fallback.
 
 New badge awards are queued and celebrated on Home. The badge appears centrally, spins, then travels toward the Badges navigation destination. Existing badges are migrated without replaying every historic achievement.
+
+The **Badge Chest** lets a learner pin and manually order up to six favourite earned badges. The first chest item is treated as the top-left achievement. Learners can:
+
+- add or remove earned badges;
+- reorder the chest;
+- share an individual badge;
+- share the full Badge Chest as a square social card.
+
+Share cards include Salita Quest branding and an invitation to **learn Filipino languages for free with Salita Quest**. On supported phones the app uses the system share sheet. On desktop it downloads the image and copies a suggested caption where clipboard access is available. Nothing is posted automatically.
+
+## Optional social links
+
+Each local learner profile can store optional links or handles for Facebook, Instagram, TikTok, X, YouTube and LinkedIn. One platform can be marked as the primary public handle for future share experiences.
+
+These links:
+
+- remain inside the local learner profile;
+- are never used for automatic posting;
+- do not provide OAuth access to the learner's social account;
+- can be changed or removed from Settings.
+
+Direct social-account OAuth and server-side posting would require registered platform applications, redirect URLs, a privacy policy and a secure backend. The current implementation deliberately uses local links plus the device share sheet.
 
 ## Pronunciation and audio
 
@@ -69,12 +109,12 @@ The generator reads the released Cebuano items and dialogue lines, writes determ
 
 Setup instructions are in [`docs/CEBUANO_AUDIO.md`](docs/CEBUANO_AUDIO.md).
 
-Google Cloud credentials are never stored in the browser app or committed to the repository. Audio generation requires a Google Cloud project, billing, Cloud Text-to-Speech, Application Default Credentials and the required Vertex AI prediction permission.
+Google Cloud credentials are never stored in the browser app or committed to the repository. Audio generation requires a Google Cloud project, billing, Application Default Credentials and the necessary API and prediction permissions.
 
 ## Learner profiles and saving
 
 - Multiple local learner profiles are supported.
-- Each learner has separate Tagalog and Cebuano progress.
+- Each learner has separate Tagalog and Cebuano progress and placement results.
 - PINs are salted and hashed with SHA-256 through Web Crypto.
 - Course state is mirrored to the active learner regularly.
 - A full save is forced every 15 seconds.
@@ -87,6 +127,7 @@ This is a local profile lock, not a server-authenticated account. Progress remai
 
 - Responsive desktop dashboard with a retractable symbol-only navigation rail.
 - Dedicated Home, Learn, Topic Review, Hands-Free Review, Dictionary, Journey Map, Challenges, Progress, Badges and Settings destinations.
+- Responsive Badge catalogue and Badge Chest grids that reduce column counts before cards can overlap the desktop app canvas.
 - Compact mobile practice mode with fixed Skip, Check and Continue controls.
 - Mobile World Progress uses numbered nodes without overlapping region labels.
 - Light and dark themes are supported.
@@ -106,14 +147,17 @@ After a release, a hard refresh or fully closing and reopening an installed copy
 - `languages/cebuano/` — Cebuano course, map and module packs
 - `audio/audio_manifest.json` — static audio index
 - `scripts/generate_cebuano_google_audio.py` — Google Cloud Gemini-TTS generator
+- `placement-onboarding-v1.js` — beginner choice and 20-question placement check
 - `badge-catalogue-v2.js` — ordered badge catalogue and badge persistence
+- `badge-sharing-v1.js` — Badge Chest and share-card generation
+- `social-links-v1.js` — optional learner social-profile links
 - `home-reward-coordinator.js` — reliable Home-only Daily Key playback
 - `pronunciation-release-control.js` — release-based pronunciation activation
 - `service-worker.js` — installed/offline delivery
 
 ## Validation
 
-The pull-request workflow runs the course, shared UI, Home dashboard, mobile, key-run, progression/scenario/navigation and audio/badge release checks.
+The pull-request workflow runs course, shared UI, Home dashboard, mobile, key-run, progression/scenario/navigation, audio/badge and placement/share release checks.
 
 Run the principal checks locally with Node.js 20 or later:
 
@@ -125,8 +169,9 @@ node scripts/validate-mobile-refinement.mjs
 node scripts/validate-key-run-refinement.mjs
 node scripts/validate-progression-scenarios-navigation.mjs
 node scripts/validate-audio-badge-release.mjs
+node scripts/validate-placement-sharing.mjs
 ```
 
 ## Privacy
 
-The app does not automatically post rewards or badges. Share controls use the device share sheet where supported or generate a local image file. Google Cloud credentials are used only by the offline generation script and must never be exposed to the browser.
+The app does not automatically post rewards, badges or social content. Share controls use the device share sheet where supported or generate a local image file. Optional social links remain in the local profile. Google Cloud credentials are used only by the offline generation script and must never be exposed to the browser.
