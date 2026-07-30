@@ -14,6 +14,7 @@ on:
       - "agent/hosted-**"
       - "agent/individual-**"
       - "agent/badge-**"
+      - "agent/avatar-**"
 
 permissions:
   contents: read
@@ -50,3 +51,5 @@ jobs:
         run: node scripts/validate-hosted-achievement-sharing.mjs
       - name: Validate Badge Chest and achievement sharing stability
         run: node scripts/validate-badge-stability.mjs
+      - name: Validate avatar collection and progression
+        run: node scripts/validate-avatar-collection.mjs
