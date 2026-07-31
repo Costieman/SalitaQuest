@@ -1,0 +1,39 @@
+name: Validate Avatar Progression 5.5
+
+on:
+  pull_request:
+    paths:
+      - "avatars/**"
+      - "avatar-*.js"
+      - "avatar-*.css"
+      - "weekly-avatar-*.js"
+      - "weekly-avatar-*.css"
+      - "level-avatar-*.js"
+      - "achievement-sharing-avatar-bridge-v1.js"
+      - "profile-app.js"
+      - "profile-emblem-control.js"
+      - "service-worker.js"
+      - "README.md"
+      - "docs/releases/5.5.0-avatar-progression.md"
+      - "scripts/validate-avatar-*.mjs"
+      - ".github/workflows/validate-avatar-progression-v550.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-avatar-progression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Check whitespace
+        run: git diff --check origin/${{ github.base_ref || 'main' }}...HEAD
+      - name: Run Avatar Progression integration validation
+        run: node scripts/validate-avatar-progression-v550.mjs
