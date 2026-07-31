@@ -41,7 +41,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python -m pip install --disable-pip-version-check pillow cairosvg
+          python -m pip install --disable-pip-version-check pillow pillow-avif-plugin cairosvg
           python scripts/build-canonical-avatars-v556.py
       - name: Commit generated assets to the branch
         if: github.event_name == 'pull_request'
