@@ -60,7 +60,7 @@ for (const htmlFile of ["app.html", "bisaya.html"]) {
   if (!(launcher >= 0 && mobile > launcher)) fail(`${htmlFile} must load mobile refinement after the lesson launcher.`);
 }
 const appHtml = read("app.html");
-const appProfileMatch = appHtml.match(/profile-app\.js\?v=(?:5\.4\.21|5\.5\.2|5\.5\.3)/);
+const appProfileMatch = appHtml.match(/profile-app\.js\?v=(?:5\.4\.21|5\.5\.2|5\.5\.3|5\.5\.4)/);
 const appProfile = appProfileMatch ? appProfileMatch.index : -1;
 const appMobile = appHtml.indexOf('mobile-session-refinement.js?v=5.4.21');
 if (!(appProfile > appMobile)) fail("Tagalog must load profile controls after mobile refinement.");
