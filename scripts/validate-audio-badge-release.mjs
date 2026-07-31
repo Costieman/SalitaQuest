@@ -90,7 +90,8 @@ for (const htmlFile of ["app.html","bisaya.html"]) {
     'home-reward-coordinator.js?v=5.4.22',
     'badge-catalogue-v2.js?v=5.4.23'
   ]) if (!html.includes(asset)) fail(`${htmlFile} does not load ${asset}`);
-  const nav = html.indexOf('desktop-navigation-refinement.js?v=5.4.21');
+  const navMatch = html.match(/desktop-navigation-refinement\.js\?v=(?:5\.4\.21|5\.5\.2)/);
+  const nav = navMatch ? navMatch.index : -1;
   const audio = html.indexOf('pronunciation-release-control.js?v=5.4.22');
   const rewardIndex = html.indexOf('home-reward-coordinator.js?v=5.4.22');
   const catalogue = html.indexOf('badge-catalogue-v2.js?v=5.4.23');
