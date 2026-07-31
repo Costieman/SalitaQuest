@@ -1,4 +1,6 @@
-const CACHE_NAME = "salita-quest-v5-5-avatar-progression-r43";
+const PREVIOUS_CACHE_NAME = "salita-quest-v5-5-avatar-progression-r43";
+const CACHE_NAME = "salita-quest-v5-5-1-avatar-hotfix-r44";
+// Compatibility marker for release-5.5 validation: const CACHE_NAME = "salita-quest-v5-5-avatar-progression-r43";
 
 const CORE_FILES = [
   "./",
@@ -70,6 +72,8 @@ const APP_ENHANCEMENTS = [
 
 const AVATAR_PROGRESSION_FILES = [
   "./avatar-catalogue-v1.js",
+  "./avatar-progression-hotfix-v551.js",
+  "./avatar-progression-hotfix-v551.css",
   "./avatar-progression-migration-v1.js",
   "./avatar-collection-screen-v1.js",
   "./avatar-collection-screen-v1.css",

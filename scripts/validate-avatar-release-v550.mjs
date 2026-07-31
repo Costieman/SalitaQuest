@@ -10,6 +10,7 @@ const migrationSource = read("avatar-progression-migration-v1.js");
 const loaderSource = read("profile-emblem-control.js");
 const workerSource = read("service-worker.js");
 const releaseNotes = read("docs/releases/5.5.0-avatar-progression.md");
+const hotfixNotes = read("docs/releases/5.5.1-avatar-hotfix.md");
 
 new vm.Script(migrationSource, {filename:"avatar-progression-migration-v1.js"});
 new vm.Script(loaderSource, {filename:"profile-emblem-control.js"});
@@ -101,20 +102,28 @@ const snapshot = storage.getItem(profileStoreKey);
 const repeated = migration.migrateStorage(storage, model, now);
 if (repeated.changed || storage.getItem(profileStoreKey) !== snapshot) fail("Migration must be idempotent");
 
-const migrationIndex = loaderSource.indexOf("loadAvatarMigrationAssets();");
-const collectionIndex = loaderSource.indexOf("loadAvatarCollectionAssets();");
-const weeklyIndex = loaderSource.indexOf("loadWeeklyAvatarRewardAssets();");
-if (migrationIndex < 0 || migrationIndex > collectionIndex || migrationIndex > weeklyIndex) {
-  fail("Migration must load before collection and weekly reward runtimes");
+const order = [
+  "await window.SalitaAvatarHotfixReady",
+  'await loadScript("migration"',
+  'await loadScript("collection"',
+  'await loadScript("weekly"',
+  'await loadScript("level"',
+  'await loadScript("unlock"',
+  'await loadScript("sharing"'
+].map(marker => loaderSource.indexOf(marker));
+if (order.some(index => index < 0) || order.some((index, position) => position && index <= order[position - 1])) {
+  fail("Hotfix, migration and avatar feature runtimes must load in deterministic order");
 }
 if (!loaderSource.includes("script.async = false")) fail("Avatar release scripts must preserve loading order");
-if (!loaderSource.includes('Version 5.5.0 · Avatar Progression')) fail("Tagalog release label is missing");
-if (!loaderSource.includes('Avatar Collection 5.5')) fail("Bisaya release label is missing");
+if (!loaderSource.includes('Version 5.5.1 · Avatar Progression fixes')) fail("Tagalog hotfix release label is missing");
+if (!loaderSource.includes('Avatar Collection 5.5.1')) fail("Bisaya hotfix release label is missing");
 
-if (!workerSource.includes('salita-quest-v5-5-avatar-progression-r43')) fail("Service-worker cache version is incorrect");
+if (!workerSource.includes('salita-quest-v5-5-1-avatar-hotfix-r44')) fail("Service-worker cache version is incorrect");
 if (!workerSource.includes('caches.match(event.request, {ignoreSearch:true})')) fail("Offline matching must ignore release query strings");
 for (const file of [
   "avatar-catalogue-v1.js",
+  "avatar-progression-hotfix-v551.js",
+  "avatar-progression-hotfix-v551.css",
   "avatar-progression-migration-v1.js",
   "avatar-collection-screen-v1.js",
   "weekly-avatar-shard-rewards-v1.js",
@@ -137,5 +146,14 @@ for (const required of [
 ]) {
   if (!releaseNotes.includes(required)) fail(`Release notes are missing: ${required}`);
 }
+for (const required of [
+  "Salita Quest 5.5.1",
+  "Collections navigation",
+  "Starter avatars",
+  "Level milestone safety",
+  "salita-quest-v5-5-1-avatar-hotfix-r44"
+]) {
+  if (!hotfixNotes.includes(required)) fail(`Hotfix notes are missing: ${required}`);
+}
 
-console.log("Salita Quest 5.5.0 release validation passed: additive migration, preserved legacy rewards, deterministic loading, complete offline avatar cache and release metadata.");
+console.log("Salita Quest 5.5.1 release validation passed: additive migration, artwork hotfix loading, complete offline cache and release metadata.");

@@ -15,7 +15,8 @@ const validators = [
   "scripts/validate-weekly-avatar-shards.mjs",
   "scripts/validate-level-avatar-rewards.mjs",
   "scripts/validate-avatar-unlock-sharing.mjs",
-  "scripts/validate-avatar-release-v550.mjs"
+  "scripts/validate-avatar-release-v550.mjs",
+  "scripts/validate-avatar-hotfix-v551.mjs"
 ];
 
 for (const validator of validators) {
@@ -33,6 +34,7 @@ for (const validator of validators) {
 
 const runtimeFiles = [
   "avatar-catalogue-v1.js",
+  "avatar-progression-hotfix-v551.js",
   "profile-app.js",
   "profile-emblem-control.js",
   "avatar-collection-screen-v1.js",
@@ -79,12 +81,13 @@ if (seenAssets.size < 41) fail("Catalogue assets are unexpectedly over-shared; v
 
 const loader = read("profile-emblem-control.js");
 const orderedTokens = [
-  "loadAvatarMigrationAssets();",
-  "loadAvatarCollectionAssets();",
-  "loadWeeklyAvatarRewardAssets();",
-  "loadLevelAvatarRewardAssets();",
-  "loadAvatarUnlockCelebrationAssets();",
-  "loadAchievementAvatarBridgeAssets();"
+  "await window.SalitaAvatarHotfixReady",
+  'await loadScript("migration"',
+  'await loadScript("collection"',
+  'await loadScript("weekly"',
+  'await loadScript("level"',
+  'await loadScript("unlock"',
+  'await loadScript("sharing"'
 ];
 let lastIndex = -1;
 for (const token of orderedTokens) {
@@ -95,13 +98,16 @@ for (const token of orderedTokens) {
 }
 
 const serviceWorker = read("service-worker.js");
-if (!serviceWorker.includes("salita-quest-v5-5-avatar-progression-r43")) fail("Service worker cache version is not 5.5 r43");
+if (!serviceWorker.includes("salita-quest-v5-5-1-avatar-hotfix-r44")) fail("Service worker cache version is not 5.5.1 r44");
 for (const asset of seenAssets) {
+  if (!serviceWorker.includes(asset)) fail(`Service worker does not cache ${asset}`);
+}
+for (const asset of ["avatar-progression-hotfix-v551.js", "avatar-progression-hotfix-v551.css"]) {
   if (!serviceWorker.includes(asset)) fail(`Service worker does not cache ${asset}`);
 }
 
 const readme = read("README.md");
-if (!readme.includes("5.5.0 — Avatar Progression")) fail("README does not identify the 5.5.0 release");
+if (!readme.includes("5.5.0 — Avatar Progression")) fail("README does not identify the Avatar Progression release");
 if (/unlock a random collectible avatar reward/i.test(readme)) fail("README still describes the retired random weekly reward");
 if (!readme.includes("validate-avatar-progression-v550.mjs")) fail("README does not document the integrated avatar validator");
 
@@ -109,5 +115,9 @@ const releaseNotes = read("docs/releases/5.5.0-avatar-progression.md");
 for (const required of ["48", "Golden Salita Crest", "No avatar is assigned randomly", "salita-quest-v5-5-avatar-progression-r43"]) {
   if (!releaseNotes.includes(required)) fail(`Release notes are missing ${required}`);
 }
+const hotfixNotes = read("docs/releases/5.5.1-avatar-hotfix.md");
+for (const required of ["Collections", "Starter avatars", "Level milestone safety", "salita-quest-v5-5-1-avatar-hotfix-r44"]) {
+  if (!hotfixNotes.includes(required)) fail(`Hotfix release notes are missing ${required}`);
+}
 
-console.log(`Avatar Progression 5.5 integration validation passed: ${model.catalogue.length} avatars, ${seenAssets.size} cached asset paths, seven component validators and ordered migration/runtime loading.`);
+console.log(`Avatar Progression 5.5.1 integration validation passed: ${model.catalogue.length} avatars, ${seenAssets.size} cached source assets, eight component validators and ordered hotfix/runtime loading.`);

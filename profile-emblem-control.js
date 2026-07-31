@@ -2,111 +2,63 @@
   "use strict";
 
   const INSTALL_FLAG = "__salitaQuestProfileEmblemControlInstalled";
-  const RELEASE_VERSION = "5.5.0";
+  const RELEASE_VERSION = "5.5.1";
+  let assetPromise = null;
 
-  function appendStylesheet(selector, href, datasetKey) {
-    if (document.querySelector(selector)) return;
+  function addStylesheet(key, href) {
+    if (document.querySelector(`link[data-sq-avatar-asset="${key}"]`)) return;
     const link = document.createElement("link");
     link.rel = "stylesheet";
     link.href = href;
-    link.dataset[datasetKey] = "true";
+    link.dataset.sqAvatarAsset = key;
     document.head.appendChild(link);
   }
 
-  function appendScript(selector, src, datasetKey, errorMessage) {
-    if (document.querySelector(selector)) return;
-    const script = document.createElement("script");
-    script.src = src;
-    script.async = false;
-    script.dataset[datasetKey] = "true";
-    script.onerror = () => console.warn(errorMessage);
-    document.body.appendChild(script);
-  }
-
-  function loadAvatarMigrationAssets() {
-    appendScript(
-      'script[data-avatar-progression-migration]',
-      `./avatar-progression-migration-v1.js?v=${RELEASE_VERSION}`,
-      "avatarProgressionMigration",
-      "Avatar progression migration could not be loaded."
-    );
-  }
-
-  function loadAvatarCollectionAssets() {
-    appendStylesheet(
-      'link[data-avatar-collection-screen]',
-      `./avatar-collection-screen-v1.css?v=${RELEASE_VERSION}`,
-      "avatarCollectionScreen"
-    );
-    appendScript(
-      'script[data-avatar-collection-screen]',
-      `./avatar-collection-screen-v1.js?v=${RELEASE_VERSION}`,
-      "avatarCollectionScreen",
-      "Avatar collection screen could not be loaded."
-    );
-  }
-
-  function loadWeeklyAvatarRewardAssets() {
-    appendStylesheet(
-      'link[data-weekly-avatar-shards]',
-      `./weekly-avatar-shard-rewards-v1.css?v=${RELEASE_VERSION}`,
-      "weeklyAvatarShards"
-    );
-    appendScript(
-      'script[data-weekly-avatar-shards]',
-      `./weekly-avatar-shard-rewards-v1.js?v=${RELEASE_VERSION}`,
-      "weeklyAvatarShards",
-      "Weekly avatar shard rewards could not be loaded."
-    );
-  }
-
-  function loadLevelAvatarRewardAssets() {
-    appendScript(
-      'script[data-level-avatar-rewards]',
-      `./level-avatar-rewards-v1.js?v=${RELEASE_VERSION}`,
-      "levelAvatarRewards",
-      "Level milestone avatar rewards could not be loaded."
-    );
-  }
-
-  function loadAvatarUnlockCelebrationAssets() {
-    appendStylesheet(
-      'link[data-avatar-unlock-celebration]',
-      `./avatar-unlock-celebration-v1.css?v=${RELEASE_VERSION}`,
-      "avatarUnlockCelebration"
-    );
-    appendScript(
-      'script[data-avatar-unlock-celebration]',
-      `./avatar-unlock-celebration-v1.js?v=${RELEASE_VERSION}`,
-      "avatarUnlockCelebration",
-      "Avatar unlock celebrations could not be loaded."
-    );
-  }
-
-  function loadAchievementAvatarBridgeAssets() {
-    appendScript(
-      'script[data-achievement-avatar-bridge]',
-      `./achievement-sharing-avatar-bridge-v1.js?v=${RELEASE_VERSION}`,
-      "achievementAvatarBridge",
-      "Avatar-aware achievement sharing could not be loaded."
-    );
+  function loadScript(key, src, errorMessage) {
+    const existing = document.querySelector(`script[data-sq-avatar-asset="${key}"]`);
+    if (existing?.dataset.loaded === "true") return Promise.resolve();
+    if (existing) return new Promise((resolve, reject) => {
+      existing.addEventListener("load", resolve, {once:true});
+      existing.addEventListener("error", reject, {once:true});
+    });
+    return new Promise((resolve, reject) => {
+      const script = document.createElement("script");
+      script.src = src;
+      script.async = false;
+      script.dataset.sqAvatarAsset = key;
+      script.onload = () => { script.dataset.loaded = "true"; resolve(); };
+      script.onerror = () => {
+        console.warn(errorMessage);
+        reject(new Error(errorMessage));
+      };
+      document.body.appendChild(script);
+    });
   }
 
   function loadAvatarProgressionAssets() {
-    loadAvatarMigrationAssets();
-    loadAvatarCollectionAssets();
-    loadWeeklyAvatarRewardAssets();
-    loadLevelAvatarRewardAssets();
-    loadAvatarUnlockCelebrationAssets();
-    loadAchievementAvatarBridgeAssets();
+    if (assetPromise) return assetPromise;
+    addStylesheet("collection-css", `./avatar-collection-screen-v1.css?v=${RELEASE_VERSION}`);
+    addStylesheet("weekly-css", `./weekly-avatar-shard-rewards-v1.css?v=${RELEASE_VERSION}`);
+    addStylesheet("unlock-css", `./avatar-unlock-celebration-v1.css?v=${RELEASE_VERSION}`);
+    addStylesheet("hotfix-css", `./avatar-progression-hotfix-v551.css?v=${RELEASE_VERSION}`);
+
+    assetPromise = (async () => {
+      await loadScript("hotfix-runtime", `./avatar-progression-hotfix-v551.js?v=${RELEASE_VERSION}`, "Avatar hotfix runtime could not be loaded.");
+      await window.SalitaAvatarHotfixReady;
+      await loadScript("migration", `./avatar-progression-migration-v1.js?v=${RELEASE_VERSION}`, "Avatar progression migration could not be loaded.");
+      await loadScript("collection", `./avatar-collection-screen-v1.js?v=${RELEASE_VERSION}`, "Avatar collection screen could not be loaded.");
+      await loadScript("weekly", `./weekly-avatar-shard-rewards-v1.js?v=${RELEASE_VERSION}`, "Weekly avatar rewards could not be loaded.");
+      await loadScript("level", `./level-avatar-rewards-v1.js?v=${RELEASE_VERSION}`, "Level avatar rewards could not be loaded.");
+      await loadScript("unlock", `./avatar-unlock-celebration-v1.js?v=${RELEASE_VERSION}`, "Avatar unlock celebration could not be loaded.");
+      await loadScript("sharing", `./achievement-sharing-avatar-bridge-v1.js?v=${RELEASE_VERSION}`, "Avatar-aware sharing could not be loaded.");
+      document.dispatchEvent(new CustomEvent("salita:avatar-progression-ready", {detail:{version:RELEASE_VERSION}}));
+    })().catch(error => console.warn("Salita Quest avatar progression did not fully load", error));
+    return assetPromise;
   }
 
-  function retry() {
-    window.setTimeout(install, 90);
-  }
+  function retry() { window.setTimeout(install, 90); }
 
   function install() {
-    loadAvatarProgressionAssets();
     const host = document.querySelector(".sq-profile-control");
     const originalButton = host?.querySelector(".sq-profile-button");
     const menu = host?.querySelector(".sq-profile-menu");
@@ -122,7 +74,23 @@
     const imageSource = originalButton.querySelector("img")?.src || "avatars/tarsier.png";
     const triggers = [];
 
-    function makeTrigger(anchor, mobile = false) {
+    function positionMenu(trigger) {
+      const rect = trigger.getBoundingClientRect();
+      const width = Math.min(260, window.innerWidth - 24);
+      let left = Math.max(12, rect.left);
+      if (left + width > window.innerWidth - 12) left = window.innerWidth - width - 12;
+      menu.style.left = `${left}px`;
+      menu.style.top = `${Math.min(window.innerHeight - 20, rect.bottom + 10)}px`;
+      menu.style.right = "auto";
+      menu.style.bottom = "auto";
+      menu.style.width = `${width}px`;
+    }
+
+    function syncExpanded() {
+      triggers.forEach(trigger => trigger.setAttribute("aria-expanded", String(!menu.hidden)));
+    }
+
+    function makeTrigger(anchor, mobile) {
       anchor.innerHTML = `<img src="${imageSource}" alt="" aria-hidden="true">`;
       anchor.classList.add("sq-profile-emblem-trigger");
       anchor.dataset.profileEmblem = mobile ? "mobile" : "desktop";
@@ -131,7 +99,6 @@
       anchor.setAttribute("aria-label", "Open learner menu");
       anchor.setAttribute("aria-expanded", "false");
       triggers.push(anchor);
-
       const open = event => {
         event.preventDefault();
         event.stopPropagation();
@@ -146,51 +113,26 @@
       }, true);
     }
 
-    function positionMenu(trigger) {
-      const rect = trigger.getBoundingClientRect();
-      const width = Math.min(260, window.innerWidth - 24);
-      let left = rect.left;
-      if (left + width > window.innerWidth - 12) left = window.innerWidth - width - 12;
-      left = Math.max(12, left);
-      menu.style.left = `${left}px`;
-      menu.style.top = `${Math.min(window.innerHeight - 20, rect.bottom + 10)}px`;
-      menu.style.right = "auto";
-      menu.style.bottom = "auto";
-      menu.style.width = `${width}px`;
-    }
-
-    function syncExpanded() {
-      triggers.forEach(trigger => trigger.setAttribute("aria-expanded", String(!menu.hidden)));
-    }
-
-    function syncAvatarImage(source) {
+    makeTrigger(desktopMark, false);
+    makeTrigger(mobileMark, true);
+    new MutationObserver(syncExpanded).observe(menu, {attributes:true, attributeFilter:["hidden"]});
+    window.addEventListener("resize", () => {
+      if (menu.hidden) return;
+      positionMenu(window.matchMedia("(max-width: 1000px)").matches ? mobileMark : desktopMark);
+    }, {passive:true});
+    document.addEventListener("salita:avatar-equipped", event => {
+      const source = event.detail?.avatar?.image;
       if (!source) return;
       triggers.forEach(trigger => {
         const image = trigger.querySelector("img");
         if (image) image.src = source;
       });
-    }
-
-    makeTrigger(desktopMark, false);
-    makeTrigger(mobileMark, true);
-
-    const observer = new MutationObserver(syncExpanded);
-    observer.observe(menu, {attributes:true, attributeFilter:["hidden"]});
-    window.addEventListener("resize", () => {
-      if (menu.hidden) return;
-      const visibleTrigger = window.matchMedia("(max-width: 1000px)").matches ? mobileMark : desktopMark;
-      positionMenu(visibleTrigger);
-    }, {passive:true});
-    document.addEventListener("salita:avatar-equipped", event => {
-      syncAvatarImage(event.detail?.avatar?.image);
     });
 
     const version = document.querySelector(".version-label");
-    if (version) {
-      version.textContent = document.body.dataset.course === "cebuano"
-        ? "Bisaya Foundation 0.3 · Avatar Collection 5.5"
-        : "Version 5.5.0 · Avatar Progression";
-    }
+    if (version) version.textContent = document.body.dataset.course === "cebuano"
+      ? "Bisaya Foundation 0.3 · Avatar Collection 5.5.1"
+      : "Version 5.5.1 · Avatar Progression fixes";
     document.documentElement.dataset.salitaRelease = RELEASE_VERSION;
   }
 
