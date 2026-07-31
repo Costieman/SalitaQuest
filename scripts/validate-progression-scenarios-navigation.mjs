@@ -165,18 +165,25 @@ for (const htmlFile of ["app.html", "bisaya.html"]) {
   const html = read(htmlFile);
   requireMarkers(html, [
     "world-progress-status.css?v=5.4.21",
-    "level-progression-v2.css?v=5.4.21",
     "fluid-desktop-app.css?v=5.4.21",
     "adaptive-scenarios.css?v=5.4.21",
-    "desktop-navigation-refinement.css?v=5.4.21",
-    "adaptive-scenarios.js?v=5.4.21",
-    "level-progression-v2.js?v=5.4.21",
-    "desktop-navigation-refinement.js?v=5.4.21"
+    "adaptive-scenarios.js?v=5.4.21"
   ], `${htmlFile} progression release`);
+  for (const [asset, kind] of [
+    ["level-progression-v2.css", "Level Progression styles"],
+    ["desktop-navigation-refinement.css", "navigation styles"],
+    ["level-progression-v2.js", "Level Progression runtime"],
+    ["desktop-navigation-refinement.js", "navigation runtime"]
+  ]) {
+    const pattern = new RegExp(`${asset.replaceAll(".", "\\.")}\\?v=(?:5\\.4\\.21|5\\.5\\.2)`);
+    if (!pattern.test(html)) fail(`${htmlFile} progression release is missing ${kind}.`);
+  }
   const mobileIndex = html.indexOf("mobile-session-refinement.js?v=5.4.21");
   const adaptiveIndex = html.indexOf("adaptive-scenarios.js?v=5.4.21");
-  const levelIndex = html.indexOf("level-progression-v2.js?v=5.4.21");
-  const navigationIndex = html.indexOf("desktop-navigation-refinement.js?v=5.4.21");
+  const levelMatch = html.match(/level-progression-v2\.js\?v=(?:5\.4\.21|5\.5\.2)/);
+  const navigationMatch = html.match(/desktop-navigation-refinement\.js\?v=(?:5\.4\.21|5\.5\.2)/);
+  const levelIndex = levelMatch ? levelMatch.index : -1;
+  const navigationIndex = navigationMatch ? navigationMatch.index : -1;
   if (!(mobileIndex >= 0 && adaptiveIndex > mobileIndex && levelIndex > adaptiveIndex && navigationIndex > levelIndex)) {
     fail(`${htmlFile} must load mobile state, scenarios, Level 99, then the final navigation wrapper.`);
   }
