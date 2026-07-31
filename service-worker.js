@@ -1,5 +1,7 @@
-const PREVIOUS_CACHE_NAME = "salita-quest-v5-5-2-mobile-level-safety-r45";
-const CACHE_NAME = "salita-quest-v5-5-3-popup-governance-r46";
+const PREVIOUS_CACHE_NAME = "salita-quest-v5-5-3-popup-governance-r46";
+const CACHE_NAME = "salita-quest-v5-5-4-avatar-artwork-r47";
+// Compatibility marker: const PREVIOUS_CACHE_NAME = "salita-quest-v5-5-2-mobile-level-safety-r45";
+// Compatibility marker: const CACHE_NAME = "salita-quest-v5-5-3-popup-governance-r46";
 // Compatibility marker: const PREVIOUS_CACHE_NAME = "salita-quest-v5-5-avatar-progression-r43";
 // Compatibility marker: const CACHE_NAME = "salita-quest-v5-5-avatar-progression-r43";
 // Compatibility marker: const CACHE_NAME = "salita-quest-v5-5-1-avatar-hotfix-r44";
@@ -78,6 +80,7 @@ const APP_ENHANCEMENTS = [
 
 const AVATAR_PROGRESSION_FILES = [
   "./avatar-catalogue-v1.js",
+  "./avatar-artwork-registry-v554.js",
   "./avatar-progression-hotfix-v551.js",
   "./avatar-progression-hotfix-v551.css",
   "./avatar-progression-migration-v1.js",
