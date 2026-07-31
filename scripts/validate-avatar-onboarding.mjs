@@ -30,7 +30,7 @@ if (index.includes("AVATARS=[")) {
   fail("The legacy hard-coded eight-avatar onboarding list must not remain.");
 }
 
-if (!profileApp.includes("./avatar-catalogue-v1.js?v=5.5.0")) {
+if (!profileApp.includes("./avatar-catalogue-v1.js?v=5.5.4") && !profileApp.includes("./avatar-catalogue-v1.js?v=5.5.0")) {
   fail("The in-app profile control must load the central avatar catalogue.");
 }
 if (!profileApp.includes("data-avatar-choice")) {
