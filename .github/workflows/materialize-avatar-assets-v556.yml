@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - agent/avatar-canonical-rebuild-v5-5-6
+      - agent/avatar-canonical-rebuild-v5-5-6-1024
     paths:
       - tools/avatar-assets-1024.tar
       - .github/workflows/materialize-avatar-assets-v556.yml
@@ -19,7 +19,7 @@ jobs:
       - name: Check out rebuild branch
         uses: actions/checkout@v4
         with:
-          ref: agent/avatar-canonical-rebuild-v5-5-6
+          ref: agent/avatar-canonical-rebuild-v5-5-6-1024
           fetch-depth: 0
 
       - name: Extract individual 1024 by 1024 avatars
@@ -53,4 +53,4 @@ jobs:
             exit 0
           fi
           git commit -m "Materialize 48 canonical 1024px avatar assets"
-          git push origin HEAD:agent/avatar-canonical-rebuild-v5-5-6
+          git push origin HEAD:agent/avatar-canonical-rebuild-v5-5-6-1024
