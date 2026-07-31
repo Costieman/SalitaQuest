@@ -19,7 +19,7 @@ vm.runInContext(rewardSource, sandbox, {filename:"level-avatar-rewards-v1.js"});
 
 const model = sandbox.SalitaAvatarModel;
 const logic = sandbox.SalitaLevelAvatarRewardLogic;
-if (!model || !logic) fail("Milestone reward model did not initialise");
+if (!model || logic?.version !== 2) fail("Milestone reward model v2 did not initialise");
 
 const expected = {
   10:"narra",
@@ -82,22 +82,44 @@ if (summit.awarded.some(reward => reward.level < 99 && !["common", "uncommon"].i
   fail("Levels 10–90 must never award rare avatars");
 }
 
+const corrupted = {
+  avatarId:"anahaw",
+  avatarCollection:{
+    equippedAvatarId:"anahaw",
+    ownedAvatarIds:["anahaw","narra","nipa_palm"],
+    shards:{narra:100,nipa_palm:100},
+    levelRewardsClaimed:[10,20],
+    pendingUnlocks:[
+      {avatarId:"narra",source:"level_milestone",level:10},
+      {avatarId:"nipa_palm",source:"level_milestone",level:20}
+    ]
+  },
+  avatarMilestoneRewards:{claims:{10:{avatarId:"narra"},20:{avatarId:"nipa_palm"}}}
+};
+const repaired = logic.repairFutureMilestones(corrupted, 1, model);
+if (!repaired.changed || corrupted.avatarCollection.levelRewardsClaimed.length) fail("Future milestone claims were not repaired");
+if (corrupted.avatarCollection.ownedAvatarIds.includes("narra") || corrupted.avatarCollection.ownedAvatarIds.includes("nipa_palm")) {
+  fail("Unsupported future milestone avatars were not removed");
+}
+
 for (const required of [
   "salitaQuestLocalProfilesV1",
   "levelRewardsClaimed",
   'source:"level_milestone"',
   "highestLevelObserved",
   "salita:avatar-collection-changed",
-  "updateGlobalUIWithAvatarMilestones",
-  "initial_migration",
+  "repairFutureMilestones",
+  "repairedFutureLevels",
+  "!window.__salitaQuestLevelProgressionV2Installed",
   "golden_salita_crest"
 ]) {
   if (!rewardSource.includes(required)) fail(`Milestone runtime is missing ${required}`);
 }
 if (/state\.xp\s*(?:\+|-|\*|\/)?=/.test(rewardSource)) fail("Milestone rewards must not alter XP or existing levels");
-if (!loaderSource.includes('const RELEASE_VERSION = "5.5.0"')) fail("Shared profile runtime release version is not 5.5.0");
-if (!loaderSource.includes("level-avatar-rewards-v1.js") || !loaderSource.includes("loadLevelAvatarRewardAssets();")) {
+if (!loaderSource.includes('const RELEASE_VERSION = "5.5.1"')) fail("Shared profile runtime release version is not 5.5.1");
+if (!loaderSource.includes("level-avatar-rewards-v1.js") || !loaderSource.includes('loadScript("level"')) {
   fail("Shared profile runtime does not load milestone rewards");
 }
+if (!loaderSource.includes("await window.SalitaAvatarHotfixReady")) fail("Milestones load before the safe model hotfix");
 
-console.log("Level avatar reward validation passed: Levels 10–90 common/uncommon, Level 99 crest, retroactive account-wide migration and no duplicate awards.");
+console.log("Level avatar reward validation passed: Levels 10–90 common/uncommon, Level 99 crest, real-level gating, future-claim repair and no duplicate awards.");
