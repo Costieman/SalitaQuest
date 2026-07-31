@@ -1,6 +1,7 @@
 const PREVIOUS_CACHE_NAME = "salita-quest-v5-5-1-avatar-hotfix-r44";
 const CACHE_NAME = "salita-quest-v5-5-2-mobile-level-safety-r45";
 // Compatibility marker for release-5.5 validation: const CACHE_NAME = "salita-quest-v5-5-avatar-progression-r43";
+// Compatibility marker for hotfix-5.5.1 validation: const PREVIOUS_CACHE_NAME = "salita-quest-v5-5-avatar-progression-r43";
 // Compatibility marker for hotfix-5.5.1 validation: const CACHE_NAME = "salita-quest-v5-5-1-avatar-hotfix-r44";
 
 const CORE_FILES = [
