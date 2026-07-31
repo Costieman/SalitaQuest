@@ -95,6 +95,9 @@ for (const required of [
   if (!rewardSource.includes(required)) fail(`Milestone runtime is missing ${required}`);
 }
 if (/state\.xp\s*(?:\+|-|\*|\/)?=/.test(rewardSource)) fail("Milestone rewards must not alter XP or existing levels");
-if (!loaderSource.includes("level-avatar-rewards-v1.js?v=5.5.0")) fail("Shared profile runtime does not load milestone rewards");
+if (!loaderSource.includes('const RELEASE_VERSION = "5.5.0"')) fail("Shared profile runtime release version is not 5.5.0");
+if (!loaderSource.includes("level-avatar-rewards-v1.js") || !loaderSource.includes("loadLevelAvatarRewardAssets();")) {
+  fail("Shared profile runtime does not load milestone rewards");
+}
 
 console.log("Level avatar reward validation passed: Levels 10–90 common/uncommon, Level 99 crest, retroactive account-wide migration and no duplicate awards.");
