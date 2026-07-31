@@ -46,10 +46,38 @@
     document.body.appendChild(script);
   }
 
+  function loadAvatarUnlockCelebrationAssets() {
+    if (!document.querySelector('link[data-avatar-unlock-celebration]')) {
+      const link = document.createElement("link");
+      link.rel = "stylesheet";
+      link.href = "./avatar-unlock-celebration-v1.css?v=5.5.0";
+      link.dataset.avatarUnlockCelebration = "true";
+      document.head.appendChild(link);
+    }
+    if (!document.querySelector('script[data-avatar-unlock-celebration]')) {
+      const script = document.createElement("script");
+      script.src = "./avatar-unlock-celebration-v1.js?v=5.5.0";
+      script.dataset.avatarUnlockCelebration = "true";
+      script.onerror = () => console.warn("Avatar unlock celebrations could not be loaded.");
+      document.body.appendChild(script);
+    }
+  }
+
+  function loadAchievementAvatarBridgeAssets() {
+    if (document.querySelector('script[data-achievement-avatar-bridge]')) return;
+    const script = document.createElement("script");
+    script.src = "./achievement-sharing-avatar-bridge-v1.js?v=5.5.0";
+    script.dataset.achievementAvatarBridge = "true";
+    script.onerror = () => console.warn("Avatar-aware achievement sharing could not be loaded.");
+    document.body.appendChild(script);
+  }
+
   function loadAvatarProgressionAssets() {
     loadAvatarCollectionAssets();
     loadWeeklyAvatarRewardAssets();
     loadLevelAvatarRewardAssets();
+    loadAvatarUnlockCelebrationAssets();
+    loadAchievementAvatarBridgeAssets();
   }
 
   function retry() {
