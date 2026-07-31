@@ -93,11 +93,11 @@ for (const asset of [
   '"./placement-onboarding-v1.js"',
   '"./placement-onboarding-v1.css"'
 ]) if (!worker.includes(asset)) fail(`Offline cache is missing ${asset}`);
-if (!worker.includes("salita-quest-v5-4-badge-stability-r42")) fail("Current service-worker cache is missing");
+if (!worker.includes("salita-quest-v5-5-avatar-progression-r43")) fail("Current service-worker cache is missing");
 
 const index = read("index.html");
 if (!index.includes("profile-shell.css?v=5.4.25") || !index.includes("service-worker.js?v=5.4.29")) {
-  fail("Profile gate was not advanced to the badge stability release");
+  fail("Profile gate was not advanced to the stable profile release");
 }
 
 const readme = read("README.md");
@@ -108,4 +108,4 @@ for (const marker of [
   "validate-placement-sharing.mjs"
 ]) if (!readme.includes(marker)) fail(`README is missing: ${marker}`);
 
-console.log("Validated 20-question placement, non-destructive content access, badge catalogue render boundary, stable Badge Chest ownership, both language loaders and offline release 5.4.29.");
+console.log("Validated 20-question placement, non-destructive content access, badge catalogue render boundary, stable Badge Chest ownership, both language loaders and current offline release.");
