@@ -25,13 +25,61 @@
     return window.SalitaAvatarModel?.get(id) || window.SalitaAvatarModel?.get("anahaw") || null;
   }
 
-  async function withEquippedAvatarImages(action) {
+  function loadImage(NativeImage, source) {
+    return new Promise(resolve => {
+      const image = new NativeImage();
+      image.onload = () => resolve(image);
+      image.onerror = () => resolve(null);
+      image.src = source;
+    });
+  }
+
+  function roundedRect(context, x, y, width, height, radius) {
+    const safe = Math.min(radius, width / 2, height / 2);
+    context.beginPath();
+    context.moveTo(x + safe, y);
+    context.arcTo(x + width, y, x + width, y + height, safe);
+    context.arcTo(x + width, y + height, x, y + height, safe);
+    context.arcTo(x, y + height, x, y, safe);
+    context.arcTo(x, y, x + width, y, safe);
+    context.closePath();
+  }
+
+  function stampAvatar(canvas, image) {
+    if (!canvas || !image || canvas.__salitaEquippedAvatarStamped) return;
+    const context = canvas.getContext?.("2d");
+    if (!context) return;
+    canvas.__salitaEquippedAvatarStamped = true;
+
+    const square = canvas.width === canvas.height;
+    const size = square ? Math.round(canvas.width * .14) : Math.round(canvas.height * .18);
+    const margin = square ? Math.round(canvas.width * .045) : Math.round(canvas.height * .045);
+    const x = canvas.width - size - margin;
+    const y = margin;
+
+    context.save();
+    roundedRect(context, x, y, size, size, size * .24);
+    context.fillStyle = "rgba(235,249,244,.96)";
+    context.fill();
+    context.strokeStyle = "#f7c948";
+    context.lineWidth = Math.max(4, size * .045);
+    context.stroke();
+    context.clip();
+    context.imageSmoothingEnabled = false;
+    context.drawImage(image, x, y, size, size);
+    context.restore();
+  }
+
+  async function withEquippedAvatarImages(action, options = {}) {
     const avatar = equippedAvatar();
     if (!avatar?.image || typeof action !== "function") return action?.();
 
     const NativeImage = window.Image;
     const nativeDescriptor = Object.getOwnPropertyDescriptor(HTMLImageElement.prototype, "src");
+    const nativeToBlob = HTMLCanvasElement.prototype.toBlob;
     if (!NativeImage || !nativeDescriptor?.get || !nativeDescriptor?.set) return action();
+
+    const avatarImage = options.stampBadge ? await loadImage(NativeImage, avatar.image) : null;
 
     function RedirectedImage(width, height) {
       const image = new NativeImage(width, height);
@@ -49,10 +97,18 @@
     RedirectedImage.prototype = NativeImage.prototype;
 
     window.Image = RedirectedImage;
+    if (avatarImage && typeof nativeToBlob === "function") {
+      HTMLCanvasElement.prototype.toBlob = function avatarStampedToBlob() {
+        stampAvatar(this, avatarImage);
+        return nativeToBlob.apply(this, arguments);
+      };
+    }
+
     try {
       return await action();
     } finally {
       window.Image = NativeImage;
+      if (avatarImage && typeof nativeToBlob === "function") HTMLCanvasElement.prototype.toBlob = nativeToBlob;
     }
   }
 
@@ -63,7 +119,10 @@
       if (typeof original !== "function") continue;
       api[method] = function avatarAwareShareMethod() {
         const args = arguments;
-        return withEquippedAvatarImages(() => original.apply(api, args));
+        return withEquippedAvatarImages(
+          () => original.apply(api, args),
+          {stampBadge:method === "openBadge"}
+        );
       };
     }
     Object.defineProperty(api, "__equippedAvatarBridge", {value:true});
@@ -119,7 +178,8 @@
     document.addEventListener("click", interceptSharingClicks, true);
     window.SalitaAchievementAvatarBridge = Object.freeze({
       equippedAvatar,
-      withEquippedAvatarImages
+      withEquippedAvatarImages,
+      stampAvatar
     });
   }
 
