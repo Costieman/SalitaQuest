@@ -87,7 +87,10 @@ for (const loaderFile of ["app.html", "bisaya.html"]) {
   if (governorIndex < 0 || levelIndex < 0 || governorIndex > levelIndex) {
     fail(`${loaderFile} must load popup governance before level progression`);
   }
-  requireMarkers(loader, ["profile-emblem-control.js?v=5.5.3", "level-up-mobile-safety-v552.js?v=5.5.3"], loaderFile);
+  if (!loader.includes("profile-emblem-control.js?v=5.5.3") && !loader.includes("profile-emblem-control.js?v=5.5.4")) {
+    fail(`${loaderFile} must load the governed profile emblem runtime`);
+  }
+  requireMarkers(loader, ["level-up-mobile-safety-v552.js?v=5.5.3"], loaderFile);
 }
 
 const worker = read("service-worker.js");

@@ -87,10 +87,10 @@ for (const htmlFile of ["app.html", "bisaya.html"]) {
     "key-run-refinement.js?v=5.4.21",
     "even-progress-rail.js?v=5.4.21"
   ], `${htmlFile} key-run assets`);
-  if (!/profile-emblem-control\.css\?v=(?:5\.4\.21|5\.5\.2|5\.5\.3)/.test(html)) {
+  if (!/profile-emblem-control\.css\?v=(?:5\.4\.21|5\.5\.2|5\.5\.3|5\.5\.4)/.test(html)) {
     fail(`${htmlFile} key-run assets is missing the profile emblem styles.`);
   }
-  if (!/profile-emblem-control\.js\?v=(?:5\.4\.21|5\.5\.2|5\.5\.3)/.test(html)) {
+  if (!/profile-emblem-control\.js\?v=(?:5\.4\.21|5\.5\.2|5\.5\.3|5\.5\.4)/.test(html)) {
     fail(`${htmlFile} key-run assets is missing the profile emblem runtime.`);
   }
   const dailyIndex = html.indexOf("daily-goal-refinement.js?v=5.4.21");
