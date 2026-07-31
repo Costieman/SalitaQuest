@@ -2,85 +2,155 @@ from __future__ import annotations
 
 import hashlib
 import io
+import re
 import struct
 import subprocess
 import tarfile
 import tempfile
+import zipfile
 from pathlib import Path
 
 import cairosvg
-from PIL import Image
+from PIL import Image, UnidentifiedImageError
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "avatars" / "canonical"
 SIZE = (128, 128)
-SOURCE_REF = "origin/agent/avatar-progression-step-06-assets-rare-animals-2"
+SOURCE_REFS = (
+    "origin/agent/avatar-canonical-rebuild-v5-5-6-1024",
+    "origin/agent/avatar-progression-step-06-assets-rare-animals-2",
+)
 
-SOURCES = {
-    "eagle": "avatars/eagle.png",
-    "tamaraw": "avatars/tamaraw.png",
-    "anahaw": "avatars/anahaw.png",
-    "peacock": "avatars/peacock.png",
-    "orchid": "avatars/orchid.png",
-    "jade": "avatars/jade.png",
-    "rafflesia": "avatars/rafflesia.png",
-    "tarsier": "avatars/tarsier.png",
-    "narra": "avatars/narra.png",
-    "nipa_palm": "avatars/nipa.png",
-    "buri_palm": "avatars/buri.png",
-    "almaciga": "avatars/almaciga.png",
-    "pandan": "avatars/pandan.png",
-    "bakawan_mangrove": "avatars/bakawan.png",
-    "kawayang_tinik": "avatars/kawayang-tinik.png",
-    "pili": "avatars/pili.png",
-    "katmon": "avatars/katmon.png",
-    "medinilla": "avatars/medinilla.png",
-    "philippine_teak": "avatars/philippine-teak.png",
-    "banaba": "avatars/banaba.png",
-    "mangkono": "avatars/mangkono.png",
-    "attenborough_pitcher": "avatars/attenborough-pitcher.png",
-    "slipper_orchid": "avatars/slipper-orchid.png",
-    "philippine_hoya": "avatars/philippine-hoya.png",
-    "parol": "avatars/parol.svg",
-    "vinta": "avatars/vinta.svg",
-    "kulintang": "avatars/kulintang.svg",
-    "bangka": "avatars/bangka.svg",
-    "jeepney": "avatars/jeepney.svg",
-    "bahay_kubo": "avatars/bahay-kubo.svg",
-    "sarimanok": "avatars/sarimanok.svg",
-    "golden_salita_crest": "avatars/golden-salita-crest.svg",
-    "philippine_pangolin": "avatars/philippine-pangolin.webp",
-    "visayan_spotted_deer": "avatars/visayan-spotted-deer.webp",
-    "visayan_warty_pig": "avatars/visayan-warty-pig.webp",
-    "philippine_crocodile": "avatars/philippine-crocodile.webp",
-    "philippine_forest_turtle": "avatars/philippine-forest-turtle.webp",
-    "philippine_sailfin_lizard": "avatars/philippine-sailfin-lizard.webp",
-    "golden_crowned_flying_fox": "avatars/golden-crowned-flying-fox.webp",
-    "philippine_colugo": "avatars/philippine-colugo.webp",
-    "philippine_cockatoo": "avatars/philippine-cockatoo.svg",
-    "rufous_hornbill": "avatars/rufous-hornbill.svg",
-    "luzon_bleeding_heart_dove": "avatars/luzon-bleeding-heart-dove.svg",
-    "cebu_flowerpecker": "avatars/cebu-flowerpecker.svg",
-    "philippine_eagle_owl": "avatars/philippine-eagle-owl.svg",
-    "whale_shark_butanding": "avatars/whale-shark-butanding.svg",
-    "dugong": "avatars/dugong.svg",
-    "hawksbill_sea_turtle": "avatars/hawksbill-sea-turtle.svg",
+SOURCE_STEMS = {
+    "eagle": ("philippine_eagle", "eagle"),
+    "tamaraw": ("tamaraw",),
+    "anahaw": ("anahaw",),
+    "peacock": ("palawan_peacock_pheasant", "peacock"),
+    "orchid": ("waling_waling_orchid", "orchid"),
+    "jade": ("jade_vine", "jade"),
+    "rafflesia": ("philippine_rafflesia", "rafflesia"),
+    "tarsier": ("philippine_tarsier", "tarsier"),
+    "narra": ("narra",),
+    "nipa_palm": ("nipa_palm", "nipa"),
+    "buri_palm": ("buri_palm", "buri"),
+    "almaciga": ("almaciga",),
+    "pandan": ("pandan",),
+    "bakawan_mangrove": ("bakawan_mangrove", "bakawan"),
+    "kawayang_tinik": ("kawayang_tinik_bamboo", "kawayang_tinik"),
+    "pili": ("pili",),
+    "katmon": ("katmon_flower", "katmon"),
+    "medinilla": ("medinilla_magnifica", "medinilla"),
+    "philippine_teak": ("philippine_teak_blossom", "philippine_teak"),
+    "banaba": ("banaba_flower", "banaba"),
+    "mangkono": ("mangkono_blossom", "mangkono"),
+    "attenborough_pitcher": ("attenborough_pitcher_plant", "attenborough_pitcher"),
+    "slipper_orchid": ("philippine_slipper_orchid", "slipper_orchid"),
+    "philippine_hoya": ("philippine_hoya",),
+    "parol": ("parol",),
+    "vinta": ("vinta",),
+    "kulintang": ("kulintang",),
+    "bangka": ("bangka",),
+    "jeepney": ("jeepney",),
+    "bahay_kubo": ("bahay_kubo",),
+    "sarimanok": ("sarimanok",),
+    "golden_salita_crest": ("golden_salita_crest",),
+    "philippine_pangolin": ("philippine_pangolin",),
+    "visayan_spotted_deer": ("visayan_spotted_deer",),
+    "visayan_warty_pig": ("visayan_warty_pig",),
+    "philippine_crocodile": ("philippine_crocodile",),
+    "philippine_forest_turtle": ("philippine_forest_turtle",),
+    "philippine_sailfin_lizard": ("philippine_sailfin_lizard",),
+    "golden_crowned_flying_fox": (
+        "giant_golden_crowned_flying_fox",
+        "golden_crowned_flying_fox",
+    ),
+    "philippine_colugo": ("philippine_colugo",),
+    "philippine_cockatoo": ("philippine_cockatoo",),
+    "rufous_hornbill": ("rufous_hornbill",),
+    "luzon_bleeding_heart_dove": (
+        "luzon_bleeding_heart_dove",
+        "luzon_bleeding_heart",
+    ),
+    "cebu_flowerpecker": ("cebu_flowerpecker",),
+    "philippine_eagle_owl": ("philippine_eagle_owl",),
+    "whale_shark_butanding": ("whale_shark_butanding", "whale_shark"),
+    "dugong": ("dugong",),
+    "hawksbill_sea_turtle": ("hawksbill_sea_turtle", "hawksbill_turtle"),
 }
 
+RASTER_SUFFIXES = {".png", ".webp", ".jpg", ".jpeg"}
+SUPPORTED_SUFFIXES = RASTER_SUFFIXES | {".svg"}
 
-def extract_clean_source(destination: Path) -> None:
+
+def slug(value: str) -> str:
+    return re.sub(r"^_+|_+$", "", re.sub(r"[^a-z0-9]+", "_", value.lower()))
+
+
+def extract_ref(ref: str, destination: Path) -> None:
     subprocess.run(
-        ["git", "rev-parse", "--verify", SOURCE_REF],
+        ["git", "rev-parse", "--verify", ref],
         cwd=ROOT,
         check=True,
         stdout=subprocess.DEVNULL,
     )
     archive = subprocess.check_output(
-        ["git", "archive", "--format=tar", SOURCE_REF, "avatars"],
+        ["git", "archive", "--format=tar", ref],
         cwd=ROOT,
     )
     with tarfile.open(fileobj=io.BytesIO(archive), mode="r:") as bundle:
         bundle.extractall(destination, filter="data")
+
+
+def unpack_embedded_zips(root: Path) -> None:
+    for index, archive_path in enumerate(sorted(root.rglob("*.zip"))):
+        destination = root / f"_unpacked_zip_{index}"
+        destination.mkdir(parents=True, exist_ok=True)
+        with zipfile.ZipFile(archive_path) as archive:
+            for member in archive.infolist():
+                target = (destination / member.filename).resolve()
+                if destination.resolve() not in target.parents and target != destination.resolve():
+                    raise ValueError(f"Unsafe ZIP member: {member.filename}")
+            archive.extractall(destination)
+
+
+def candidate_score(path: Path, source_priority: int) -> tuple[int, int, int, int]:
+    suffix = path.suffix.lower()
+    if suffix in RASTER_SUFFIXES:
+        try:
+            with Image.open(path) as image:
+                image.load()
+                area = image.width * image.height
+        except (UnidentifiedImageError, OSError, ValueError):
+            return (-1, -1, -1, -1)
+        return (source_priority, 2, area, path.stat().st_size)
+    if suffix == ".svg":
+        return (source_priority, 1, 0, path.stat().st_size)
+    return (-1, -1, -1, -1)
+
+
+def select_sources(roots: list[tuple[Path, int]]) -> dict[str, Path]:
+    files: list[tuple[Path, int]] = []
+    for root, priority in roots:
+        files.extend(
+            (path, priority)
+            for path in root.rglob("*")
+            if path.is_file() and path.suffix.lower() in SUPPORTED_SUFFIXES
+        )
+
+    selected: dict[str, Path] = {}
+    for avatar_id, aliases in SOURCE_STEMS.items():
+        accepted = {slug(alias) for alias in aliases}
+        candidates = [
+            (candidate_score(path, priority), path)
+            for path, priority in files
+            if slug(path.stem) in accepted
+        ]
+        candidates = [item for item in candidates if item[0][0] >= 0]
+        if not candidates:
+            raise FileNotFoundError(f"No readable source found for {avatar_id}")
+        candidates.sort(key=lambda item: item[0], reverse=True)
+        selected[avatar_id] = candidates[0][1]
+    return selected
 
 
 def render_source(path: Path) -> Image.Image:
@@ -118,7 +188,7 @@ def validate_png(path: Path) -> str:
 
 
 def main() -> None:
-    if len(SOURCES) != 48 or len(set(SOURCES)) != 48:
+    if len(SOURCE_STEMS) != 48 or len(set(SOURCE_STEMS)) != 48:
         raise ValueError("The canonical manifest must contain 48 unique IDs")
 
     OUTPUT.mkdir(parents=True, exist_ok=True)
@@ -126,15 +196,20 @@ def main() -> None:
         stale.unlink()
 
     with tempfile.TemporaryDirectory(prefix="salita-avatar-source-") as temporary:
-        source_root = Path(temporary)
-        extract_clean_source(source_root)
+        temporary_root = Path(temporary)
+        source_roots: list[tuple[Path, int]] = []
+        for priority, ref in enumerate(SOURCE_REFS, start=1):
+            destination = temporary_root / f"source_{priority}"
+            destination.mkdir()
+            extract_ref(ref, destination)
+            unpack_embedded_zips(destination)
+            source_roots.append((destination, priority))
 
-        for avatar_id, relative_source in SOURCES.items():
-            source = source_root / relative_source
-            if not source.is_file():
-                raise FileNotFoundError(source)
+        selected = select_sources(source_roots)
+        for avatar_id, source in selected.items():
             destination = OUTPUT / f"{avatar_id}.png"
             render_source(source).save(destination, format="PNG", optimize=True)
+            print(f"{avatar_id}: {source.relative_to(temporary_root)}")
 
     files = sorted(OUTPUT.glob("*.png"))
     if len(files) != 48:
@@ -144,10 +219,7 @@ def main() -> None:
     if len(set(hashes)) != 48:
         raise ValueError("Canonical avatar output contains duplicate files")
 
-    print(
-        "Generated and validated 48 standalone canonical 128x128 PNG avatars "
-        f"from {SOURCE_REF}."
-    )
+    print("Generated and validated 48 standalone canonical 128x128 PNG avatars.")
 
 
 if __name__ == "__main__":
