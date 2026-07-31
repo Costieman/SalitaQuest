@@ -11,6 +11,7 @@ import zipfile
 from pathlib import Path
 
 import cairosvg
+import pillow_avif  # noqa: F401 - registers AVIF support with Pillow
 from PIL import Image, UnidentifiedImageError
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -78,7 +79,7 @@ SOURCE_STEMS = {
     "hawksbill_sea_turtle": ("hawksbill_sea_turtle", "hawksbill_turtle"),
 }
 
-RASTER_SUFFIXES = {".png", ".webp", ".jpg", ".jpeg"}
+RASTER_SUFFIXES = {".png", ".webp", ".avif", ".jpg", ".jpeg"}
 SUPPORTED_SUFFIXES = RASTER_SUFFIXES | {".svg"}
 
 
@@ -101,7 +102,7 @@ def extract_ref(ref: str, destination: Path) -> None:
         bundle.extractall(destination, filter="data")
 
 
-def unpack_embedded_zips(root: Path) -> None:
+def unpack_embedded_archives(root: Path) -> None:
     for index, archive_path in enumerate(sorted(root.rglob("*.zip"))):
         destination = root / f"_unpacked_zip_{index}"
         destination.mkdir(parents=True, exist_ok=True)
@@ -111,6 +112,21 @@ def unpack_embedded_zips(root: Path) -> None:
                 if destination.resolve() not in target.parents and target != destination.resolve():
                     raise ValueError(f"Unsafe ZIP member: {member.filename}")
             archive.extractall(destination)
+
+    tar_candidates = sorted(
+        path
+        for path in root.rglob("*")
+        if path.is_file()
+        and (
+            path.suffix.lower() == ".tar"
+            or path.name.lower().endswith((".tar.gz", ".tgz", ".tar.bz2", ".tar.xz"))
+        )
+    )
+    for index, archive_path in enumerate(tar_candidates):
+        destination = root / f"_unpacked_tar_{index}"
+        destination.mkdir(parents=True, exist_ok=True)
+        with tarfile.open(archive_path, mode="r:*") as archive:
+            archive.extractall(destination, filter="data")
 
 
 def candidate_score(path: Path, source_priority: int) -> tuple[int, int, int, int]:
@@ -198,11 +214,12 @@ def main() -> None:
     with tempfile.TemporaryDirectory(prefix="salita-avatar-source-") as temporary:
         temporary_root = Path(temporary)
         source_roots: list[tuple[Path, int]] = []
-        for priority, ref in enumerate(SOURCE_REFS, start=1):
-            destination = temporary_root / f"source_{priority}"
+        for index, ref in enumerate(SOURCE_REFS):
+            destination = temporary_root / f"source_{index + 1}"
             destination.mkdir()
             extract_ref(ref, destination)
-            unpack_embedded_zips(destination)
+            unpack_embedded_archives(destination)
+            priority = len(SOURCE_REFS) - index
             source_roots.append((destination, priority))
 
         selected = select_sources(source_roots)
