@@ -1,0 +1,37 @@
+name: Generate canonical avatars 5.5.6
+
+on:
+  push:
+    branches:
+      - agent/avatar-canonical-rebuild-v5-5-6
+    paths:
+      - scripts/build-canonical-avatars-v556.py
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/avatar-canonical-rebuild-v5-5-6
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install image converters
+        run: python -m pip install --disable-pip-version-check pillow cairosvg
+      - name: Build and validate canonical assets
+        run: python scripts/build-canonical-avatars-v556.py
+      - name: Commit generated assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm .github/workflows/generate-canonical-avatars-v556.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add avatars/canonical scripts/build-canonical-avatars-v556.py .github/workflows/generate-canonical-avatars-v556.yml
+          git commit -m "Generate 48 canonical avatar PNG assets"
+          git push origin HEAD:agent/avatar-canonical-rebuild-v5-5-6
