@@ -1,6 +1,6 @@
 {
   "status": "PASS",
-  "stage": "mapping-only",
+  "stage": "mapping-and-assets",
   "expectedAvatarCount": 48,
   "manifestAvatarCount": 48,
   "sourceInventoryCount": 48,
@@ -24,10 +24,10 @@
     "sourceMasterHeight": 1024,
     "note": "Canonical artwork must never be exported below 512 x 512. The verified 1024 x 1024 masters remain the source of truth."
   },
-  "canonicalAssetsPresent": 0,
-  "canonicalAssetRequirementApplied": false,
+  "canonicalAssetsPresent": 48,
+  "canonicalAssetRequirementApplied": true,
   "errors": [],
   "warnings": [],
-  "checksPassed": 947,
+  "checksPassed": 1044,
   "checksFailed": 0
 }
