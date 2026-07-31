@@ -37,9 +37,19 @@
     }
   }
 
+  function loadLevelAvatarRewardAssets() {
+    if (document.querySelector('script[data-level-avatar-rewards]')) return;
+    const script = document.createElement("script");
+    script.src = "./level-avatar-rewards-v1.js?v=5.5.0";
+    script.dataset.levelAvatarRewards = "true";
+    script.onerror = () => console.warn("Level milestone avatar rewards could not be loaded.");
+    document.body.appendChild(script);
+  }
+
   function loadAvatarProgressionAssets() {
     loadAvatarCollectionAssets();
     loadWeeklyAvatarRewardAssets();
+    loadLevelAvatarRewardAssets();
   }
 
   function retry() {
