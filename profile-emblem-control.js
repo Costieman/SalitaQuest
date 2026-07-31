@@ -20,12 +20,34 @@
     }
   }
 
+  function loadWeeklyAvatarRewardAssets() {
+    if (!document.querySelector('link[data-weekly-avatar-shards]')) {
+      const link = document.createElement("link");
+      link.rel = "stylesheet";
+      link.href = "./weekly-avatar-shard-rewards-v1.css?v=5.5.0";
+      link.dataset.weeklyAvatarShards = "true";
+      document.head.appendChild(link);
+    }
+    if (!document.querySelector('script[data-weekly-avatar-shards]')) {
+      const script = document.createElement("script");
+      script.src = "./weekly-avatar-shard-rewards-v1.js?v=5.5.0";
+      script.dataset.weeklyAvatarShards = "true";
+      script.onerror = () => console.warn("Weekly avatar shard rewards could not be loaded.");
+      document.body.appendChild(script);
+    }
+  }
+
+  function loadAvatarProgressionAssets() {
+    loadAvatarCollectionAssets();
+    loadWeeklyAvatarRewardAssets();
+  }
+
   function retry() {
     window.setTimeout(install, 90);
   }
 
   function install() {
-    loadAvatarCollectionAssets();
+    loadAvatarProgressionAssets();
     const host = document.querySelector(".sq-profile-control");
     const originalButton = host?.querySelector(".sq-profile-button");
     const menu = host?.querySelector(".sq-profile-menu");
@@ -108,11 +130,11 @@
     const version = document.querySelector(".version-label");
     if (version) {
       version.textContent = document.body.dataset.course === "cebuano"
-        ? "Bisaya Foundation 0.3 · Key Run Edition"
-        : "Version 5.4.20 · Key Run Edition";
+        ? "Bisaya Foundation 0.3 · Avatar Collection"
+        : "Version 5.5.0 · Avatar Collection";
     }
   }
 
-  loadAvatarCollectionAssets();
+  loadAvatarProgressionAssets();
   install();
 })();
