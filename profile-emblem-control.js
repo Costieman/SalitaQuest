@@ -2,77 +2,98 @@
   "use strict";
 
   const INSTALL_FLAG = "__salitaQuestProfileEmblemControlInstalled";
+  const RELEASE_VERSION = "5.5.0";
+
+  function appendStylesheet(selector, href, datasetKey) {
+    if (document.querySelector(selector)) return;
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = href;
+    link.dataset[datasetKey] = "true";
+    document.head.appendChild(link);
+  }
+
+  function appendScript(selector, src, datasetKey, errorMessage) {
+    if (document.querySelector(selector)) return;
+    const script = document.createElement("script");
+    script.src = src;
+    script.async = false;
+    script.dataset[datasetKey] = "true";
+    script.onerror = () => console.warn(errorMessage);
+    document.body.appendChild(script);
+  }
+
+  function loadAvatarMigrationAssets() {
+    appendScript(
+      'script[data-avatar-progression-migration]',
+      `./avatar-progression-migration-v1.js?v=${RELEASE_VERSION}`,
+      "avatarProgressionMigration",
+      "Avatar progression migration could not be loaded."
+    );
+  }
 
   function loadAvatarCollectionAssets() {
-    if (!document.querySelector('link[data-avatar-collection-screen]')) {
-      const link = document.createElement("link");
-      link.rel = "stylesheet";
-      link.href = "./avatar-collection-screen-v1.css?v=5.5.0";
-      link.dataset.avatarCollectionScreen = "true";
-      document.head.appendChild(link);
-    }
-    if (!document.querySelector('script[data-avatar-collection-screen]')) {
-      const script = document.createElement("script");
-      script.src = "./avatar-collection-screen-v1.js?v=5.5.0";
-      script.dataset.avatarCollectionScreen = "true";
-      script.onerror = () => console.warn("Avatar collection screen could not be loaded.");
-      document.body.appendChild(script);
-    }
+    appendStylesheet(
+      'link[data-avatar-collection-screen]',
+      `./avatar-collection-screen-v1.css?v=${RELEASE_VERSION}`,
+      "avatarCollectionScreen"
+    );
+    appendScript(
+      'script[data-avatar-collection-screen]',
+      `./avatar-collection-screen-v1.js?v=${RELEASE_VERSION}`,
+      "avatarCollectionScreen",
+      "Avatar collection screen could not be loaded."
+    );
   }
 
   function loadWeeklyAvatarRewardAssets() {
-    if (!document.querySelector('link[data-weekly-avatar-shards]')) {
-      const link = document.createElement("link");
-      link.rel = "stylesheet";
-      link.href = "./weekly-avatar-shard-rewards-v1.css?v=5.5.0";
-      link.dataset.weeklyAvatarShards = "true";
-      document.head.appendChild(link);
-    }
-    if (!document.querySelector('script[data-weekly-avatar-shards]')) {
-      const script = document.createElement("script");
-      script.src = "./weekly-avatar-shard-rewards-v1.js?v=5.5.0";
-      script.dataset.weeklyAvatarShards = "true";
-      script.onerror = () => console.warn("Weekly avatar shard rewards could not be loaded.");
-      document.body.appendChild(script);
-    }
+    appendStylesheet(
+      'link[data-weekly-avatar-shards]',
+      `./weekly-avatar-shard-rewards-v1.css?v=${RELEASE_VERSION}`,
+      "weeklyAvatarShards"
+    );
+    appendScript(
+      'script[data-weekly-avatar-shards]',
+      `./weekly-avatar-shard-rewards-v1.js?v=${RELEASE_VERSION}`,
+      "weeklyAvatarShards",
+      "Weekly avatar shard rewards could not be loaded."
+    );
   }
 
   function loadLevelAvatarRewardAssets() {
-    if (document.querySelector('script[data-level-avatar-rewards]')) return;
-    const script = document.createElement("script");
-    script.src = "./level-avatar-rewards-v1.js?v=5.5.0";
-    script.dataset.levelAvatarRewards = "true";
-    script.onerror = () => console.warn("Level milestone avatar rewards could not be loaded.");
-    document.body.appendChild(script);
+    appendScript(
+      'script[data-level-avatar-rewards]',
+      `./level-avatar-rewards-v1.js?v=${RELEASE_VERSION}`,
+      "levelAvatarRewards",
+      "Level milestone avatar rewards could not be loaded."
+    );
   }
 
   function loadAvatarUnlockCelebrationAssets() {
-    if (!document.querySelector('link[data-avatar-unlock-celebration]')) {
-      const link = document.createElement("link");
-      link.rel = "stylesheet";
-      link.href = "./avatar-unlock-celebration-v1.css?v=5.5.0";
-      link.dataset.avatarUnlockCelebration = "true";
-      document.head.appendChild(link);
-    }
-    if (!document.querySelector('script[data-avatar-unlock-celebration]')) {
-      const script = document.createElement("script");
-      script.src = "./avatar-unlock-celebration-v1.js?v=5.5.0";
-      script.dataset.avatarUnlockCelebration = "true";
-      script.onerror = () => console.warn("Avatar unlock celebrations could not be loaded.");
-      document.body.appendChild(script);
-    }
+    appendStylesheet(
+      'link[data-avatar-unlock-celebration]',
+      `./avatar-unlock-celebration-v1.css?v=${RELEASE_VERSION}`,
+      "avatarUnlockCelebration"
+    );
+    appendScript(
+      'script[data-avatar-unlock-celebration]',
+      `./avatar-unlock-celebration-v1.js?v=${RELEASE_VERSION}`,
+      "avatarUnlockCelebration",
+      "Avatar unlock celebrations could not be loaded."
+    );
   }
 
   function loadAchievementAvatarBridgeAssets() {
-    if (document.querySelector('script[data-achievement-avatar-bridge]')) return;
-    const script = document.createElement("script");
-    script.src = "./achievement-sharing-avatar-bridge-v1.js?v=5.5.0";
-    script.dataset.achievementAvatarBridge = "true";
-    script.onerror = () => console.warn("Avatar-aware achievement sharing could not be loaded.");
-    document.body.appendChild(script);
+    appendScript(
+      'script[data-achievement-avatar-bridge]',
+      `./achievement-sharing-avatar-bridge-v1.js?v=${RELEASE_VERSION}`,
+      "achievementAvatarBridge",
+      "Avatar-aware achievement sharing could not be loaded."
+    );
   }
 
   function loadAvatarProgressionAssets() {
+    loadAvatarMigrationAssets();
     loadAvatarCollectionAssets();
     loadWeeklyAvatarRewardAssets();
     loadLevelAvatarRewardAssets();
@@ -115,8 +136,7 @@
         event.preventDefault();
         event.stopPropagation();
         event.stopImmediatePropagation?.();
-        const opening = menu.hidden;
-        if (opening) positionMenu(anchor);
+        if (menu.hidden) positionMenu(anchor);
         originalButton.click();
         syncExpanded();
       };
@@ -168,9 +188,10 @@
     const version = document.querySelector(".version-label");
     if (version) {
       version.textContent = document.body.dataset.course === "cebuano"
-        ? "Bisaya Foundation 0.3 · Avatar Collection"
-        : "Version 5.5.0 · Avatar Collection";
+        ? "Bisaya Foundation 0.3 · Avatar Collection 5.5"
+        : "Version 5.5.0 · Avatar Progression";
     }
+    document.documentElement.dataset.salitaRelease = RELEASE_VERSION;
   }
 
   loadAvatarProgressionAssets();
