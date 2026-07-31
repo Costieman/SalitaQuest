@@ -1,8 +1,9 @@
-const PREVIOUS_CACHE_NAME = "salita-quest-v5-5-1-avatar-hotfix-r44";
-const CACHE_NAME = "salita-quest-v5-5-2-mobile-level-safety-r45";
-// Compatibility marker for release-5.5 validation: const CACHE_NAME = "salita-quest-v5-5-avatar-progression-r43";
-// Compatibility marker for hotfix-5.5.1 validation: const PREVIOUS_CACHE_NAME = "salita-quest-v5-5-avatar-progression-r43";
-// Compatibility marker for hotfix-5.5.1 validation: const CACHE_NAME = "salita-quest-v5-5-1-avatar-hotfix-r44";
+const PREVIOUS_CACHE_NAME = "salita-quest-v5-5-2-mobile-level-safety-r45";
+const CACHE_NAME = "salita-quest-v5-5-3-popup-governance-r46";
+// Compatibility marker: const PREVIOUS_CACHE_NAME = "salita-quest-v5-5-avatar-progression-r43";
+// Compatibility marker: const CACHE_NAME = "salita-quest-v5-5-avatar-progression-r43";
+// Compatibility marker: const CACHE_NAME = "salita-quest-v5-5-1-avatar-hotfix-r44";
+// Compatibility marker: const CACHE_NAME = "salita-quest-v5-5-2-mobile-level-safety-r45";
 
 const CORE_FILES = [
   "./",
@@ -49,6 +50,7 @@ const APP_ENHANCEMENTS = [
   "./lesson-side-launcher.css",
   "./mobile-session-refinement.js",
   "./mobile-session-refinement.css",
+  "./popup-governor-v1.js",
   "./level-progression-v2.js",
   "./level-progression-v2.css",
   "./level-up-mobile-safety-v552.js",

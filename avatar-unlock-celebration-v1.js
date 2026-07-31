@@ -1,27 +1,33 @@
 (() => {
   "use strict";
 
-  const globalRoot = typeof window !== "undefined" ? window : globalThis;
+  const root = typeof window !== "undefined" ? window : globalThis;
   const PROFILE_STORE = "salitaQuestLocalProfilesV1";
   const ACTIVE_PROFILE = "salitaQuestActiveProfileId";
-  const INSTALL_FLAG = "__salitaQuestAvatarUnlockCelebrationV2Installed";
+  const INSTALL_FLAG = "__salitaQuestAvatarUnlockCelebrationV3Installed";
+  const RELEASE = "5.5.3";
   const HISTORY_LIMIT = 100;
+  let model = null;
+  let retryTimer = 0;
 
   function entryKey(entry = {}) {
     return [entry.avatarId || "", entry.source || "unknown", entry.level || "", entry.weekKey || ""].join("|");
   }
-  function nextPending(sourceCollection, model) {
-    if (!model?.normaliseCollectionState) return null;
-    const collection = model.normaliseCollectionState(sourceCollection);
-    const history = new Set((sourceCollection?.avatarUnlockHistory || []).map(entryKey));
+  function nextPending(sourceCollection, avatarModel, historyEntries = []) {
+    if (!avatarModel?.normaliseCollectionState) return null;
+    const collection = avatarModel.normaliseCollectionState(sourceCollection);
+    const history = new Set((Array.isArray(historyEntries) ? historyEntries : []).map(entryKey));
+    const seen = new Set();
     return collection.pendingUnlocks.find(entry => {
-      const item = model.get(entry?.avatarId);
-      return item && collection.ownedAvatarIds.includes(item.id) &&
-        entry.animationSeen !== true && !history.has(entryKey(entry));
+      const key = entryKey(entry);
+      if (seen.has(key)) return false;
+      seen.add(key);
+      const item = avatarModel.get(entry?.avatarId);
+      return item && collection.ownedAvatarIds.includes(item.id) && entry.animationSeen !== true && !history.has(key);
     }) || null;
   }
-  function consumePending(sourceCollection, pendingEntry, model, now = new Date().toISOString()) {
-    const collection = model.normaliseCollectionState(sourceCollection);
+  function consumePending(sourceCollection, pendingEntry, avatarModel, now = new Date().toISOString()) {
+    const collection = avatarModel.normaliseCollectionState(sourceCollection);
     const targetKey = entryKey(pendingEntry);
     let consumed = null;
     collection.pendingUnlocks = collection.pendingUnlocks.filter(entry => {
@@ -38,20 +44,8 @@
     return Object.freeze({collection, consumed});
   }
 
-  globalRoot.SalitaAvatarUnlockCelebrationLogic = Object.freeze({
-    version:2, entryKey, nextPending, consumePending
-  });
-
+  root.SalitaAvatarUnlockCelebrationLogic = Object.freeze({version:2, release:RELEASE, entryKey, nextPending, consumePending});
   if (typeof document === "undefined" || typeof window === "undefined") return;
-  if (window[INSTALL_FLAG]) return;
-  window[INSTALL_FLAG] = true;
-
-  let model = null;
-  let playing = false;
-  let finishing = false;
-  let retryTimer = 0;
-  let layer = null;
-  const wait = milliseconds => new Promise(resolve => window.setTimeout(resolve, milliseconds));
 
   function readStore() {
     try {
@@ -68,206 +62,168 @@
     const id = sessionStorage.getItem(ACTIVE_PROFILE);
     return store.profiles.find(profile => profile.id === id) || null;
   }
-  function reducedMotion() {
-    try { if (typeof state !== "undefined" && state.settings?.reducedMotion) return true; } catch {}
-    return Boolean(window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches);
+  function activeProfileId() { return sessionStorage.getItem(ACTIVE_PROFILE) || "anonymous"; }
+  function actualLevel() {
+    try {
+      const value = Number(typeof levelInfo === "function" ? levelInfo()?.level : NaN);
+      return Number.isFinite(value) ? Math.max(1, Math.min(99, Math.floor(value))) : null;
+    } catch { return null; }
   }
-  function homeIsReady() {
-    const home = document.getElementById("homeView");
-    return !home || home.classList.contains("active") || document.body.dataset.currentView === "home";
+  function milestoneIsEligible(entry) {
+    if (entry?.source !== "level_milestone") return true;
+    const required = Number(entry.level);
+    const current = actualLevel();
+    return Number.isInteger(required) && current != null && required <= current;
   }
-  function celebrationBlocked() {
-    if (document.hidden || !homeIsReady()) return true;
-    return Boolean(document.querySelector(
-      ".level-up-celebration,.daily-key-celebration,.daily-key-award," +
-      ".weekly-avatar-shard-modal:not([hidden]),.achievement-share-modal:not([hidden])," +
-      ".sq-avatar-unlock-layer"
-    ));
+  function historyHas(profile, entry) {
+    const key = entryKey(entry);
+    return (Array.isArray(profile?.avatarUnlockHistory) ? profile.avatarUnlockHistory : []).some(item => entryKey(item) === key);
+  }
+  function canonicalImage(item) {
+    return window.getAvatarImagePath?.(item?.id) ||
+      window.SalitaAvatarAssets?.getAvatarImagePath?.(item?.id) ||
+      model?.get?.(item?.id)?.image || item?.image || "";
   }
   function sourceCopy(entry) {
-    if (entry?.source === "level_milestone") {
-      return {eyebrow:`LEVEL ${entry.level || ""} REWARD`, text:"A milestone avatar has joined your account-wide collection."};
-    }
-    if (entry?.source === "weekly_reward" || entry?.source === "weekly_keys") {
-      return {eyebrow:"WEEKLY REWARD COMPLETE", text:"Your chosen shard target is complete and this avatar is now unlocked."};
-    }
+    if (entry?.source === "level_milestone") return {eyebrow:`LEVEL ${entry.level || ""} REWARD`, text:"A milestone avatar has joined your account-wide collection."};
+    if (entry?.source === "weekly_reward" || entry?.source === "weekly_keys") return {eyebrow:"WEEKLY REWARD COMPLETE", text:"Your chosen shard target is complete and this avatar is now unlocked."};
     return {eyebrow:"NEW AVATAR UNLOCKED", text:"This avatar has joined your account-wide collection."};
   }
-  function playChime() {
-    try {
-      if (typeof state !== "undefined" && state.settings?.celebrationSounds === false) return;
-      const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-      if (!AudioContextClass) return;
-      const context = new AudioContextClass();
-      const start = context.currentTime + .03;
-      [659.25,783.99,987.77,1318.51].forEach((frequency,index) => {
-        const oscillator = context.createOscillator();
-        const gain = context.createGain();
-        oscillator.type = index === 3 ? "triangle" : "sine";
-        oscillator.frequency.setValueAtTime(frequency,start + index * .10);
-        gain.gain.setValueAtTime(.0001,start + index * .10);
-        gain.gain.exponentialRampToValueAtTime(index === 3 ? .13 : .08,start + index * .10 + .025);
-        gain.gain.exponentialRampToValueAtTime(.0001,start + index * .10 + .42);
-        oscillator.connect(gain); gain.connect(context.destination);
-        oscillator.start(start + index * .10); oscillator.stop(start + index * .10 + .46);
-      });
-      window.setTimeout(() => context.close().catch(() => {}),1200);
-    } catch {}
+  function installImageFallback(layer, item) {
+    const image = layer.querySelector(".sq-avatar-unlock-art img");
+    const fallback = layer.querySelector(".sq-avatar-unlock-fallback");
+    if (!image) return;
+    image.dataset.retryCount = "0";
+    image.addEventListener("load", () => { image.hidden = false; if (fallback) fallback.hidden = true; });
+    image.addEventListener("error", () => {
+      const retryCount = Number(image.dataset.retryCount || 0);
+      if (retryCount < 1) {
+        image.dataset.retryCount = "1";
+        const source = canonicalImage(item) || "avatars/tarsier.png";
+        image.src = `${source}${source.includes("?") ? "&" : "?"}retry=${Date.now()}`;
+        return;
+      }
+      image.hidden = true;
+      if (fallback) fallback.hidden = false;
+    });
   }
   function buildLayer(item, entry) {
     const copy = sourceCopy(entry);
-    const node = document.createElement("div");
-    node.className = "sq-avatar-unlock-layer";
-    node.setAttribute("role","dialog");
-    node.setAttribute("aria-modal","true");
-    node.setAttribute("aria-labelledby","sqAvatarUnlockTitle");
-    node.innerHTML = `
-      <div class="sq-avatar-unlock-rays" aria-hidden="true"></div>
-      <div class="sq-avatar-unlock-sparks" aria-hidden="true">${Array.from({length:12},(_,index)=>`<i style="--i:${index}"></i>`).join("")}</div>
+    const layer = document.createElement("div");
+    layer.className = "sq-avatar-unlock-layer";
+    layer.setAttribute("role", "dialog");
+    layer.setAttribute("aria-modal", "true");
+    layer.innerHTML = `<div class="sq-avatar-unlock-rays" aria-hidden="true"></div>
       <section class="sq-avatar-unlock-card">
         <p class="sq-avatar-unlock-eyebrow">${copy.eyebrow}</p>
-        <h2 id="sqAvatarUnlockTitle">${item.name}</h2>
-        <div class="sq-avatar-unlock-art"><img src="${item.image}" alt="${item.name}"></div>
+        <h2>${item.name}</h2>
+        <div class="sq-avatar-unlock-art">
+          <img src="${canonicalImage(item)}" alt="${item.name}">
+          <span class="sq-avatar-unlock-fallback" hidden><b>${item.name}</b><small>Artwork unavailable</small></span>
+        </div>
         <p>${copy.text}</p>
         <span class="sq-avatar-unlock-meta">${item.starter ? "Starter · Common reward" : `${item.rarity} · ${item.category}`}</span>
         <div class="sq-avatar-unlock-actions">
-          <button class="sq-avatar-unlock-add" type="button" data-unlock-add>Add to collection</button>
-          <button class="sq-avatar-unlock-skip" type="button" data-unlock-skip>Skip animation</button>
+          <button class="sq-avatar-unlock-add" type="button" data-unlock-add>View collection</button>
+          <button class="sq-avatar-unlock-skip" type="button" data-unlock-skip>Close</button>
         </div>
       </section>`;
-    document.body.appendChild(node);
-    return node;
+    installImageFallback(layer, item);
+    document.body.appendChild(layer);
+    return layer;
   }
-
-  function saveCompletion(pendingEntry, item) {
+  function acknowledgePending(pendingEntry, item) {
+    if (!milestoneIsEligible(pendingEntry)) throw new Error("Milestone popup is above the learner's actual level");
     const store = readStore();
     const profile = activeProfile(store);
-    if (!profile) return false;
+    if (!profile) throw new Error("Active learner profile is unavailable");
+    if (historyHas(profile, pendingEntry)) return true;
     const result = consumePending(profile.avatarCollection, pendingEntry, model);
     profile.avatarCollection = result.collection;
     profile.avatarUnlockHistory = Array.isArray(profile.avatarUnlockHistory) ? profile.avatarUnlockHistory : [];
-    const key = entryKey(pendingEntry);
-    if (!profile.avatarUnlockHistory.some(entry => entryKey(entry) === key)) {
-      profile.avatarUnlockHistory.push({
-        avatarId:item.id, source:pendingEntry.source || "unknown",
-        level:pendingEntry.level || null, weekKey:pendingEntry.weekKey || null,
-        unlockedAt:pendingEntry.unlockedAt || null, animationSeenAt:new Date().toISOString()
-      });
-      profile.avatarUnlockHistory = profile.avatarUnlockHistory.slice(-HISTORY_LIMIT);
-    }
+    profile.avatarUnlockHistory.push({
+      avatarId:item.id,
+      source:pendingEntry.source || "unknown",
+      level:pendingEntry.level || null,
+      weekKey:pendingEntry.weekKey || null,
+      unlockedAt:pendingEntry.unlockedAt || null,
+      animationSeenAt:new Date().toISOString(),
+      acknowledgedBeforePopup:true,
+      acknowledgedBy:RELEASE
+    });
+    profile.avatarUnlockHistory = profile.avatarUnlockHistory.slice(-HISTORY_LIMIT);
     writeStore(store);
-    document.dispatchEvent(new CustomEvent("salita:avatar-collection-changed", {
-      detail:{source:"unlock_animation", avatarId:item.id}
-    }));
+    document.dispatchEvent(new CustomEvent("salita:avatar-unlock-acknowledged", {detail:{avatarId:item.id, source:pendingEntry.source || "unknown", release:RELEASE}}));
     return true;
   }
-  async function openCollectionTarget(item) {
-    const api = window.SalitaAvatarCollectionScreen;
-    if (api?.open) api.open();
-    else document.dispatchEvent(new CustomEvent("salita:open-avatar-collection"));
-    await wait(100);
-    let card = document.querySelector(`[data-avatar-card="${CSS.escape(item.id)}"]`);
-    if (!card) { await wait(300); card = document.querySelector(`[data-avatar-card="${CSS.escape(item.id)}"]`); }
-    if (card) {
-      card.scrollIntoView({block:"center",inline:"center",behavior:reducedMotion() ? "auto" : "smooth"});
-      await wait(reducedMotion() ? 40 : 360);
-    }
-    return card;
+  function showUnlock(item, pendingEntry) {
+    return new Promise(resolve => {
+      const layer = buildLayer(item, pendingEntry);
+      let finished = false;
+      const finish = openCollection => {
+        if (finished) return;
+        finished = true;
+        layer.remove();
+        if (openCollection) {
+          if (window.SalitaAvatarCollectionScreen?.open) window.SalitaAvatarCollectionScreen.open();
+          else document.dispatchEvent(new CustomEvent("salita:open-avatar-collection"));
+        }
+        document.dispatchEvent(new CustomEvent("salita:avatar-unlock-animation-finished", {detail:{avatarId:item.id, source:pendingEntry.source || "unknown", release:RELEASE}}));
+        resolve();
+      };
+      document.dispatchEvent(new CustomEvent("salita:avatar-unlock-animation-started", {detail:{avatarId:item.id, source:pendingEntry.source || "unknown", release:RELEASE}}));
+      layer.querySelector("[data-unlock-add]")?.addEventListener("click", () => finish(true), {once:true});
+      layer.querySelector("[data-unlock-skip]")?.addEventListener("click", () => finish(false), {once:true});
+      const escape = event => {
+        if (event.key !== "Escape") return;
+        document.removeEventListener("keydown", escape);
+        finish(false);
+      };
+      document.addEventListener("keydown", escape);
+      layer.querySelector("[data-unlock-add]")?.focus();
+    });
   }
-  async function flyToCollection(item) {
-    const art = layer?.querySelector(".sq-avatar-unlock-art img");
-    const startRect = art?.getBoundingClientRect();
-    const card = await openCollectionTarget(item);
-    const target = card?.querySelector(".sq-avatar-card-art") || card;
-    const targetRect = target?.getBoundingClientRect();
-
-    if (reducedMotion() || !startRect || !targetRect || typeof Element.prototype.animate !== "function") {
-      layer?.remove(); layer = null;
-      card?.classList.add("sq-avatar-unlock-arrived");
-      window.setTimeout(() => card?.classList.remove("sq-avatar-unlock-arrived"),1400);
-      return;
-    }
-
-    const flyer = document.createElement("img");
-    flyer.className = "sq-avatar-unlock-flyer";
-    flyer.src = item.image; flyer.alt = "";
-    Object.assign(flyer.style,{left:`${startRect.left}px`,top:`${startRect.top}px`,width:`${startRect.width}px`,height:`${startRect.height}px`});
-    document.body.appendChild(flyer);
-    layer?.classList.add("is-travelling");
-    const dx = targetRect.left + targetRect.width/2 - (startRect.left + startRect.width/2);
-    const dy = targetRect.top + targetRect.height/2 - (startRect.top + startRect.height/2);
-    const scale = Math.max(.08,Math.min(1,targetRect.width/startRect.width));
-    const animation = flyer.animate([
-      {transform:"translate(0,0) scale(1) rotate(0deg)",opacity:1,filter:"brightness(1.4) drop-shadow(0 16px 20px rgba(0,0,0,.35))"},
-      {transform:`translate(${dx*.28}px,${dy*.10-70}px) scale(.92) rotate(180deg)`,opacity:1,offset:.35},
-      {transform:`translate(${dx*.70}px,${dy*.58-42}px) scale(${Math.max(scale*1.35,.28)}) rotate(430deg)`,opacity:1,offset:.72},
-      {transform:`translate(${dx}px,${dy}px) scale(${scale}) rotate(720deg)`,opacity:.15,filter:"brightness(2.1) drop-shadow(0 0 24px rgba(247,201,72,.9))"}
-    ],{duration:1300,easing:"cubic-bezier(.16,.82,.18,1)",fill:"forwards"});
-    await animation.finished.catch(() => {});
-    flyer.remove(); layer?.remove(); layer = null;
-    card?.classList.add("sq-avatar-unlock-arrived");
-    window.setTimeout(() => card?.classList.remove("sq-avatar-unlock-arrived"),1400);
-  }
-  function skipAnimation() { layer?.remove(); layer = null; }
-
-  async function playNext() {
+  function requestNext() {
     window.clearTimeout(retryTimer);
-    if (playing || finishing || celebrationBlocked() || !model) {
-      retryTimer = window.setTimeout(playNext,900);
-      return;
-    }
-    const store = readStore();
-    const profile = activeProfile(store);
+    const governor = window.SalitaPopupGovernor;
+    if (!governor || !model) { schedule(500); return; }
+    const profile = activeProfile(readStore());
     if (!profile) return;
-    const pendingEntry = nextPending(profile.avatarCollection,model);
+    const pendingEntry = nextPending(profile.avatarCollection, model, profile.avatarUnlockHistory);
     if (!pendingEntry) return;
     const item = model.get(pendingEntry.avatarId);
     if (!item) return;
-
-    playing = true;
-    layer = buildLayer(item,pendingEntry);
-    playChime();
-    document.dispatchEvent(new CustomEvent("salita:avatar-unlock-animation-started", {
-      detail:{avatarId:item.id,source:pendingEntry.source || "unknown"}
-    }));
-
-    const finish = async useFlight => {
-      if (!playing || finishing) return;
-      finishing = true;
-      saveCompletion(pendingEntry,item);
-      try {
-        if (useFlight) await flyToCollection(item);
-        else skipAnimation();
-      } finally {
-        playing = false;
-        finishing = false;
-        document.dispatchEvent(new CustomEvent("salita:avatar-unlock-animation-finished", {
-          detail:{avatarId:item.id,source:pendingEntry.source || "unknown"}
-        }));
-        retryTimer = window.setTimeout(playNext,650);
-      }
-    };
-
-    layer.querySelector("[data-unlock-add]")?.addEventListener("click",()=>finish(true),{once:true});
-    layer.querySelector("[data-unlock-skip]")?.addEventListener("click",()=>finish(false),{once:true});
-    document.addEventListener("keydown",event => {
-      if (event.key === "Escape" && layer) finish(false);
-    },{once:true});
-    layer.querySelector("[data-unlock-add]")?.focus();
+    if (!milestoneIsEligible(pendingEntry)) {
+      window.SalitaLevelAvatarRewards?.sync?.();
+      schedule(900);
+      return;
+    }
+    governor.enqueue({
+      key:`avatar:${activeProfileId()}:${entryKey(pendingEntry)}`,
+      type:"avatar_unlock",
+      priority:80,
+      homeOnly:true,
+      canRun:() => milestoneIsEligible(pendingEntry),
+      isAcknowledged:() => historyHas(activeProfile(readStore()), pendingEntry),
+      acknowledge:() => acknowledgePending(pendingEntry, item),
+      show:() => showUnlock(item, pendingEntry)
+    });
   }
-  function schedule(delay=500) {
+  function schedule(delay = 500) {
     window.clearTimeout(retryTimer);
-    retryTimer = window.setTimeout(playNext,delay);
+    retryTimer = window.setTimeout(requestNext, delay);
   }
   function install() {
     model = window.SalitaAvatarModel || null;
-    if (!model) { window.setTimeout(install,100); return; }
-    schedule(1500);
-    document.addEventListener("salita:avatar-collection-changed",()=>schedule(450));
-    document.addEventListener("salita:avatar-milestones-awarded",()=>schedule(900));
-    document.addEventListener("visibilitychange",()=>{ if (!document.hidden) schedule(300); });
-    document.addEventListener("click",()=>{ if (!playing && !finishing) schedule(700); },{passive:true});
-    window.SalitaAvatarUnlockCelebration = Object.freeze({version:2,playNext,schedule});
+    if (!model || !window.SalitaPopupGovernor) { window.setTimeout(install, 100); return; }
+    if (window[INSTALL_FLAG]) return;
+    window[INSTALL_FLAG] = true;
+    schedule(1000);
+    document.addEventListener("salita:avatar-collection-changed", () => schedule(350));
+    document.addEventListener("salita:avatar-milestones-awarded", () => schedule(450));
+    document.addEventListener("salita:popup-finished", () => schedule(220));
+    document.addEventListener("visibilitychange", () => { if (!document.hidden) schedule(250); });
+    window.SalitaAvatarUnlockCelebration = Object.freeze({version:3, release:RELEASE, playNext:requestNext, schedule});
   }
   install();
 })();

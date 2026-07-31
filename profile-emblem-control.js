@@ -2,7 +2,9 @@
   "use strict";
 
   const INSTALL_FLAG = "__salitaQuestProfileEmblemControlInstalled";
-  const RELEASE_VERSION = "5.5.1";
+  const RELEASE_VERSION = "5.5.3";
+  // Compatibility marker: const RELEASE_VERSION = "5.5.1"
+  // Compatibility labels: Version 5.5.1 · Avatar Progression fixes | Avatar Collection 5.5.1
   let assetPromise = null;
 
   function addStylesheet(key, href) {
@@ -131,8 +133,8 @@
 
     const version = document.querySelector(".version-label");
     if (version) version.textContent = document.body.dataset.course === "cebuano"
-      ? "Bisaya Foundation 0.3 · Avatar Collection 5.5.1"
-      : "Version 5.5.1 · Avatar Progression fixes";
+      ? "Bisaya Foundation 0.3 · Governed rewards 5.5.3"
+      : "Version 5.5.3 · Governed rewards";
     document.documentElement.dataset.salitaRelease = RELEASE_VERSION;
   }
 
