@@ -3,6 +3,9 @@ from __future__ import annotations
 import hashlib
 import io
 import struct
+import subprocess
+import tarfile
+import tempfile
 from pathlib import Path
 
 import cairosvg
@@ -11,6 +14,7 @@ from PIL import Image
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "avatars" / "canonical"
 SIZE = (128, 128)
+SOURCE_REF = "origin/agent/avatar-progression-step-06-assets-rare-animals-2"
 
 SOURCES = {
     "eagle": "avatars/eagle.png",
@@ -64,6 +68,21 @@ SOURCES = {
 }
 
 
+def extract_clean_source(destination: Path) -> None:
+    subprocess.run(
+        ["git", "rev-parse", "--verify", SOURCE_REF],
+        cwd=ROOT,
+        check=True,
+        stdout=subprocess.DEVNULL,
+    )
+    archive = subprocess.check_output(
+        ["git", "archive", "--format=tar", SOURCE_REF, "avatars"],
+        cwd=ROOT,
+    )
+    with tarfile.open(fileobj=io.BytesIO(archive), mode="r:") as bundle:
+        bundle.extractall(destination, filter="data")
+
+
 def render_source(path: Path) -> Image.Image:
     if path.suffix.lower() == ".svg":
         rendered = cairosvg.svg2png(
@@ -106,12 +125,16 @@ def main() -> None:
     for stale in OUTPUT.glob("*.png"):
         stale.unlink()
 
-    for avatar_id, relative_source in SOURCES.items():
-        source = ROOT / relative_source
-        if not source.is_file():
-            raise FileNotFoundError(source)
-        destination = OUTPUT / f"{avatar_id}.png"
-        render_source(source).save(destination, format="PNG", optimize=True)
+    with tempfile.TemporaryDirectory(prefix="salita-avatar-source-") as temporary:
+        source_root = Path(temporary)
+        extract_clean_source(source_root)
+
+        for avatar_id, relative_source in SOURCES.items():
+            source = source_root / relative_source
+            if not source.is_file():
+                raise FileNotFoundError(source)
+            destination = OUTPUT / f"{avatar_id}.png"
+            render_source(source).save(destination, format="PNG", optimize=True)
 
     files = sorted(OUTPUT.glob("*.png"))
     if len(files) != 48:
@@ -121,7 +144,10 @@ def main() -> None:
     if len(set(hashes)) != 48:
         raise ValueError("Canonical avatar output contains duplicate files")
 
-    print("Generated and validated 48 standalone canonical 128x128 PNG avatars.")
+    print(
+        "Generated and validated 48 standalone canonical 128x128 PNG avatars "
+        f"from {SOURCE_REF}."
+    )
 
 
 if __name__ == "__main__":
