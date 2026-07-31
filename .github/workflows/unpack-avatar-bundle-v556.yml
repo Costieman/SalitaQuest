@@ -1,0 +1,38 @@
+name: Unpack canonical avatar bundle
+
+on:
+  push:
+    branches:
+      - agent/avatar-canonical-rebuild-v5-5-6
+    paths:
+      - avatar_bundle_v556.b64
+
+permissions:
+  contents: write
+
+jobs:
+  unpack:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/avatar-canonical-rebuild-v5-5-6
+          fetch-depth: 0
+      - name: Decode canonical avatar bundle
+        shell: bash
+        run: |
+          set -euo pipefail
+          base64 --decode avatar_bundle_v556.b64 > /tmp/avatar_bundle_v556.zip
+          unzip -o /tmp/avatar_bundle_v556.zip -d .
+          test "$(find avatars/canonical -maxdepth 1 -type f -name '*.png' | wc -l)" -eq 48
+          rm avatar_bundle_v556.b64
+          rm .github/workflows/unpack-avatar-bundle-v556.yml
+      - name: Commit canonical assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add avatars/canonical avatar_bundle_v556.b64 .github/workflows/unpack-avatar-bundle-v556.yml
+          git commit -m "Install 48 canonical avatar PNG assets"
+          git push origin HEAD:agent/avatar-canonical-rebuild-v5-5-6
