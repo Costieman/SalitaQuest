@@ -81,6 +81,9 @@ for (const required of [
   "window.SalitaAvatarModel?.get",
   "LEGACY_AVATAR_PATTERN",
   "RedirectedImage",
+  "stampAvatar",
+  "HTMLCanvasElement.prototype.toBlob",
+  "stampBadge:method === \"openBadge\"",
   '"openBadge", "openChest", "openLevel"',
   "document.addEventListener(\"click\", interceptSharingClicks, true)"
 ]) {
