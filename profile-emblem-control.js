@@ -3,11 +3,29 @@
 
   const INSTALL_FLAG = "__salitaQuestProfileEmblemControlInstalled";
 
+  function loadAvatarCollectionAssets() {
+    if (!document.querySelector('link[data-avatar-collection-screen]')) {
+      const link = document.createElement("link");
+      link.rel = "stylesheet";
+      link.href = "./avatar-collection-screen-v1.css?v=5.5.0";
+      link.dataset.avatarCollectionScreen = "true";
+      document.head.appendChild(link);
+    }
+    if (!document.querySelector('script[data-avatar-collection-screen]')) {
+      const script = document.createElement("script");
+      script.src = "./avatar-collection-screen-v1.js?v=5.5.0";
+      script.dataset.avatarCollectionScreen = "true";
+      script.onerror = () => console.warn("Avatar collection screen could not be loaded.");
+      document.body.appendChild(script);
+    }
+  }
+
   function retry() {
     window.setTimeout(install, 90);
   }
 
   function install() {
+    loadAvatarCollectionAssets();
     const host = document.querySelector(".sq-profile-control");
     const originalButton = host?.querySelector(".sq-profile-button");
     const menu = host?.querySelector(".sq-profile-menu");
@@ -95,5 +113,6 @@
     }
   }
 
+  loadAvatarCollectionAssets();
   install();
 })();
