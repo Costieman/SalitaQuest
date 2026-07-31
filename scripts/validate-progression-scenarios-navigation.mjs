@@ -84,17 +84,19 @@ requireMarkers(railCss, [
 const level = read("level-progression-v2.js");
 requireMarkers(level, [
   "const MAX_LEVEL = 99",
-  "function xpNeededForLevel(level)",
-  "0.12 * safeLevel * safeLevel",
-  "legacyLevel",
+  "const requirementFor = level =>",
+  ".12*safe*safe",
+  "function newSystem()",
   "lastKnownLevel",
   "pendingLevelUp",
-  "function homeIsActive()",
-  "function playLevelCelebration()",
-  "target.getBoundingClientRect()",
+  "levelUpsSeen",
+  "const homeActive =",
+  "async function renderCelebration",
+  "window.SalitaPopupGovernor",
+  "acknowledge_before_level_popup",
   "level-up-avatar",
   "Level 99 · MAX"
-], "Level 99 progression");
+], "Governed Level 99 progression");
 const totalXpTo99 = Array.from({length:98}, (_, index) => {
   const currentLevel = index + 1;
   return Math.round(180 + 8 * currentLevel + 0.12 * currentLevel * currentLevel);
@@ -175,17 +177,17 @@ for (const htmlFile of ["app.html", "bisaya.html"]) {
     ["level-progression-v2.js", "Level Progression runtime"],
     ["desktop-navigation-refinement.js", "navigation runtime"]
   ]) {
-    const pattern = new RegExp(`${asset.replaceAll(".", "\\.")}\\?v=(?:5\\.4\\.21|5\\.5\\.2)`);
+    const pattern = new RegExp(`${asset.replaceAll(".", "\\.")}\\?v=(?:5\\.4\\.21|5\\.5\\.2|5\\.5\\.3)`);
     if (!pattern.test(html)) fail(`${htmlFile} progression release is missing ${kind}.`);
   }
   const mobileIndex = html.indexOf("mobile-session-refinement.js?v=5.4.21");
   const adaptiveIndex = html.indexOf("adaptive-scenarios.js?v=5.4.21");
-  const levelMatch = html.match(/level-progression-v2\.js\?v=(?:5\.4\.21|5\.5\.2)/);
-  const navigationMatch = html.match(/desktop-navigation-refinement\.js\?v=(?:5\.4\.21|5\.5\.2)/);
+  const levelMatch = html.match(/level-progression-v2\.js\?v=(?:5\.4\.21|5\.5\.2|5\.5\.3)/);
+  const navigationMatch = html.match(/desktop-navigation-refinement\.js\?v=(?:5\.4\.21|5\.5\.2|5\.5\.3)/);
   const levelIndex = levelMatch ? levelMatch.index : -1;
   const navigationIndex = navigationMatch ? navigationMatch.index : -1;
   if (!(mobileIndex >= 0 && adaptiveIndex > mobileIndex && levelIndex > adaptiveIndex && navigationIndex > levelIndex)) {
-    fail(`${htmlFile} must load mobile state, scenarios, Level 99, then the final navigation wrapper.`);
+    fail(`${htmlFile} must load mobile state, scenarios, governed Level 99, then the final navigation wrapper.`);
   }
 }
 
@@ -202,4 +204,4 @@ requireMarkers(serviceWorker, [
   '"./desktop-navigation-refinement.css"'
 ], "Offline progression release");
 
-console.log(`Validated live Quick Review item counting, World Progress states, ${totalXpTo99} XP to Level 99, Home-only level-up celebration, ${scenarioCount} adaptive scenarios, fluid desktop resizing, retractable symbol navigation, dedicated Badges view, both courses, and offline delivery.`);
+console.log(`Validated live Quick Review item counting, World Progress states, ${totalXpTo99} XP to Level 99, governed acknowledgement-before-render level celebrations, ${scenarioCount} adaptive scenarios, fluid desktop resizing, retractable symbol navigation, dedicated Badges view, both courses, and offline delivery.`);
