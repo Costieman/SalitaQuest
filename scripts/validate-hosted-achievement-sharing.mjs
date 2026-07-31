@@ -130,8 +130,7 @@ for (const htmlFile of ["app.html", "bisaya.html"]) {
 
 const worker = read("service-worker.js");
 requireMarkers(worker, [
-  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-4-achievement-sharing-r41"',
-  'const CACHE_NAME = "salita-quest-v5-4-badge-stability-r42"',
+  'const CACHE_NAME = "salita-quest-v5-5-avatar-progression-r43"',
   '"./social-connections-v2.js"',
   '"./badge-chest-v2.js"',
   '"./achievement-sharing-v4.js"',
@@ -152,4 +151,4 @@ requireMarkers(readme, [
 const serviceDocs = read("services/social-share/README.md");
 requireMarkers(serviceDocs, ["Open Graph metadata", "og:image", "Cloud Run", "Start learning a Filipino language free"], "Share-service documentation");
 
-console.log("Validated built-in progress sharing, one badge/chest/level card owner, exact Open Graph images, Cloud Run deployment, both language loaders and release 5.4.29.");
+console.log("Validated built-in progress sharing, one badge/chest/level card owner, exact Open Graph images, Cloud Run deployment, both language loaders and current offline release.");
