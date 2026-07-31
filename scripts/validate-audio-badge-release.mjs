@@ -123,7 +123,7 @@ if (compile.status !== 0) fail(`Cebuano generator does not compile: ${compile.st
 
 const readme = read("README.md");
 for (const marker of [
-  '5.4.29 — Badge Stability & Code Consolidation',
+  '5.5.0 — Avatar Progression',
   'pointer release',
   'earned badges first, ordered newest to oldest',
   'Google Cloud Gemini-TTS',
