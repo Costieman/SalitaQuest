@@ -5,7 +5,8 @@
   const PROFILE_STORE = "salitaQuestLocalProfilesV1";
   const ACTIVE_PROFILE = "salitaQuestActiveProfileId";
   const INSTALL_FLAG = "__salitaQuestAvatarUnlockCelebrationV3Installed";
-  const RELEASE = "5.5.3";
+  const RELEASE = "5.5.4";
+  // Compatibility marker: const RELEASE = "5.5.3";
   const HISTORY_LIMIT = 100;
   let model = null;
   let retryTimer = 0;
@@ -80,7 +81,8 @@
     return (Array.isArray(profile?.avatarUnlockHistory) ? profile.avatarUnlockHistory : []).some(item => entryKey(item) === key);
   }
   function canonicalImage(item) {
-    return window.getAvatarImagePath?.(item?.id) ||
+    return window.SalitaAvatarArtwork?.getAvatarImagePath?.(item?.id) ||
+      window.getAvatarImagePath?.(item?.id) ||
       window.SalitaAvatarAssets?.getAvatarImagePath?.(item?.id) ||
       model?.get?.(item?.id)?.image || item?.image || "";
   }
@@ -93,6 +95,16 @@
     const image = layer.querySelector(".sq-avatar-unlock-art img");
     const fallback = layer.querySelector(".sq-avatar-unlock-fallback");
     if (!image) return;
+    if (window.SalitaAvatarArtwork) {
+      window.SalitaAvatarArtwork.bind(image,item.id,{alt:item.name}).then(() => {
+        image.hidden = false;
+        if (fallback) fallback.hidden = true;
+      }).catch(() => {
+        image.hidden = true;
+        if (fallback) fallback.hidden = false;
+      });
+      return;
+    }
     image.dataset.retryCount = "0";
     image.addEventListener("load", () => { image.hidden = false; if (fallback) fallback.hidden = true; });
     image.addEventListener("error", () => {
@@ -118,7 +130,7 @@
         <p class="sq-avatar-unlock-eyebrow">${copy.eyebrow}</p>
         <h2>${item.name}</h2>
         <div class="sq-avatar-unlock-art">
-          <img src="${canonicalImage(item)}" alt="${item.name}">
+          <img src="${canonicalImage(item)}" data-sq-avatar-id="${item.id}" alt="${item.name}">
           <span class="sq-avatar-unlock-fallback" hidden><b>${item.name}</b><small>Artwork unavailable</small></span>
         </div>
         <p>${copy.text}</p>
