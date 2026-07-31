@@ -1,0 +1,69 @@
+/* Stage 1: run-once level and milestone reward presentation. */
+.level-up-reward-label {
+  position: fixed;
+  left: 50%;
+  top: min(70%, calc(50% + 180px));
+  transform: translateX(-50%);
+  z-index: 2;
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+  width: min(88vw, 520px);
+  padding: 10px 16px;
+  border: 1px solid rgba(255,255,255,.28);
+  border-radius: 15px;
+  background: rgba(9,24,43,.72);
+  color: white;
+  text-align: center;
+  box-shadow: 0 14px 34px rgba(0,0,0,.24);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.level-up-reward-label span {
+  color: #ffe28a;
+  font-size: .7rem;
+  font-weight: 950;
+  letter-spacing: .16em;
+}
+
+.level-up-reward-label strong {
+  font-size: clamp(1rem, 2.8vw, 1.45rem);
+  line-height: 1.15;
+}
+
+.level-up-reward-safety-label {
+  margin-top: 6px;
+  padding: 6px 10px;
+  border: 1px solid rgba(255,226,138,.35);
+  border-radius: 999px;
+  background: rgba(7,23,40,.62);
+  color: #ffe28a;
+  font-size: clamp(.72rem, 1.5vw, .9rem);
+  font-weight: 900;
+  letter-spacing: .02em;
+}
+
+.level-up-avatar img.level-up-avatar-fallback {
+  opacity: .72;
+  filter: grayscale(.2);
+}
+
+.level-up-celebration.travelling .level-up-reward-label,
+.level-up-celebration.leaving .level-up-reward-label {
+  opacity: 0;
+  transition: opacity .3s ease;
+}
+
+@media (max-width: 760px) {
+  .level-up-reward-label {
+    top: auto;
+    bottom: max(8vh, 58px);
+    width: min(84vw, 420px);
+    padding: 9px 13px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .level-up-reward-label { transition: none !important; }
+}
