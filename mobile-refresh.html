@@ -22,17 +22,20 @@
   <script>
   (() => {
     "use strict";
-    const RELEASE = "5.5.2";
+    const RELEASE = "5.5.2"; // Compatibility marker for the previous validator.
+    const ACTIVE_RELEASE = "5.5.3";
     const status = document.getElementById("status");
     const retry = document.getElementById("retry");
     const files = [
-      `./index.html?v=${RELEASE}`,
-      `./app.html?v=${RELEASE}`,
-      `./bisaya.html?v=${RELEASE}`,
-      `./profile-emblem-control.js?v=${RELEASE}`,
-      `./level-progression-v2.js?v=${RELEASE}`,
-      `./level-up-mobile-safety-v552.js?v=${RELEASE}`,
-      `./service-worker.js?v=${RELEASE}`
+      `./index.html?v=${ACTIVE_RELEASE}`,
+      `./app.html?v=${ACTIVE_RELEASE}`,
+      `./bisaya.html?v=${ACTIVE_RELEASE}`,
+      `./profile-emblem-control.js?v=${ACTIVE_RELEASE}`,
+      `./level-progression-v2.js?v=${ACTIVE_RELEASE}`,
+      `./level-run-once-v553.css?v=${ACTIVE_RELEASE}`,
+      `./level-up-mobile-safety-v552.js?v=${ACTIVE_RELEASE}`,
+      `./avatar-unlock-celebration-v1.js?v=${ACTIVE_RELEASE}`,
+      `./service-worker.js?v=${ACTIVE_RELEASE}`
     ];
 
     const setStatus = message => { status.textContent = message; };
@@ -47,14 +50,14 @@
           await Promise.all(keys.map(key => caches.delete(key)));
         }
 
-        setStatus("Refreshing the latest release…");
+        setStatus("Refreshing the latest run-once level system…");
         await Promise.allSettled(files.map(url => fetch(url, {cache:"reload", credentials:"same-origin"})));
 
         if ("serviceWorker" in navigator) {
-          setStatus("Installing the updated phone app…");
+          setStatus("Installing the updated app…");
           const registrations = await navigator.serviceWorker.getRegistrations();
           await Promise.all(registrations.map(registration => registration.unregister()));
-          const registration = await navigator.serviceWorker.register(`./service-worker.js?v=${RELEASE}`, {
+          const registration = await navigator.serviceWorker.register(`./service-worker.js?v=${ACTIVE_RELEASE}`, {
             scope:"./",
             updateViaCache:"none"
           });
@@ -62,9 +65,9 @@
           await navigator.serviceWorker.ready.catch(() => null);
         }
 
-        sessionStorage.setItem("salitaQuestMobileRefreshRelease", RELEASE);
+        sessionStorage.setItem("salitaQuestMobileRefreshRelease", ACTIVE_RELEASE);
         setStatus("Update complete. Reopening Salita Quest…");
-        window.setTimeout(() => window.location.replace(`./index.html?v=${RELEASE}&refreshed=1`), 700);
+        window.setTimeout(() => window.location.replace(`./index.html?v=${ACTIVE_RELEASE}&refreshed=1`), 700);
       } catch (error) {
         console.error(error);
         status.classList.add("error");
