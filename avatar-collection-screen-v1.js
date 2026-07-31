@@ -117,8 +117,8 @@
         <button class="sq-avatar-card-open" type="button" data-avatar-detail="${item.id}" aria-label="View ${esc(item.name)} details">
           <div class="sq-avatar-card-art" style="--avatar-mask-top:${maskTop}%">
             <span class="sq-avatar-status-badge">${esc(status)}</span>
-            <img class="sq-avatar-grey" src="${esc(item.image)}" alt="">
-            <img class="sq-avatar-colour" src="${esc(item.image)}" alt="">
+            <img class="sq-avatar-grey" src="${esc(item.image)}" data-sq-avatar-id="${item.id}" alt="">
+            <img class="sq-avatar-colour" src="${esc(item.image)}" data-sq-avatar-id="${item.id}" alt="">
           </div>
           <div class="sq-avatar-card-copy">
             <strong title="${esc(item.name)}">${esc(item.name)}</strong>
@@ -153,12 +153,18 @@
           <div class="sq-avatar-grid-full">${items.map(cardMarkup).join("")}</div>
         </section>`;
     }).join("");
+    window.SalitaAvatarArtwork?.repair(root);
   }
 
   function syncVisibleAvatar(item) {
     document.querySelectorAll(".sq-profile-button img,.sq-profile-identity img,.sq-profile-emblem-trigger img,.player-avatar img").forEach(image => {
-      image.src = item.image;
-      image.alt = item.name;
+      image.dataset.sqAvatarId = item.id;
+      if (window.SalitaAvatarArtwork) {
+        window.SalitaAvatarArtwork.bind(image,item.id,{alt:item.name});
+      } else {
+        image.src = item.image;
+        image.alt = item.name;
+      }
     });
     document.querySelectorAll("[data-avatar-choice]").forEach(button => {
       button.setAttribute("aria-pressed", String(button.dataset.avatarChoice === item.id));
@@ -191,7 +197,7 @@
     const detailImageStyle = state.owned ? "" : `filter:grayscale(1) saturate(0);opacity:${state.reveal ? ".82" : ".55"}`;
     detail.innerHTML = `
       <div class="sq-avatar-detail-card" role="document">
-        <img src="${esc(item.image)}" alt="${esc(item.name)}" style="${detailImageStyle}">
+        <img src="${esc(item.image)}" data-sq-avatar-id="${item.id}" alt="${esc(item.name)}" style="${detailImageStyle}">
         <h3>${esc(item.name)}</h3>
         <div class="sq-avatar-detail-meta">${esc(item.rarity)} · ${esc(item.category)}</div>
         <p>${esc(categoryDescription(item))}</p>
@@ -202,6 +208,7 @@
           <button class="sq-avatar-detail-equip" type="button" data-detail-equip="${item.id}" ${!state.owned || state.equipped ? "disabled" : ""}>${state.equipped ? "Equipped" : state.owned ? "Equip avatar" : "Locked"}</button>
         </div>
       </div>`;
+    window.SalitaAvatarArtwork?.repair(detail);
     detail.hidden = false;
     detail.querySelector("[data-detail-close]")?.focus();
   }
