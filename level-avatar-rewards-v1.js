@@ -130,7 +130,8 @@
     const profile = store.profiles.find(item => item.id === activeId);
     if (!profile) return null;
 
-    const result = applyMilestoneRewards(level, profile.avatarCollection, model, {
+    const baseCollection = model.normaliseCollectionState(profile.avatarCollection, profile.avatarId);
+    const result = applyMilestoneRewards(level, baseCollection, model, {
       course:activeCourse(),
       now:new Date().toISOString()
     });
@@ -144,6 +145,9 @@
       ? profile.avatarMilestoneRewards
       : {version:1, claims:{}, highestLevelObserved:1};
     profile.avatarMilestoneRewards.version = 1;
+    profile.avatarMilestoneRewards.claims = profile.avatarMilestoneRewards.claims && typeof profile.avatarMilestoneRewards.claims === "object"
+      ? profile.avatarMilestoneRewards.claims
+      : {};
     profile.avatarMilestoneRewards.highestLevelObserved = Math.max(
       Number(profile.avatarMilestoneRewards.highestLevelObserved || 1),
       result.level
