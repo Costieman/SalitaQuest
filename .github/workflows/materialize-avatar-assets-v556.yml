@@ -1,0 +1,56 @@
+name: Materialize avatar assets 5.5.6
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - agent/avatar-canonical-rebuild-v5-5-6
+    paths:
+      - tools/avatar-assets-1024.tar
+      - .github/workflows/materialize-avatar-assets-v556.yml
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out rebuild branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/avatar-canonical-rebuild-v5-5-6
+          fetch-depth: 0
+
+      - name: Extract individual 1024 by 1024 avatars
+        run: |
+          set -euo pipefail
+          rm -rf avatars/final
+          mkdir -p avatars/final
+          tar -xf tools/avatar-assets-1024.tar -C avatars/final
+          rm -f tools/avatar-assets-1024.tar avatars/final/tarsier.svg tools/.avatar-bundle-stage
+          python - <<'PY'
+          from pathlib import Path
+          from PIL import Image
+          root = Path('avatars/final')
+          images = sorted(root.glob('*.avif'))
+          assert len(images) == 48, f'expected 48 avatars, found {len(images)}'
+          for image in images:
+              with Image.open(image) as decoded:
+                  assert decoded.size == (1024, 1024), f'{image}: {decoded.size}'
+                  assert decoded.mode == 'RGBA', f'{image}: {decoded.mode}'
+          print('Validated 48 individual 1024x1024 RGBA avatar assets')
+          PY
+
+      - name: Commit materialized assets
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A avatars/final tools/avatar-assets-1024.tar tools/.avatar-bundle-stage
+          if git diff --cached --quiet; then
+            echo "Assets already materialized"
+            exit 0
+          fi
+          git commit -m "Materialize 48 canonical 1024px avatar assets"
+          git push origin HEAD:agent/avatar-canonical-rebuild-v5-5-6
