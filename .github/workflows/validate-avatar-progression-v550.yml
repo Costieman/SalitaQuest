@@ -16,7 +16,7 @@ on:
       - "README.md"
       - "docs/releases/**"
       - "scripts/validate-*.mjs"
-      - "scripts/build-canonical-avatars-v556.py"
+      - "scripts/build-canonical-avatars-v556*.py"
       - ".github/workflows/validate-avatar-progression-v550.yml"
   workflow_dispatch:
 
@@ -42,7 +42,7 @@ jobs:
         run: |
           set -euo pipefail
           python -m pip install --disable-pip-version-check pillow pillow-avif-plugin cairosvg
-          python scripts/build-canonical-avatars-v556.py
+          python scripts/build-canonical-avatars-v556-tolerant.py
       - name: Commit generated assets to the branch
         if: github.event_name == 'pull_request'
         shell: bash
