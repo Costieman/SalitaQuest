@@ -1,0 +1,45 @@
+{
+  "status": "PASS_AWAITING_USER_VISUAL_APPROVAL",
+  "sourceArchive": {
+    "filename": "salita_quest_final_avatars_updated.zip",
+    "sha256": "cc08ef8e247d4bedacfecc2d7f8659e91ebc2064de287570c67346b9594f543f",
+    "masterDimensions": "1024x1024",
+    "masterMode": "RGBA"
+  },
+  "canonicalExport": {
+    "count": 48,
+    "dimensions": "512x512",
+    "format": "PNG",
+    "mode": "RGBA",
+    "resampling": "Pillow LANCZOS",
+    "allTransparent": true,
+    "uniqueStableIds": 48,
+    "uniqueFilenames": 48,
+    "uniqueHashes": 48,
+    "upscalingUsed": false
+  },
+  "artifacts": {
+    "bundleFilename": "salita_quest_canonical_avatars_512.zip",
+    "bundleSha256": "422d74a61b8561d5b7a92dfafef9bd9a9952df3c7f936ecb2d48f0737dd73be0",
+    "bundleByteSize": 10763801,
+    "contactSheetFilename": "avatar-contact-sheet-512.png",
+    "contactSheetSha256": "fe7b226eea77d47ae9b8b10985a40c9eb2124df71f4d82f1fb8bfd0d3ba672cc",
+    "contactSheetDimensions": "1500x2560",
+    "inventoryFilename": "avatar-canonical-512-inventory.csv",
+    "inventorySha256": "7092174d253b8353e046bd750074bb444dc0f334f31d3c8e8d0c879f935ddd31",
+    "validationFilename": "avatar-canonical-512-validation.json",
+    "validationSha256": "8550aa756ee3055287ca2f474dfe3e39c77932b69450761cd45a11ade7fd2f00"
+  },
+  "checks": {
+    "all48Generated": true,
+    "all512By512": true,
+    "allPng": true,
+    "allRgba": true,
+    "transparencyPreserved": true,
+    "noDuplicateStableIds": true,
+    "noDuplicateFilenames": true,
+    "noDuplicateOutputHashes": true,
+    "contactSheetLabelsContainedWithinTiles": true
+  },
+  "releaseGate": "The export is technically validated. Application integration must not begin until the labelled contact sheet has been visually reviewed and accepted."
+}
