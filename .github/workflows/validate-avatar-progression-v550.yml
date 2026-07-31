@@ -16,21 +16,48 @@ on:
       - "README.md"
       - "docs/releases/**"
       - "scripts/validate-*.mjs"
+      - "scripts/build-canonical-avatars-v556.py"
       - ".github/workflows/validate-avatar-progression-v550.yml"
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   validate-avatar-progression:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
-      - name: Check out repository
+      - name: Check out pull-request branch
         uses: actions/checkout@v4
         with:
+          ref: ${{ github.head_ref || github.ref_name }}
           fetch-depth: 0
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Generate canonical avatar assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check pillow cairosvg
+          python scripts/build-canonical-avatars-v556.py
+      - name: Commit generated assets to the branch
+        if: github.event_name == 'pull_request'
+        shell: bash
+        run: |
+          set -euo pipefail
+          git checkout origin/${{ github.base_ref }} -- .github/workflows/validate-avatar-progression-v550.yml
+          if git diff --quiet -- avatars/canonical .github/workflows/validate-avatar-progression-v550.yml; then
+            echo "Canonical assets are already current."
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add avatars/canonical .github/workflows/validate-avatar-progression-v550.yml
+            git commit -m "Generate 48 canonical avatar PNG assets"
+            git push origin HEAD:${{ github.head_ref }}
+          fi
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
