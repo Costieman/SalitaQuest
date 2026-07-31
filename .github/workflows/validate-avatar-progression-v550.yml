@@ -14,8 +14,8 @@ on:
       - "profile-emblem-control.js"
       - "service-worker.js"
       - "README.md"
-      - "docs/releases/5.5.0-avatar-progression.md"
-      - "scripts/validate-avatar-*.mjs"
+      - "docs/releases/**"
+      - "scripts/validate-*.mjs"
       - ".github/workflows/validate-avatar-progression-v550.yml"
   workflow_dispatch:
 
@@ -29,6 +29,8 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
