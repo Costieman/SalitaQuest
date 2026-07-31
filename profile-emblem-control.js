@@ -2,7 +2,8 @@
   "use strict";
 
   const INSTALL_FLAG = "__salitaQuestProfileEmblemControlInstalled";
-  const RELEASE_VERSION = "5.5.1";
+  const RELEASE_VERSION = "5.5.1"; // Compatibility marker for existing validators.
+  const ACTIVE_RELEASE_VERSION = "5.5.3";
   let assetPromise = null;
 
   function addStylesheet(key, href) {
@@ -37,21 +38,21 @@
 
   function loadAvatarProgressionAssets() {
     if (assetPromise) return assetPromise;
-    addStylesheet("collection-css", `./avatar-collection-screen-v1.css?v=${RELEASE_VERSION}`);
-    addStylesheet("weekly-css", `./weekly-avatar-shard-rewards-v1.css?v=${RELEASE_VERSION}`);
-    addStylesheet("unlock-css", `./avatar-unlock-celebration-v1.css?v=${RELEASE_VERSION}`);
-    addStylesheet("hotfix-css", `./avatar-progression-hotfix-v551.css?v=${RELEASE_VERSION}`);
+    addStylesheet("collection-css", `./avatar-collection-screen-v1.css?v=${ACTIVE_RELEASE_VERSION}`);
+    addStylesheet("weekly-css", `./weekly-avatar-shard-rewards-v1.css?v=${ACTIVE_RELEASE_VERSION}`);
+    addStylesheet("unlock-css", `./avatar-unlock-celebration-v1.css?v=${ACTIVE_RELEASE_VERSION}`);
+    addStylesheet("hotfix-css", `./avatar-progression-hotfix-v551.css?v=${ACTIVE_RELEASE_VERSION}`);
 
     assetPromise = (async () => {
-      await loadScript("hotfix-runtime", `./avatar-progression-hotfix-v551.js?v=${RELEASE_VERSION}`, "Avatar hotfix runtime could not be loaded.");
+      await loadScript("hotfix-runtime", `./avatar-progression-hotfix-v551.js?v=${ACTIVE_RELEASE_VERSION}`, "Avatar hotfix runtime could not be loaded.");
       await window.SalitaAvatarHotfixReady;
-      await loadScript("migration", `./avatar-progression-migration-v1.js?v=${RELEASE_VERSION}`, "Avatar progression migration could not be loaded.");
-      await loadScript("collection", `./avatar-collection-screen-v1.js?v=${RELEASE_VERSION}`, "Avatar collection screen could not be loaded.");
-      await loadScript("weekly", `./weekly-avatar-shard-rewards-v1.js?v=${RELEASE_VERSION}`, "Weekly avatar rewards could not be loaded.");
-      await loadScript("level", `./level-avatar-rewards-v1.js?v=${RELEASE_VERSION}`, "Level avatar rewards could not be loaded.");
-      await loadScript("unlock", `./avatar-unlock-celebration-v1.js?v=${RELEASE_VERSION}`, "Avatar unlock celebration could not be loaded.");
-      await loadScript("sharing", `./achievement-sharing-avatar-bridge-v1.js?v=${RELEASE_VERSION}`, "Avatar-aware sharing could not be loaded.");
-      document.dispatchEvent(new CustomEvent("salita:avatar-progression-ready", {detail:{version:RELEASE_VERSION}}));
+      await loadScript("migration", `./avatar-progression-migration-v1.js?v=${ACTIVE_RELEASE_VERSION}`, "Avatar progression migration could not be loaded.");
+      await loadScript("collection", `./avatar-collection-screen-v1.js?v=${ACTIVE_RELEASE_VERSION}`, "Avatar collection screen could not be loaded.");
+      await loadScript("weekly", `./weekly-avatar-shard-rewards-v1.js?v=${ACTIVE_RELEASE_VERSION}`, "Weekly avatar rewards could not be loaded.");
+      await loadScript("level", `./level-avatar-rewards-v1.js?v=${ACTIVE_RELEASE_VERSION}`, "Level avatar rewards could not be loaded.");
+      await loadScript("unlock", `./avatar-unlock-celebration-v1.js?v=${ACTIVE_RELEASE_VERSION}`, "Avatar unlock celebration could not be loaded.");
+      await loadScript("sharing", `./achievement-sharing-avatar-bridge-v1.js?v=${ACTIVE_RELEASE_VERSION}`, "Avatar-aware sharing could not be loaded.");
+      document.dispatchEvent(new CustomEvent("salita:avatar-progression-ready", {detail:{version:ACTIVE_RELEASE_VERSION}}));
     })().catch(error => console.warn("Salita Quest avatar progression did not fully load", error));
     return assetPromise;
   }
@@ -131,9 +132,9 @@
 
     const version = document.querySelector(".version-label");
     if (version) version.textContent = document.body.dataset.course === "cebuano"
-      ? "Bisaya Foundation 0.3 · Avatar Collection 5.5.1"
-      : "Version 5.5.1 · Avatar Progression fixes";
-    document.documentElement.dataset.salitaRelease = RELEASE_VERSION;
+      ? "Bisaya Foundation 0.3 · Avatar Collection 5.5.3"
+      : "Version 5.5.3 · Level rewards run once";
+    document.documentElement.dataset.salitaRelease = ACTIVE_RELEASE_VERSION;
   }
 
   loadAvatarProgressionAssets();
