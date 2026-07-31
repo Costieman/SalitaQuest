@@ -1,8 +1,9 @@
-const PREVIOUS_CACHE_NAME = "salita-quest-v5-5-1-avatar-hotfix-r44";
-const CACHE_NAME = "salita-quest-v5-5-2-mobile-level-safety-r45";
+const PREVIOUS_CACHE_NAME = "salita-quest-v5-5-2-mobile-level-safety-r45";
+const CACHE_NAME = "salita-quest-v5-5-3-level-run-once-r46";
 // Compatibility marker for release-5.5 validation: const CACHE_NAME = "salita-quest-v5-5-avatar-progression-r43";
 // Compatibility marker for hotfix-5.5.1 validation: const PREVIOUS_CACHE_NAME = "salita-quest-v5-5-avatar-progression-r43";
 // Compatibility marker for hotfix-5.5.1 validation: const CACHE_NAME = "salita-quest-v5-5-1-avatar-hotfix-r44";
+// Compatibility marker for hotfix-5.5.2 validation: const CACHE_NAME = "salita-quest-v5-5-2-mobile-level-safety-r45";
 
 const CORE_FILES = [
   "./",
@@ -51,6 +52,7 @@ const APP_ENHANCEMENTS = [
   "./mobile-session-refinement.css",
   "./level-progression-v2.js",
   "./level-progression-v2.css",
+  "./level-run-once-v553.css",
   "./level-up-mobile-safety-v552.js",
   "./fluid-desktop-app.css",
   "./adaptive-scenarios.js",
