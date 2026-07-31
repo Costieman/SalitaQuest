@@ -157,8 +157,7 @@ requireMarkers(catalogue, [
 
 const worker = read("service-worker.js");
 requireMarkers(worker, [
-  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-4-achievement-sharing-r41"',
-  'const CACHE_NAME = "salita-quest-v5-4-badge-stability-r42"',
+  'const CACHE_NAME = "salita-quest-v5-5-avatar-progression-r43"',
   '"./badge-chest-v2.js"',
   '"./badge-chest-v2.css"',
   '"./achievement-sharing-v4.js"',
@@ -172,6 +171,6 @@ for (const obsolete of [
 ]) if (worker.includes(obsolete)) fail(`Offline cache still carries obsolete asset ${obsolete}`);
 
 const index = read("index.html");
-if (!index.includes('service-worker.js?v=5.4.29')) fail("Profile gate does not request the badge-stability service worker.");
+if (!index.includes('service-worker.js?v=5.4.29')) fail("Profile gate does not request the stable service worker.");
 
-console.log("Validated preserved and editable six-slot Badge Chest state, deterministic selection rules, single-owner individual/chest/level sharing, loader order, obsolete-runtime removal and offline release 5.4.29.");
+console.log("Validated preserved and editable six-slot Badge Chest state, deterministic selection rules, single-owner individual/chest/level sharing, loader order, obsolete-runtime removal and current offline release.");
