@@ -65,6 +65,14 @@
       triggers.forEach(trigger => trigger.setAttribute("aria-expanded", String(!menu.hidden)));
     }
 
+    function syncAvatarImage(source) {
+      if (!source) return;
+      triggers.forEach(trigger => {
+        const image = trigger.querySelector("img");
+        if (image) image.src = source;
+      });
+    }
+
     makeTrigger(desktopMark, false);
     makeTrigger(mobileMark, true);
 
@@ -75,6 +83,9 @@
       const visibleTrigger = window.matchMedia("(max-width: 1000px)").matches ? mobileMark : desktopMark;
       positionMenu(visibleTrigger);
     }, {passive:true});
+    document.addEventListener("salita:avatar-equipped", event => {
+      syncAvatarImage(event.detail?.avatar?.image);
+    });
 
     const version = document.querySelector(".version-label");
     if (version) {
