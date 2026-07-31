@@ -2,7 +2,8 @@
   "use strict";
 
   const INSTALL_FLAG = "__salitaQuestProfileEmblemControlInstalled";
-  const RELEASE_VERSION = "5.5.4";
+  const RELEASE_VERSION = "5.5.5";
+  // Compatibility marker: const RELEASE_VERSION = "5.5.4"
   // Compatibility marker: const RELEASE_VERSION = "5.5.3"
   // Compatibility marker: const RELEASE_VERSION = "5.5.1"
   // Compatibility labels: Version 5.5.1 · Avatar Progression fixes | Avatar Collection 5.5.1
@@ -152,8 +153,8 @@
     window.SalitaAvatarArtwork?.syncEquipped();
     const version = document.querySelector(".version-label");
     if (version) version.textContent = document.body.dataset.course === "cebuano"
-      ? "Bisaya Foundation 0.3 · Avatar artwork 5.5.4"
-      : "Version 5.5.4 · Avatar artwork";
+      ? "Bisaya Foundation 0.3 · Avatar stability 5.5.5"
+      : "Version 5.5.5 · Avatar stability";
     document.documentElement.dataset.salitaRelease = RELEASE_VERSION;
   }
 
