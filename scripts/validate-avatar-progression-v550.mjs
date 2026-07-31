@@ -79,7 +79,7 @@ if (seenAssets.size < 41) fail("Catalogue assets are unexpectedly over-shared; v
 
 const loader = read("profile-emblem-control.js");
 const orderedTokens = [
-  "loadAvatarProgressionMigrationAssets();",
+  "loadAvatarMigrationAssets();",
   "loadAvatarCollectionAssets();",
   "loadWeeklyAvatarRewardAssets();",
   "loadLevelAvatarRewardAssets();",
