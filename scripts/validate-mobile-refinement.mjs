@@ -50,15 +50,19 @@ for (const htmlFile of ["app.html", "bisaya.html"]) {
   const html = read(htmlFile);
   requireMarkers(html, [
     'mobile-session-refinement.css?v=5.4.21',
-    'mobile-session-refinement.js?v=5.4.21',
-    'desktop-navigation-refinement.js?v=5.4.21'
+    'mobile-session-refinement.js?v=5.4.21'
   ], `${htmlFile} mobile assets`);
+  if (!/desktop-navigation-refinement\.js\?v=(?:5\.4\.21|5\.5\.2)/.test(html)) {
+    fail(`${htmlFile} mobile assets is missing the desktop navigation refinement runtime.`);
+  }
   const launcher = html.indexOf('lesson-side-launcher.js?v=5.4.21');
   const mobile = html.indexOf('mobile-session-refinement.js?v=5.4.21');
   if (!(launcher >= 0 && mobile > launcher)) fail(`${htmlFile} must load mobile refinement after the lesson launcher.`);
 }
-const appProfile = read("app.html").indexOf('profile-app.js?v=5.4.21');
-const appMobile = read("app.html").indexOf('mobile-session-refinement.js?v=5.4.21');
+const appHtml = read("app.html");
+const appProfileMatch = appHtml.match(/profile-app\.js\?v=(?:5\.4\.21|5\.5\.2)/);
+const appProfile = appProfileMatch ? appProfileMatch.index : -1;
+const appMobile = appHtml.indexOf('mobile-session-refinement.js?v=5.4.21');
 if (!(appProfile > appMobile)) fail("Tagalog must load profile controls after mobile refinement.");
 if (!read("bisaya-app-loader.js").includes('loadScript("./profile-app.js')) fail("Bisaya must load profile controls through its course loader.");
 

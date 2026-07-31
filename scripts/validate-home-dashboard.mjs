@@ -81,7 +81,9 @@ for (const htmlFile of ["app.html", "bisaya.html"]) {
     'weekly-avatar-polish.js?v=5.4.21'
   ], `${htmlFile} Home release assets`);
 }
-if (!read("app.html").includes('profile-app.js?v=5.4.21')) fail("Tagalog does not load the shared profile runtime directly.");
+if (!/profile-app\.js\?v=(?:5\.4\.21|5\.5\.2)/.test(read("app.html"))) {
+  fail("Tagalog does not load the shared profile runtime directly.");
+}
 if (!read("bisaya-app-loader.js").includes('loadScript("./profile-app.js')) fail("Bisaya does not load the shared profile runtime through its course loader.");
 
 const index = read("index.html");
