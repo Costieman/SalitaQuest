@@ -52,10 +52,11 @@ for (const required of [
   if (!css.includes(required)) fail(`Weekly reward styles are missing ${required}`);
 }
 
-if (!loader.includes("weekly-avatar-shard-rewards-v1.css?v=5.5.0")) {
+if (!loader.includes('const RELEASE_VERSION = "5.5.0"')) fail("Shared profile runtime release version is not 5.5.0");
+if (!loader.includes("weekly-avatar-shard-rewards-v1.css") || !loader.includes("appendStylesheet")) {
   fail("Shared profile runtime does not load weekly shard reward styles");
 }
-if (!loader.includes("weekly-avatar-shard-rewards-v1.js?v=5.5.0")) {
+if (!loader.includes("weekly-avatar-shard-rewards-v1.js") || !loader.includes("appendScript")) {
   fail("Shared profile runtime does not load weekly shard reward logic");
 }
 
