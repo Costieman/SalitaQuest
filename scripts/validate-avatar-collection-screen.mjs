@@ -51,8 +51,13 @@ for (const required of [
   if (!screenCss.includes(required)) fail(`Collection styles are missing ${required}`);
 }
 
-if (!emblemSource.includes("avatar-collection-screen-v1.css?v=5.5.0")) fail("Collection CSS is not loaded by the shared profile runtime");
-if (!emblemSource.includes("avatar-collection-screen-v1.js?v=5.5.0")) fail("Collection JavaScript is not loaded by the shared profile runtime");
+if (!emblemSource.includes('const RELEASE_VERSION = "5.5.0"')) fail("Shared profile runtime release version is not 5.5.0");
+if (!emblemSource.includes("avatar-collection-screen-v1.css") || !emblemSource.includes("appendStylesheet")) {
+  fail("Collection CSS is not loaded by the shared profile runtime");
+}
+if (!emblemSource.includes("avatar-collection-screen-v1.js") || !emblemSource.includes("appendScript")) {
+  fail("Collection JavaScript is not loaded by the shared profile runtime");
+}
 if (!emblemSource.includes("loadAvatarCollectionAssets();")) fail("Collection loader is not started");
 
 console.log("Avatar collection screen validation passed: all avatars, locked greyscale, 25/50/75% reveal, details and owned-only equipping.");
