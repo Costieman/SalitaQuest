@@ -59,13 +59,13 @@ for (const required of [
   if (!hotfixCss.includes(required)) fail(`Collection hotfix styles are missing ${required}`);
 }
 
-if (!emblemSource.includes('const RELEASE_VERSION = "5.5.1"')) fail("Shared profile runtime release version is not 5.5.1");
+if (!emblemSource.includes('const RELEASE_VERSION = "5.5.6"')) fail("Shared profile runtime release version is not 5.5.6");
 if (!emblemSource.includes("avatar-collection-screen-v1.css") || !emblemSource.includes("addStylesheet")) {
   fail("Collection CSS is not loaded by the shared profile runtime");
 }
 if (!emblemSource.includes("avatar-collection-screen-v1.js") || !emblemSource.includes('loadScript("collection"')) {
   fail("Collection JavaScript is not loaded by the shared profile runtime");
 }
-if (!emblemSource.includes("await window.SalitaAvatarHotfixReady")) fail("Collection starts before repaired artwork is ready");
+if (!emblemSource.includes("await window.SalitaAvatarHotfixReady")) fail("Collection starts before canonical progression data is ready");
 
 console.log("Avatar collection screen validation passed: all avatars, locked greyscale, 25/50/75% reveal, stable cards and owned-only equipping.");
