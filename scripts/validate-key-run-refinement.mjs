@@ -83,12 +83,16 @@ requireMarkers(emblem, [
 for (const htmlFile of ["app.html", "bisaya.html"]) {
   const html = read(htmlFile);
   requireMarkers(html, [
-    "profile-emblem-control.css?v=5.4.21",
     "daily-goal-refinement.js?v=5.4.21",
     "key-run-refinement.js?v=5.4.21",
-    "even-progress-rail.js?v=5.4.21",
-    "profile-emblem-control.js?v=5.4.21"
+    "even-progress-rail.js?v=5.4.21"
   ], `${htmlFile} key-run assets`);
+  if (!/profile-emblem-control\.css\?v=(?:5\.4\.21|5\.5\.2)/.test(html)) {
+    fail(`${htmlFile} key-run assets is missing the profile emblem styles.`);
+  }
+  if (!/profile-emblem-control\.js\?v=(?:5\.4\.21|5\.5\.2)/.test(html)) {
+    fail(`${htmlFile} key-run assets is missing the profile emblem runtime.`);
+  }
   const dailyIndex = html.indexOf("daily-goal-refinement.js?v=5.4.21");
   const chestIndex = html.indexOf("weekly-avatar-chest.js?v=5.4.21");
   const keyRunIndex = html.indexOf("key-run-refinement.js?v=5.4.21");
