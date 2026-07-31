@@ -1,12 +1,14 @@
-const PREVIOUS_CACHE_NAME = "salita-quest-v5-5-avatar-progression-r43";
-const CACHE_NAME = "salita-quest-v5-5-1-avatar-hotfix-r44";
+const PREVIOUS_CACHE_NAME = "salita-quest-v5-5-1-avatar-hotfix-r44";
+const CACHE_NAME = "salita-quest-v5-5-2-mobile-level-safety-r45";
 // Compatibility marker for release-5.5 validation: const CACHE_NAME = "salita-quest-v5-5-avatar-progression-r43";
+// Compatibility marker for hotfix-5.5.1 validation: const CACHE_NAME = "salita-quest-v5-5-1-avatar-hotfix-r44";
 
 const CORE_FILES = [
   "./",
   "./index.html",
   "./app.html",
   "./bisaya.html",
+  "./mobile-refresh.html",
   "./style.css",
   "./app.js",
   "./manifest.webmanifest",
@@ -48,6 +50,7 @@ const APP_ENHANCEMENTS = [
   "./mobile-session-refinement.css",
   "./level-progression-v2.js",
   "./level-progression-v2.css",
+  "./level-up-mobile-safety-v552.js",
   "./fluid-desktop-app.css",
   "./adaptive-scenarios.js",
   "./adaptive-scenarios.css",
@@ -180,8 +183,12 @@ self.addEventListener("fetch", event => {
   const url = new URL(event.request.url);
   if (event.request.method !== "GET" || url.pathname.startsWith("/api/")) return;
 
+  const networkRequest = url.origin === self.location.origin
+    ? new Request(event.request, {cache:"reload"})
+    : event.request;
+
   event.respondWith(
-    fetch(event.request)
+    fetch(networkRequest)
       .then(response => {
         if (response.ok || response.type === "opaque") {
           const copy = response.clone();
@@ -195,6 +202,7 @@ self.addEventListener("fetch", event => {
         if (event.request.mode === "navigate") {
           if (url.pathname.endsWith("/bisaya.html")) return caches.match("./bisaya.html");
           if (url.pathname.endsWith("/app.html")) return caches.match("./app.html");
+          if (url.pathname.endsWith("/mobile-refresh.html")) return caches.match("./mobile-refresh.html");
           return caches.match("./index.html");
         }
         return Response.error();
