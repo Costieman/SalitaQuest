@@ -22,7 +22,7 @@ vm.runInContext(unlockSource, sandbox, {filename:"avatar-unlock-celebration-v1.j
 
 const model = sandbox.SalitaAvatarModel;
 const logic = sandbox.SalitaAvatarUnlockCelebrationLogic;
-if (!model || !logic) fail("Unlock celebration logic did not initialise");
+if (!model || logic?.version !== 2) fail("Unlock celebration logic v2 did not initialise");
 
 const pending = {
   equippedAvatarId:"anahaw",
@@ -46,6 +46,20 @@ if (consumed.collection.pendingUnlocks.length !== 1 || consumed.collection.pendi
 if (logic.nextPending(consumed.collection, model)?.avatarId !== "katmon") {
   fail("The next queued unlock must remain available");
 }
+const duplicates = {
+  equippedAvatarId:"anahaw",
+  ownedAvatarIds:["anahaw","narra"],
+  shards:{narra:100},
+  pendingUnlocks:[
+    {avatarId:"narra",source:"level_milestone",level:10,animationSeen:false},
+    {avatarId:"narra",source:"level_milestone",level:10,animationSeen:false}
+  ]
+};
+const duplicateFirst = logic.nextPending(duplicates, model);
+const duplicateConsumed = logic.consumePending(duplicates, duplicateFirst, model);
+if (!duplicateConsumed.consumed || duplicateConsumed.collection.pendingUnlocks.length !== 0) {
+  fail("Duplicate entries for one unlock must be consumed together");
+}
 const seenOnly = logic.nextPending({
   ownedAvatarIds:["narra"],
   pendingUnlocks:[{avatarId:"narra", source:"level_milestone", animationSeen:true}]
@@ -62,9 +76,15 @@ for (const required of [
   "flyer.animate",
   "avatarUnlockHistory",
   "salita:avatar-unlock-animation-started",
-  "salita:avatar-unlock-animation-finished"
+  "salita:avatar-unlock-animation-finished",
+  "let finishing = false",
+  "saveCompletion(pendingEntry,item)",
+  "if (useFlight) await flyToCollection(item)"
 ]) {
   if (!unlockSource.includes(required)) fail(`Unlock runtime is missing ${required}`);
+}
+if (unlockSource.indexOf("saveCompletion(pendingEntry,item)") > unlockSource.indexOf("if (useFlight) await flyToCollection(item)")) {
+  fail("Unlock acknowledgement must be saved before the flight animation");
 }
 
 for (const required of [
@@ -90,15 +110,15 @@ for (const required of [
   if (!bridgeSource.includes(required)) fail(`Achievement avatar bridge is missing ${required}`);
 }
 
-if (!loaderSource.includes('const RELEASE_VERSION = "5.5.0"')) fail("Shared profile runtime release version is not 5.5.0");
+if (!loaderSource.includes('const RELEASE_VERSION = "5.5.1"')) fail("Shared profile runtime release version is not 5.5.1");
 for (const required of [
   "avatar-unlock-celebration-v1.css",
   "avatar-unlock-celebration-v1.js",
   "achievement-sharing-avatar-bridge-v1.js",
-  "loadAvatarUnlockCelebrationAssets();",
-  "loadAchievementAvatarBridgeAssets();"
+  'loadScript("unlock"',
+  'loadScript("sharing"'
 ]) {
   if (!loaderSource.includes(required)) fail(`Shared loader is missing ${required}`);
 }
 
-console.log("Avatar unlock and sharing validation passed: queued once-only reveals, flight into the collection, reduced-motion fallback and equipped-avatar badge/chest/level cards.");
+console.log("Avatar unlock and sharing validation passed: persisted once-only reveals, duplicate consumption, collection flight, reduced-motion fallback and equipped-avatar cards.");
