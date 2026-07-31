@@ -8,12 +8,19 @@ on:
     paths:
       - tools/avatar-assets-1024.tar
       - .github/workflows/materialize-avatar-assets-v556.yml
+  pull_request:
+    branches:
+      - main
+    paths:
+      - tools/avatar-assets-1024.tar
+      - .github/workflows/materialize-avatar-assets-v556.yml
 
 permissions:
   contents: write
 
 jobs:
   materialize:
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
     steps:
       - name: Check out rebuild branch
