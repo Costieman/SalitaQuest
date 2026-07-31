@@ -14,7 +14,8 @@ const validators = [
   "scripts/validate-avatar-collection-screen.mjs",
   "scripts/validate-weekly-avatar-shards.mjs",
   "scripts/validate-avatar-release-v550.mjs",
-  "scripts/validate-stage1-popup-governance-v553.mjs"
+  "scripts/validate-stage1-popup-governance-v553.mjs",
+  "scripts/validate-avatar-artwork-v554.mjs"
 ];
 
 for (const validator of validators) {
@@ -28,6 +29,7 @@ for (const validator of validators) {
 
 const runtimeFiles = [
   "avatar-catalogue-v1.js",
+  "avatar-artwork-registry-v554.js",
   "avatar-progression-hotfix-v551.js",
   "profile-app.js",
   "popup-governor-v1.js",
@@ -62,7 +64,11 @@ for (const avatar of model.catalogue) {
 
 const loader = read("profile-emblem-control.js");
 const orderedTokens = [
+  'await loadScript("catalogue"',
+  'await loadScript("artwork-runtime"',
+  'await loadScript("hotfix-runtime"',
   "await window.SalitaAvatarHotfixReady",
+  "await window.SalitaAvatarArtworkReady",
   'await loadScript("migration"',
   'await loadScript("collection"',
   'await loadScript("weekly"',
@@ -76,15 +82,16 @@ for (const token of orderedTokens) {
   if (index < 0 || index <= lastIndex) fail(`Shared loader order is incorrect at ${token}`);
   lastIndex = index;
 }
-if (!loader.includes('const RELEASE_VERSION = "5.5.3"')) fail("Shared loader is not cache-busted to 5.5.3");
+if (!loader.includes('const RELEASE_VERSION = "5.5.4"')) fail("Shared loader is not cache-busted to 5.5.4");
 
 const serviceWorker = read("service-worker.js");
-if (!serviceWorker.includes("salita-quest-v5-5-3-popup-governance-r46")) fail("Service worker cache version is not 5.5.3 r46");
+if (!serviceWorker.includes("salita-quest-v5-5-4-avatar-artwork-r47")) fail("Service worker cache version is not 5.5.4 r47");
 for (const asset of seenAssets) {
   if (!serviceWorker.includes(asset)) fail(`Service worker does not cache ${asset}`);
 }
 for (const asset of [
   "popup-governor-v1.js",
+  "avatar-artwork-registry-v554.js",
   "avatar-progression-hotfix-v551.js",
   "level-up-mobile-safety-v552.js",
   "level-avatar-rewards-v1.js",
@@ -98,10 +105,11 @@ for (const [file, markers] of [
   ["docs/releases/5.5.0-avatar-progression.md", ["48", "Golden Salita Crest"]],
   ["docs/releases/5.5.1-avatar-hotfix.md", ["Collections", "Level milestone safety"]],
   ["docs/releases/5.5.2-mobile-level-up-hotfix.md", ["Mobile level-up safety", "mobile-refresh.html"]],
-  ["docs/releases/5.5.3-stage-1-popup-governance.md", ["single popup governor", "acknowledgement-before-render", "r46"]]
+  ["docs/releases/5.5.3-stage-1-popup-governance.md", ["single popup governor", "acknowledgement-before-render", "r46"]],
+  ["docs/releases/5.5.4-avatar-artwork-governance.md", ["canonical artwork registry", "48 avatars", "r47"]]
 ]) {
   const source = read(file).toLowerCase();
   for (const marker of markers) if (!source.includes(marker.toLowerCase())) fail(`${file} is missing ${marker}`);
 }
 
-console.log(`Avatar Progression 5.5.3 integration validation passed: ${model.catalogue.length} avatars, ${seenAssets.size} cached assets, six component validators and governed reward popups.`);
+console.log(`Avatar Progression 5.5.4 integration validation passed: ${model.catalogue.length} avatars, ${seenAssets.size} cached assets, seven component validators, governed popups and canonical artwork.`);
