@@ -58,18 +58,18 @@ for (const required of [
   'rarity:starter ? "common" : source.rarity',
   'weeklyRarity:starter ? "common"',
   "shardRequirement:starter ? 100",
-  'collectionGroups:starter ? Object.freeze(["starter","common"])'
+  'collectionGroups:starter ? Object.freeze(["starter", "common"])'
 ]) {
   if (!hotfix.includes(required)) fail(`Starter weekly eligibility is missing ${required}`);
 }
 
-if (!loader.includes('const RELEASE_VERSION = "5.5.1"')) fail("Shared profile runtime release version is not 5.5.1");
+if (!loader.includes('const RELEASE_VERSION = "5.5.6"')) fail("Shared profile runtime release version is not 5.5.6");
 if (!loader.includes("weekly-avatar-shard-rewards-v1.css") || !loader.includes("addStylesheet")) {
   fail("Shared profile runtime does not load weekly shard reward styles");
 }
 if (!loader.includes("weekly-avatar-shard-rewards-v1.js") || !loader.includes('loadScript("weekly"')) {
   fail("Shared profile runtime does not load weekly shard reward logic");
 }
-if (!loader.includes("await window.SalitaAvatarHotfixReady")) fail("Weekly rewards load before starter/common hotfix data");
+if (!loader.includes("await window.SalitaAvatarHotfixReady")) fail("Weekly rewards load before starter/common progression data");
 
 console.log("Weekly avatar reward validation passed: six account-wide keys, collectible starters, free target choice, 100/50/25 shards and no randomness.");
