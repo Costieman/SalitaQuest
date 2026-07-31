@@ -102,8 +102,7 @@ for (const htmlFile of ["app.html", "bisaya.html"]) {
 
 const worker = read("service-worker.js");
 requireMarkers(worker, [
-  "salita-quest-v5-4-achievement-sharing-r41",
-  "salita-quest-v5-4-badge-stability-r42",
+  "salita-quest-v5-5-avatar-progression-r43",
   '"./badge-layout-v3.css"',
   '"./badge-chest-v2.js"',
   '"./badge-chest-v2.css"',
