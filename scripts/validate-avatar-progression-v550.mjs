@@ -82,7 +82,12 @@ for (const token of orderedTokens) {
   if (index < 0 || index <= lastIndex) fail(`Shared loader order is incorrect at ${token}`);
   lastIndex = index;
 }
-if (!loader.includes('const RELEASE_VERSION = "5.5.4"')) fail("Shared loader is not cache-busted to 5.5.4");
+if (!loader.includes('const RELEASE_VERSION = "5.5.5"')) fail("Shared loader is not cache-busted to 5.5.5");
+
+const artwork = read("avatar-artwork-registry-v554.js");
+if (artwork.includes("installObserver") || artwork.includes("observer.observe(document.documentElement")) {
+  fail("Avatar artwork release must not install a global src mutation observer");
+}
 
 const serviceWorker = read("service-worker.js");
 if (!serviceWorker.includes("salita-quest-v5-5-4-avatar-artwork-r47")) fail("Service worker cache version is not 5.5.4 r47");
@@ -112,4 +117,4 @@ for (const [file, markers] of [
   for (const marker of markers) if (!source.includes(marker.toLowerCase())) fail(`${file} is missing ${marker}`);
 }
 
-console.log(`Avatar Progression 5.5.4 integration validation passed: ${model.catalogue.length} avatars, ${seenAssets.size} cached assets, seven component validators, governed popups and canonical artwork.`);
+console.log(`Avatar Progression 5.5.5 integration validation passed: ${model.catalogue.length} avatars, ${seenAssets.size} cached assets, seven component validators, governed popups and observer-free artwork binding.`);
