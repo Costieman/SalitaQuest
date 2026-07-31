@@ -37,8 +37,8 @@ for (const id of spriteIds) requireText(registry, `${id}:[`, `Sprite crop map fo
 for (const token of [
   'const RELEASE = "5.5.4"',
   "loadFirst",
+  "loadImage",
   "cropSprite",
-  "createImageBitmap",
   "getAvatarImagePath",
   "MutationObserver",
   '"salita:avatar-equipped"',
