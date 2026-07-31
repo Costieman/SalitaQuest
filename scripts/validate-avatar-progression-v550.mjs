@@ -16,7 +16,8 @@ const validators = [
   "scripts/validate-level-avatar-rewards.mjs",
   "scripts/validate-avatar-unlock-sharing.mjs",
   "scripts/validate-avatar-release-v550.mjs",
-  "scripts/validate-avatar-hotfix-v551.mjs"
+  "scripts/validate-avatar-hotfix-v551.mjs",
+  "scripts/validate-mobile-level-up-hotfix-v552.mjs"
 ];
 
 for (const validator of validators) {
@@ -40,6 +41,7 @@ const runtimeFiles = [
   "avatar-collection-screen-v1.js",
   "weekly-avatar-shard-rewards-v1.js",
   "level-avatar-rewards-v1.js",
+  "level-up-mobile-safety-v552.js",
   "avatar-unlock-celebration-v1.js",
   "achievement-sharing-avatar-bridge-v1.js",
   "avatar-progression-migration-v1.js",
@@ -98,11 +100,16 @@ for (const token of orderedTokens) {
 }
 
 const serviceWorker = read("service-worker.js");
-if (!serviceWorker.includes("salita-quest-v5-5-1-avatar-hotfix-r44")) fail("Service worker cache version is not 5.5.1 r44");
+if (!serviceWorker.includes("salita-quest-v5-5-2-mobile-level-safety-r45")) fail("Service worker cache version is not 5.5.2 r45");
 for (const asset of seenAssets) {
   if (!serviceWorker.includes(asset)) fail(`Service worker does not cache ${asset}`);
 }
-for (const asset of ["avatar-progression-hotfix-v551.js", "avatar-progression-hotfix-v551.css"]) {
+for (const asset of [
+  "avatar-progression-hotfix-v551.js",
+  "avatar-progression-hotfix-v551.css",
+  "level-up-mobile-safety-v552.js",
+  "mobile-refresh.html"
+]) {
   if (!serviceWorker.includes(asset)) fail(`Service worker does not cache ${asset}`);
 }
 
@@ -119,5 +126,9 @@ const hotfixNotes = read("docs/releases/5.5.1-avatar-hotfix.md");
 for (const required of ["Collections", "Starter avatars", "Level milestone safety", "salita-quest-v5-5-1-avatar-hotfix-r44"]) {
   if (!hotfixNotes.includes(required)) fail(`Hotfix release notes are missing ${required}`);
 }
+const mobileHotfixNotes = read("docs/releases/5.5.2-mobile-level-up-hotfix.md");
+for (const required of ["Mobile level-up safety", "mobile-refresh.html", "localStorage", "salita-quest-v5-5-2-mobile-level-safety-r45"]) {
+  if (!mobileHotfixNotes.includes(required)) fail(`Mobile hotfix release notes are missing ${required}`);
+}
 
-console.log(`Avatar Progression 5.5.1 integration validation passed: ${model.catalogue.length} avatars, ${seenAssets.size} cached source assets, eight component validators and ordered hotfix/runtime loading.`);
+console.log(`Avatar Progression 5.5.2 integration validation passed: ${model.catalogue.length} avatars, ${seenAssets.size} cached source assets, nine component validators and mobile level-up safety.`);
