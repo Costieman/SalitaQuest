@@ -90,10 +90,11 @@ for (const required of [
   if (!bridgeSource.includes(required)) fail(`Achievement avatar bridge is missing ${required}`);
 }
 
+if (!loaderSource.includes('const RELEASE_VERSION = "5.5.0"')) fail("Shared profile runtime release version is not 5.5.0");
 for (const required of [
-  "avatar-unlock-celebration-v1.css?v=5.5.0",
-  "avatar-unlock-celebration-v1.js?v=5.5.0",
-  "achievement-sharing-avatar-bridge-v1.js?v=5.5.0",
+  "avatar-unlock-celebration-v1.css",
+  "avatar-unlock-celebration-v1.js",
+  "achievement-sharing-avatar-bridge-v1.js",
   "loadAvatarUnlockCelebrationAssets();",
   "loadAchievementAvatarBridgeAssets();"
 ]) {
