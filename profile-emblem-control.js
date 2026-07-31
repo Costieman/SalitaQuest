@@ -2,11 +2,7 @@
   "use strict";
 
   const INSTALL_FLAG = "__salitaQuestProfileEmblemControlInstalled";
-  const RELEASE_VERSION = "5.5.5";
-  // Compatibility marker: const RELEASE_VERSION = "5.5.4"
-  // Compatibility marker: const RELEASE_VERSION = "5.5.3"
-  // Compatibility marker: const RELEASE_VERSION = "5.5.1"
-  // Compatibility labels: Version 5.5.1 · Avatar Progression fixes | Avatar Collection 5.5.1
+  const RELEASE_VERSION = "5.5.6";
   let assetPromise = null;
 
   function addStylesheet(key, href) {
@@ -50,8 +46,8 @@
       if (!window.SalitaAvatarModel) {
         await loadScript("catalogue", `./avatar-catalogue-v1.js?v=${RELEASE_VERSION}`, "Avatar catalogue could not be loaded.");
       }
-      await loadScript("artwork-runtime", `./avatar-artwork-registry-v554.js?v=${RELEASE_VERSION}`, "Avatar artwork registry could not be loaded.");
-      await loadScript("hotfix-runtime", `./avatar-progression-hotfix-v551.js?v=${RELEASE_VERSION}`, "Avatar hotfix runtime could not be loaded.");
+      await loadScript("artwork-runtime", `./avatar-artwork-registry-v554.js?v=${RELEASE_VERSION}`, "Avatar artwork resolver could not be loaded.");
+      await loadScript("hotfix-runtime", `./avatar-progression-hotfix-v551.js?v=${RELEASE_VERSION}`, "Avatar progression compatibility could not be loaded.");
       await window.SalitaAvatarHotfixReady;
       await window.SalitaAvatarArtworkReady;
       await loadScript("migration", `./avatar-progression-migration-v1.js?v=${RELEASE_VERSION}`, "Avatar progression migration could not be loaded.");
@@ -60,7 +56,6 @@
       await loadScript("level", `./level-avatar-rewards-v1.js?v=${RELEASE_VERSION}`, "Level avatar rewards could not be loaded.");
       await loadScript("unlock", `./avatar-unlock-celebration-v1.js?v=${RELEASE_VERSION}`, "Avatar unlock celebration could not be loaded.");
       await loadScript("sharing", `./achievement-sharing-avatar-bridge-v1.js?v=${RELEASE_VERSION}`, "Avatar-aware sharing could not be loaded.");
-      window.SalitaAvatarArtwork?.repair(document);
       window.SalitaAvatarArtwork?.syncEquipped();
       document.dispatchEvent(new CustomEvent("salita:avatar-progression-ready", {detail:{version:RELEASE_VERSION}}));
     })().catch(error => console.warn("Salita Quest avatar progression did not fully load", error));
@@ -83,8 +78,11 @@
     window[INSTALL_FLAG] = true;
 
     const originalImage = originalButton.querySelector("img");
-    const imageSource = originalImage?.src || "avatars/tarsier.png";
-    const avatarId = originalImage?.dataset.sqAvatarId || originalImage?.dataset.avatarId || "";
+    const avatarId = originalImage?.dataset.sqAvatarId || originalImage?.dataset.avatarId || "anahaw";
+    const item = window.SalitaAvatarModel?.get?.(avatarId);
+    const imageSource = window.SalitaAvatarArtwork?.getAvatarImagePath?.(avatarId)
+      || item?.image
+      || "avatars/canonical/anahaw.png";
     const triggers = [];
 
     function positionMenu(trigger) {
@@ -104,7 +102,7 @@
     }
 
     function makeTrigger(anchor, mobile) {
-      anchor.innerHTML = `<img src="${imageSource}" alt="" aria-hidden="true"${avatarId ? ` data-sq-avatar-id="${avatarId}"` : ""}>`;
+      anchor.innerHTML = `<img src="${imageSource}" alt="" aria-hidden="true" data-sq-avatar-id="${avatarId}">`;
       anchor.classList.add("sq-profile-emblem-trigger");
       anchor.dataset.profileEmblem = mobile ? "mobile" : "desktop";
       anchor.setAttribute("role", "button");
@@ -136,25 +134,18 @@
     }, {passive:true});
     document.addEventListener("salita:avatar-equipped", event => {
       const id = event.detail?.avatarId || event.detail?.avatar?.id;
-      const source = event.detail?.avatar?.image;
       const name = event.detail?.avatar?.name || "";
       triggers.forEach(trigger => {
         const image = trigger.querySelector("img");
-        if (!image) return;
-        if (id && window.SalitaAvatarArtwork) {
-          window.SalitaAvatarArtwork.bind(image, id, {alt:name});
-        } else if (source) {
-          image.src = source;
-          image.alt = name;
-        }
+        if (image && id) window.SalitaAvatarArtwork?.bind(image, id, {alt:name});
       });
     });
 
     window.SalitaAvatarArtwork?.syncEquipped();
     const version = document.querySelector(".version-label");
     if (version) version.textContent = document.body.dataset.course === "cebuano"
-      ? "Bisaya Foundation 0.3 · Avatar stability 5.5.5"
-      : "Version 5.5.5 · Avatar stability";
+      ? "Bisaya Foundation 0.3 · Canonical avatars 5.5.6"
+      : "Version 5.5.6 · Canonical avatars";
     document.documentElement.dataset.salitaRelease = RELEASE_VERSION;
   }
 
