@@ -102,7 +102,7 @@ for (const htmlFile of ["app.html", "bisaya.html"]) {
 
 const worker = read("service-worker.js");
 requireMarkers(worker, [
-  "salita-quest-v5-5-avatar-progression-r43",
+  "salita-quest-v5-5-6-canonical-avatars-r48",
   '"./badge-layout-v3.css"',
   '"./badge-chest-v2.js"',
   '"./badge-chest-v2.css"',
