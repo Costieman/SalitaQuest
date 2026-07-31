@@ -35,18 +35,26 @@ const spriteIds = [
 ];
 for (const id of spriteIds) requireText(registry, `${id}:[`, `Sprite crop map for ${id}`);
 for (const token of [
-  'const RELEASE = "5.5.4"',
-  "loadFirst",
-  "loadImage",
+  'const RELEASE = "5.5.5"',
+  "setFallbackChain",
   "cropSprite",
   "getAvatarImagePath",
-  "MutationObserver",
+  "repairScope",
   '"salita:avatar-equipped"',
   '"salita:avatar-model-hotfixed"',
   "syncEquipped",
   "verifyAll",
   "data:image/svg+xml"
 ]) requireText(registry, token, "Avatar artwork registry");
+
+for (const forbidden of [
+  "installObserver",
+  "observer.observe(document.documentElement",
+  'window.addEventListener("error"',
+  "window.setTimeout(() => verifyAll"
+]) {
+  if (registry.includes(forbidden)) fail(`Avatar artwork registry must not contain runaway global watcher: ${forbidden}`);
+}
 
 const profileLoader = read("profile-emblem-control.js");
 new vm.Script(profileLoader, {filename:"profile-emblem-control.js"});
@@ -65,9 +73,12 @@ for (const token of orderedLoaderTokens) {
   if (current < 0 || current <= previous) fail(`Avatar loader order is incorrect at ${token}`);
   previous = current;
 }
-for (const token of ['const RELEASE_VERSION = "5.5.4"', "avatar-artwork-registry-v554.js", "SalitaAvatarArtwork.bind", "SalitaAvatarArtwork?.syncEquipped"]) {
-  requireText(profileLoader, token, "Profile emblem loader");
-}
+for (const token of [
+  'const RELEASE_VERSION = "5.5.5"',
+  "avatar-artwork-registry-v554.js",
+  "SalitaAvatarArtwork?.repair",
+  "SalitaAvatarArtwork?.syncEquipped"
+]) requireText(profileLoader, token, "Profile emblem loader");
 
 const profileApp = read("profile-app.js");
 new vm.Script(profileApp, {filename:"profile-app.js"});
@@ -92,7 +103,7 @@ for (const token of [
 
 const unlock = read("avatar-unlock-celebration-v1.js");
 new vm.Script(unlock, {filename:"avatar-unlock-celebration-v1.js"});
-for (const token of ['const RELEASE = "5.5.4"', "SalitaAvatarArtwork?.getAvatarImagePath", "SalitaAvatarArtwork.bind", 'data-sq-avatar-id="${item.id}"']) {
+for (const token of ["SalitaAvatarArtwork?.getAvatarImagePath", "SalitaAvatarArtwork.bind", 'data-sq-avatar-id="${item.id}"']) {
   requireText(unlock, token, "Avatar unlock popup");
 }
 
@@ -102,12 +113,9 @@ for (const token of ["salita-quest-v5-5-4-avatar-artwork-r47", "avatar-artwork-r
   requireText(worker, token, "Service worker");
 }
 
-for (const loaderName of ["app.html", "bisaya.html"]) {
-  const loader = read(loaderName);
-  requireText(loader, "V554", loaderName);
-  requireText(loader, "profile-emblem-control.css?v=5.5.4", loaderName);
-  requireText(loader, "profile-emblem-control.js?v=5.5.4", loaderName);
+const refresh = read("mobile-refresh.html");
+for (const token of ['const RELEASE = "5.5.5"', "avatar-artwork-registry-v554.js", "profile-emblem-control.js"]) {
+  requireText(refresh, token, "Recovery refresh page");
 }
-requireText(read("app.html"), "profile-app.js?v=5.5.4", "app.html");
 
-console.log(`Avatar artwork 5.5.4 validation passed: ${model.catalogue.length} canonical entries, ${spriteIds.length} sprite crops, finalized model ordering, unified consumers and cache r47.`);
+console.log(`Avatar artwork 5.5.5 crash validation passed: ${model.catalogue.length} canonical entries, ${spriteIds.length} sprite crops, explicit bindings, no competing global image observers and a cache-reset recovery page.`);
