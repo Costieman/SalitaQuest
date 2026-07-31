@@ -14,19 +14,35 @@
   function loadAvatarModel() {
     if (window.SalitaAvatarModel) return Promise.resolve(window.SalitaAvatarModel);
     return new Promise((resolve, reject) => {
-      const existing = document.querySelector('script[data-avatar-catalogue]');
+      const existing = document.querySelector('script[data-avatar-catalogue],script[data-sq-avatar-asset="catalogue"]');
       if (existing) {
+        if (window.SalitaAvatarModel) {
+          resolve(window.SalitaAvatarModel);
+          return;
+        }
         existing.addEventListener("load", () => resolve(window.SalitaAvatarModel), {once:true});
         existing.addEventListener("error", reject, {once:true});
         return;
       }
       const script = document.createElement("script");
-      script.src = "./avatar-catalogue-v1.js?v=5.5.0";
+      script.src = "./avatar-catalogue-v1.js?v=5.5.4";
       script.dataset.avatarCatalogue = "true";
       script.onload = () => resolve(window.SalitaAvatarModel);
       script.onerror = () => reject(new Error("Avatar catalogue could not be loaded."));
       document.head.appendChild(script);
     });
+  }
+
+  async function finalAvatarModel(baseModel) {
+    for (let attempt = 0; attempt < 125; attempt += 1) {
+      if (window.SalitaAvatarHotfixReady) {
+        try { await window.SalitaAvatarHotfixReady; } catch {}
+        try { await window.SalitaAvatarArtworkReady; } catch {}
+        return window.SalitaAvatarModel || baseModel;
+      }
+      await new Promise(resolve => window.setTimeout(resolve, 40));
+    }
+    return window.SalitaAvatarModel || baseModel;
   }
 
   function readStore() {
@@ -158,15 +174,16 @@
 
     const courseName = COURSE === "cebuano" ? "Bisaya" : "Tagalog";
     const nextCourseName = COURSE === "cebuano" ? "Tagalog" : "Bisaya";
+    const initialAvatar = currentAvatar();
     const control = document.createElement("div");
     control.className = "sq-profile-control";
     control.innerHTML = `
       <button class="sq-profile-button" type="button" aria-label="Open learner profile menu" aria-expanded="false">
-        <img src="${currentAvatar().image}" alt="">
+        <img src="${initialAvatar.image}" data-sq-avatar-id="${initialAvatar.id}" alt="">
       </button>
       <div class="sq-profile-menu" hidden>
         <div class="sq-profile-identity">
-          <img src="${currentAvatar().image}" alt="">
+          <img src="${initialAvatar.image}" data-sq-avatar-id="${initialAvatar.id}" alt="">
           <div><small>LEARNING AS</small><strong></strong><em>${courseName} course</em></div>
         </div>
         <button class="sq-profile-action" type="button" data-avatar-menu>Choose avatar</button>
@@ -194,19 +211,25 @@
       choiceGrid.innerHTML = owned.map(item => `
         <button class="sq-avatar-choice" type="button" data-avatar-choice="${item.id}"
           aria-label="Use ${item.name}" aria-pressed="${String(item.id === equipped)}">
-          <img src="${item.image}" alt="">
+          <img src="${item.image}" data-sq-avatar-id="${item.id}" alt="">
         </button>`).join("");
+      window.SalitaAvatarArtwork?.repair(choiceGrid);
     }
 
     function syncAvatarImages() {
       const item = currentAvatar();
-      control.querySelectorAll(".sq-profile-button img,.sq-profile-identity img").forEach(image => {
-        image.src = item.image;
-        image.alt = item.name;
-      });
-      document.querySelectorAll(".player-avatar img").forEach(image => {
-        image.src = item.image;
-        image.alt = item.name;
+      const images = [
+        ...control.querySelectorAll(".sq-profile-button img,.sq-profile-identity img"),
+        ...document.querySelectorAll(".player-avatar img")
+      ];
+      images.forEach(image => {
+        image.dataset.sqAvatarId = item.id;
+        if (window.SalitaAvatarArtwork) {
+          window.SalitaAvatarArtwork.bind(image,item.id,{alt:item.name});
+        } else {
+          image.src = item.image;
+          image.alt = item.name;
+        }
       });
     }
 
@@ -259,16 +282,20 @@
     });
 
     document.body.appendChild(control);
+    window.SalitaAvatarArtwork?.repair(control);
 
     const selectedAvatar = document.querySelector(".player-avatar");
     if (selectedAvatar) {
-      selectedAvatar.innerHTML = `<img src="${currentAvatar().image}" alt="${currentAvatar().name}">`;
+      const item = currentAvatar();
+      selectedAvatar.innerHTML = `<img src="${item.image}" data-sq-avatar-id="${item.id}" alt="${item.name}">`;
       selectedAvatar.style.overflow = "hidden";
       const avatarStyle = document.createElement("style");
       avatarStyle.textContent = ".player-avatar img{width:100%;height:100%;object-fit:contain;image-rendering:pixelated}";
       document.head.appendChild(avatarStyle);
+      window.SalitaAvatarArtwork?.repair(selectedAvatar);
     }
 
+    syncAvatarImages();
     const version = document.querySelector(".version-label");
     if (version) {
       version.textContent = COURSE === "cebuano"
@@ -300,6 +327,7 @@
 
   function start() {
     loadAvatarModel()
+      .then(finalAvatarModel)
       .then(model => {
         if (!model) throw new Error("Avatar data model is unavailable.");
         installProfileControl(model);
