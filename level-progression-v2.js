@@ -4,6 +4,7 @@
   const INSTALL_FLAG = "__salitaQuestLevelProgressionV2Installed";
   const MAX_LEVEL = 99;
   const SYSTEM_VERSION = 2;
+  const RUN_ONCE_RELEASE = "5.5.3";
   let celebrationTimer = 0;
   let celebrationPlaying = false;
 
@@ -37,6 +38,13 @@
     return rank;
   }
 
+  function cleanLevels(values) {
+    return [...new Set((Array.isArray(values) ? values : [])
+      .map(Number)
+      .filter(value => Number.isInteger(value) && value >= 1 && value <= MAX_LEVEL))]
+      .sort((a, b) => a - b);
+  }
+
   function ensureSystem() {
     const currentXp = Math.max(0, Number(state.xp || 0));
     let system = state.levelProgressionV2;
@@ -51,6 +59,8 @@
         lastKnownLevel: legacyLevel,
         lastCelebratedLevel: legacyLevel,
         pendingLevelUp: null,
+        celebratedLevels: [legacyLevel],
+        milestoneAnimationsSeen: [],
         migratedAt: new Date().toISOString()
       };
       state.levelProgressionV2 = system;
@@ -61,6 +71,8 @@
     system.baseXp = Math.max(0, Number(system.baseXp || 0));
     system.lastKnownLevel = Math.max(system.baseLevel, Math.min(MAX_LEVEL, Number(system.lastKnownLevel || system.baseLevel)));
     system.lastCelebratedLevel = Math.max(system.baseLevel, Math.min(MAX_LEVEL, Number(system.lastCelebratedLevel || system.baseLevel)));
+    system.celebratedLevels = cleanLevels(system.celebratedLevels);
+    system.milestoneAnimationsSeen = cleanLevels(system.milestoneAnimationsSeen);
     return system;
   }
 
@@ -103,9 +115,43 @@
     };
   }
 
+  function sanitisePending(info = calculateLevel()) {
+    const system = ensureSystem();
+    const pending = system.pendingLevelUp;
+    let changed = false;
+
+    if (system.lastKnownLevel > info.level) {
+      system.lastKnownLevel = info.level;
+      changed = true;
+    }
+    if (system.lastCelebratedLevel > info.level) {
+      system.lastCelebratedLevel = info.level;
+      changed = true;
+    }
+
+    if (pending) {
+      const from = Number(pending.from);
+      const to = Number(pending.to);
+      const invalid = !Number.isFinite(to) || to < 1 || to > info.level ||
+        to <= system.lastCelebratedLevel || system.celebratedLevels.includes(to) ||
+        (Number.isFinite(from) && from >= to);
+      if (invalid) {
+        system.pendingLevelUp = null;
+        changed = true;
+      }
+    }
+
+    if (changed) {
+      system.lastRunOnceRepairAt = new Date().toISOString();
+      system.lastRunOnceRepairRelease = RUN_ONCE_RELEASE;
+      try { saveState(); } catch {}
+    }
+    return changed;
+  }
+
   function queueLevelUp(info) {
     const system = ensureSystem();
-    if (info.level <= system.lastKnownLevel) return false;
+    if (info.level <= system.lastKnownLevel || system.celebratedLevels.includes(info.level)) return false;
 
     const previousKnown = system.lastKnownLevel;
     const existing = system.pendingLevelUp;
@@ -166,6 +212,18 @@
     }) || null;
   }
 
+  function equippedImage() {
+    return visibleEmblem()?.querySelector("img")?.src ||
+      document.querySelector(".player-avatar img")?.src ||
+      "avatars/tarsier.png";
+  }
+
+  function rewardForLevel(level) {
+    const model = window.SalitaAvatarModel;
+    const rewardId = model?.levelRewards?.[level];
+    return rewardId ? model.get(rewardId) : null;
+  }
+
   function playLevelChime() {
     if (state.settings?.celebrationSounds === false) return;
     try {
@@ -190,11 +248,31 @@
     } catch {}
   }
 
-  function markCelebrated(pending) {
+  function markCelebrated(pending, reward = null, reason = "animation_started") {
     const system = ensureSystem();
-    if (system.pendingLevelUp?.to === pending.to) system.pendingLevelUp = null;
-    system.lastCelebratedLevel = Math.max(system.lastCelebratedLevel, pending.to);
+    const target = Math.max(1, Math.min(MAX_LEVEL, Number(pending?.to) || 1));
+    if (system.pendingLevelUp?.to === target) system.pendingLevelUp = null;
+    system.lastKnownLevel = Math.max(system.lastKnownLevel, target);
+    system.lastCelebratedLevel = Math.max(system.lastCelebratedLevel, target);
+    system.celebratedLevels = cleanLevels([...system.celebratedLevels, target]);
+    if (reward) system.milestoneAnimationsSeen = cleanLevels([...system.milestoneAnimationsSeen, target]);
+    system.lastCelebrationAcknowledgedAt = new Date().toISOString();
+    system.lastCelebrationAcknowledgedBy = RUN_ONCE_RELEASE;
+    system.lastCelebrationReason = reason;
     saveState();
+    document.dispatchEvent(new CustomEvent("salita:level-up-acknowledged", {
+      detail:{level:target, rewardAvatarId:reward?.id || null, release:RUN_ONCE_RELEASE, reason}
+    }));
+  }
+
+  function installImageFallback(image, fallbackSource) {
+    if (!image) return;
+    image.addEventListener("error", () => {
+      if (image.dataset.fallbackApplied === "true") return;
+      image.dataset.fallbackApplied = "true";
+      image.src = fallbackSource || "avatars/tarsier.png";
+      image.classList.add("level-up-avatar-fallback");
+    }, {once:true});
   }
 
   async function playLevelCelebration() {
@@ -204,73 +282,97 @@
     const pending = system.pendingLevelUp;
     if (!pending) return;
 
+    const info = calculateLevel();
+    const targetLevel = Number(pending.to);
+    if (!Number.isFinite(targetLevel) || targetLevel > info.level ||
+        targetLevel <= system.lastCelebratedLevel || system.celebratedLevels.includes(targetLevel)) {
+      sanitisePending(info);
+      return;
+    }
+
     if (document.querySelector(".daily-key-celebration, .daily-key-award")) {
       celebrationTimer = window.setTimeout(playLevelCelebration, 900);
       return;
     }
 
     const target = visibleEmblem();
-    const imageSource = target?.querySelector("img")?.src || document.querySelector(".player-avatar img")?.src || "avatars/tarsier.png";
+    const fallbackImage = equippedImage();
+    const reward = rewardForLevel(targetLevel);
+    const imageSource = reward?.image || fallbackImage;
+
+    // Run-once guarantee: persist acknowledgement before any DOM or animation work.
+    markCelebrated(pending, reward, "before_animation_dom");
     celebrationPlaying = true;
 
     const layer = document.createElement("div");
     layer.className = "level-up-celebration";
+    layer.dataset.level = String(targetLevel);
+    if (reward?.id) layer.dataset.rewardAvatarId = reward.id;
     layer.setAttribute("aria-live", "polite");
     layer.innerHTML = `
       <div class="level-up-backdrop"></div>
       <div class="level-up-rays" aria-hidden="true"></div>
-      <div class="level-up-banner"><span>LEVEL UP!</span><strong>Level ${pending.to}</strong><small>${rankForLevel(pending.to)[1]}</small></div>
-      <div class="level-up-avatar"><img src="${imageSource}" alt=""><b>${pending.to}</b></div>
+      <div class="level-up-banner">
+        <span>LEVEL UP!</span>
+        <strong>Level ${targetLevel}</strong>
+        <small>${reward ? `${rankForLevel(targetLevel)[1]} · Reward: ${reward.name}` : rankForLevel(targetLevel)[1]}</small>
+      </div>
+      <div class="level-up-avatar"><img src="${imageSource}" alt="${reward?.name || "Equipped avatar"}"><b>${targetLevel}</b></div>
+      ${reward ? `<div class="level-up-reward-label"><span>AVATAR REWARD</span><strong>${reward.name}</strong></div>` : ""}
       <div class="level-up-sparks" aria-hidden="true">${Array.from({length:24}, (_, index) => `<i style="--i:${index}"></i>`).join("")}</div>`;
     document.body.appendChild(layer);
+    installImageFallback(layer.querySelector(".level-up-avatar img"), fallbackImage);
     requestAnimationFrame(() => layer.classList.add("show"));
     playLevelChime();
 
     const reduced = Boolean(state.settings?.reducedMotion) || window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
     const avatar = layer.querySelector(".level-up-avatar");
 
-    if (reduced || !target) {
-      await new Promise(resolve => window.setTimeout(resolve, 1500));
-      layer.classList.add("leaving");
-      await new Promise(resolve => window.setTimeout(resolve, 420));
-      layer.remove();
-      target?.classList.add("level-up-emblem-impact");
-      window.setTimeout(() => target?.classList.remove("level-up-emblem-impact"), 900);
-      markCelebrated(pending);
+    try {
+      if (reduced || !target || typeof avatar?.animate !== "function") {
+        await new Promise(resolve => window.setTimeout(resolve, 1500));
+        layer.classList.add("leaving");
+        await new Promise(resolve => window.setTimeout(resolve, 420));
+        layer.remove();
+        target?.classList.add("level-up-emblem-impact");
+        window.setTimeout(() => target?.classList.remove("level-up-emblem-impact"), 900);
+        return;
+      }
+
+      const targetRect = target.getBoundingClientRect();
+      const startX = window.innerWidth / 2;
+      const startY = Math.min(window.innerHeight * .47, window.innerHeight - 220);
+      const endX = targetRect.left + targetRect.width / 2;
+      const endY = targetRect.top + targetRect.height / 2;
+      const dx = endX - startX;
+      const dy = endY - startY;
+
+      avatar.style.left = `${startX}px`;
+      avatar.style.top = `${startY}px`;
+      const animation = avatar.animate([
+        {opacity:0, transform:"translate(-50%,-50%) scale(.18) rotate(-80deg)", filter:"brightness(1) blur(3px)"},
+        {opacity:1, transform:"translate(-50%,-50%) scale(1.28) rotate(360deg)", filter:"brightness(1.7) blur(0)", offset:.24},
+        {opacity:1, transform:"translate(-50%,-54%) scale(1.08) rotate(720deg)", filter:"brightness(1.25)", offset:.52},
+        {opacity:1, transform:`translate(calc(-50% + ${dx * .35}px),calc(-54% + ${dy * .2}px)) scale(.92) rotate(850deg)`, filter:"brightness(1.35)", offset:.70},
+        {opacity:1, transform:`translate(calc(-50% + ${dx}px),calc(-50% + ${dy}px)) scale(.22) rotate(1080deg)`, filter:"brightness(2)", offset:.94},
+        {opacity:0, transform:`translate(calc(-50% + ${dx}px),calc(-50% + ${dy}px)) scale(.1) rotate(1110deg)`, filter:"brightness(2.4)"}
+      ], {duration:2700, easing:"cubic-bezier(.18,.8,.16,1)", fill:"forwards"});
+
+      window.setTimeout(() => layer.classList.add("travelling"), 1450);
+      window.setTimeout(() => layer.classList.add("leaving"), 2200);
+      await animation.finished.catch(() => {});
+
+      target.classList.remove("level-up-emblem-impact");
+      void target.offsetWidth;
+      target.classList.add("level-up-emblem-impact");
+      window.setTimeout(() => target.classList.remove("level-up-emblem-impact"), 1050);
+      window.setTimeout(() => layer.remove(), 380);
+    } finally {
       celebrationPlaying = false;
-      return;
+      document.dispatchEvent(new CustomEvent("salita:level-up-animation-finished", {
+        detail:{level:targetLevel, rewardAvatarId:reward?.id || null, release:RUN_ONCE_RELEASE}
+      }));
     }
-
-    const targetRect = target.getBoundingClientRect();
-    const startX = window.innerWidth / 2;
-    const startY = Math.min(window.innerHeight * .47, window.innerHeight - 220);
-    const endX = targetRect.left + targetRect.width / 2;
-    const endY = targetRect.top + targetRect.height / 2;
-    const dx = endX - startX;
-    const dy = endY - startY;
-
-    avatar.style.left = `${startX}px`;
-    avatar.style.top = `${startY}px`;
-    const animation = avatar.animate([
-      {opacity:0, transform:"translate(-50%,-50%) scale(.18) rotate(-80deg)", filter:"brightness(1) blur(3px)"},
-      {opacity:1, transform:"translate(-50%,-50%) scale(1.28) rotate(360deg)", filter:"brightness(1.7) blur(0)", offset:.24},
-      {opacity:1, transform:"translate(-50%,-54%) scale(1.08) rotate(720deg)", filter:"brightness(1.25)", offset:.52},
-      {opacity:1, transform:`translate(calc(-50% + ${dx * .35}px),calc(-54% + ${dy * .2}px)) scale(.92) rotate(850deg)`, filter:"brightness(1.35)", offset:.70},
-      {opacity:1, transform:`translate(calc(-50% + ${dx}px),calc(-50% + ${dy}px)) scale(.22) rotate(1080deg)`, filter:"brightness(2)", offset:.94},
-      {opacity:0, transform:`translate(calc(-50% + ${dx}px),calc(-50% + ${dy}px)) scale(.1) rotate(1110deg)`, filter:"brightness(2.4)"}
-    ], {duration:2700, easing:"cubic-bezier(.18,.8,.16,1)", fill:"forwards"});
-
-    window.setTimeout(() => layer.classList.add("travelling"), 1450);
-    window.setTimeout(() => layer.classList.add("leaving"), 2200);
-    await animation.finished.catch(() => {});
-
-    target.classList.remove("level-up-emblem-impact");
-    void target.offsetWidth;
-    target.classList.add("level-up-emblem-impact");
-    window.setTimeout(() => target.classList.remove("level-up-emblem-impact"), 1050);
-    window.setTimeout(() => layer.remove(), 380);
-    markCelebrated(pending);
-    celebrationPlaying = false;
   }
 
   function scheduleCelebration(delay = 500) {
@@ -300,6 +402,7 @@
 
     ensureSystem();
     levelInfo = calculateLevel;
+    sanitisePending(calculateLevel());
 
     const baseUpdateGlobalUI = updateGlobalUI;
     updateGlobalUI = function updateGlobalUIWithLevel99() {
@@ -321,8 +424,9 @@
     const version = document.querySelector(".version-label");
     if (version) version.textContent = document.body.dataset.course === "cebuano"
       ? "Bisaya Foundation 0.3 · Level 99 Edition"
-      : "Version 5.4.21 · Level 99 Edition";
+      : "Version 5.5.3 · Level rewards run once";
 
+    document.documentElement.dataset.levelRunOnceRelease = RUN_ONCE_RELEASE;
     updateGlobalUI();
     if (homeIsActive()) scheduleCelebration(900);
   }
