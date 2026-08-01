@@ -49,13 +49,15 @@ The runtime uses direct canonical PNG paths. It does not extract sprites, redraw
 
 ## Badges and sharing
 
-Badges have a dedicated catalogue and a six-slot Badge Chest. Learners can select, order and share earned badges.
+Badges have a dedicated catalogue and a six-slot Badge Chest. The catalogue shows **earned badges first, ordered newest to oldest**, followed by available and locked badges. Learners can select, order and share earned badges.
 
 `achievement-sharing-v4.js` creates badge, Badge Chest and level-up cards. The optional Cloud Run service in `services/social-share/` hosts Open Graph images and public share pages for social platforms.
 
 Hosted sharing works without connected social accounts. Direct publishing integrations would require provider applications, OAuth credentials and approved scopes.
 
 ## Audio
+
+Pronunciation activates on **pointer release**, with keyboard activation retained and touch-generated clicks deduplicated.
 
 Static audio is indexed through `audio/audio_manifest.json`.
 
@@ -144,8 +146,10 @@ node scripts/validate-badge-stability.mjs
 
 The canonical avatar validator checks all 48 PNG signatures, dimensions, alpha channels, manifest mappings, runtime consumers, service-worker coverage and the absence of retired sprite/source-rewrite mechanisms.
 
-## Release and architecture notes
+## Release history and architecture notes
 
+- **5.5.0 — Avatar Progression** introduced the account-wide 48-avatar progression system.
+- **5.5.6 — Canonical Avatar Runtime** replaced legacy artwork paths with the direct canonical asset set.
 - `docs/releases/5.5.6-canonical-avatar-runtime.md`
 - `docs/CODE_AUDIT_2026-07-30.md`
 - `docs/SOCIAL_CONNECTIONS.md`
