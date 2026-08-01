@@ -23,6 +23,9 @@ jobs:
       - name: Generate repository audit
         run: node scripts/audit-repository-streamline.mjs
 
+      - name: Audit maintenance scripts and generated docs
+        run: node scripts/audit-maintenance-files.mjs
+
       - name: Trace remaining legacy asset and validator references
         run: >-
           node scripts/audit-reference-sources.mjs
