@@ -148,7 +148,8 @@ for (const htmlFile of ["app.html", "bisaya.html"]) {
 
 const worker = read("service-worker.js");
 requireMarkers(worker, [
-  'const CACHE_NAME = "salita-quest-v5-5-7-complete-bisaya-audio-r49"',
+  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-5-7-complete-bisaya-audio-r49"',
+  'const CACHE_NAME = "salita-quest-v5-5-8-sharing-foundation-r50"',
   '"./social-connections-v2.js"',
   '"./badge-chest-v2.js"',
   '"./achievement-sharing-v4.js"',
@@ -169,4 +170,4 @@ requireMarkers(readme, [
 const serviceDocs = read("services/social-share/README.md");
 requireMarkers(serviceDocs, ["Open Graph metadata", "og:image", "Cloud Run", "Start learning a Filipino language free"], "Share-service documentation");
 
-console.log("Validated unified badge/chest/avatar/level sharing, hosted-to-local fallbacks, exact Open Graph images, Cloud Run service structure, both language loaders and current offline release.");
+console.log("Validated unified badge/chest/avatar/level sharing, hosted-to-local fallbacks, exact Open Graph images, Cloud Run service structure, both language loaders and sharing-foundation offline release.");
