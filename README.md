@@ -47,11 +47,20 @@ The app contains **48 canonical 512 × 512 PNG avatars** under `avatars/canonica
 
 The runtime uses direct canonical PNG paths. It does not extract sprites, redraw avatar art through canvas, rewrite image sources globally or fall back to raw GitHub artwork.
 
-## Badges and sharing
+## Badges
 
 Badges have a dedicated catalogue and a six-slot Badge Chest. The catalogue shows **earned badges first, ordered newest to oldest**, followed by available and locked badges. Learners can select, order and share earned badges.
 
-`achievement-sharing-v4.js` creates badge, Badge Chest and level-up cards. The optional Cloud Run service in `services/social-share/` hosts Open Graph images and public share pages for social platforms.
+## Hosted achievement sharing
+
+`achievement-sharing-v4.js` creates badge, Badge Chest and level-up cards. It renders the square card and a **1200 × 630 Open Graph version**. Cards include a visible **START LEARNING FREE** invitation.
+
+The optional Cloud Run service in `services/social-share/` hosts Open Graph images and public share pages for social platforms. Deploy it with:
+
+```bash
+chmod +x services/social-share/deploy-cloud-shell.sh
+./services/social-share/deploy-cloud-shell.sh
+```
 
 Hosted sharing works without connected social accounts. Direct publishing integrations would require provider applications, OAuth credentials and approved scopes.
 
