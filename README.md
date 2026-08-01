@@ -2,7 +2,7 @@
 
 Salita Quest is a local-first language-learning app for **Tagalog** and **Cebuano / Bisaya**. It combines active recall, spaced repetition, structured mastery, short daily practice, audio review, learner profiles, progression rewards and offline installation.
 
-Current release: **5.5.6 — Canonical Avatar Runtime**.
+Current release: **5.5.7 — Complete Bisaya Audio**.
 
 ## Core learning system
 
@@ -68,7 +68,15 @@ Hosted sharing works without connected social accounts. Direct publishing integr
 
 Pronunciation activates on **pointer release**, with keyboard activation retained and touch-generated clicks deduplicated.
 
-Static audio is indexed through `audio/audio_manifest.json`.
+Static audio is indexed through `audio/audio_manifest.json`. Release 5.5.7 connects the complete released Bisaya course to recorded audio:
+
+- 177 unique released Cebuano spoken texts are covered;
+- 176 English Hands-Free answers are covered;
+- 296 Cebuano MP3 files support 356 manifest entries through safe aliases;
+- 138 Bisaya-specific British-English MP3 files extend the existing English library;
+- Cebuano pronunciation never falls back to Tagalog audio.
+
+The audio manifest is precached. MP3 files use cache-first delivery after their first successful playback, including support for browser range requests, so previously played clips remain available offline.
 
 The Cebuano generator is resumable and uses Google Cloud Gemini-TTS:
 
@@ -78,16 +86,23 @@ export GOOGLE_CLOUD_REGION="global"
 python3 scripts/generate_cebuano_google_audio.py
 ```
 
+The British-English generator creates only missing Bisaya Hands-Free answers and preserves existing files:
+
+```bash
+export GOOGLE_CLOUD_PROJECT="$(gcloud config get-value project)"
+python3 scripts/generate_missing_bisaya_english_audio.py
+```
+
 See `docs/CEBUANO_AUDIO.md` for setup and recovery details.
 
 ## Offline installation
 
-Salita Quest is a Progressive Web App. `service-worker.js` precaches the course engine, language packs, interface assets and all 48 canonical avatars.
+Salita Quest is a Progressive Web App. `service-worker.js` precaches the course engine, language packs, interface assets, the audio manifest and all 48 canonical avatars. Audio recordings are cached on first playback rather than forcing hundreds of downloads during installation.
 
 Current cache revision:
 
 ```text
-salita-quest-v5-5-6-canonical-avatars-r48
+salita-quest-v5-5-7-complete-bisaya-audio-r49
 ```
 
 The recovery page refreshes app caches and service-worker registrations without clearing learner local storage.
@@ -149,17 +164,20 @@ node scripts/validate-progression-scenarios-navigation.mjs
 node scripts/validate-audio-badge-release.mjs
 node scripts/validate-placement-sharing.mjs
 node scripts/validate-social-posting-audio-resume.mjs
+node scripts/validate-bisaya-audio-library.mjs
 node scripts/validate-hosted-achievement-sharing.mjs
 node scripts/validate-badge-stability.mjs
 ```
 
-The canonical avatar validator checks all 48 PNG signatures, dimensions, alpha channels, manifest mappings, runtime consumers, service-worker coverage and the absence of retired sprite/source-rewrite mechanisms.
+The Bisaya audio validator checks released Cebuano and English coverage, MP3 signatures, manifest paths, runtime language routing, service-worker integration and CI coverage. The canonical avatar validator checks all 48 PNG signatures, dimensions, alpha channels, manifest mappings, runtime consumers, service-worker coverage and the absence of retired sprite/source-rewrite mechanisms.
 
 ## Release history and architecture notes
 
 - **5.5.0 — Avatar Progression** introduced the account-wide 48-avatar progression system.
 - **5.5.6 — Canonical Avatar Runtime** replaced legacy artwork paths with the direct canonical asset set.
+- **5.5.7 — Complete Bisaya Audio** connected complete released Cebuano and English audio coverage with offline replay caching.
 - `docs/releases/5.5.6-canonical-avatar-runtime.md`
+- `docs/releases/5.5.7-complete-bisaya-audio.md`
 - `docs/CODE_AUDIT_2026-07-30.md`
 - `docs/SOCIAL_CONNECTIONS.md`
 - `docs/CEBUANO_AUDIO.md`

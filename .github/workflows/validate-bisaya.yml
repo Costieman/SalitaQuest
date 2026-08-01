@@ -14,6 +14,7 @@ on:
       - "agent/hosted-**"
       - "agent/individual-**"
       - "agent/badge-**"
+      - "feature/connect-cebuano-audio-**"
 
 permissions:
   contents: read
@@ -46,6 +47,8 @@ jobs:
         run: node scripts/validate-placement-sharing.mjs
       - name: Validate social service and resumable Cebuano audio
         run: node scripts/validate-social-posting-audio-resume.mjs
+      - name: Validate complete Bisaya and English audio libraries
+        run: node scripts/validate-bisaya-audio-library.mjs
       - name: Validate hosted achievement previews
         run: node scripts/validate-hosted-achievement-sharing.mjs
       - name: Validate Badge Chest and achievement sharing stability
