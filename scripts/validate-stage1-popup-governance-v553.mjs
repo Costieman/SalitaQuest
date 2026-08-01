@@ -95,7 +95,8 @@ for (const loaderFile of ["app.html", "bisaya.html"]) {
 
 const worker = read("service-worker.js");
 requireMarkers(worker, [
-  'salita-quest-v5-5-6-canonical-avatars-r48',
+  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-5-7-complete-bisaya-audio-r49"',
+  'const CACHE_NAME = "salita-quest-v5-5-8-sharing-foundation-r50"',
   '"./popup-governor-v1.js"',
   '"./level-avatar-rewards-v1.js"',
   '"./avatar-unlock-celebration-v1.js"',
@@ -116,4 +117,4 @@ for (const marker of ["acknowledgement-before-render", "single popup governor", 
   if (!notes.toLowerCase().includes(marker.toLowerCase())) fail(`Stage 1 release notes are missing ${marker}`);
 }
 
-console.log("Stage 1 popup-governance validation passed: one queue, durable acknowledgement, actual-level gating, placement suppression and canonical cache refresh.");
+console.log("Stage 1 popup-governance validation passed: one queue, durable acknowledgement, actual-level gating, placement suppression and sharing-foundation cache refresh.");
