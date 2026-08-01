@@ -1,5 +1,6 @@
 const PREVIOUS_CACHE_NAME = "salita-quest-v5-5-9-avatar-case-r51";
 const CACHE_NAME = "salita-quest-v5-5-10-persistent-navigation-r52";
+const MOBILE_BADGE_LAYOUT_HOTFIX = "2026-08-01-phone-flow-1";
 
 const CORE_FILES = [
   "./", "./index.html", "./app.html", "./bisaya.html", "./mobile-refresh.html",
