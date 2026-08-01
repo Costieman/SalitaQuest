@@ -93,7 +93,7 @@ for (const asset of [
   '"./placement-onboarding-v1.js"',
   '"./placement-onboarding-v1.css"'
 ]) if (!worker.includes(asset)) fail(`Offline cache is missing ${asset}`);
-if (!worker.includes("salita-quest-v5-5-avatar-progression-r43")) fail("Current service-worker cache is missing");
+if (!worker.includes("salita-quest-v5-5-6-canonical-avatars-r48")) fail("Current service-worker cache is missing");
 
 const index = read("index.html");
 if (!index.includes("profile-shell.css?v=5.4.25") || !index.includes("service-worker.js?v=5.4.29")) {

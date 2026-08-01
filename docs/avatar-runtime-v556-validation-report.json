@@ -1,0 +1,46 @@
+{
+  "status": "PASS",
+  "release": "5.5.6",
+  "stage": "canonical-avatar-runtime-integration",
+  "branch": "fix/avatar-canonical-assets",
+  "scope": "Committed runtime, canonical assets and pull-request regression workflows",
+  "canonicalAvatarCount": 48,
+  "serviceWorkerCanonicalAssets": 48,
+  "mappingAndAssetChecksPassed": 1044,
+  "runtimeArchitectureChecksPassed": 194,
+  "checksFailed": 0,
+  "githubWorkflows": {
+    "avatarProgression": "PASS",
+    "bisayaRegression": "PASS"
+  },
+  "learnerStateChecks": {
+    "historicalEquippedAliasPreserved": true,
+    "ownedAvatarAliasesPreserved": true,
+    "partialShardTotalsPreserved": true,
+    "pendingUnlocksPreserved": true,
+    "levelRewardClaimsPreserved": true,
+    "localStorageCleared": false
+  },
+  "prohibitedRuntimeMechanisms": {
+    "spriteExtraction": false,
+    "canvasArtworkConversion": false,
+    "createImageBitmapArtworkConversion": false,
+    "rawGitHubArtworkFallback": false,
+    "globalAvatarSourceObserver": false,
+    "documentWideRepairPass": false,
+    "duplicatePathRegistryOutsideCatalogue": false
+  },
+  "manualGatesRemaining": [
+    "Desktop collection open, scroll, equip and reload on a real saved profile",
+    "Mobile collection open, scroll, equip and reload on a real saved profile",
+    "Tagalog and Bisaya equipped-avatar parity on the user's account",
+    "Offline and installed-PWA confirmation after online installation",
+    "Final user visual approval"
+  ],
+  "notes": [
+    "All 48 canonical files were validated as direct 512 x 512 PNGs.",
+    "The branch remains unmerged and undeployed pending browser and device sign-off.",
+    "Draft pull request 42 contains the integrated candidate."
+  ],
+  "errors": []
+}
