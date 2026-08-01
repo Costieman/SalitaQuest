@@ -23,8 +23,13 @@ jobs:
       - name: Generate repository audit
         run: node scripts/audit-repository-streamline.mjs
 
-      - name: Trace remaining legacy asset references
-        run: node scripts/audit-reference-sources.mjs rare-animals-set2-sprite.png
+      - name: Trace remaining legacy asset and validator references
+        run: >-
+          node scripts/audit-reference-sources.mjs
+          rare-animals-set2-sprite.png
+          validate-avatar-artwork-v554.mjs
+          validate-avatar-hotfix-v551.mjs
+          validate-avatar-release-v550.mjs
 
       - name: Upload repository audit
         uses: actions/upload-artifact@v4
