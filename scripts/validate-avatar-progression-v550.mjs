@@ -112,7 +112,7 @@ for (const marker of [
   "no canvas artwork conversion",
   "no raw GitHub artwork fallback",
   "learner state preservation",
-  "not merged to main"
+  "merged into `main`"
 ]) {
   if (!releaseNotes.toLowerCase().includes(marker.toLowerCase())) fail(`5.5.6 release notes are missing ${marker}`);
 }
