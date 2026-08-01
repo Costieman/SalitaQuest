@@ -2,6 +2,17 @@
   "use strict";
 
   const INSTALL_FLAG = "__salitaQuestCleanTopbarInstalled";
+  const STYLE_ID = "salita-topbar-world-progress-hotfix";
+  const STYLE_HREF = "topbar-world-progress-hotfix.css?v=5.5.10.1";
+
+  function ensureStylesheet() {
+    if (document.getElementById(STYLE_ID)) return;
+    const link = document.createElement("link");
+    link.id = STYLE_ID;
+    link.rel = "stylesheet";
+    link.href = STYLE_HREF;
+    document.head.appendChild(link);
+  }
 
   function retryInstall() {
     window.setTimeout(installCleanTopbar, 60);
@@ -110,6 +121,7 @@
   }
 
   function installCleanTopbar() {
+    ensureStylesheet();
     try {
       if (typeof renderMasteryRail !== "function" || !document.querySelector(".mastery-rail-shell")) {
         retryInstall();
@@ -133,5 +145,6 @@
     compactMasteryCopy();
   }
 
+  ensureStylesheet();
   installCleanTopbar();
 })();
