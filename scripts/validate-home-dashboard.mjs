@@ -40,15 +40,38 @@ requireMarkers(topbarCss, [
   'display: none !important'
 ], "Top bar and focused Home styling");
 
+const finalLayoutCss = read("topbar-world-progress-hotfix.css");
+requireMarkers(finalLayoutCss, [
+  'grid-template-columns:minmax(0,1fr) auto !important',
+  '.mastery-rail-shell[data-compact-mastery="true"]',
+  'grid-template-rows:auto 72px !important',
+  '> .mastery-summary-compact',
+  '> .mastery-next-copy',
+  '> .mastery-milestones',
+  'grid-column:1 / -1 !important',
+  '.mastery-points-compact',
+  '@media (min-width:1001px) and (max-width:1180px)',
+  '@media (min-width:1001px) and (max-width:1120px)'
+], "Final non-overlapping top bar and World Progress layout");
+
 const topbar = read("clean-topbar.js");
 requireMarkers(topbar, [
+  'const STYLE_HREF = "topbar-world-progress-hotfix.css?v=5.5.10.1"',
+  'function ensureStylesheet()',
+  'function directChild(parent, selector)',
   'function structureMasteryShell()',
+  'const heading = directChild(shell, ".mastery-rail-heading")',
+  'if (heading)',
   'summary.classList.add("mastery-summary-compact")',
   'shell.dataset.compactMastery = "true"',
-  'World Progress · ${points} MP',
-  'Next: ${regionName}',
+  'function ensurePointsLabel(summary, points)',
+  'title.textContent = "World Progress"',
+  'nextRegion.textContent = regionName',
   '${remaining} MP to go'
-], "Top bar runtime");
+], "Top bar rerender normalization");
+if (topbar.includes('if (shell.dataset.compactMastery === "true") return true;')) {
+  fail("World Progress must not skip structural normalization merely because an old dataset marker remains after rerendering.");
+}
 
 const profile = read("profile-app.js");
 requireMarkers(profile, [
@@ -95,10 +118,12 @@ requireMarkers(index, [
 const serviceWorker = read("service-worker.js");
 requireMarkers(serviceWorker, [
   'const CACHE_NAME = "salita-quest-',
+  'const TOPBAR_WORLD_PROGRESS_HOTFIX = "2026-08-01-separated-heading-rail-1"',
   '"./weekly-avatar-polish.js"',
   '"./weekly-avatar-chest.css"',
   '"./clean-topbar.js"',
+  '"./topbar-world-progress-hotfix.css"',
   '"./profile-app.js"'
 ], "Home offline release");
 
-console.log("Validated the focused Home dashboard, compact World Progress header, reliable profile autosave in both course architectures, Home-only Daily Key celebration, and current offline release.");
+console.log("Validated the focused Home dashboard, rerender-safe World Progress structure, separate heading and milestone rows, responsive top-stat layout, reliable profile autosave, Home-only Daily Key celebration, and current offline release.");
