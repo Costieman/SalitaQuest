@@ -95,12 +95,13 @@ for (const loaderFile of ["app.html", "bisaya.html"]) {
 
 const worker = read("service-worker.js");
 requireMarkers(worker, [
-  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-5-8-sharing-foundation-r50"',
-  'const CACHE_NAME = "salita-quest-v5-5-9-avatar-case-r51"',
+  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-5-9-avatar-case-r51"',
+  'const CACHE_NAME = "salita-quest-v5-5-10-persistent-navigation-r52"',
   '"./popup-governor-v1.js"',
   '"./level-avatar-rewards-v1.js"',
   '"./avatar-unlock-celebration-v1.js"',
   '"./avatar-case-v1.js"',
+  '"./desktop-navigation-refinement.js"',
   "caches.match(event.request, {ignoreSearch:true})"
 ], "Service worker");
 const refresh = read("mobile-refresh.html");
@@ -118,4 +119,4 @@ for (const marker of ["acknowledgement-before-render", "single popup governor", 
   if (!notes.toLowerCase().includes(marker.toLowerCase())) fail(`Stage 1 release notes are missing ${marker}`);
 }
 
-console.log("Stage 1 popup-governance validation passed: one queue, durable acknowledgement, actual-level gating, placement suppression and Avatar Case cache refresh.");
+console.log("Stage 1 popup-governance validation passed: one queue, durable acknowledgement, actual-level gating, placement suppression and persistent-navigation cache refresh.");
