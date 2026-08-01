@@ -81,6 +81,15 @@ requireMarkers(connectionCss, [
 
 const service = read("services/social-share/index.js");
 requireMarkers(service, [
+  'const SERVICE_VERSION = "5.5.8-sharing-foundation"',
+  "const SHARE_TYPE_META = Object.freeze({",
+  'badge: {label:"BADGE EARNED"',
+  'badge_chest: {label:"BADGE CHEST"',
+  'avatar: {label:"AVATAR COLLECTION"',
+  'avatar_case: {label:"AVATAR CASE"',
+  'level_up: {label:"LEVEL UP"',
+  "function normaliseShareType(value)",
+  "supportedTypes: Object.keys(SHARE_TYPE_META)",
   'app.get("/health"',
   'app.post("/api/share-cards"',
   'decodePngDataUrl(req.body.squareImageDataUrl, "squareImageDataUrl", 1080, 1080)',
@@ -100,6 +109,12 @@ requireMarkers(service, [
   "ALLOWED_ORIGINS",
   "Cache-Control"
 ], "Cloud Run Open Graph service");
+requirePatterns(service, [
+  [/const type\s*=\s*normaliseShareType\(req\.body\.type\)/, "normalized unified share type"],
+  [/shareLabel:\s*typeMeta\.label/, "type-specific share-page label"],
+  [/serviceVersion:\s*SERVICE_VERSION/, "stored service version"],
+  [/type,\s*\n\s*shareUrl:/, "normalized share type in upload response"]
+], "Unified Cloud Run share contract");
 if (service.includes('app.get("/healthz"')) fail("The service must avoid Cloud Run's reserved health path");
 
 for (const file of ["services/social-share/index.js", "social-connections-v2.js", "achievement-sharing-v4.js"]) {
@@ -168,6 +183,13 @@ requireMarkers(readme, [
   "validate-hosted-achievement-sharing.mjs"
 ], "Hosted-sharing documentation");
 const serviceDocs = read("services/social-share/README.md");
-requireMarkers(serviceDocs, ["Open Graph metadata", "og:image", "Cloud Run", "Start learning a Filipino language free"], "Share-service documentation");
+requireMarkers(serviceDocs, [
+  "Open Graph metadata",
+  "avatar_case",
+  "Deployment boundary",
+  "Hosted service unavailable",
+  "supported achievement types",
+  "Start learning a Filipino language free"
+], "Share-service documentation");
 
-console.log("Validated unified badge/chest/avatar/level sharing, hosted-to-local fallbacks, exact Open Graph images, Cloud Run service structure, both language loaders and sharing-foundation offline release.");
+console.log("Validated unified badge/chest/avatar/Avatar Case/level share types, hosted-to-local fallbacks, exact Open Graph images, Cloud Run service structure, both language loaders and sharing-foundation offline release.");
