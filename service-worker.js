@@ -1,5 +1,5 @@
-const PREVIOUS_CACHE_NAME = "salita-quest-v5-5-7-complete-bisaya-audio-r49";
-const CACHE_NAME = "salita-quest-v5-5-8-sharing-foundation-r50";
+const PREVIOUS_CACHE_NAME = "salita-quest-v5-5-8-sharing-foundation-r50";
+const CACHE_NAME = "salita-quest-v5-5-9-avatar-case-r51";
 
 const CORE_FILES = [
   "./", "./index.html", "./app.html", "./bisaya.html", "./mobile-refresh.html",
@@ -32,6 +32,7 @@ const AVATAR_PROGRESSION_FILES = [
   "./avatars/canonical/manifest.json", "./avatar-catalogue-v1.js", "./avatar-artwork-registry-v554.js",
   "./avatar-progression-hotfix-v551.js", "./avatar-progression-hotfix-v551.css",
   "./avatar-progression-migration-v1.js", "./avatar-collection-screen-v1.js", "./avatar-collection-screen-v1.css",
+  "./avatar-case-v1.js", "./avatar-case-v1.css",
   "./weekly-avatar-shard-rewards-v1.js", "./weekly-avatar-shard-rewards-v1.css",
   "./level-avatar-rewards-v1.js", "./avatar-unlock-celebration-v1.js", "./avatar-unlock-celebration-v1.css",
   "./achievement-sharing-avatar-bridge-v1.js"
