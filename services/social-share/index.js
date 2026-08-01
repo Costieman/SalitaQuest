@@ -7,6 +7,14 @@ const BUCKET_NAME = String(process.env.SHARE_BUCKET || "").trim();
 const APP_URL = String(process.env.PUBLIC_APP_URL || "https://costieman.github.io/SalitaQuest/").trim();
 const MAX_IMAGE_BYTES = 8 * 1024 * 1024;
 const MAX_UPLOADS_PER_HOUR = Number(process.env.MAX_UPLOADS_PER_HOUR || 30);
+const SERVICE_VERSION = "5.5.8-sharing-foundation";
+const SHARE_TYPE_META = Object.freeze({
+  badge: {label:"BADGE EARNED", defaultTitle:"Salita Quest badge"},
+  badge_chest: {label:"BADGE CHEST", defaultTitle:"Salita Quest Badge Chest"},
+  avatar: {label:"AVATAR COLLECTION", defaultTitle:"Salita Quest avatar"},
+  avatar_case: {label:"AVATAR CASE", defaultTitle:"Salita Quest Avatar Case"},
+  level_up: {label:"LEVEL UP", defaultTitle:"Salita Quest level milestone"}
+});
 const ALLOWED_ORIGINS = new Set(
   String(process.env.ALLOWED_ORIGINS || "https://costieman.github.io,http://localhost:8000,http://127.0.0.1:8000")
     .split(",")
@@ -42,6 +50,11 @@ function escapeHTML(value) {
 function safeId(value) {
   const id = String(value || "");
   return /^[A-Za-z0-9_-]{20,40}$/.test(id) ? id : "";
+}
+
+function normaliseShareType(value) {
+  const type = cleanText(value, 32).toLowerCase().replace(/[^a-z0-9_]/g, "");
+  return Object.hasOwn(SHARE_TYPE_META, type) ? type : "badge";
 }
 
 function originAllowed(origin) {
@@ -118,7 +131,12 @@ app.use((req, res, next) => {
 });
 
 app.get("/health", (_req, res) => {
-  res.json({ok: true, bucketConfigured: Boolean(bucket)});
+  res.json({
+    ok: true,
+    version: SERVICE_VERSION,
+    bucketConfigured: Boolean(bucket),
+    supportedTypes: Object.keys(SHARE_TYPE_META)
+  });
 });
 
 app.post("/api/share-cards", async (req, res) => {
@@ -130,8 +148,9 @@ app.post("/api/share-cards", async (req, res) => {
     const square = decodePngDataUrl(req.body.squareImageDataUrl, "squareImageDataUrl", 1080, 1080);
     const openGraph = decodePngDataUrl(req.body.ogImageDataUrl, "ogImageDataUrl", 1200, 630);
     const id = crypto.randomBytes(18).toString("base64url");
-    const type = req.body.type === "badge" ? "badge" : "chest";
-    const title = cleanText(req.body.title, 100) || (type === "badge" ? "Salita Quest badge" : "Salita Quest Badge Chest");
+    const type = normaliseShareType(req.body.type);
+    const typeMeta = SHARE_TYPE_META[type];
+    const title = cleanText(req.body.title, 100) || typeMeta.defaultTitle;
     const description = cleanText(req.body.description, 220) || "A language-learning achievement earned with Salita Quest.";
     const campaign = cleanText(req.body.campaign, 50).replace(/[^A-Za-z0-9_-]/g, "") || "achievement-share";
     const learnerName = cleanText(req.body.learnerName, 40);
@@ -139,12 +158,14 @@ app.post("/api/share-cards", async (req, res) => {
     const metadata = {
       id,
       type,
+      shareLabel: typeMeta.label,
       title,
       description,
       learnerName,
       course,
       campaign,
       createdAt: new Date().toISOString(),
+      serviceVersion: SERVICE_VERSION,
       appUrl: appLink(campaign, id)
     };
 
@@ -157,6 +178,7 @@ app.post("/api/share-cards", async (req, res) => {
     const base = requestBase(req);
     return res.status(201).json({
       id,
+      type,
       shareUrl: `${base}/share/${id}`,
       imageUrl: `${base}/media/${id}/og.png`,
       squareImageUrl: `${base}/media/${id}/square.png`,
@@ -201,6 +223,7 @@ app.get("/share/:id", async (req, res) => {
     const description = escapeHTML(metadata.description);
     const appUrl = escapeHTML(metadata.appUrl || appLink(metadata.campaign, id));
     const learnerLine = [metadata.learnerName, metadata.course].filter(Boolean).map(escapeHTML).join(" · ");
+    const shareLabel = escapeHTML(metadata.shareLabel || SHARE_TYPE_META[normaliseShareType(metadata.type)].label);
 
     res.set({
       "Content-Type": "text/html; charset=utf-8",
@@ -236,7 +259,7 @@ app.get("/share/:id", async (req, res) => {
 <style>
 :root{color-scheme:dark;font-family:Inter,system-ui,sans-serif;background:#071427;color:#fff}*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:radial-gradient(circle at 80% 10%,#155e63 0,#071427 48%,#040b17 100%);padding:28px}.card{width:min(100%,760px);background:rgba(8,24,42,.94);border:1px solid rgba(111,211,193,.35);border-radius:28px;padding:24px;box-shadow:0 30px 90px rgba(0,0,0,.45)}img{display:block;width:100%;border-radius:20px;border:1px solid rgba(247,201,72,.45)}.copy{padding:24px 6px 6px}.eyebrow{margin:0 0 8px;color:#7ad9c8;font-weight:900;letter-spacing:.14em;font-size:12px}.meta{color:#9eb8b7;font-weight:700}.cta{display:inline-flex;margin-top:20px;padding:15px 22px;border-radius:999px;background:#f7c948;color:#10213b;text-decoration:none;font-weight:950;box-shadow:0 8px 0 #b78419}.cta:active{transform:translateY(3px);box-shadow:0 5px 0 #b78419}h1{font-size:clamp(28px,5vw,48px);margin:0 0 10px}p{line-height:1.55;color:#d5e6e3}</style>
 </head>
-<body><main class="card"><img src="${square}" alt="${title}"><div class="copy"><p class="eyebrow">SALITA QUEST ACHIEVEMENT</p><h1>${title}</h1>${learnerLine ? `<div class="meta">${learnerLine}</div>` : ""}<p>${description}</p><a class="cta" href="${appUrl}">Start learning a Filipino language free →</a></div></main></body>
+<body><main class="card"><img src="${square}" alt="${title}"><div class="copy"><p class="eyebrow">SALITA QUEST · ${shareLabel}</p><h1>${title}</h1>${learnerLine ? `<div class="meta">${learnerLine}</div>` : ""}<p>${description}</p><a class="cta" href="${appUrl}">Start learning a Filipino language free →</a></div></main></body>
 </html>`);
   } catch (error) {
     console.error("Share page read failed", error);
