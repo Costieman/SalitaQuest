@@ -26,7 +26,7 @@ requireMarkers(runtime,[
   "ensureDesktopRoutes",
   "ensureMobileRoutes",
   'data-sq-nav-action="avatar-collection"',
-  "data.shareAvatar",
+  'action:"avatar-collection"',
   "salita:open-avatar-collection",
   'aria-current","page"',
   "scrollIntoView?.({block:\"nearest\"})",
