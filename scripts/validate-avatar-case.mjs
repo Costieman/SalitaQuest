@@ -15,6 +15,7 @@ const sharing = read("achievement-sharing-v4.js");
 const loader = read("profile-emblem-control.js");
 const worker = read("service-worker.js");
 const css = read("avatar-case-v1.css");
+const collectionCss = read("avatar-collection-screen-v1.css");
 const service = read("services/social-share/index.js");
 
 new vm.Script(runtime,{filename:"avatar-case-v1.js"});
@@ -71,8 +72,10 @@ requireMarkers(loader,[
 requireMarkers(worker,[
   'const PREVIOUS_CACHE_NAME = "salita-quest-v5-5-9-avatar-case-r51"',
   'const CACHE_NAME = "salita-quest-v5-5-10-persistent-navigation-r52"',
+  'const MOBILE_AVATAR_COLLECTION_HOTFIX = "2026-08-01-four-row-flow-1"',
   '"./avatar-case-v1.js"',
-  '"./avatar-case-v1.css"'
+  '"./avatar-case-v1.css"',
+  '"./avatar-collection-screen-v1.css"'
 ],"Avatar Case carried into persistent-navigation offline release");
 
 requireMarkers(css,[
@@ -89,6 +92,24 @@ requireMarkers(css,[
   "@media(max-width:520px)",
   ".dark-mode .sq-avatar-case-panel"
 ],"Avatar Case responsive styles");
+
+requireMarkers(collectionCss,[
+  "grid-template-rows:auto auto auto minmax(0,1fr)!important",
+  ".sq-avatar-collection-header,",
+  ".sq-avatar-case-panel,",
+  ".sq-avatar-collection-summary,",
+  ".sq-avatar-collection-scroll{",
+  "min-height:0!important",
+  "height:100dvh!important",
+  "max-height:100dvh!important",
+  "max-height:min(34dvh,260px)!important",
+  ".sq-avatar-case-body[hidden]",
+  "overflow-y:auto!important",
+  "-webkit-overflow-scrolling:touch"
+],"Non-overlapping phone Avatar Case and collection layout");
+if (collectionCss.includes("grid-template-rows:auto auto minmax(0,1fr)!important")) {
+  fail("Avatar Collection must not return to a three-row grid after inserting the Avatar Case");
+}
 
 requireMarkers(service,[
   'avatar_case: {label:"AVATAR CASE"',
@@ -167,4 +188,4 @@ const finalProfile=JSON.parse(stored).profiles[0];
 if(finalProfile.avatarId!=="a"||finalProfile.avatarCollection.equippedAvatarId!=="a")fail("Avatar Case changed the equipped avatar");
 if(finalProfile.avatarCaseIds.join("|")!=="e|c|b")fail("Avatar Case state was not persisted on the profile");
 
-console.log("Validated four-slot owned-only Avatar Case state, phone-default collapse, accessible expansion, compact mobile shelf, duplicate rejection, reordering, equipped-avatar independence, unified sharing and persistent-navigation offline delivery.");
+console.log("Validated four-slot owned-only Avatar Case state, phone-default collapse, four-row non-overlapping collection flow, capped expansion, independent collection scrolling, duplicate rejection, reordering, equipped-avatar independence and unified sharing.");
