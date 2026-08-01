@@ -76,7 +76,7 @@ for (const token of orderedTokens) {
   if (index < 0 || index <= lastIndex) fail(`Shared loader order is incorrect at ${token}`);
   lastIndex = index;
 }
-if (!loader.includes('const RELEASE_VERSION = "5.5.6"')) fail("Shared loader is not cache-busted to 5.5.6");
+if (!loader.includes('const RELEASE_VERSION = "5.5.6"')) fail("Shared avatar loader is not cache-busted to its canonical runtime release");
 if (loader.includes("repair(document)")) fail("Shared loader must not run a document-wide avatar repair pass");
 
 const artwork = read("avatar-artwork-registry-v554.js");
@@ -95,14 +95,21 @@ if (artwork.includes("MutationObserver") || compatibility.includes("MutationObse
   fail("Avatar artwork runtimes must not install a source mutation observer");
 }
 
+const sharingBridge = read("achievement-sharing-avatar-bridge-v1.js");
+if (!sharingBridge.includes("compatibilityOnly:true")) fail("Avatar sharing bridge is not explicitly compatibility-only");
+if (!sharingBridge.includes("controller()?.openAvatar")) fail("Avatar bridge does not delegate avatar sharing to the shared controller");
+if (sharingBridge.includes("window.SalitaQuestAchievementSharing =")) fail("Avatar bridge must not replace the shared achievement controller");
+if (sharingBridge.includes('document.addEventListener("click"')) fail("Avatar bridge must not intercept share clicks");
+
 const serviceWorker = read("service-worker.js");
-if (!serviceWorker.includes("salita-quest-v5-5-6-canonical-avatars-r48")) fail("Service worker cache version is not 5.5.6 r48");
+if (!serviceWorker.includes('const PREVIOUS_CACHE_NAME = "salita-quest-v5-5-7-complete-bisaya-audio-r49"')) fail("Service worker does not retain the previous audio release boundary");
+if (!serviceWorker.includes('const CACHE_NAME = "salita-quest-v5-5-8-sharing-foundation-r50"')) fail("Service worker cache version is not the sharing foundation release");
 const cachedCanonical = [...serviceWorker.matchAll(/"\.\/avatars\/canonical\/[^"]+\.png"/g)];
 if (cachedCanonical.length !== 48) fail(`Service worker must cache exactly 48 canonical PNGs, found ${cachedCanonical.length}`);
 if (/"\.\/avatars\/(?!canonical\/)/.test(serviceWorker)) fail("Service worker still caches legacy avatar artwork");
 
 const refresh = read("mobile-refresh.html");
-if (!refresh.includes('const RELEASE = "5.5.6"')) fail("Mobile refresh is not aligned to 5.5.6");
+if (!refresh.includes('const RELEASE = "5.5.6"')) fail("Mobile refresh is not aligned to the canonical avatar runtime");
 if (/localStorage\.(?:clear|removeItem)\(/.test(refresh)) fail("Mobile refresh must not remove learner local-storage data");
 
 const releaseNotes = read("docs/releases/5.5.6-canonical-avatar-runtime.md");
@@ -117,4 +124,4 @@ for (const marker of [
   if (!releaseNotes.toLowerCase().includes(marker.toLowerCase())) fail(`5.5.6 release notes are missing ${marker}`);
 }
 
-console.log(`Avatar Progression 5.5.6 integration validation passed: ${model.catalogue.length} direct canonical avatars, seven component validators, preserved learner state, governed rewards and no competing artwork runtime.`);
+console.log(`Avatar progression integration validation passed: ${model.catalogue.length} direct canonical avatars, compatibility-only sharing bridge, preserved learner state, governed rewards and sharing-foundation offline delivery.`);

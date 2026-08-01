@@ -9,6 +9,9 @@ const fail = message => { throw new Error(message); };
 const requireMarkers = (source, markers, label) => markers.forEach(marker => {
   if (!source.includes(marker)) fail(`${label} is missing: ${marker}`);
 });
+const requirePatterns = (source, patterns, label) => patterns.forEach(([pattern, description]) => {
+  if (!pattern.test(source)) fail(`${label} is missing: ${description}`);
+});
 
 for (const file of ["achievement-sharing-v4.js", "social-connections-v2.js"]) {
   new vm.Script(read(file), {filename: file});
@@ -18,6 +21,7 @@ const sharing = read("achievement-sharing-v4.js");
 requireMarkers(sharing, [
   "buildBadgeCard",
   "buildChestCard",
+  "buildAvatarCard",
   "buildLevelCard",
   "buildOpenGraphCard",
   "START LEARNING FREE",
@@ -27,14 +31,22 @@ requireMarkers(sharing, [
   "/api/share-cards",
   "squareImageDataUrl",
   "ogImageDataUrl",
-  "hosted.shareUrl",
   "popup.document.write",
   "www.facebook.com/sharer/sharer.php?u=",
   "www.linkedin.com/sharing/share-offsite/?url=",
   "navigator.canShare?.({files: [file]})",
   "SalitaQuestBadgeChest",
   "SalitaQuestAchievementSharing"
-], "Consolidated browser hosted-sharing client");
+], "Unified browser hosted-sharing client");
+requirePatterns(sharing, [
+  [/hosted\?\.shareUrl\s*\|\|\s*activeShare\.url/, "hosted-to-local share URL fallback"],
+  [/async function openAvatar\s*\(/, "avatar share entry point"],
+  [/type\s*:\s*"badge_chest"/, "Badge Chest share type"],
+  [/type\s*:\s*"avatar"/, "avatar share type"],
+  [/type\s*:\s*"level_up"/, "level-up share type"],
+  [/Hosted previews are offline\. The card is still ready for device sharing or download\./, "offline hosted-preview status"],
+  [/credentials\s*:\s*"omit"/, "credential-free public card upload"]
+], "Stable hosted-sharing client");
 
 const connections = read("social-connections-v2.js");
 requireMarkers(connections, [
@@ -48,6 +60,12 @@ requireMarkers(connections, [
   'if(!developerMode()) return ""',
   "oauthAvailable"
 ], "Seamless hosted-sharing settings");
+requirePatterns(connections, [
+  [/data\.bucketConfigured\s*===\s*false/, "storage-aware health check"],
+  [/async function ensureHosted\s*\(/, "shared hosted readiness function"],
+  [/hostedStatus/, "hosted readiness API"],
+  [/Generated cards can still be shared through your device or downloaded\./, "image fallback messaging"]
+], "Resilient hosted-sharing settings");
 if (connections.includes("/healthz")) fail("The browser must not use Cloud Run's reserved health path");
 if (connections.includes("Share service not configured")) fail("Learners must not see a missing-service configuration state");
 if (connections.includes("Deploy the Salita Quest share service")) fail("Learners must not receive infrastructure setup instructions");
@@ -63,6 +81,15 @@ requireMarkers(connectionCss, [
 
 const service = read("services/social-share/index.js");
 requireMarkers(service, [
+  'const SERVICE_VERSION = "5.5.8-sharing-foundation"',
+  "const SHARE_TYPE_META = Object.freeze({",
+  'badge: {label:"BADGE EARNED"',
+  'badge_chest: {label:"BADGE CHEST"',
+  'avatar: {label:"AVATAR COLLECTION"',
+  'avatar_case: {label:"AVATAR CASE"',
+  'level_up: {label:"LEVEL UP"',
+  "function normaliseShareType(value)",
+  "supportedTypes: Object.keys(SHARE_TYPE_META)",
   'app.get("/health"',
   'app.post("/api/share-cards"',
   'decodePngDataUrl(req.body.squareImageDataUrl, "squareImageDataUrl", 1080, 1080)',
@@ -82,6 +109,12 @@ requireMarkers(service, [
   "ALLOWED_ORIGINS",
   "Cache-Control"
 ], "Cloud Run Open Graph service");
+requirePatterns(service, [
+  [/const type\s*=\s*normaliseShareType\(req\.body\.type\)/, "normalized unified share type"],
+  [/shareLabel:\s*typeMeta\.label/, "type-specific share-page label"],
+  [/serviceVersion:\s*SERVICE_VERSION/, "stored service version"],
+  [/type,\s*\n\s*shareUrl:/, "normalized share type in upload response"]
+], "Unified Cloud Run share contract");
 if (service.includes('app.get("/healthz"')) fail("The service must avoid Cloud Run's reserved health path");
 
 for (const file of ["services/social-share/index.js", "social-connections-v2.js", "achievement-sharing-v4.js"]) {
@@ -130,7 +163,8 @@ for (const htmlFile of ["app.html", "bisaya.html"]) {
 
 const worker = read("service-worker.js");
 requireMarkers(worker, [
-  'const CACHE_NAME = "salita-quest-v5-5-7-complete-bisaya-audio-r49"',
+  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-5-7-complete-bisaya-audio-r49"',
+  'const CACHE_NAME = "salita-quest-v5-5-8-sharing-foundation-r50"',
   '"./social-connections-v2.js"',
   '"./badge-chest-v2.js"',
   '"./achievement-sharing-v4.js"',
@@ -149,6 +183,13 @@ requireMarkers(readme, [
   "validate-hosted-achievement-sharing.mjs"
 ], "Hosted-sharing documentation");
 const serviceDocs = read("services/social-share/README.md");
-requireMarkers(serviceDocs, ["Open Graph metadata", "og:image", "Cloud Run", "Start learning a Filipino language free"], "Share-service documentation");
+requireMarkers(serviceDocs, [
+  "Open Graph metadata",
+  "avatar_case",
+  "Deployment boundary",
+  "Hosted service unavailable",
+  "supported achievement types",
+  "Start learning a Filipino language free"
+], "Share-service documentation");
 
-console.log("Validated built-in progress sharing, one badge/chest/level card owner, exact Open Graph images, Cloud Run deployment, both language loaders and current offline release.");
+console.log("Validated unified badge/chest/avatar/Avatar Case/level share types, hosted-to-local fallbacks, exact Open Graph images, Cloud Run service structure, both language loaders and sharing-foundation offline release.");

@@ -1,11 +1,13 @@
 (() => {
   "use strict";
 
-  const INSTALL_FLAG = "__salitaQuestSocialConnectionsV2Installed";
+  const INSTALL_FLAG = "__salitaQuestSocialConnectionsV3Installed";
+  const LEGACY_FLAG = "__salitaQuestSocialConnectionsV2Installed";
   const PROFILE_STORE = "salitaQuestLocalProfilesV1";
   const ACTIVE_PROFILE = "salitaQuestActiveProfileId";
   const API_STORAGE = "salitaQuestSocialApiBase";
   const DEFAULT_API_BASE = "https://salita-quest-social-share-zvxenj6xcq-as.a.run.app";
+  const RELEASE = "5.5.8-sharing-foundation";
   const SHARE_DESTINATIONS = [
     {id:"facebook",label:"Facebook",icon:"f"},
     {id:"instagram",label:"Instagram",icon:"◎"},
@@ -15,10 +17,13 @@
     {id:"whatsapp",label:"WhatsApp",icon:"◉"}
   ];
   const CONNECTABLE_PLATFORMS = SHARE_DESTINATIONS.filter(item => item.id !== "whatsapp");
+
   let connections = {};
   let pendingPopup = null;
   let hostedSharingAvailable = null;
   let oauthAvailable = false;
+  let refreshPromise = null;
+  let lastHealthMessage = "";
 
   function retry(){ window.setTimeout(install,100); }
   function esc(value){ return String(value ?? "").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch])); }
@@ -34,6 +39,7 @@
   function status(message,error=false){ const node=document.getElementById("socialConnectionsStatus"); if(node){node.textContent=message||"";node.classList.toggle("error",Boolean(error));} }
   function connection(provider){ return connections[provider] || null; }
   function isConnected(provider){ return Boolean(connection(provider)?.connected); }
+  function hostedStatus(){ return hostedSharingAvailable; }
 
   function ensureCard(){
     const settings=document.getElementById("settingsView");
@@ -45,9 +51,9 @@
   }
 
   function stateLabel(){
-    if(hostedSharingAvailable===true) return {className:"ready",label:"Ready",detail:"Your badge cards are hosted automatically."};
-    if(hostedSharingAvailable===false) return {className:"offline",label:"Temporarily unavailable",detail:"You can still download and share the image."};
-    return {className:"checking",label:"Checking",detail:"Confirming secure sharing…"};
+    if(hostedSharingAvailable===true) return {className:"ready",label:"Ready",detail:"Hosted achievement previews are available."};
+    if(hostedSharingAvailable===false) return {className:"offline",label:"Card sharing available",detail:"Hosted previews are offline; device sharing and downloads still work."};
+    return {className:"checking",label:"Checking",detail:"Confirming hosted-preview availability…"};
   }
 
   function destinationMarkup(){
@@ -55,7 +61,7 @@
   }
 
   function accountMarkup(){
-    if(!oauthAvailable) return `<div class="social-future-note"><strong>No account setup required.</strong><span>Choose a platform when you share a badge. Optional direct account connections will appear here only when they are fully supported.</span></div>`;
+    if(!oauthAvailable) return `<div class="social-future-note"><strong>No account setup required.</strong><span>Choose a platform when you share a badge, avatar, Avatar Case, or level. Optional direct account connections will appear here only when they are fully supported.</span></div>`;
     return `<div class="social-connected-section"><div class="social-connected-heading"><strong>Connected accounts</strong><span>Optional direct publishing</span></div><div class="social-connection-grid">${CONNECTABLE_PLATFORMS.map(platform=>{
       const item=connection(platform.id); const connected=Boolean(item?.connected);
       const detail=connected?`Connected${item.displayName?` as ${esc(item.displayName)}`:""}`:"Not connected";
@@ -73,39 +79,62 @@
     const card=ensureCard();
     if(!card) return;
     const state=stateLabel();
-    card.innerHTML=`<div class="social-connections-heading"><div><p class="eyebrow">PROGRESS SHARING</p><h3>Share your achievements</h3><p>Open the Badges page, choose a badge or your Badge Chest, and Salita Quest prepares the image and post automatically.</p></div><span class="social-sharing-state ${state.className}"><i></i><span><strong>${state.label}</strong><small>${state.detail}</small></span></span></div>
+    card.innerHTML=`<div class="social-connections-heading"><div><p class="eyebrow">PROGRESS SHARING</p><h3>Share your achievements</h3><p>Badges, avatars and level milestones use one card-sharing system. Hosted previews are optional: generated images can still be shared through the device or downloaded.</p></div><span class="social-sharing-state ${state.className}"><i></i><span><strong>${state.label}</strong><small>${state.detail}</small></span></span></div>
       <div class="social-share-launcher"><div><strong>Available destinations</strong><div class="social-destination-list">${destinationMarkup()}</div></div><button class="primary-btn" type="button" data-open-badges>Open Badges</button></div>
       ${accountMarkup()}
       ${developerMarkup()}
       <p id="socialConnectionsStatus" class="social-connections-status"></p>`;
+    if(lastHealthMessage) status(lastHealthMessage,hostedSharingAvailable===false);
+  }
+
+  async function checkHealth(){
+    const base=apiBase();
+    const health=await fetch(`${base}/health`,{cache:"no-store",credentials:"omit",headers:{Accept:"application/json"}});
+    if(!health.ok) throw new Error(`Sharing service returned ${health.status}`);
+    const data=await health.json().catch(()=>({}));
+    if(data.ok===false) throw new Error(data.message||"Sharing service is not ready");
+    if(data.bucketConfigured===false) throw new Error("Hosted share storage is not configured");
+    return data;
   }
 
   async function refresh(){
-    const base=apiBase(); const profile=activeProfile();
-    hostedSharingAvailable=null; render();
-    try{
-      const health=await fetch(`${base}/health`,{cache:"no-store",headers:{Accept:"application/json"}});
-      if(!health.ok) throw new Error(`Sharing service returned ${health.status}`);
-      hostedSharingAvailable=true;
-      oauthAvailable=false;
-      connections={};
-      if(profile){
-        const response=await fetch(`${base}/api/social/connections?profileId=${encodeURIComponent(profile.id)}`,{credentials:"include",headers:{Accept:"application/json"}});
-        if(response.ok){
-          const data=await response.json();
-          connections=data.connections&&typeof data.connections==="object"?data.connections:{};
-          oauthAvailable=true;
-        } else if(response.status!==404&&response.status!==501){
-          console.info(`Optional social connection service returned ${response.status}`);
+    if(refreshPromise) return refreshPromise;
+    refreshPromise=(async()=>{
+      const base=apiBase(); const profile=activeProfile();
+      hostedSharingAvailable=null; lastHealthMessage=""; render();
+      try{
+        await checkHealth();
+        hostedSharingAvailable=true;
+        oauthAvailable=false;
+        connections={};
+        if(profile){
+          const response=await fetch(`${base}/api/social/connections?profileId=${encodeURIComponent(profile.id)}`,{credentials:"include",headers:{Accept:"application/json"}});
+          if(response.ok){
+            const data=await response.json();
+            connections=data.connections&&typeof data.connections==="object"?data.connections:{};
+            oauthAvailable=true;
+          } else if(response.status!==404&&response.status!==501){
+            console.info(`Optional social connection service returned ${response.status}`);
+          }
         }
+        lastHealthMessage="Progress sharing is ready.";
+        render();
+        return true;
+      }catch(error){
+        console.warn("Salita Quest sharing service check failed",error);
+        connections={}; oauthAvailable=false; hostedSharingAvailable=false;
+        lastHealthMessage="Hosted previews are temporarily unavailable. Generated cards can still be shared through your device or downloaded.";
+        render();
+        return false;
       }
-      render();
-      status("Progress sharing is ready.");
-    }catch(error){
-      console.warn("Salita Quest sharing service check failed",error);
-      connections={}; oauthAvailable=false; hostedSharingAvailable=false; render();
-      status("Hosted previews are temporarily unavailable. You can still download and share the generated card.",true);
-    }
+    })().finally(()=>{refreshPromise=null;});
+    return refreshPromise;
+  }
+
+  async function ensureHosted(){
+    if(hostedSharingAvailable===true) return true;
+    if(hostedSharingAvailable===false) return false;
+    return refresh();
   }
 
   function saveApi(){
@@ -113,6 +142,7 @@
     const value=String(document.getElementById("socialApiBaseInput")?.value||"").trim().replace(/\/$/,"");
     if(value&&!/^https:\/\//i.test(value)){ status("The developer override must use HTTPS.",true); return; }
     if(value)localStorage.setItem(API_STORAGE,value);else localStorage.removeItem(API_STORAGE);
+    hostedSharingAvailable=null;
     refresh();
   }
 
@@ -153,6 +183,7 @@
     if(window[INSTALL_FLAG])return;
     if(!document.getElementById("settingsView")){retry();return;}
     window[INSTALL_FLAG]=true;
+    window[LEGACY_FLAG]=true;
     document.addEventListener("click",event=>{
       if(event.target.closest("[data-open-badges]")){openBadges();return;}
       if(event.target.closest("[data-save-social-api]")){saveApi();return;}
@@ -163,12 +194,15 @@
     window.addEventListener("message",event=>{
       const origin=apiOrigin(); if(!origin||event.origin!==origin||event.data?.type!=="salita-social-oauth")return;
       try{pendingPopup?.close();}catch{}pendingPopup=null;
-      if(event.data.ok){status(`${event.data.provider||"Account"} connected.`);refresh();}
+      if(event.data.ok){status(`${event.data.provider||"Account"} connected.`);hostedSharingAvailable=null;refresh();}
       else status(event.data.message||"The account could not be connected.",true);
     });
     const baseSwitch=typeof switchView==="function"?switchView:null;
     if(baseSwitch){switchView=function switchViewWithSocialConnections(view){const result=baseSwitch.apply(this,arguments);if(view==="settings")window.setTimeout(refresh,30);return result;};}
-    window.SalitaQuestSocialConnections={apiBase,isConnected,getAll:()=>({...connections}),post,openSettings(){try{switchView("settings");}catch{}window.setTimeout(()=>document.getElementById("socialLinksCard")?.scrollIntoView({behavior:"smooth",block:"center"}),80);},refresh};
+    window.SalitaQuestSocialConnections=Object.freeze({
+      version:3,release:RELEASE,apiBase,isConnected,getAll:()=>({...connections}),post,refresh,ensureHosted,hostedStatus,
+      openSettings(){try{switchView("settings");}catch{}window.setTimeout(()=>document.getElementById("socialLinksCard")?.scrollIntoView({behavior:"smooth",block:"center"}),80);}
+    });
     render(); refresh();
   }
 

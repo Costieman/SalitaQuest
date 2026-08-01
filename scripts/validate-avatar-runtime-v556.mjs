@@ -84,8 +84,8 @@ for (const [needle, message] of [
   ["PATH_BY_ID", "No duplicate artwork path registry remains"]
 ]) check(!artworkRuntime.includes(needle), message);
 check(!sources.profileLoader.includes("repair(document)"), "No document-wide artwork repair pass remains");
-check(sources.profileLoader.includes('RELEASE_VERSION = "5.5.6"'), "Profile runtime uses release 5.5.6");
-check(sources.refresh.includes('RELEASE = "5.5.6"'), "Recovery page uses release 5.5.6");
+check(sources.profileLoader.includes('RELEASE_VERSION = "5.5.6"'), "Profile runtime retains canonical avatar release version");
+check(sources.refresh.includes('RELEASE = "5.5.6"'), "Recovery page retains canonical avatar release version");
 check(sources.css.includes("image-rendering:auto!important"), "Avatar scaling uses normal high-resolution rendering");
 
 check(sources.profile.includes("data-sq-avatar-id"), "Profile images carry stable avatar IDs");
@@ -93,7 +93,11 @@ check(sources.collection.includes("data-sq-avatar-id"), "Collection images carry
 check(sources.weekly.includes("item.image") || sources.weekly.includes("SalitaAvatarArtwork"), "Weekly rewards resolve canonical artwork");
 check(sources.level.includes("avatar:item") && sources.level.includes("avatarId:item.id"), "Level rewards hand the canonical avatar record to the unlock renderer");
 check(sources.unlock.includes("item.image") || sources.unlock.includes("getAvatarImagePath") || sources.unlock.includes("SalitaAvatarArtwork"), "Unlock celebrations resolve canonical artwork");
-check(sources.sharing.includes("canonicalAvatarPath") && sources.sharing.includes("avatar?.image"), "Sharing resolves the equipped canonical artwork directly");
+check(sources.sharing.includes("canonicalAvatarPath") && sources.sharing.includes("item?.image"), "Compatibility bridge resolves canonical artwork directly");
+check(sources.sharing.includes("compatibilityOnly:true"), "Avatar sharing bridge declares compatibility-only mode");
+check(sources.sharing.includes("controller()?.openAvatar"), "Avatar sharing bridge delegates to the shared controller");
+check(!sources.sharing.includes("window.SalitaQuestAchievementSharing ="), "Avatar sharing bridge does not replace the shared controller");
+check(!sources.sharing.includes('document.addEventListener("click"'), "Avatar sharing bridge does not intercept sharing clicks");
 check(!sources.sharing.includes("LEGACY_AVATAR_PATTERN"), "Sharing contains no legacy path redirect");
 check(!sources.sharing.includes("nativeDescriptor"), "Sharing contains no image-source descriptor rewrite");
 check(!sources.sharing.includes("window." + "Image ="), "Sharing does not replace the global image constructor");
@@ -104,7 +108,8 @@ check(cached.length === 48, "Service worker lists exactly 48 canonical PNGs");
 check(new Set(cached).size === 48, "Service-worker canonical paths are unique");
 check(manifestPaths.every(file => cached.includes(file)), "Service worker precaches every manifest image");
 check(!/"\.\/avatars\/(?!canonical\/)/.test(sources.worker), "Service worker does not cache legacy avatar artwork");
-check(sources.worker.includes('CACHE_NAME = "salita-quest-v5-5-6-canonical-avatars-r48"'), "Service-worker cache revision is current");
+check(sources.worker.includes('PREVIOUS_CACHE_NAME = "salita-quest-v5-5-7-complete-bisaya-audio-r49"'), "Service worker records the previous audio cache boundary");
+check(sources.worker.includes('CACHE_NAME = "salita-quest-v5-5-8-sharing-foundation-r50"'), "Service-worker cache revision is the sharing foundation release");
 
 function pngMetadata(filePath) {
   const buffer = fs.readFileSync(filePath);
@@ -124,7 +129,7 @@ for (const item of manifest.avatars) {
 
 const report = {
   status:errors.length ? "FAIL" : "PASS",
-  release:"5.5.6",
+  release:"5.5.8-sharing-foundation",
   canonicalAvatarCount:model.catalogue.length,
   serviceWorkerCanonicalAssets:cached.length,
   checksPassed:checks.filter(item => item.passed).length,
