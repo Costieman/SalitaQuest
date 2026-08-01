@@ -23,10 +23,13 @@ jobs:
       - name: Generate repository audit
         run: node scripts/audit-repository-streamline.mjs
 
+      - name: Trace remaining legacy asset references
+        run: node scripts/audit-reference-sources.mjs rare-animals-set2-sprite.png
+
       - name: Upload repository audit
         uses: actions/upload-artifact@v4
         with:
           name: repository-streamline-audit
-          path: artifacts/repository-streamline-audit.*
+          path: artifacts/repository-*
           if-no-files-found: error
           retention-days: 14
