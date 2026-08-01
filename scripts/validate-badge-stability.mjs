@@ -8,6 +8,9 @@ const fail = message => { throw new Error(message); };
 const requireMarkers = (source, markers, label) => markers.forEach(marker => {
   if (!source.includes(marker)) fail(`${label} is missing: ${marker}`);
 });
+const requirePatterns = (source, patterns, label) => patterns.forEach(([pattern, description]) => {
+  if (!pattern.test(source)) fail(`${label} is missing: ${description}`);
+});
 
 const chestRuntime = read("badge-chest-v2.js");
 const shareRuntime = read("achievement-sharing-v4.js");
@@ -34,12 +37,14 @@ if (chestRuntime.includes("MutationObserver")) fail("Badge Chest must not use a 
 if (chestRuntime.includes("earnedBadges().slice(0, MAX_CHEST_BADGES)")) fail("Badge Chest must not silently auto-fill all six slots.");
 
 requireMarkers(shareRuntime, [
-  "__salitaQuestAchievementSharingV4Installed",
+  "__salitaQuestAchievementSharingV5Installed",
   "function openBadge",
   "function openChest",
+  "function openAvatar",
   "function openLevel",
   "buildBadgeCard",
   "buildChestCard",
+  "buildAvatarCard",
   "buildLevelCard",
   "buildOpenGraphCard",
   "START LEARNING FREE",
@@ -50,10 +55,22 @@ requireMarkers(shareRuntime, [
   "www.facebook.com/sharer/sharer.php",
   "www.linkedin.com/sharing/share-offsite",
   "navigator.canShare?.({files: [file]})",
-  "state?.levelProgressionV2?.pendingLevelUp",
+  "salita:level-updated",
+  "salita:popup-finished",
+  "salita:avatar-unlock-animation-started",
   "Share level up",
+  "Share avatar",
   "SalitaQuestAchievementSharing"
 ], "Single-owner achievement sharing");
+requirePatterns(shareRuntime, [
+  [/event\.detail\?\.type\s*!==\s*"level_up"/, "production popup-governor level completion filter"],
+  [/ownedAvatar\s*\(\s*id\s*\)/, "owned-avatar sharing guard"],
+  [/data-share-current-level/, "persistent current-level sharing entry point"],
+  [/version:5\s*,\s*release:RELEASE/, "single versioned sharing controller"]
+], "Stable badge/avatar/level sharing");
+if (/MutationObserver[\s\S]{0,500}level-up-celebration/.test(shareRuntime)) {
+  fail("Level sharing must not depend on observing level-up celebration DOM.");
+}
 
 const fakePanel = {
   innerHTML: "",
@@ -173,4 +190,4 @@ for (const obsolete of [
 const index = read("index.html");
 if (!index.includes('service-worker.js?v=5.4.29')) fail("Profile gate does not request the stable service worker.");
 
-console.log("Validated preserved and editable six-slot Badge Chest state, deterministic selection rules, single-owner individual/chest/level sharing, loader order, obsolete-runtime removal and current offline release.");
+console.log("Validated preserved six-slot Badge Chest state, deterministic selection rules, one badge/avatar/level sharing owner, production level events, loader order and current offline release.");
