@@ -140,28 +140,44 @@ requireMarkers(fluidCss, [
 
 const navigation = read("desktop-navigation-refinement.js");
 requireMarkers(navigation, [
-  "salitaQuestDesktopNavigationCollapsed",
-  'badgesButton.dataset.view = "badges"',
-  'badgesView.id = "badgesView"',
-  ".progress-achievement-card",
-  "#homeView > .achievement-panel",
-  'document.querySelector(".mobile-more-grid")',
+  "__salitaQuestPersistentNavigationV1Installed",
+  'const RELEASE = "5.5.10-persistent-navigation"',
+  "REQUIRED_DESKTOP_VIEWS",
+  "REQUIRED_MOBILE_MORE_VIEWS",
+  'badgesView.id="badgesView"',
+  'action:"avatar-collection"',
+  "nav.dataset.persistentNavigation=RELEASE",
+  "grid.dataset.persistentNavigation=RELEASE",
   'switchView("badges")',
-  "desktop-nav-collapse",
-  "desktop-nav-collapsed",
-  "localStorage.setItem(STORAGE_KEY",
-  "switchViewWithBadges"
-], "Retractable navigation and Badges view");
+  'new CustomEvent("salita:open-avatar-collection"',
+  "switchViewWithPersistentNavigation",
+  "aria-current",
+  "scrollIntoView",
+  "window.SalitaQuestPersistentNavigation"
+], "Persistent navigation and collection routes");
+if (navigation.includes("salitaQuestDesktopNavigationCollapsed")) fail("Persistent navigation must not retain the old collapsed-sidebar preference.");
+if (navigation.includes("localStorage.setItem(STORAGE_KEY")) fail("Persistent navigation must not persist an icon-only sidebar state.");
 
 const navigationCss = read("desktop-navigation-refinement.css");
 requireMarkers(navigationCss, [
-  ".desktop-nav-collapse",
-  "body.desktop-nav-collapsed .app-shell",
-  "grid-template-columns: 78px minmax(0, 1fr)",
-  "body.desktop-nav-collapsed .sidebar .nav-item > span:last-child",
+  "--sq-persistent-sidebar-width",
+  "@media (min-width: 861px)",
+  "position: fixed !important",
+  "height: 100dvh !important",
+  ".sidebar .nav-list",
+  "overflow-y: auto !important",
+  ".sidebar .nav-item > span:last-child",
+  ".main-area",
+  "margin-left: var(--sq-persistent-sidebar-width) !important",
+  "@media (min-width: 861px) and (max-width: 1180px)",
+  "@media (max-width: 860px)",
+  ".mobile-nav",
+  ".mobile-menu-sheet",
   ".badges-page-hero",
   ".badges-page-shelf .badge-shelf"
-], "Retractable navigation and Badges styling");
+], "Persistent navigation and small-desktop styling");
+if (navigationCss.includes("body.desktop-nav-collapsed .app-shell")) fail("Persistent navigation CSS must not restore the retired icon rail.");
+if (navigationCss.includes("grid-template-columns: 78px minmax(0, 1fr)")) fail("Persistent navigation CSS must keep labels visible at laptop widths.");
 
 for (const htmlFile of ["app.html", "bisaya.html"]) {
   const html = read(htmlFile);
@@ -193,7 +209,8 @@ for (const htmlFile of ["app.html", "bisaya.html"]) {
 
 const serviceWorker = read("service-worker.js");
 requireMarkers(serviceWorker, [
-  'const CACHE_NAME = "salita-quest-',
+  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-5-9-avatar-case-r51"',
+  'const CACHE_NAME = "salita-quest-v5-5-10-persistent-navigation-r52"',
   '"./world-progress-status.css"',
   '"./level-progression-v2.js"',
   '"./level-progression-v2.css"',
@@ -204,4 +221,4 @@ requireMarkers(serviceWorker, [
   '"./desktop-navigation-refinement.css"'
 ], "Offline progression release");
 
-console.log(`Validated live Quick Review item counting, World Progress states, ${totalXpTo99} XP to Level 99, governed acknowledgement-before-render level celebrations, ${scenarioCount} adaptive scenarios, fluid desktop resizing, retractable symbol navigation, dedicated Badges view, both courses, and offline delivery.`);
+console.log(`Validated live Quick Review item counting, World Progress states, ${totalXpTo99} XP to Level 99, governed acknowledgement-before-render level celebrations, ${scenarioCount} adaptive scenarios, persistent labelled navigation, dedicated Badges and Avatar Collection routes, small-desktop safety, both courses and offline delivery.`);
