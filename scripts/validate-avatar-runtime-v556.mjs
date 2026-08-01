@@ -113,9 +113,10 @@ check(cached.length === 48, "Service worker lists exactly 48 canonical PNGs");
 check(new Set(cached).size === 48, "Service-worker canonical paths are unique");
 check(manifestPaths.every(file => cached.includes(file)), "Service worker precaches every manifest image");
 check(!/"\.\/avatars\/(?!canonical\/)/.test(sources.worker), "Service worker does not cache legacy avatar artwork");
-check(sources.worker.includes('PREVIOUS_CACHE_NAME = "salita-quest-v5-5-8-sharing-foundation-r50"'), "Service worker records the previous sharing cache boundary");
-check(sources.worker.includes('CACHE_NAME = "salita-quest-v5-5-9-avatar-case-r51"'), "Service-worker cache revision is the Avatar Case release");
+check(sources.worker.includes('PREVIOUS_CACHE_NAME = "salita-quest-v5-5-9-avatar-case-r51"'), "Service worker records the Avatar Case cache boundary");
+check(sources.worker.includes('CACHE_NAME = "salita-quest-v5-5-10-persistent-navigation-r52"'), "Service-worker cache revision is the persistent-navigation release");
 check(sources.worker.includes('"./avatar-case-v1.js"') && sources.worker.includes('"./avatar-case-v1.css"'), "Service worker precaches Avatar Case assets");
+check(sources.worker.includes('"./desktop-navigation-refinement.js"') && sources.worker.includes('"./desktop-navigation-refinement.css"'), "Service worker precaches persistent-navigation assets");
 
 function pngMetadata(filePath) {
   const buffer = fs.readFileSync(filePath);
@@ -135,7 +136,7 @@ for (const item of manifest.avatars) {
 
 const report = {
   status:errors.length ? "FAIL" : "PASS",
-  release:"5.5.9-avatar-case",
+  release:"5.5.10-persistent-navigation",
   canonicalAvatarCount:model.catalogue.length,
   serviceWorkerCanonicalAssets:cached.length,
   checksPassed:checks.filter(item => item.passed).length,
