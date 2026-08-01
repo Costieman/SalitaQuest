@@ -21,6 +21,7 @@ const sources = {
   profileLoader:read("profile-emblem-control.js"),
   profile:read("profile-app.js"),
   collection:read("avatar-collection-screen-v1.js"),
+  avatarCase:read("avatar-case-v1.js"),
   weekly:read("weekly-avatar-shard-rewards-v1.js"),
   level:read("level-avatar-rewards-v1.js"),
   unlock:read("avatar-unlock-celebration-v1.js"),
@@ -85,11 +86,15 @@ for (const [needle, message] of [
 ]) check(!artworkRuntime.includes(needle), message);
 check(!sources.profileLoader.includes("repair(document)"), "No document-wide artwork repair pass remains");
 check(sources.profileLoader.includes('RELEASE_VERSION = "5.5.6"'), "Profile runtime retains canonical avatar release version");
+check(sources.profileLoader.includes('AVATAR_CASE_VERSION = "5.5.9"'), "Profile runtime loads the versioned Avatar Case");
 check(sources.refresh.includes('RELEASE = "5.5.6"'), "Recovery page retains canonical avatar release version");
 check(sources.css.includes("image-rendering:auto!important"), "Avatar scaling uses normal high-resolution rendering");
 
 check(sources.profile.includes("data-sq-avatar-id"), "Profile images carry stable avatar IDs");
 check(sources.collection.includes("data-sq-avatar-id"), "Collection images carry stable avatar IDs");
+check(sources.avatarCase.includes("const MAX_CASE_AVATARS = 4"), "Avatar Case uses four slots");
+check(sources.avatarCase.includes("profile.avatarCaseIds = cleaned"), "Avatar Case persists separately on the profile");
+check(!/profile\.avatarId\s*=|equippedAvatarId\s*=/.test(sources.avatarCase), "Avatar Case does not change the equipped avatar");
 check(sources.weekly.includes("item.image") || sources.weekly.includes("SalitaAvatarArtwork"), "Weekly rewards resolve canonical artwork");
 check(sources.level.includes("avatar:item") && sources.level.includes("avatarId:item.id"), "Level rewards hand the canonical avatar record to the unlock renderer");
 check(sources.unlock.includes("item.image") || sources.unlock.includes("getAvatarImagePath") || sources.unlock.includes("SalitaAvatarArtwork"), "Unlock celebrations resolve canonical artwork");
@@ -108,8 +113,9 @@ check(cached.length === 48, "Service worker lists exactly 48 canonical PNGs");
 check(new Set(cached).size === 48, "Service-worker canonical paths are unique");
 check(manifestPaths.every(file => cached.includes(file)), "Service worker precaches every manifest image");
 check(!/"\.\/avatars\/(?!canonical\/)/.test(sources.worker), "Service worker does not cache legacy avatar artwork");
-check(sources.worker.includes('PREVIOUS_CACHE_NAME = "salita-quest-v5-5-7-complete-bisaya-audio-r49"'), "Service worker records the previous audio cache boundary");
-check(sources.worker.includes('CACHE_NAME = "salita-quest-v5-5-8-sharing-foundation-r50"'), "Service-worker cache revision is the sharing foundation release");
+check(sources.worker.includes('PREVIOUS_CACHE_NAME = "salita-quest-v5-5-8-sharing-foundation-r50"'), "Service worker records the previous sharing cache boundary");
+check(sources.worker.includes('CACHE_NAME = "salita-quest-v5-5-9-avatar-case-r51"'), "Service-worker cache revision is the Avatar Case release");
+check(sources.worker.includes('"./avatar-case-v1.js"') && sources.worker.includes('"./avatar-case-v1.css"'), "Service worker precaches Avatar Case assets");
 
 function pngMetadata(filePath) {
   const buffer = fs.readFileSync(filePath);
@@ -129,7 +135,7 @@ for (const item of manifest.avatars) {
 
 const report = {
   status:errors.length ? "FAIL" : "PASS",
-  release:"5.5.8-sharing-foundation",
+  release:"5.5.9-avatar-case",
   canonicalAvatarCount:model.catalogue.length,
   serviceWorkerCanonicalAssets:cached.length,
   checksPassed:checks.filter(item => item.passed).length,
