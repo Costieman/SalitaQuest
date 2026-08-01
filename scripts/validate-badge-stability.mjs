@@ -157,7 +157,7 @@ requireMarkers(catalogue, [
 
 const worker = read("service-worker.js");
 requireMarkers(worker, [
-  'const CACHE_NAME = "salita-quest-v5-5-6-canonical-avatars-r48"',
+  'const CACHE_NAME = "salita-quest-v5-5-7-complete-bisaya-audio-r49"',
   '"./badge-chest-v2.js"',
   '"./badge-chest-v2.css"',
   '"./achievement-sharing-v4.js"',
