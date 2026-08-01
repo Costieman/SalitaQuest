@@ -12,6 +12,7 @@ const requireMarkers = (source, markers, label) => markers.forEach(marker => {
 
 const runtime = read("avatar-case-v1.js");
 const sharing = read("achievement-sharing-v4.js");
+const sharingCss = read("achievement-sharing-v4.css");
 const loader = read("profile-emblem-control.js");
 const worker = read("service-worker.js");
 const css = read("avatar-case-v1.css");
@@ -23,6 +24,7 @@ new vm.Script(sharing,{filename:"achievement-sharing-v4.js"});
 
 requireMarkers(runtime,[
   "const MAX_CASE_AVATARS = 4",
+  'const RELEASE = "5.5.10-avatar-case-compact"',
   'const MOBILE_COLLAPSE_QUERY = "(max-width: 650px)"',
   "profile.avatarCaseIds = cleaned",
   "cleanIds",
@@ -35,16 +37,23 @@ requireMarkers(runtime,[
   "function setExpanded",
   "function toggleExpanded",
   "isExpanded:()=>panelExpanded",
-  "data-avatar-case-move",
-  "data-avatar-case-remove",
+  "sq-avatar-case-picker-order",
+  "data-avatar-case-draft-move",
+  "data-avatar-case-draft-remove",
+  "function moveDraft",
+  "function removeDraft",
   "data-avatar-case-open-picker",
   "data-avatar-case-picker-save",
   "data-share-avatar-case",
   "salita:avatar-case-changed",
   "SalitaQuestAvatarCase"
-],"Avatar Case runtime");
+],"Compact Avatar Case runtime");
 if (/profile\.avatarId\s*=/.test(runtime)) fail("Avatar Case must not change the equipped profile avatar");
 if (/equippedAvatarId\s*=/.test(runtime)) fail("Avatar Case must not change equippedAvatarId");
+const slotSource = runtime.slice(runtime.indexOf("function slotMarkup"),runtime.indexOf("function ensurePanel"));
+if (/data-avatar-case-(?:move|remove)/.test(slotSource)) {
+  fail("The compact showcase must not contain reorder or remove controls; those belong in the editor");
+}
 
 requireMarkers(sharing,[
   "buildAvatarCaseCard",
@@ -72,28 +81,35 @@ requireMarkers(loader,[
 requireMarkers(worker,[
   'const PREVIOUS_CACHE_NAME = "salita-quest-v5-5-9-avatar-case-r51"',
   'const CACHE_NAME = "salita-quest-v5-5-10-persistent-navigation-r52"',
-  'const MOBILE_AVATAR_COLLECTION_HOTFIX = "2026-08-01-four-row-flow-1"',
+  'const AVATAR_CASE_DISPLAY_HOTFIX = "2026-08-01-compact-display-share-stack-1"',
   '"./avatar-case-v1.js"',
   '"./avatar-case-v1.css"',
-  '"./avatar-collection-screen-v1.css"'
-],"Avatar Case carried into persistent-navigation offline release");
+  '"./avatar-collection-screen-v1.css"',
+  '"./achievement-sharing-v4.css"'
+],"Compact Avatar Case offline delivery");
 
 requireMarkers(css,[
   ".sq-avatar-case-panel",
   ".sq-avatar-case-toggle",
   '.sq-avatar-case-toggle[aria-expanded="false"]',
   ".sq-avatar-case-body[hidden]",
-  "grid-template-columns:repeat(4",
-  ".sq-avatar-case-picker",
+  ".sq-avatar-case-slots{display:grid;grid-template-columns:repeat(4,minmax(0,1fr))",
+  ".sq-avatar-case-art img{display:block;width:100%;height:100%;max-width:100%;max-height:100%;object-fit:contain",
+  ".sq-avatar-case-picker{position:fixed;inset:0;z-index:2147483300",
+  ".sq-avatar-case-picker-order",
+  ".sq-avatar-case-order-item",
+  ".sq-avatar-case-order-controls",
   "@media(max-width:820px)",
   "@media(max-width:650px)",
-  "grid-auto-flow:column",
-  "overflow-x:auto",
-  "@media(max-width:520px)",
+  ".sq-avatar-case-slots{grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}",
+  "@media(max-width:370px)",
   ".dark-mode .sq-avatar-case-panel"
-],"Avatar Case responsive styles");
+],"Compact Avatar Case responsive styles");
+if (css.includes("grid-auto-flow:column")) fail("Avatar Case must not return to a horizontally clipped phone shelf");
 
 requireMarkers(collectionCss,[
+  ".sq-avatar-collection-backdrop{position:fixed;inset:0;z-index:2147483000",
+  ".sq-avatar-detail{position:fixed;inset:0;z-index:2147483100",
   "grid-template-rows:auto auto auto minmax(0,1fr)!important",
   ".sq-avatar-collection-header,",
   ".sq-avatar-case-panel,",
@@ -102,13 +118,33 @@ requireMarkers(collectionCss,[
   "min-height:0!important",
   "height:100dvh!important",
   "max-height:100dvh!important",
-  "max-height:min(34dvh,260px)!important",
+  "max-height:min(30dvh,220px)!important",
   ".sq-avatar-case-body[hidden]",
   "overflow-y:auto!important",
   "-webkit-overflow-scrolling:touch"
-],"Non-overlapping phone Avatar Case and collection layout");
+],"Non-overlapping Avatar Case and collection layout");
 if (collectionCss.includes("grid-template-rows:auto auto minmax(0,1fr)!important")) {
   fail("Avatar Collection must not return to a three-row grid after inserting the Avatar Case");
+}
+
+requireMarkers(sharingCss,[
+  ".achievement-share-modal{position:fixed;inset:0;z-index:2147483500",
+  "isolation:isolate",
+  ".achievement-share-backdrop",
+  "max-height:96dvh"
+],"Top-level sharing overlay");
+
+const zValue = (source,expression,label) => {
+  const match = source.match(expression);
+  if (!match) fail(`Could not read ${label} z-index`);
+  return Number(match[1]);
+};
+const collectionZ = zValue(collectionCss,/\.sq-avatar-collection-backdrop\{[^}]*z-index:(\d+)/,"collection");
+const detailZ = zValue(collectionCss,/\.sq-avatar-detail\{[^}]*z-index:(\d+)/,"avatar detail");
+const pickerZ = zValue(css,/\.sq-avatar-case-picker\{[^}]*z-index:(\d+)/,"Avatar Case editor");
+const shareZ = zValue(sharingCss,/\.achievement-share-modal\{[^}]*z-index:(\d+)/,"share dialog");
+if (!(collectionZ < detailZ && detailZ < pickerZ && pickerZ < shareZ)) {
+  fail(`Overlay order is invalid: collection ${collectionZ}, detail ${detailZ}, editor ${pickerZ}, share ${shareZ}`);
 }
 
 requireMarkers(service,[
@@ -172,6 +208,7 @@ vm.runInContext(runtime,context,{filename:"avatar-case-v1.behavior.js"});
 const api=context.SalitaQuestAvatarCase;
 if(!api)fail("Avatar Case API was not installed in the deterministic harness");
 if(api.max!==4)fail(`Avatar Case maximum is ${api.max}, expected 4`);
+if(api.version!==2)fail(`Avatar Case API version is ${api.version}, expected 2`);
 if(api.isExpanded()!==false)fail("Avatar Case must start collapsed at the phone breakpoint");
 api.toggleExpanded();
 if(api.isExpanded()!==true)fail("Avatar Case did not expand through its public toggle");
@@ -188,4 +225,4 @@ const finalProfile=JSON.parse(stored).profiles[0];
 if(finalProfile.avatarId!=="a"||finalProfile.avatarCollection.equippedAvatarId!=="a")fail("Avatar Case changed the equipped avatar");
 if(finalProfile.avatarCaseIds.join("|")!=="e|c|b")fail("Avatar Case state was not persisted on the profile");
 
-console.log("Validated four-slot owned-only Avatar Case state, phone-default collapse, four-row non-overlapping collection flow, capped expansion, independent collection scrolling, duplicate rejection, reordering, equipped-avatar independence and unified sharing.");
+console.log("Validated compact four-tile Avatar Case display, phone-default collapse, contained artwork, editor-only controls, non-overlapping collection flow, ordered overlays, share-above-collection behavior, duplicate rejection, reordering and equipped-avatar independence.");
