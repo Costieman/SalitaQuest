@@ -62,11 +62,11 @@ requireMarkers(loader,[
 ],"Shared avatar loader");
 
 requireMarkers(worker,[
-  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-5-8-sharing-foundation-r50"',
-  'const CACHE_NAME = "salita-quest-v5-5-9-avatar-case-r51"',
+  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-5-9-avatar-case-r51"',
+  'const CACHE_NAME = "salita-quest-v5-5-10-persistent-navigation-r52"',
   '"./avatar-case-v1.js"',
   '"./avatar-case-v1.css"'
-],"Avatar Case offline release");
+],"Avatar Case carried into persistent-navigation offline release");
 
 requireMarkers(css,[
   ".sq-avatar-case-panel",
@@ -148,4 +148,4 @@ const finalProfile=JSON.parse(stored).profiles[0];
 if(finalProfile.avatarId!=="a"||finalProfile.avatarCollection.equippedAvatarId!=="a")fail("Avatar Case changed the equipped avatar");
 if(finalProfile.avatarCaseIds.join("|")!=="e|c|b")fail("Avatar Case state was not persisted on the profile");
 
-console.log("Validated four-slot owned-only Avatar Case state, duplicate rejection, mouse/touch-safe reordering controls, equipped-avatar independence, unified sharing and offline delivery.");
+console.log("Validated four-slot owned-only Avatar Case state, duplicate rejection, mouse/touch-safe reordering controls, equipped-avatar independence, unified sharing and persistent-navigation offline delivery.");
