@@ -1,5 +1,5 @@
-const PREVIOUS_CACHE_NAME = "salita-quest-v5-5-6-canonical-avatars-r48";
-const CACHE_NAME = "salita-quest-v5-5-7-complete-bisaya-audio-r49";
+const PREVIOUS_CACHE_NAME = "salita-quest-v5-5-7-complete-bisaya-audio-r49";
+const CACHE_NAME = "salita-quest-v5-5-8-sharing-foundation-r50";
 
 const CORE_FILES = [
   "./", "./index.html", "./app.html", "./bisaya.html", "./mobile-refresh.html",
