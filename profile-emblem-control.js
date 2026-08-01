@@ -3,6 +3,7 @@
 
   const INSTALL_FLAG = "__salitaQuestProfileEmblemControlInstalled";
   const RELEASE_VERSION = "5.5.6";
+  const AVATAR_CASE_VERSION = "5.5.9";
   let assetPromise = null;
 
   function addStylesheet(key, href) {
@@ -38,6 +39,7 @@
   function loadAvatarProgressionAssets() {
     if (assetPromise) return assetPromise;
     addStylesheet("collection-css", `./avatar-collection-screen-v1.css?v=${RELEASE_VERSION}`);
+    addStylesheet("case-css", `./avatar-case-v1.css?v=${AVATAR_CASE_VERSION}`);
     addStylesheet("weekly-css", `./weekly-avatar-shard-rewards-v1.css?v=${RELEASE_VERSION}`);
     addStylesheet("unlock-css", `./avatar-unlock-celebration-v1.css?v=${RELEASE_VERSION}`);
     addStylesheet("hotfix-css", `./avatar-progression-hotfix-v551.css?v=${RELEASE_VERSION}`);
@@ -52,12 +54,13 @@
       await window.SalitaAvatarArtworkReady;
       await loadScript("migration", `./avatar-progression-migration-v1.js?v=${RELEASE_VERSION}`, "Avatar progression migration could not be loaded.");
       await loadScript("collection", `./avatar-collection-screen-v1.js?v=${RELEASE_VERSION}`, "Avatar collection screen could not be loaded.");
+      await loadScript("case", `./avatar-case-v1.js?v=${AVATAR_CASE_VERSION}`, "Avatar Case could not be loaded.");
       await loadScript("weekly", `./weekly-avatar-shard-rewards-v1.js?v=${RELEASE_VERSION}`, "Weekly avatar rewards could not be loaded.");
       await loadScript("level", `./level-avatar-rewards-v1.js?v=${RELEASE_VERSION}`, "Level avatar rewards could not be loaded.");
       await loadScript("unlock", `./avatar-unlock-celebration-v1.js?v=${RELEASE_VERSION}`, "Avatar unlock celebration could not be loaded.");
       await loadScript("sharing", `./achievement-sharing-avatar-bridge-v1.js?v=${RELEASE_VERSION}`, "Avatar-aware sharing could not be loaded.");
       window.SalitaAvatarArtwork?.syncEquipped();
-      document.dispatchEvent(new CustomEvent("salita:avatar-progression-ready", {detail:{version:RELEASE_VERSION}}));
+      document.dispatchEvent(new CustomEvent("salita:avatar-progression-ready", {detail:{version:RELEASE_VERSION,avatarCaseVersion:AVATAR_CASE_VERSION}}));
     })().catch(error => console.warn("Salita Quest avatar progression did not fully load", error));
     return assetPromise;
   }

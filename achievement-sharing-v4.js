@@ -1,13 +1,13 @@
 (() => {
   "use strict";
 
-  const INSTALL_FLAG = "__salitaQuestAchievementSharingV5Installed";
+  const INSTALL_FLAG = "__salitaQuestAchievementSharingV6Installed";
   const LEGACY_FLAG = "__salitaQuestAchievementSharingV4Installed";
   const PROFILE_STORE = "salitaQuestLocalProfilesV1";
   const ACTIVE_PROFILE = "salitaQuestActiveProfileId";
   const MODAL_ID = "achievementShareModalV4";
   const PROMPT_ID = "levelSharePromptV4";
-  const RELEASE = "5.5.8-sharing-foundation";
+  const RELEASE = "5.5.9-avatar-case";
 
   const PLATFORM_META = {
     facebook: {label:"Facebook",icon:"f",detail:"Open a post with your achievement link"},
@@ -134,6 +134,12 @@
     if (api?.getBadges) return api.getBadges();
     const ids = Array.isArray(state?.badgeProgress?.chestIds) ? state.badgeProgress.chestIds : [];
     return ids.slice(0,6).map(badgeById).filter(badge => badge && isEarned(badge));
+  }
+
+  function avatarCaseItems() {
+    const api = window.SalitaQuestAvatarCase;
+    const items = api?.getAvatars?.() || [];
+    return items.map(item => ownedAvatar(item?.id)).filter(Boolean).slice(0,4);
   }
 
   function loadImage(src) {
@@ -322,6 +328,42 @@
     context.fillStyle = "#fff"; context.font = "950 52px system-ui,sans-serif";
     wrapText(context,item.name,540,895,880,58,2);
     drawCallToAction(context,contextLabel === "unlock" ? "avatar-unlock" : "avatar-share");
+    return canvas;
+  }
+
+  async function buildAvatarCaseCard(items) {
+    const canvas = makeCanvas();
+    const context = canvas.getContext("2d");
+    drawBackground(context); drawBrand(context,"MY AVATAR CASE");
+    const positions = [[70,218],[560,218],[70,548],[560,548]];
+    for (let index = 0; index < 4; index += 1) {
+      const item = items[index];
+      const [x,y] = positions[index];
+      roundRect(context,x,y,450,292,34);
+      const panel = context.createLinearGradient(x,y,x + 450,y + 292);
+      panel.addColorStop(0,"#fff8dc"); panel.addColorStop(1,"#d5f1e7");
+      context.fillStyle = panel; context.fill();
+      context.strokeStyle = item ? "rgba(247,201,72,.82)" : "rgba(255,255,255,.18)";
+      context.lineWidth = 6; context.stroke();
+      if (item) {
+        const image = await loadImage(avatarPath(item.id));
+        context.save(); roundRect(context,x + 18,y + 18,414,196,24); context.clip();
+        drawImageContain(context,image,x + 18,y + 18,414,196); context.restore();
+        context.textAlign = "center";
+        context.fillStyle = "#10213b"; context.font = "900 25px system-ui,sans-serif";
+        wrapText(context,item.name,x + 225,y + 248,392,29,2);
+        context.fillStyle = "#0f766e"; context.font = "850 16px system-ui,sans-serif";
+        context.fillText(String(item.rarity || "collectible").toUpperCase(),x + 225,y + 280);
+      } else {
+        context.textAlign = "center"; context.fillStyle = "rgba(16,33,59,.28)";
+        context.font = "900 76px system-ui,sans-serif"; context.fillText("＋",x + 225,y + 160);
+        context.font = "800 18px system-ui,sans-serif"; context.fillText("EMPTY FAVOURITE SLOT",x + 225,y + 214);
+      }
+    }
+    context.textAlign = "center"; context.fillStyle = "rgba(255,255,255,.78)";
+    context.font = "800 22px system-ui,sans-serif";
+    context.fillText(`${items.length} of 4 favourite avatars`,540,888);
+    drawCallToAction(context,"avatar-case");
     return canvas;
   }
 
@@ -568,6 +610,23 @@
     }),"Share avatar");
   }
 
+  async function openAvatarCase(button = null) {
+    const items = avatarCaseItems();
+    if (!items.length) {
+      notify("Choose at least one unlocked avatar before sharing your Avatar Case.");
+      window.SalitaQuestAvatarCase?.openPicker?.();
+      return;
+    }
+    return withButton(button, async () => prepareShare({
+      type:"avatar_case",
+      title:"My Salita Quest Avatar Case",
+      text:`These are my favourite Salita Quest avatars while learning ${courseLabel()}.`,
+      fileName:"salita-quest-avatar-case.png",
+      campaign:"avatar-case",
+      canvas:await buildAvatarCaseCard(items)
+    }),"Share Avatar Case");
+  }
+
   function currentLevelData() {
     let info = null;
     try { info = window.SalitaLevelProgression?.calculate?.() || (typeof levelInfo === "function" ? levelInfo() : null); }
@@ -717,7 +776,10 @@
   }
 
   function decorateAvatarDetails(scope = document) {
-    scope.querySelectorAll?.(".sq-avatar-detail-card").forEach(card => {
+    const cards = [];
+    if (scope?.matches?.(".sq-avatar-detail-card")) cards.push(scope);
+    scope.querySelectorAll?.(".sq-avatar-detail-card").forEach(card => cards.push(card));
+    cards.forEach(card => {
       if (card.querySelector("[data-share-avatar]")) return;
       const id = card.querySelector("[data-sq-avatar-id]")?.dataset.sqAvatarId || "";
       if (!ownedAvatar(id)) return;
@@ -762,6 +824,8 @@
       event.preventDefault();
       return openAvatar(avatarButton.dataset.shareAvatar,{context:avatarButton.dataset.avatarShareContext || "collection"},avatarButton);
     }
+    const avatarCaseButton = event.target.closest?.("[data-share-avatar-case]");
+    if (avatarCaseButton) { event.preventDefault(); return openAvatarCase(avatarCaseButton); }
     const currentLevelButton = event.target.closest?.("[data-share-current-level]");
     if (currentLevelButton) { event.preventDefault(); return openLevel(currentLevelData(),currentLevelButton); }
     const levelButton = event.target.closest?.("[data-share-level-v4]");
@@ -822,7 +886,7 @@
     });
     installDecorations();
     window.SalitaQuestAchievementSharing = Object.freeze({
-      version:5,release:RELEASE,openBadge,openChest,openAvatar,openLevel,currentLevelData,close:closeShare
+      version:6,release:RELEASE,openBadge,openChest,openAvatar,openAvatarCase,openLevel,currentLevelData,close:closeShare
     });
     document.documentElement.dataset.achievementSharing = RELEASE;
   }

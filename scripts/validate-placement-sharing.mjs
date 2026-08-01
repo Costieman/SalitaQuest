@@ -91,13 +91,15 @@ for (const asset of [
   '"./badge-chest-v2.js"',
   '"./badge-chest-v2.css"',
   '"./placement-onboarding-v1.js"',
-  '"./placement-onboarding-v1.css"'
+  '"./placement-onboarding-v1.css"',
+  '"./avatar-case-v1.js"',
+  '"./avatar-case-v1.css"'
 ]) if (!worker.includes(asset)) fail(`Offline cache is missing ${asset}`);
-if (!worker.includes('const PREVIOUS_CACHE_NAME = "salita-quest-v5-5-7-complete-bisaya-audio-r49"')) {
+if (!worker.includes('const PREVIOUS_CACHE_NAME = "salita-quest-v5-5-8-sharing-foundation-r50"')) {
   fail("Previous service-worker cache boundary is missing");
 }
-if (!worker.includes('const CACHE_NAME = "salita-quest-v5-5-8-sharing-foundation-r50"')) {
-  fail("Current sharing-foundation service-worker cache is missing");
+if (!worker.includes('const CACHE_NAME = "salita-quest-v5-5-9-avatar-case-r51"')) {
+  fail("Current Avatar Case service-worker cache is missing");
 }
 
 const index = read("index.html");
@@ -113,4 +115,4 @@ for (const marker of [
   "validate-placement-sharing.mjs"
 ]) if (!readme.includes(marker)) fail(`README is missing: ${marker}`);
 
-console.log("Validated 20-question placement, non-destructive content access, badge catalogue render boundary, stable Badge Chest ownership, both language loaders and sharing-foundation offline release.");
+console.log("Validated 20-question placement, non-destructive content access, badge catalogue render boundary, stable Badge Chest ownership, both language loaders and Avatar Case offline release.");

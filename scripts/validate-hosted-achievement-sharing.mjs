@@ -22,6 +22,7 @@ requireMarkers(sharing, [
   "buildBadgeCard",
   "buildChestCard",
   "buildAvatarCard",
+  "buildAvatarCaseCard",
   "buildLevelCard",
   "buildOpenGraphCard",
   "START LEARNING FREE",
@@ -36,14 +37,18 @@ requireMarkers(sharing, [
   "www.linkedin.com/sharing/share-offsite/?url=",
   "navigator.canShare?.({files: [file]})",
   "SalitaQuestBadgeChest",
+  "SalitaQuestAvatarCase",
   "SalitaQuestAchievementSharing"
 ], "Unified browser hosted-sharing client");
 requirePatterns(sharing, [
   [/hosted\?\.shareUrl\s*\|\|\s*activeShare\.url/, "hosted-to-local share URL fallback"],
   [/async function openAvatar\s*\(/, "avatar share entry point"],
+  [/async function openAvatarCase\s*\(/, "Avatar Case share entry point"],
   [/type\s*:\s*"badge_chest"/, "Badge Chest share type"],
   [/type\s*:\s*"avatar"/, "avatar share type"],
+  [/type\s*:\s*"avatar_case"/, "Avatar Case share type"],
   [/type\s*:\s*"level_up"/, "level-up share type"],
+  [/version:6\s*,\s*release:RELEASE/, "versioned Avatar Case sharing controller"],
   [/Hosted previews are offline\. The card is still ready for device sharing or download\./, "offline hosted-preview status"],
   [/credentials\s*:\s*"omit"/, "credential-free public card upload"]
 ], "Stable hosted-sharing client");
@@ -163,12 +168,14 @@ for (const htmlFile of ["app.html", "bisaya.html"]) {
 
 const worker = read("service-worker.js");
 requireMarkers(worker, [
-  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-5-7-complete-bisaya-audio-r49"',
-  'const CACHE_NAME = "salita-quest-v5-5-8-sharing-foundation-r50"',
+  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-5-8-sharing-foundation-r50"',
+  'const CACHE_NAME = "salita-quest-v5-5-9-avatar-case-r51"',
   '"./social-connections-v2.js"',
   '"./badge-chest-v2.js"',
   '"./achievement-sharing-v4.js"',
-  '"./achievement-sharing-v4.css"'
+  '"./achievement-sharing-v4.css"',
+  '"./avatar-case-v1.js"',
+  '"./avatar-case-v1.css"'
 ], "Stable achievement-sharing offline release");
 
 const index = read("index.html");
@@ -192,4 +199,4 @@ requireMarkers(serviceDocs, [
   "Start learning a Filipino language free"
 ], "Share-service documentation");
 
-console.log("Validated unified badge/chest/avatar/Avatar Case/level share types, hosted-to-local fallbacks, exact Open Graph images, Cloud Run service structure, both language loaders and sharing-foundation offline release.");
+console.log("Validated unified badge/chest/avatar/Avatar Case/level share types, hosted-to-local fallbacks, exact Open Graph images, Cloud Run service structure, both language loaders and Avatar Case offline release.");

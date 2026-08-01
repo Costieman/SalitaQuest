@@ -2,7 +2,7 @@
 
 Salita Quest is a local-first language-learning app for **Tagalog** and **Cebuano / Bisaya**. It combines active recall, spaced repetition, structured mastery, short daily practice, audio review, learner profiles, progression rewards and offline installation.
 
-Current release: **5.5.7 — Complete Bisaya Audio**.
+Current release: **5.5.9 — Avatar Case**.
 
 ## Core learning system
 
@@ -23,7 +23,7 @@ Salita Quest supports multiple local learner profiles. Each profile stores:
 - mastery, due dates and item history;
 - XP, coins and streaks;
 - placement and access settings;
-- account-wide avatar ownership, shards, weekly keys and equipped identity.
+- account-wide avatar ownership, shards, weekly keys, equipped identity and Avatar Case.
 
 Progress can be moved through JSON backup/import and transfer codes. The profile lock is local rather than server-authenticated, so progress remains tied to the browser origin and device unless exported.
 
@@ -44,6 +44,8 @@ The app contains **48 canonical 512 × 512 PNG avatars** under `avatars/canonica
 - Level 99 grants the Golden Salita Crest.
 - Locked avatars reveal colour as shard progress increases.
 - Owned avatars can be equipped at any time.
+- A separate four-slot Avatar Case displays favourite owned avatars without changing the equipped avatar.
+- Avatar Case entries can be reordered, removed and shared as one collection card.
 
 The runtime uses direct canonical PNG paths. It does not extract sprites, redraw avatar art through canvas, rewrite image sources globally or fall back to raw GitHub artwork.
 
@@ -53,7 +55,16 @@ Badges have a dedicated catalogue and a six-slot Badge Chest. The catalogue show
 
 ## Hosted achievement sharing
 
-`achievement-sharing-v4.js` creates badge, Badge Chest and level-up cards. It renders the square card and a **1200 × 630 Open Graph version**. Cards include a visible **START LEARNING FREE** invitation.
+`achievement-sharing-v4.js` is the single card and platform hand-off controller for:
+
+- individual badges;
+- the Badge Chest;
+- individual owned avatars;
+- newly unlocked avatars;
+- the four-slot Avatar Case;
+- level-up milestones and the current learner level.
+
+It renders a 1080 × 1080 square card and a **1200 × 630 Open Graph version**. Cards include a visible **START LEARNING FREE** invitation.
 
 The optional Cloud Run service in `services/social-share/` hosts Open Graph images and public share pages for social platforms. Deploy it with:
 
@@ -62,7 +73,7 @@ chmod +x services/social-share/deploy-cloud-shell.sh
 ./services/social-share/deploy-cloud-shell.sh
 ```
 
-Hosted sharing works without connected social accounts. Direct publishing integrations would require provider applications, OAuth credentials and approved scopes.
+Hosted sharing works without connected social accounts. If the hosted service is unavailable, generated cards can still be shared through the device or downloaded, and public web composers can use the Salita Quest app link. Direct connected-account publishing would require provider applications, OAuth credentials and approved scopes.
 
 ## Audio
 
@@ -97,12 +108,12 @@ See `docs/CEBUANO_AUDIO.md` for setup and recovery details.
 
 ## Offline installation
 
-Salita Quest is a Progressive Web App. `service-worker.js` precaches the course engine, language packs, interface assets, the audio manifest and all 48 canonical avatars. Audio recordings are cached on first playback rather than forcing hundreds of downloads during installation.
+Salita Quest is a Progressive Web App. `service-worker.js` precaches the course engine, language packs, interface assets, the audio manifest, the Avatar Case runtime and all 48 canonical avatars. Audio recordings are cached on first playback rather than forcing hundreds of downloads during installation.
 
 Current cache revision:
 
 ```text
-salita-quest-v5-5-7-complete-bisaya-audio-r49
+salita-quest-v5-5-9-avatar-case-r51
 ```
 
 The recovery page refreshes app caches and service-worker registrations without clearing learner local storage.
@@ -130,17 +141,18 @@ The recovery page refreshes app caches and service-worker registrations without 
 - `avatars/canonical/manifest.json` — canonical identity and asset manifest
 - `avatar-catalogue-v1.js` — stable catalogue, aliases and rewards
 - `avatar-collection-screen-v1.js` — collection and equip controls
+- `avatar-case-v1.js` — four-slot favourite-avatar persistence, picker and ordering
 - `weekly-avatar-shard-rewards-v1.js` — weekly shard rewards
 - `level-avatar-rewards-v1.js` — level milestones
 - `avatar-unlock-celebration-v1.js` — once-only unlock reveals
 - `avatar-progression-migration-v1.js` — additive legacy migration
-- `achievement-sharing-avatar-bridge-v1.js` — canonical avatar sharing integration
+- `achievement-sharing-avatar-bridge-v1.js` — compatibility-only delegation to the shared controller
 
 ### Badges and sharing
 
 - `badge-catalogue-v2.js` — badge definitions and catalogue
 - `badge-chest-v2.js` — Badge Chest selection and ordering
-- `achievement-sharing-v4.js` — achievement card rendering and hand-off
+- `achievement-sharing-v4.js` — unified badge, avatar, Avatar Case and level card rendering
 - `social-connections-v2.js` — sharing-service status and OAuth-ready contract
 - `services/social-share/` — hosted Open Graph service
 
@@ -150,6 +162,12 @@ Run the complete canonical avatar gate:
 
 ```bash
 node scripts/validate-avatar-progression-v550.mjs
+```
+
+Run the Avatar Case state and sharing harness directly:
+
+```bash
+node scripts/validate-avatar-case.mjs
 ```
 
 Run the full application regression suite through the GitHub workflows or individually:
@@ -169,15 +187,19 @@ node scripts/validate-hosted-achievement-sharing.mjs
 node scripts/validate-badge-stability.mjs
 ```
 
-The Bisaya audio validator checks released Cebuano and English coverage, MP3 signatures, manifest paths, runtime language routing, service-worker integration and CI coverage. The canonical avatar validator checks all 48 PNG signatures, dimensions, alpha channels, manifest mappings, runtime consumers, service-worker coverage and the absence of retired sprite/source-rewrite mechanisms.
+The Avatar Case validator executes profile-state behavior and checks owned-only selection, duplicate rejection, the four-slot limit, persistence, reordering, equipped-avatar independence, sharing and offline delivery. The Bisaya audio validator checks released Cebuano and English coverage, MP3 signatures, manifest paths, runtime language routing, service-worker integration and CI coverage. The canonical avatar validator checks all 48 PNG signatures, dimensions, alpha channels, manifest mappings, runtime consumers, service-worker coverage and the absence of retired sprite/source-rewrite mechanisms.
 
 ## Release history and architecture notes
 
 - **5.5.0 — Avatar Progression** introduced the account-wide 48-avatar progression system.
 - **5.5.6 — Canonical Avatar Runtime** replaced legacy artwork paths with the direct canonical asset set.
 - **5.5.7 — Complete Bisaya Audio** connected complete released Cebuano and English audio coverage with offline replay caching.
+- **5.5.8 — Sharing Foundation** replaced competing posting controllers with one badge, avatar and level system.
+- **5.5.9 — Avatar Case** added the independent four-slot favourite-avatar showcase and sharing card.
 - `docs/releases/5.5.6-canonical-avatar-runtime.md`
 - `docs/releases/5.5.7-complete-bisaya-audio.md`
+- `docs/releases/5.5.8-sharing-foundation.md`
+- `docs/releases/5.5.9-avatar-case.md`
 - `docs/CODE_AUDIT_2026-07-30.md`
 - `docs/SOCIAL_CONNECTIONS.md`
 - `docs/CEBUANO_AUDIO.md`

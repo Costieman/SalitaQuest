@@ -37,14 +37,16 @@ if (chestRuntime.includes("MutationObserver")) fail("Badge Chest must not use a 
 if (chestRuntime.includes("earnedBadges().slice(0, MAX_CHEST_BADGES)")) fail("Badge Chest must not silently auto-fill all six slots.");
 
 requireMarkers(shareRuntime, [
-  "__salitaQuestAchievementSharingV5Installed",
+  "__salitaQuestAchievementSharingV6Installed",
   "function openBadge",
   "function openChest",
   "function openAvatar",
+  "function openAvatarCase",
   "function openLevel",
   "buildBadgeCard",
   "buildChestCard",
   "buildAvatarCard",
+  "buildAvatarCaseCard",
   "buildLevelCard",
   "buildOpenGraphCard",
   "START LEARNING FREE",
@@ -60,14 +62,17 @@ requireMarkers(shareRuntime, [
   "salita:avatar-unlock-animation-started",
   "Share level up",
   "Share avatar",
+  "Share Avatar Case",
   "SalitaQuestAchievementSharing"
 ], "Single-owner achievement sharing");
 requirePatterns(shareRuntime, [
   [/event\.detail\?\.type\s*!==\s*"level_up"/, "production popup-governor level completion filter"],
   [/ownedAvatar\s*\(\s*id\s*\)/, "owned-avatar sharing guard"],
+  [/avatarCaseItems\s*\(\s*\)/, "owned Avatar Case resolver"],
+  [/data-share-avatar-case/, "Avatar Case sharing action"],
   [/data-share-current-level/, "persistent current-level sharing entry point"],
-  [/version:5\s*,\s*release:RELEASE/, "single versioned sharing controller"]
-], "Stable badge/avatar/level sharing");
+  [/version:6\s*,\s*release:RELEASE/, "single versioned sharing controller"]
+], "Stable badge/avatar/Avatar Case/level sharing");
 if (/MutationObserver[\s\S]{0,500}level-up-celebration/.test(shareRuntime)) {
   fail("Level sharing must not depend on observing level-up celebration DOM.");
 }
@@ -174,13 +179,15 @@ requireMarkers(catalogue, [
 
 const worker = read("service-worker.js");
 requireMarkers(worker, [
-  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-5-7-complete-bisaya-audio-r49"',
-  'const CACHE_NAME = "salita-quest-v5-5-8-sharing-foundation-r50"',
+  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-5-8-sharing-foundation-r50"',
+  'const CACHE_NAME = "salita-quest-v5-5-9-avatar-case-r51"',
   '"./badge-chest-v2.js"',
   '"./badge-chest-v2.css"',
   '"./achievement-sharing-v4.js"',
-  '"./achievement-sharing-v4.css"'
-], "Badge stability offline release");
+  '"./achievement-sharing-v4.css"',
+  '"./avatar-case-v1.js"',
+  '"./avatar-case-v1.css"'
+], "Badge and Avatar Case stability offline release");
 for (const obsolete of [
   '"./badge-sharing-v1.js"',
   '"./social-links-v1.js"',
@@ -191,4 +198,4 @@ for (const obsolete of [
 const index = read("index.html");
 if (!index.includes('service-worker.js?v=5.4.29')) fail("Profile gate does not request the stable service worker.");
 
-console.log("Validated preserved six-slot Badge Chest state, deterministic selection rules, one badge/avatar/level sharing owner, production level events, loader order and sharing-foundation offline release.");
+console.log("Validated preserved six-slot Badge Chest state, deterministic selection rules, one badge/avatar/Avatar Case/level sharing owner, production level events, loader order and Avatar Case offline release.");

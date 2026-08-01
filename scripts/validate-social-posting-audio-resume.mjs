@@ -65,6 +65,7 @@ requireMarkers(sharing, [
   "buildBadgeCard",
   "buildChestCard",
   "buildAvatarCard",
+  "buildAvatarCaseCard",
   "buildLevelCard",
   "buildOpenGraphCard",
   "START LEARNING FREE",
@@ -81,6 +82,7 @@ requireMarkers(sharing, [
   "data-share-badge-chest",
   "data-share-badge",
   "data-share-avatar",
+  "data-share-avatar-case",
   "data-share-current-level",
   "data-share-level-v4",
   "salita:avatar-unlock-animation-started",
@@ -92,12 +94,15 @@ requirePatterns(sharing, [
   [/function makeCanvas\s*\(\s*width\s*=\s*1080\s*,\s*height\s*=\s*1080\s*\)/, "configurable square canvas factory"],
   [/makeCanvas\s*\(\s*1200\s*,\s*630\s*\)/, "1200 × 630 Open Graph canvas"],
   [/async function openAvatar\s*\(/, "individual avatar sharing entry point"],
+  [/async function openAvatarCase\s*\(/, "Avatar Case sharing entry point"],
   [/type\s*:\s*"avatar"/, "avatar share-card type"],
+  [/type\s*:\s*"avatar_case"/, "Avatar Case share-card type"],
   [/type\s*:\s*"level_up"/, "level-up share-card type"],
   [/ownedAvatar\s*\(\s*id\s*\)/, "owned-avatar guard"],
+  [/avatarCaseItems\s*\(\s*\)/, "owned Avatar Case item resolver"],
   [/canonicalAvatarPath\s*\(/, "canonical avatar artwork resolver"],
   [/Hosted preview unavailable\. The card is still ready for device sharing or download\./, "non-silent hosted-preview fallback"],
-  [/version:5\s*,\s*release:RELEASE/, "single versioned achievement-sharing API"]
+  [/version:6\s*,\s*release:RELEASE/, "single versioned achievement-sharing API"]
 ], "Stable unified achievement-sharing runtime");
 if (/MutationObserver[\s\S]{0,500}level-up-celebration/.test(sharing)) {
   fail("Level sharing must use production level events rather than observing celebration DOM");
@@ -129,15 +134,17 @@ for (const htmlFile of ["app.html", "bisaya.html"]) {
 
 const worker = read("service-worker.js");
 requireMarkers(worker, [
-  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-5-7-complete-bisaya-audio-r49"',
-  'const CACHE_NAME = "salita-quest-v5-5-8-sharing-foundation-r50"',
+  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-5-8-sharing-foundation-r50"',
+  'const CACHE_NAME = "salita-quest-v5-5-9-avatar-case-r51"',
   '"./badge-layout-v3.css"',
   '"./badge-chest-v2.js"',
   '"./badge-chest-v2.css"',
   '"./social-connections-v2.js"',
   '"./social-connections-v2.css"',
   '"./achievement-sharing-v4.js"',
-  '"./achievement-sharing-v4.css"'
+  '"./achievement-sharing-v4.css"',
+  '"./avatar-case-v1.js"',
+  '"./avatar-case-v1.css"'
 ], "Offline social release");
 
 const generator = read("scripts/generate_cebuano_google_audio.py");
@@ -168,4 +175,4 @@ requireMarkers(audioDocs, ["The generator is resumable", "punctuation-only alias
 const audit = read("docs/CODE_AUDIT_2026-07-30.md");
 requireMarkers(audit, ["Self-triggering Badge Chest observer", "Three modules competing", "Pinned source document plus string injection", "No full browser interaction suite"], "Code audit");
 
-console.log("Validated non-overlapping badge cards, one shared badge/avatar/level controller, hosted-service fallbacks, production level events, resumable Cebuano generation and sharing-foundation offline delivery.");
+console.log("Validated non-overlapping badge cards, one shared badge/avatar/Avatar Case/level controller, hosted-service fallbacks, production level events, resumable Cebuano generation and Avatar Case offline delivery.");

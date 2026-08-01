@@ -134,8 +134,14 @@ check(serviceWorker.includes("function isSameOriginAudio"),
   "service worker lacks the audio request classifier");
 check(serviceWorker.includes("audioCacheFirst"),
   "service worker lacks cache-first audio delivery");
-check(serviceWorker.includes("salita-quest-v5-5-7-complete-bisaya-audio-r49"),
-  "service-worker cache revision was not advanced for the audio release");
+check(serviceWorker.includes('const PREVIOUS_CACHE_NAME = "salita-quest-v5-5-8-sharing-foundation-r50"'),
+  "service worker no longer records the release preceding Avatar Case");
+check(serviceWorker.includes('const CACHE_NAME = "salita-quest-v5-5-9-avatar-case-r51"'),
+  "service-worker cache revision is not the Avatar Case release");
+
+const audioReleaseNotes = readText("docs/releases/5.5.7-complete-bisaya-audio.md");
+check(audioReleaseNotes.includes("salita-quest-v5-5-7-complete-bisaya-audio-r49"),
+  "audio release lineage no longer records the complete Bisaya audio cache");
 
 const workflow = readText(".github/workflows/validate-bisaya.yml");
 check(workflow.includes("node scripts/validate-bisaya-audio-library.mjs"),
