@@ -9,6 +9,9 @@ const fail = message => { throw new Error(message); };
 const requireMarkers = (source, markers, label) => markers.forEach(marker => {
   if (!source.includes(marker)) fail(`${label} is missing: ${marker}`);
 });
+const requirePatterns = (source, patterns, label) => patterns.forEach(([pattern, description]) => {
+  if (!pattern.test(source)) fail(`${label} is missing: ${description}`);
+});
 
 for (const file of ["social-connections-v2.js", "achievement-sharing-v4.js", "service-worker.js"]) {
   new vm.Script(read(file), {filename: file});
@@ -45,18 +48,23 @@ requireMarkers(connections, [
   "salita-social-oauth",
   "SalitaQuestSocialConnections"
 ], "Seamless connected-account runtime");
+requirePatterns(connections, [
+  [/data\.bucketConfigured\s*===\s*false/, "hosted storage readiness check"],
+  [/async function ensureHosted\s*\(/, "shared hosted-readiness gate"],
+  [/hosted previews are offline; device sharing and downloads still work/i, "learner-safe offline fallback"],
+  [/version:3\s*,\s*release:RELEASE/, "versioned sharing-service API"]
+], "Stable sharing-service runtime");
 if (connections.includes("/healthz")) fail("Connected-account runtime must avoid Cloud Run's reserved health path");
 if (connections.includes("Share service not configured")) fail("Normal learners must not see service setup errors");
 if (connections.includes("Deploy the Salita Quest share service")) fail("Normal learners must not receive infrastructure instructions");
 
 const sharing = read("achievement-sharing-v4.js");
 requireMarkers(sharing, [
-  "makeCanvas(width = 1080, height = 1080)",
-  "makeCanvas(1200, 630)",
   "avatarPath()",
   "drawBadgeVisual",
   "buildBadgeCard",
   "buildChestCard",
+  "buildAvatarCard",
   "buildLevelCard",
   "buildOpenGraphCard",
   "START LEARNING FREE",
@@ -72,9 +80,28 @@ requireMarkers(sharing, [
   "navigator.canShare?.({files: [file]})",
   "data-share-badge-chest",
   "data-share-badge",
+  "data-share-avatar",
+  "data-share-current-level",
   "data-share-level-v4",
+  "salita:avatar-unlock-animation-started",
+  "salita:level-updated",
+  "salita:popup-finished",
   "SalitaQuestAchievementSharing"
-], "Consolidated achievement-sharing runtime");
+], "Unified achievement-sharing runtime");
+requirePatterns(sharing, [
+  [/function makeCanvas\s*\(\s*width\s*=\s*1080\s*,\s*height\s*=\s*1080\s*\)/, "configurable square canvas factory"],
+  [/makeCanvas\s*\(\s*1200\s*,\s*630\s*\)/, "1200 × 630 Open Graph canvas"],
+  [/async function openAvatar\s*\(/, "individual avatar sharing entry point"],
+  [/type\s*:\s*"avatar"/, "avatar share-card type"],
+  [/type\s*:\s*"level_up"/, "level-up share-card type"],
+  [/ownedAvatar\s*\(\s*id\s*\)/, "owned-avatar guard"],
+  [/canonicalAvatarPath\s*\(/, "canonical avatar artwork resolver"],
+  [/Hosted preview unavailable\. The card is still ready for device sharing or download\./, "non-silent hosted-preview fallback"],
+  [/version:5\s*,\s*release:RELEASE/, "single versioned achievement-sharing API"]
+], "Stable unified achievement-sharing runtime");
+if (/MutationObserver[\s\S]{0,500}level-up-celebration/.test(sharing)) {
+  fail("Level sharing must use production level events rather than observing celebration DOM");
+}
 
 for (const htmlFile of ["app.html", "bisaya.html"]) {
   const html = read(htmlFile);
@@ -140,4 +167,4 @@ requireMarkers(audioDocs, ["The generator is resumable", "punctuation-only alias
 const audit = read("docs/CODE_AUDIT_2026-07-30.md");
 requireMarkers(audit, ["Self-triggering Badge Chest observer", "Three modules competing", "Pinned source document plus string injection", "No full browser interaction suite"], "Code audit");
 
-console.log("Validated non-overlapping badge cards, built-in sharing status, one achievement-sharing owner, hosted platform hand-off, resumable Cebuano generation and the documented stability audit.");
+console.log("Validated non-overlapping badge cards, one shared badge/avatar/level controller, hosted-service fallbacks, production level events, resumable Cebuano generation and the documented stability audit.");
