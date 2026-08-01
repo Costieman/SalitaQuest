@@ -1,6 +1,7 @@
 const PREVIOUS_CACHE_NAME = "salita-quest-v5-5-9-avatar-case-r51";
 const CACHE_NAME = "salita-quest-v5-5-10-persistent-navigation-r52";
 const AVATAR_CASE_DISPLAY_HOTFIX = "2026-08-01-compact-display-share-stack-1";
+const TOPBAR_WORLD_PROGRESS_HOTFIX = "2026-08-01-separated-heading-rail-1";
 
 const CORE_FILES = [
   "./", "./index.html", "./app.html", "./bisaya.html", "./mobile-refresh.html",
@@ -16,7 +17,7 @@ const APP_ENHANCEMENTS = [
   "./compact-desktop-layout.css", "./compact-home-dashboard.css", "./weekly-avatar-chest.js",
   "./weekly-avatar-polish.js", "./weekly-avatar-chest.css", "./daily-goal-refinement.js",
   "./key-run-refinement.js", "./even-progress-rail.js", "./world-progress-status.css",
-  "./clean-topbar.js", "./clean-topbar.css", "./mastery-feedback.js", "./mastery-feedback.css",
+  "./clean-topbar.js", "./clean-topbar.css", "./topbar-world-progress-hotfix.css", "./mastery-feedback.js", "./mastery-feedback.css",
   "./mastery-console-overrides.css", "./lesson-side-launcher.js", "./lesson-side-launcher.css",
   "./mobile-session-refinement.js", "./mobile-session-refinement.css", "./popup-governor-v1.js",
   "./level-progression-v2.js", "./level-progression-v2.css", "./level-up-mobile-safety-v552.js",
