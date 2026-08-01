@@ -2,7 +2,7 @@
 
 Salita Quest is a local-first language-learning app for **Tagalog** and **Cebuano / Bisaya**. It combines active recall, spaced repetition, structured mastery, short daily practice, audio review, learner profiles, progression rewards and offline installation.
 
-Current release: **5.5.9 — Avatar Case**.
+Current release: **5.5.10 — Persistent Navigation**.
 
 ## Core learning system
 
@@ -52,6 +52,19 @@ The runtime uses direct canonical PNG paths. It does not extract sprites, redraw
 ## Badges
 
 Badges have a dedicated catalogue and a six-slot Badge Chest. The catalogue shows **earned badges first, ordered newest to oldest**, followed by available and locked badges. Learners can select, order and share earned badges.
+
+## Persistent navigation
+
+Release 5.5.10 keeps the main routes available throughout long pages and removes the laptop-width icon-only rail.
+
+- Desktop screens above 860 px use a fixed full-height sidebar with visible labels.
+- The route list scrolls internally on short screens without moving the page.
+- Badges and Avatar Collection / Avatar Case are permanent menu destinations.
+- The active destination uses `aria-current="page"` and remains visible in the sidebar.
+- Small-desktop layouts wrap top-bar stats, headings, controls and multi-column learning views instead of overlapping.
+- Mobile keeps the fixed bottom navigation, sticky app bar and a scrollable More sheet containing Badges and Avatars.
+
+The navigation release does not alter learner progress, rewards, ownership, mastery or profile storage.
 
 ## Hosted achievement sharing
 
@@ -108,12 +121,12 @@ See `docs/CEBUANO_AUDIO.md` for setup and recovery details.
 
 ## Offline installation
 
-Salita Quest is a Progressive Web App. `service-worker.js` precaches the course engine, language packs, interface assets, the audio manifest, the Avatar Case runtime and all 48 canonical avatars. Audio recordings are cached on first playback rather than forcing hundreds of downloads during installation.
+Salita Quest is a Progressive Web App. `service-worker.js` precaches the course engine, language packs, interface assets, the audio manifest, the Avatar Case runtime, persistent-navigation assets and all 48 canonical avatars. Audio recordings are cached on first playback rather than forcing hundreds of downloads during installation.
 
 Current cache revision:
 
 ```text
-salita-quest-v5-5-9-avatar-case-r51
+salita-quest-v5-5-10-persistent-navigation-r52
 ```
 
 The recovery page refreshes app caches and service-worker registrations without clearing learner local storage.
@@ -128,10 +141,12 @@ The recovery page refreshes app caches and service-worker registrations without 
 - `languages/cebuano/` — Cebuano course data
 - `service-worker.js` — offline delivery
 
-### Profiles and progression
+### Profiles, navigation and progression
 
 - `profile-app.js` — learner profile interface
 - `profile-emblem-control.js` — shared avatar runtime loader
+- `desktop-navigation-refinement.js` — persistent desktop/mobile route completion and active state
+- `desktop-navigation-refinement.css` — fixed sidebar, mobile navigation and small-desktop safety
 - `placement-onboarding-v1.js` — placement and beginner access
 - `level-progression-v2.js` — learner level system
 - `popup-governor-v1.js` — queued reward and level popups
@@ -158,16 +173,17 @@ The recovery page refreshes app caches and service-worker registrations without 
 
 ## Validation
 
-Run the complete canonical avatar gate:
+Run the complete canonical avatar and navigation gate:
 
 ```bash
 node scripts/validate-avatar-progression-v550.mjs
 ```
 
-Run the Avatar Case state and sharing harness directly:
+Run the focused Avatar Case and persistent-navigation harnesses directly:
 
 ```bash
 node scripts/validate-avatar-case.mjs
+node scripts/validate-persistent-navigation.mjs
 ```
 
 Run the full application regression suite through the GitHub workflows or individually:
@@ -187,7 +203,7 @@ node scripts/validate-hosted-achievement-sharing.mjs
 node scripts/validate-badge-stability.mjs
 ```
 
-The Avatar Case validator executes profile-state behavior and checks owned-only selection, duplicate rejection, the four-slot limit, persistence, reordering, equipped-avatar independence, sharing and offline delivery. The Bisaya audio validator checks released Cebuano and English coverage, MP3 signatures, manifest paths, runtime language routing, service-worker integration and CI coverage. The canonical avatar validator checks all 48 PNG signatures, dimensions, alpha channels, manifest mappings, runtime consumers, service-worker coverage and the absence of retired sprite/source-rewrite mechanisms.
+The persistent-navigation validator checks route completeness, one-controller ownership, fixed full-height desktop geometry, internal sidebar scrolling, permanent mobile access, removal of the icon-only rail and small-desktop wrapping rules. The Avatar Case validator executes profile-state behavior and checks owned-only selection, duplicate rejection, the four-slot limit, persistence, reordering, equipped-avatar independence, sharing and offline delivery. The Bisaya audio validator checks released Cebuano and English coverage, MP3 signatures, manifest paths, runtime language routing, service-worker integration and CI coverage. The canonical avatar validator checks all 48 PNG signatures, dimensions, alpha channels, manifest mappings, runtime consumers, service-worker coverage and the absence of retired sprite/source-rewrite mechanisms.
 
 ## Release history and architecture notes
 
@@ -196,10 +212,12 @@ The Avatar Case validator executes profile-state behavior and checks owned-only 
 - **5.5.7 — Complete Bisaya Audio** connected complete released Cebuano and English audio coverage with offline replay caching.
 - **5.5.8 — Sharing Foundation** replaced competing posting controllers with one badge, avatar and level system.
 - **5.5.9 — Avatar Case** added the independent four-slot favourite-avatar showcase and sharing card.
+- **5.5.10 — Persistent Navigation** added a labelled full-height computer menu, permanent mobile access and small-desktop layout safeguards.
 - `docs/releases/5.5.6-canonical-avatar-runtime.md`
 - `docs/releases/5.5.7-complete-bisaya-audio.md`
 - `docs/releases/5.5.8-sharing-foundation.md`
 - `docs/releases/5.5.9-avatar-case.md`
+- `docs/releases/5.5.10-persistent-navigation.md`
 - `docs/CODE_AUDIT_2026-07-30.md`
 - `docs/SOCIAL_CONNECTIONS.md`
 - `docs/CEBUANO_AUDIO.md`

@@ -22,11 +22,18 @@ new vm.Script(sharing,{filename:"achievement-sharing-v4.js"});
 
 requireMarkers(runtime,[
   "const MAX_CASE_AVATARS = 4",
+  'const MOBILE_COLLAPSE_QUERY = "(max-width: 650px)"',
   "profile.avatarCaseIds = cleaned",
   "cleanIds",
   "ownedIds",
   "result.includes(item.id)",
   "result.length >= MAX_CASE_AVATARS",
+  "data-avatar-case-toggle",
+  'aria-expanded="${panelExpanded}"',
+  "sq-avatar-case-body",
+  "function setExpanded",
+  "function toggleExpanded",
+  "isExpanded:()=>panelExpanded",
   "data-avatar-case-move",
   "data-avatar-case-remove",
   "data-avatar-case-open-picker",
@@ -62,17 +69,23 @@ requireMarkers(loader,[
 ],"Shared avatar loader");
 
 requireMarkers(worker,[
-  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-5-8-sharing-foundation-r50"',
-  'const CACHE_NAME = "salita-quest-v5-5-9-avatar-case-r51"',
+  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-5-9-avatar-case-r51"',
+  'const CACHE_NAME = "salita-quest-v5-5-10-persistent-navigation-r52"',
   '"./avatar-case-v1.js"',
   '"./avatar-case-v1.css"'
-],"Avatar Case offline release");
+],"Avatar Case carried into persistent-navigation offline release");
 
 requireMarkers(css,[
   ".sq-avatar-case-panel",
+  ".sq-avatar-case-toggle",
+  '.sq-avatar-case-toggle[aria-expanded="false"]',
+  ".sq-avatar-case-body[hidden]",
   "grid-template-columns:repeat(4",
   ".sq-avatar-case-picker",
   "@media(max-width:820px)",
+  "@media(max-width:650px)",
+  "grid-auto-flow:column",
+  "overflow-x:auto",
   "@media(max-width:520px)",
   ".dark-mode .sq-avatar-case-panel"
 ],"Avatar Case responsive styles");
@@ -115,6 +128,7 @@ const context = {
   document:documentStub,
   localStorage:{getItem:key => key === "salitaQuestLocalProfilesV1" ? stored : null,setItem:(key,value)=>{if(key === "salitaQuestLocalProfilesV1")stored=value;}},
   sessionStorage:{getItem:key => key === "salitaQuestActiveProfileId" ? "profile-1" : null},
+  matchMedia:query=>({matches:query==="(max-width: 650px)",media:query}),
   MutationObserver:class MutationObserver{observe(){} disconnect(){}},
   Element:class Element{},
   CustomEvent:class CustomEvent{constructor(type,options){this.type=type;this.detail=options?.detail;}},
@@ -137,6 +151,11 @@ vm.runInContext(runtime,context,{filename:"avatar-case-v1.behavior.js"});
 const api=context.SalitaQuestAvatarCase;
 if(!api)fail("Avatar Case API was not installed in the deterministic harness");
 if(api.max!==4)fail(`Avatar Case maximum is ${api.max}, expected 4`);
+if(api.isExpanded()!==false)fail("Avatar Case must start collapsed at the phone breakpoint");
+api.toggleExpanded();
+if(api.isExpanded()!==true)fail("Avatar Case did not expand through its public toggle");
+api.setExpanded(false,{render:false});
+if(api.isExpanded()!==false)fail("Avatar Case did not collapse through its public state control");
 if(api.getIds().join("|")!=="a|b|c|d")fail(`Initial case cleaning failed: ${api.getIds().join("|")}`);
 const cleaned=api.setIds(["e","e","locked","d","c","b","a"],{announce:false});
 if(cleaned.join("|")!=="e|d|c|b")fail(`Owned/unique/four-slot enforcement failed: ${cleaned.join("|")}`);
@@ -148,4 +167,4 @@ const finalProfile=JSON.parse(stored).profiles[0];
 if(finalProfile.avatarId!=="a"||finalProfile.avatarCollection.equippedAvatarId!=="a")fail("Avatar Case changed the equipped avatar");
 if(finalProfile.avatarCaseIds.join("|")!=="e|c|b")fail("Avatar Case state was not persisted on the profile");
 
-console.log("Validated four-slot owned-only Avatar Case state, duplicate rejection, mouse/touch-safe reordering controls, equipped-avatar independence, unified sharing and offline delivery.");
+console.log("Validated four-slot owned-only Avatar Case state, phone-default collapse, accessible expansion, compact mobile shelf, duplicate rejection, reordering, equipped-avatar independence, unified sharing and persistent-navigation offline delivery.");

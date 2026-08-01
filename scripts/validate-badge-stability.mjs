@@ -179,14 +179,16 @@ requireMarkers(catalogue, [
 
 const worker = read("service-worker.js");
 requireMarkers(worker, [
-  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-5-8-sharing-foundation-r50"',
-  'const CACHE_NAME = "salita-quest-v5-5-9-avatar-case-r51"',
+  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-5-9-avatar-case-r51"',
+  'const CACHE_NAME = "salita-quest-v5-5-10-persistent-navigation-r52"',
   '"./badge-chest-v2.js"',
   '"./badge-chest-v2.css"',
   '"./achievement-sharing-v4.js"',
   '"./achievement-sharing-v4.css"',
   '"./avatar-case-v1.js"',
-  '"./avatar-case-v1.css"'
+  '"./avatar-case-v1.css"',
+  '"./desktop-navigation-refinement.js"',
+  '"./desktop-navigation-refinement.css"'
 ], "Badge and Avatar Case stability offline release");
 for (const obsolete of [
   '"./badge-sharing-v1.js"',
@@ -198,4 +200,4 @@ for (const obsolete of [
 const index = read("index.html");
 if (!index.includes('service-worker.js?v=5.4.29')) fail("Profile gate does not request the stable service worker.");
 
-console.log("Validated preserved six-slot Badge Chest state, deterministic selection rules, one badge/avatar/Avatar Case/level sharing owner, production level events, loader order and Avatar Case offline release.");
+console.log("Validated preserved six-slot Badge Chest state, deterministic selection rules, one badge/avatar/Avatar Case/level sharing owner, production level events, loader order and persistent-navigation offline release.");

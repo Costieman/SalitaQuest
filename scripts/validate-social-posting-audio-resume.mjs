@@ -134,8 +134,8 @@ for (const htmlFile of ["app.html", "bisaya.html"]) {
 
 const worker = read("service-worker.js");
 requireMarkers(worker, [
-  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-5-8-sharing-foundation-r50"',
-  'const CACHE_NAME = "salita-quest-v5-5-9-avatar-case-r51"',
+  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-5-9-avatar-case-r51"',
+  'const CACHE_NAME = "salita-quest-v5-5-10-persistent-navigation-r52"',
   '"./badge-layout-v3.css"',
   '"./badge-chest-v2.js"',
   '"./badge-chest-v2.css"',
@@ -144,7 +144,9 @@ requireMarkers(worker, [
   '"./achievement-sharing-v4.js"',
   '"./achievement-sharing-v4.css"',
   '"./avatar-case-v1.js"',
-  '"./avatar-case-v1.css"'
+  '"./avatar-case-v1.css"',
+  '"./desktop-navigation-refinement.js"',
+  '"./desktop-navigation-refinement.css"'
 ], "Offline social release");
 
 const generator = read("scripts/generate_cebuano_google_audio.py");
@@ -175,4 +177,4 @@ requireMarkers(audioDocs, ["The generator is resumable", "punctuation-only alias
 const audit = read("docs/CODE_AUDIT_2026-07-30.md");
 requireMarkers(audit, ["Self-triggering Badge Chest observer", "Three modules competing", "Pinned source document plus string injection", "No full browser interaction suite"], "Code audit");
 
-console.log("Validated non-overlapping badge cards, one shared badge/avatar/Avatar Case/level controller, hosted-service fallbacks, production level events, resumable Cebuano generation and Avatar Case offline delivery.");
+console.log("Validated non-overlapping badge cards, one shared badge/avatar/Avatar Case/level controller, hosted-service fallbacks, production level events, resumable Cebuano generation and persistent-navigation offline delivery.");

@@ -168,14 +168,16 @@ for (const htmlFile of ["app.html", "bisaya.html"]) {
 
 const worker = read("service-worker.js");
 requireMarkers(worker, [
-  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-5-8-sharing-foundation-r50"',
-  'const CACHE_NAME = "salita-quest-v5-5-9-avatar-case-r51"',
+  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-5-9-avatar-case-r51"',
+  'const CACHE_NAME = "salita-quest-v5-5-10-persistent-navigation-r52"',
   '"./social-connections-v2.js"',
   '"./badge-chest-v2.js"',
   '"./achievement-sharing-v4.js"',
   '"./achievement-sharing-v4.css"',
   '"./avatar-case-v1.js"',
-  '"./avatar-case-v1.css"'
+  '"./avatar-case-v1.css"',
+  '"./desktop-navigation-refinement.js"',
+  '"./desktop-navigation-refinement.css"'
 ], "Stable achievement-sharing offline release");
 
 const index = read("index.html");
@@ -199,4 +201,4 @@ requireMarkers(serviceDocs, [
   "Start learning a Filipino language free"
 ], "Share-service documentation");
 
-console.log("Validated unified badge/chest/avatar/Avatar Case/level share types, hosted-to-local fallbacks, exact Open Graph images, Cloud Run service structure, both language loaders and Avatar Case offline release.");
+console.log("Validated unified badge/chest/avatar/Avatar Case/level share types, hosted-to-local fallbacks, exact Open Graph images, Cloud Run service structure, both language loaders and persistent-navigation offline release.");

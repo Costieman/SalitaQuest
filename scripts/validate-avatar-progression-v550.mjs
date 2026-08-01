@@ -16,7 +16,8 @@ const validators = [
   {file:"scripts/validate-avatar-case.mjs", args:[]},
   {file:"scripts/validate-weekly-avatar-shards.mjs", args:[]},
   {file:"scripts/validate-stage1-popup-governance-v553.mjs", args:[]},
-  {file:"scripts/validate-avatar-runtime-v556.mjs", args:[]}
+  {file:"scripts/validate-avatar-runtime-v556.mjs", args:[]},
+  {file:"scripts/validate-persistent-navigation.mjs", args:[]}
 ];
 
 for (const validator of validators) {
@@ -44,6 +45,7 @@ const runtimeFiles = [
   "avatar-unlock-celebration-v1.js",
   "achievement-sharing-avatar-bridge-v1.js",
   "avatar-progression-migration-v1.js",
+  "desktop-navigation-refinement.js",
   "service-worker.js"
 ];
 for (const file of runtimeFiles) new vm.Script(read(file), {filename:file});
@@ -110,10 +112,16 @@ if (!avatarCase.includes("const MAX_CASE_AVATARS = 4")) fail("Avatar Case does n
 if (!avatarCase.includes("profile.avatarCaseIds = cleaned")) fail("Avatar Case state is not persisted account-wide on the profile");
 if (/profile\.avatarId\s*=|equippedAvatarId\s*=/.test(avatarCase)) fail("Avatar Case must not change the equipped avatar");
 
+const navigation = read("desktop-navigation-refinement.js");
+if (!navigation.includes('const RELEASE = "5.5.10-persistent-navigation"')) fail("Persistent navigation release marker is missing");
+if (!navigation.includes('action:"avatar-collection"')) fail("Persistent navigation does not expose the Avatar Collection and Avatar Case");
+if (navigation.includes("salitaQuestDesktopNavigationCollapsed")) fail("Persistent navigation retains the obsolete collapsed-sidebar preference");
+
 const serviceWorker = read("service-worker.js");
-if (!serviceWorker.includes('const PREVIOUS_CACHE_NAME = "salita-quest-v5-5-8-sharing-foundation-r50"')) fail("Service worker does not retain the previous sharing release boundary");
-if (!serviceWorker.includes('const CACHE_NAME = "salita-quest-v5-5-9-avatar-case-r51"')) fail("Service worker cache version is not the Avatar Case release");
+if (!serviceWorker.includes('const PREVIOUS_CACHE_NAME = "salita-quest-v5-5-9-avatar-case-r51"')) fail("Service worker does not retain the Avatar Case release boundary");
+if (!serviceWorker.includes('const CACHE_NAME = "salita-quest-v5-5-10-persistent-navigation-r52"')) fail("Service worker cache version is not the persistent-navigation release");
 if (!serviceWorker.includes('"./avatar-case-v1.js"') || !serviceWorker.includes('"./avatar-case-v1.css"')) fail("Service worker does not precache the Avatar Case runtime");
+if (!serviceWorker.includes('"./desktop-navigation-refinement.js"') || !serviceWorker.includes('"./desktop-navigation-refinement.css"')) fail("Service worker does not precache persistent navigation");
 const cachedCanonical = [...serviceWorker.matchAll(/"\.\/avatars\/canonical\/[^"]+\.png"/g)];
 if (cachedCanonical.length !== 48) fail(`Service worker must cache exactly 48 canonical PNGs, found ${cachedCanonical.length}`);
 if (/"\.\/avatars\/(?!canonical\/)/.test(serviceWorker)) fail("Service worker still caches legacy avatar artwork");
@@ -134,4 +142,4 @@ for (const marker of [
   if (!releaseNotes.toLowerCase().includes(marker.toLowerCase())) fail(`5.5.6 release notes are missing ${marker}`);
 }
 
-console.log(`Avatar progression integration validation passed: ${model.catalogue.length} direct canonical avatars, four-slot Avatar Case, compatibility-only sharing bridge, preserved learner state and Avatar Case offline delivery.`);
+console.log(`Avatar progression integration validation passed: ${model.catalogue.length} direct canonical avatars, four-slot Avatar Case, persistent labelled navigation, compatibility-only sharing bridge, preserved learner state and r52 offline delivery.`);

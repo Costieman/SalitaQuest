@@ -15,6 +15,7 @@ on:
       - "agent/individual-**"
       - "agent/badge-**"
       - "feature/connect-cebuano-audio-**"
+      - "feature/stability-**"
 
 permissions:
   contents: read
@@ -41,6 +42,8 @@ jobs:
         run: node scripts/validate-key-run-refinement.mjs
       - name: Validate progression scenarios and navigation
         run: node scripts/validate-progression-scenarios-navigation.mjs
+      - name: Validate persistent navigation ownership
+        run: node scripts/validate-persistent-navigation.mjs
       - name: Validate audio badges and reward coordination
         run: node scripts/validate-audio-badge-release.mjs
       - name: Validate placement and badge catalogue
