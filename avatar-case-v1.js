@@ -6,6 +6,7 @@
   const ACTIVE_PROFILE = "salitaQuestActiveProfileId";
   const MAX_CASE_AVATARS = 4;
   const RELEASE = "5.5.9-avatar-case";
+  const MOBILE_COLLAPSE_QUERY = "(max-width: 650px)";
 
   if (window[INSTALL_FLAG]) return;
   window[INSTALL_FLAG] = true;
@@ -14,6 +15,7 @@
   let picker = null;
   let pickerDraft = [];
   let observer = null;
+  let panelExpanded = !(window.matchMedia?.(MOBILE_COLLAPSE_QUERY)?.matches);
 
   const esc = value => String(value ?? "").replace(/[&<>"']/g, character => ({
     "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;"
@@ -145,20 +147,32 @@
     return panel;
   }
 
+  function setExpanded(expanded, options = {}) {
+    panelExpanded = Boolean(expanded);
+    if (options.render !== false) render();
+    return panelExpanded;
+  }
+
+  function toggleExpanded() {
+    return setExpanded(!panelExpanded);
+  }
+
   function render() {
     const host = ensurePanel();
     if (!host || !model()) return;
     const avatars = getAvatars();
     const slots = Array.from({length:MAX_CASE_AVATARS},(_,index) => slotMarkup(avatars[index] || null,index,avatars.length));
     host.innerHTML = `
-      <div class="sq-avatar-case-heading">
+      <button class="sq-avatar-case-heading sq-avatar-case-toggle" type="button" data-avatar-case-toggle aria-expanded="${panelExpanded}" aria-controls="sqAvatarCaseBody">
         <div><p>FAVOURITE COLLECTION</p><h3 id="sqAvatarCaseTitle">Avatar Case</h3><span>Display up to four unlocked avatars without changing your equipped avatar.</span></div>
-        <span class="sq-avatar-case-count">${avatars.length} / ${MAX_CASE_AVATARS}</span>
-      </div>
-      <div class="sq-avatar-case-slots">${slots.join("")}</div>
-      <div class="sq-avatar-case-actions">
-        <button class="secondary-btn" type="button" data-avatar-case-open-picker>${avatars.length ? "Edit Avatar Case" : "Choose avatars"}</button>
-        <button class="primary-btn" type="button" data-share-avatar-case ${avatars.length ? "" : "disabled"}>Share Avatar Case</button>
+        <span class="sq-avatar-case-heading-meta"><span class="sq-avatar-case-count">${avatars.length} / ${MAX_CASE_AVATARS}</span><span class="sq-avatar-case-chevron" aria-hidden="true">⌄</span></span>
+      </button>
+      <div class="sq-avatar-case-body" id="sqAvatarCaseBody" ${panelExpanded ? "" : "hidden"}>
+        <div class="sq-avatar-case-slots">${slots.join("")}</div>
+        <div class="sq-avatar-case-actions">
+          <button class="secondary-btn" type="button" data-avatar-case-open-picker>${avatars.length ? "Edit Avatar Case" : "Choose avatars"}</button>
+          <button class="primary-btn" type="button" data-share-avatar-case ${avatars.length ? "" : "disabled"}>Share Avatar Case</button>
+        </div>
       </div>`;
     window.SalitaAvatarArtwork?.repair?.(host);
   }
@@ -234,6 +248,7 @@
   }
 
   function handleDocumentClick(event) {
+    if (event.target.closest("[data-avatar-case-toggle]")) { event.preventDefault(); toggleExpanded(); return; }
     if (event.target.closest("[data-avatar-case-open-picker]")) { event.preventDefault(); openPicker(); return; }
     const moveButton = event.target.closest("[data-avatar-case-move]");
     if (moveButton && !moveButton.disabled) {
@@ -267,7 +282,7 @@
     persist(getIds(),{announce:false});
     render();
     window.SalitaQuestAvatarCase = Object.freeze({
-      version:1,release:RELEASE,max:MAX_CASE_AVATARS,getIds,getAvatars,setIds,move,remove,openPicker,render
+      version:1,release:RELEASE,max:MAX_CASE_AVATARS,getIds,getAvatars,setIds,move,remove,openPicker,render,setExpanded,toggleExpanded,isExpanded:()=>panelExpanded
     });
     document.documentElement.dataset.avatarCase = RELEASE;
     document.dispatchEvent(new CustomEvent("salita:avatar-case-ready",{detail:{release:RELEASE}}));
