@@ -11,16 +11,33 @@
     return window.SalitaQuestAchievementSharing || null;
   }
 
-  function equippedAvatar() {
+  function activeProfile() {
     try {
-      const model = window.SalitaAvatarModel;
       const profileStore = JSON.parse(localStorage.getItem("salitaQuestLocalProfilesV1") || "null");
       const profileId = sessionStorage.getItem("salitaQuestActiveProfileId");
-      const profile = profileStore?.profiles?.find(item => item.id === profileId) || null;
-      const id = profile?.avatarCollection?.equippedAvatarId || profile?.avatarId || "anahaw";
-      return model?.get?.(id) || model?.get?.("anahaw") || null;
+      return profileStore?.profiles?.find(item => item.id === profileId) || null;
     } catch {
       return null;
+    }
+  }
+
+  function equippedAvatar() {
+    const profile = activeProfile();
+    const id = profile?.avatarCollection?.equippedAvatarId || profile?.avatarId || "anahaw";
+    return window.SalitaAvatarModel?.get?.(id) || window.SalitaAvatarModel?.get?.("anahaw") || null;
+  }
+
+  function ownsAvatar(id) {
+    const item = window.SalitaAvatarModel?.get?.(id);
+    const profile = activeProfile();
+    if (!item || !profile) return false;
+    try {
+      const state = window.SalitaAvatarModel?.normaliseCollectionState?.(profile.avatarCollection, profile.avatarId) || profile.avatarCollection || {};
+      const owned = new Set(state.ownedAvatarIds || []);
+      if (profile.avatarId) owned.add(profile.avatarId);
+      return owned.has(item.id);
+    } catch {
+      return false;
     }
   }
 
@@ -34,6 +51,25 @@
     } catch {
       return item?.image || "avatars/canonical/anahaw.png";
     }
+  }
+
+  function decorateCard(card) {
+    if (!card || card.querySelector("[data-share-avatar]")) return;
+    const id = card.querySelector("[data-sq-avatar-id]")?.dataset.sqAvatarId || "";
+    if (!ownsAvatar(id)) return;
+    const actions = card.querySelector(".sq-avatar-detail-actions");
+    if (!actions) return;
+    const button = document.createElement("button");
+    button.className = "sq-avatar-detail-share secondary-btn";
+    button.type = "button";
+    button.dataset.shareAvatar = id;
+    button.textContent = "Share avatar";
+    actions.insertBefore(button, actions.lastElementChild || null);
+  }
+
+  function decorateAvatarDetails(scope = document) {
+    if (scope?.matches?.(".sq-avatar-detail-card")) decorateCard(scope);
+    scope?.querySelectorAll?.(".sq-avatar-detail-card").forEach(decorateCard);
   }
 
   const compatibilityApi = Object.freeze({
@@ -51,6 +87,19 @@
   // runtime remains the sole owner of badge, avatar and level sharing.
   window.SalitaAchievementAvatarBridge = compatibilityApi;
   document.documentElement.dataset.avatarSharingBridge = RELEASE;
+
+  decorateAvatarDetails();
+  new MutationObserver(records => {
+    for (const record of records) {
+      for (const node of record.addedNodes) {
+        if (node instanceof Element) decorateAvatarDetails(node);
+      }
+    }
+  }).observe(document.documentElement, {childList:true, subtree:true});
+
+  document.addEventListener("salita:avatar-collection-changed", () => {
+    window.setTimeout(() => decorateAvatarDetails(), 30);
+  });
   document.dispatchEvent(new CustomEvent("salita:avatar-sharing-bridge-ready", {
     detail:{release:RELEASE, compatibilityOnly:true}
   }));
