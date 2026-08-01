@@ -1,10 +1,11 @@
-const PREVIOUS_CACHE_NAME = "salita-quest-v5-5-4-avatar-artwork-r47";
-const CACHE_NAME = "salita-quest-v5-5-6-canonical-avatars-r48";
+const PREVIOUS_CACHE_NAME = "salita-quest-v5-5-6-canonical-avatars-r48";
+const CACHE_NAME = "salita-quest-v5-5-7-complete-bisaya-audio-r49";
 
 const CORE_FILES = [
   "./", "./index.html", "./app.html", "./bisaya.html", "./mobile-refresh.html",
   "./style.css", "./app.js", "./manifest.webmanifest", "./icons/icon-192.png", "./icons/icon-512.png",
-  "./profile-shell.css", "./profile-app.js", "./profile-emblem-control.js", "./profile-emblem-control.css"
+  "./profile-shell.css", "./profile-app.js", "./profile-emblem-control.js", "./profile-emblem-control.css",
+  "./audio/audio_manifest.json"
 ];
 
 const APP_ENHANCEMENTS = [
@@ -98,6 +99,83 @@ const AVATAR_FILES = [
 
 const STATIC_FILES = [...CORE_FILES, ...APP_ENHANCEMENTS, ...AVATAR_PROGRESSION_FILES, ...COURSE_FILES, ...AVATAR_FILES];
 
+function isSameOriginAudio(url) {
+  return url.origin === self.location.origin && /\.(?:mp3|m4a|ogg|wav)$/i.test(url.pathname);
+}
+
+function parseRangeHeader(value, totalLength) {
+  const match = /^bytes=(\d*)-(\d*)$/.exec(value || "");
+  if (!match) return null;
+
+  let start = match[1] === "" ? null : Number(match[1]);
+  let end = match[2] === "" ? null : Number(match[2]);
+
+  if (start === null) {
+    const suffixLength = end;
+    if (!Number.isInteger(suffixLength) || suffixLength <= 0) return null;
+    start = Math.max(0, totalLength - suffixLength);
+    end = totalLength - 1;
+  } else {
+    if (!Number.isInteger(start) || start < 0 || start >= totalLength) return null;
+    if (end === null || end >= totalLength) end = totalLength - 1;
+    if (!Number.isInteger(end) || end < start) return null;
+  }
+
+  return {start, end};
+}
+
+async function createRangeResponse(response, rangeHeader) {
+  const buffer = await response.arrayBuffer();
+  const range = parseRangeHeader(rangeHeader, buffer.byteLength);
+  if (!range) {
+    return new Response(null, {
+      status: 416,
+      headers: {"Content-Range": `bytes */${buffer.byteLength}`}
+    });
+  }
+
+  const headers = new Headers(response.headers);
+  headers.delete("Content-Encoding");
+  headers.set("Accept-Ranges", "bytes");
+  headers.set("Content-Range", `bytes ${range.start}-${range.end}/${buffer.byteLength}`);
+  headers.set("Content-Length", String(range.end - range.start + 1));
+
+  return new Response(buffer.slice(range.start, range.end + 1), {
+    status: 206,
+    statusText: "Partial Content",
+    headers
+  });
+}
+
+async function audioCacheFirst(request) {
+  const cache = await caches.open(CACHE_NAME);
+  const cacheKey = new Request(request.url, {method:"GET", credentials:"same-origin"});
+  let response = await cache.match(cacheKey, {ignoreSearch:true});
+
+  if (!response) {
+    const headers = new Headers(request.headers);
+    headers.delete("Range");
+    const networkRequest = new Request(request.url, {
+      method:"GET",
+      headers,
+      credentials:request.credentials,
+      mode:"same-origin",
+      cache:"reload",
+      redirect:"follow"
+    });
+    response = await fetch(networkRequest);
+    if (response.ok && response.status === 200) {
+      await cache.put(cacheKey, response.clone());
+    }
+  }
+
+  const rangeHeader = request.headers.get("Range");
+  if (rangeHeader && response.status === 200) {
+    return createRangeResponse(response, rangeHeader);
+  }
+  return response;
+}
+
 self.addEventListener("install", event => {
   self.skipWaiting();
   event.waitUntil(caches.open(CACHE_NAME).then(cache => Promise.allSettled(STATIC_FILES.map(file => cache.add(file)))));
@@ -112,6 +190,15 @@ self.addEventListener("activate", event => {
 self.addEventListener("fetch", event => {
   const url = new URL(event.request.url);
   if (event.request.method !== "GET" || url.pathname.startsWith("/api/")) return;
+
+  if (isSameOriginAudio(url)) {
+    event.respondWith(audioCacheFirst(event.request).catch(async () => {
+      const cached = await caches.match(event.request, {ignoreSearch:true});
+      return cached || Response.error();
+    }));
+    return;
+  }
+
   const networkRequest = url.origin === self.location.origin
     ? new Request(event.request, {cache:"reload"})
     : event.request;
