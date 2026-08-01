@@ -13,6 +13,7 @@ const validators = [
   {file:"scripts/validate-avatar-catalogue.mjs", args:[]},
   {file:"scripts/validate-avatar-onboarding.mjs", args:[]},
   {file:"scripts/validate-avatar-collection-screen.mjs", args:[]},
+  {file:"scripts/validate-avatar-case.mjs", args:[]},
   {file:"scripts/validate-weekly-avatar-shards.mjs", args:[]},
   {file:"scripts/validate-stage1-popup-governance-v553.mjs", args:[]},
   {file:"scripts/validate-avatar-runtime-v556.mjs", args:[]}
@@ -35,6 +36,7 @@ const runtimeFiles = [
   "popup-governor-v1.js",
   "profile-emblem-control.js",
   "avatar-collection-screen-v1.js",
+  "avatar-case-v1.js",
   "weekly-avatar-shard-rewards-v1.js",
   "level-avatar-rewards-v1.js",
   "level-progression-v2.js",
@@ -65,6 +67,7 @@ const orderedTokens = [
   "await window.SalitaAvatarArtworkReady",
   'await loadScript("migration"',
   'await loadScript("collection"',
+  'await loadScript("case"',
   'await loadScript("weekly"',
   'await loadScript("level"',
   'await loadScript("unlock"',
@@ -77,6 +80,7 @@ for (const token of orderedTokens) {
   lastIndex = index;
 }
 if (!loader.includes('const RELEASE_VERSION = "5.5.6"')) fail("Shared avatar loader is not cache-busted to its canonical runtime release");
+if (!loader.includes('const AVATAR_CASE_VERSION = "5.5.9"')) fail("Shared avatar loader does not version the Avatar Case runtime");
 if (loader.includes("repair(document)")) fail("Shared loader must not run a document-wide avatar repair pass");
 
 const artwork = read("avatar-artwork-registry-v554.js");
@@ -101,9 +105,15 @@ if (!sharingBridge.includes("controller()?.openAvatar")) fail("Avatar bridge doe
 if (sharingBridge.includes("window.SalitaQuestAchievementSharing =")) fail("Avatar bridge must not replace the shared achievement controller");
 if (sharingBridge.includes('document.addEventListener("click"')) fail("Avatar bridge must not intercept share clicks");
 
+const avatarCase = read("avatar-case-v1.js");
+if (!avatarCase.includes("const MAX_CASE_AVATARS = 4")) fail("Avatar Case does not enforce four slots");
+if (!avatarCase.includes("profile.avatarCaseIds = cleaned")) fail("Avatar Case state is not persisted account-wide on the profile");
+if (/profile\.avatarId\s*=|equippedAvatarId\s*=/.test(avatarCase)) fail("Avatar Case must not change the equipped avatar");
+
 const serviceWorker = read("service-worker.js");
-if (!serviceWorker.includes('const PREVIOUS_CACHE_NAME = "salita-quest-v5-5-7-complete-bisaya-audio-r49"')) fail("Service worker does not retain the previous audio release boundary");
-if (!serviceWorker.includes('const CACHE_NAME = "salita-quest-v5-5-8-sharing-foundation-r50"')) fail("Service worker cache version is not the sharing foundation release");
+if (!serviceWorker.includes('const PREVIOUS_CACHE_NAME = "salita-quest-v5-5-8-sharing-foundation-r50"')) fail("Service worker does not retain the previous sharing release boundary");
+if (!serviceWorker.includes('const CACHE_NAME = "salita-quest-v5-5-9-avatar-case-r51"')) fail("Service worker cache version is not the Avatar Case release");
+if (!serviceWorker.includes('"./avatar-case-v1.js"') || !serviceWorker.includes('"./avatar-case-v1.css"')) fail("Service worker does not precache the Avatar Case runtime");
 const cachedCanonical = [...serviceWorker.matchAll(/"\.\/avatars\/canonical\/[^"]+\.png"/g)];
 if (cachedCanonical.length !== 48) fail(`Service worker must cache exactly 48 canonical PNGs, found ${cachedCanonical.length}`);
 if (/"\.\/avatars\/(?!canonical\/)/.test(serviceWorker)) fail("Service worker still caches legacy avatar artwork");
@@ -124,4 +134,4 @@ for (const marker of [
   if (!releaseNotes.toLowerCase().includes(marker.toLowerCase())) fail(`5.5.6 release notes are missing ${marker}`);
 }
 
-console.log(`Avatar progression integration validation passed: ${model.catalogue.length} direct canonical avatars, compatibility-only sharing bridge, preserved learner state, governed rewards and sharing-foundation offline delivery.`);
+console.log(`Avatar progression integration validation passed: ${model.catalogue.length} direct canonical avatars, four-slot Avatar Case, compatibility-only sharing bridge, preserved learner state and Avatar Case offline delivery.`);
