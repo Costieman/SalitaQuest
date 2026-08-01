@@ -56,8 +56,10 @@ const englishEntries = entries["en-GB"] || {};
 
 check(Object.keys(cebuanoEntries).length > 0, "audio manifest has no ceb-PH entries");
 check(Object.keys(englishEntries).length > 0, "audio manifest has no en-GB entries");
-check(Boolean(voices["ceb-PH"]), "audio manifest has no ceb-PH voice metadata");
 check(voices["en-GB"]?.name === "en-GB-Neural2-B", "en-GB voice must remain en-GB-Neural2-B");
+if (voices["ceb-PH"]) {
+  check(voices["ceb-PH"].name === "Kore", "optional ceb-PH voice metadata must identify Kore");
+}
 
 function validateRequired(required, language, languageEntries) {
   for (const text of required) {
@@ -138,6 +140,12 @@ check(serviceWorker.includes("salita-quest-v5-5-7-complete-bisaya-audio-r49"),
 const workflow = readText(".github/workflows/validate-bisaya.yml");
 check(workflow.includes("node scripts/validate-bisaya-audio-library.mjs"),
   "Bisaya workflow does not run the complete audio validator");
+
+const cebuanoGenerator = readText("scripts/generate_cebuano_google_audio.py");
+check(cebuanoGenerator.includes('LANGUAGE_CODE = "ceb-PH"'),
+  "Cebuano generator language code changed unexpectedly");
+check(cebuanoGenerator.includes('DEFAULT_VOICE = "Kore"'),
+  "Cebuano generator voice changed unexpectedly");
 
 const englishGenerator = readText("scripts/generate_missing_bisaya_english_audio.py");
 check(englishGenerator.includes('VOICE_NAME = "en-GB-Neural2-B"'),
