@@ -174,7 +174,8 @@ requireMarkers(catalogue, [
 
 const worker = read("service-worker.js");
 requireMarkers(worker, [
-  'const CACHE_NAME = "salita-quest-v5-5-7-complete-bisaya-audio-r49"',
+  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-5-7-complete-bisaya-audio-r49"',
+  'const CACHE_NAME = "salita-quest-v5-5-8-sharing-foundation-r50"',
   '"./badge-chest-v2.js"',
   '"./badge-chest-v2.css"',
   '"./achievement-sharing-v4.js"',
@@ -190,4 +191,4 @@ for (const obsolete of [
 const index = read("index.html");
 if (!index.includes('service-worker.js?v=5.4.29')) fail("Profile gate does not request the stable service worker.");
 
-console.log("Validated preserved six-slot Badge Chest state, deterministic selection rules, one badge/avatar/level sharing owner, production level events, loader order and current offline release.");
+console.log("Validated preserved six-slot Badge Chest state, deterministic selection rules, one badge/avatar/level sharing owner, production level events, loader order and sharing-foundation offline release.");
