@@ -1,0 +1,101 @@
+.achievement-share-router-v2{
+  display:grid;
+  gap:14px;
+  margin-top:16px;
+}
+.achievement-share-mode-group{
+  display:grid;
+  gap:10px;
+  padding:12px;
+  border:1px solid rgba(15,118,110,.18);
+  border-radius:18px;
+  background:rgba(248,252,251,.78);
+}
+.achievement-share-mode-heading{
+  display:flex;
+  align-items:baseline;
+  justify-content:space-between;
+  gap:12px;
+}
+.achievement-share-mode-heading span{
+  color:#0f766e;
+  font-size:.72rem;
+  font-weight:950;
+  letter-spacing:.12em;
+}
+.achievement-share-mode-heading small{
+  color:#64748b;
+  font-size:.72rem;
+  text-align:right;
+}
+.achievement-share-mode-actions{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:8px;
+}
+.achievement-share-mode-actions.image-actions{
+  grid-template-columns:repeat(2,minmax(0,1fr));
+}
+.achievement-share-mode-actions button{
+  display:grid;
+  gap:3px;
+  align-content:center;
+  min-width:0;
+  min-height:62px;
+  padding:10px 12px;
+  border:1px solid rgba(15,118,110,.2);
+  border-radius:14px;
+  background:#fff;
+  color:#10213b;
+  text-align:left;
+  box-shadow:0 4px 14px rgba(15,23,42,.07);
+  cursor:pointer;
+}
+.achievement-share-mode-actions button:hover,
+.achievement-share-mode-actions button:focus-visible{
+  border-color:#0f766e;
+  box-shadow:0 0 0 3px rgba(15,118,110,.12),0 6px 18px rgba(15,23,42,.1);
+}
+.achievement-share-mode-actions button[data-busy="true"]{
+  opacity:.65;
+  cursor:wait;
+}
+.achievement-share-mode-actions button strong{
+  font-size:.83rem;
+  line-height:1.2;
+}
+.achievement-share-mode-actions button small{
+  color:#64748b;
+  font-size:.67rem;
+  line-height:1.25;
+}
+.achievement-share-secondary[hidden]{display:none!important}
+
+@media (max-width:720px){
+  .achievement-share-mode-heading{
+    display:grid;
+    gap:3px;
+  }
+  .achievement-share-mode-heading small{text-align:left}
+  .achievement-share-mode-actions,
+  .achievement-share-mode-actions.image-actions{
+    grid-template-columns:1fr;
+  }
+  .achievement-share-mode-actions button{
+    min-height:56px;
+  }
+}
+
+@media (prefers-color-scheme:dark){
+  .achievement-share-mode-group{
+    border-color:rgba(122,217,200,.24);
+    background:rgba(8,24,42,.6);
+  }
+  .achievement-share-mode-actions button{
+    border-color:rgba(122,217,200,.22);
+    background:#13233a;
+    color:#f8fafc;
+  }
+  .achievement-share-mode-heading small,
+  .achievement-share-mode-actions button small{color:#a9bdca}
+}
