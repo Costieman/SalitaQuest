@@ -27,7 +27,7 @@ new vm.Script(source, {filename:"daily-goal-refinement.js"});
 ].forEach(requireText);
 
 if ((source.match(/DAILY_QUEST_REWARD/g) || []).length < 6) fail("Daily quest rewards are not consistently governed by the 100-coin constant.");
-if (!source.includes("if (correct && !teachingItem)")) fail("Teaching questions must remain outside the regular-answer reduction.");
+if (!source.includes("if (correct && !teachingItem && activeExercise)")) fail("Teaching questions must remain outside the regular-answer reduction.");
 if (!source.includes("const bossPassed = bossAttempt")) fail("Boss rewards must remain conditional on passing the encounter.");
 
 console.log("Validated four 100-coin daily quests, a 100-coin chest, halved regular/combo rewards, and two daily 25-coin boss rewards.");
