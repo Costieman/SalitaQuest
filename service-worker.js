@@ -1,5 +1,5 @@
 const PREVIOUS_CACHE_NAME = "salita-quest-v5-5-9-avatar-case-r51";
-const CACHE_NAME = "salita-quest-v5-5-11-profile-install-r53";
+const CACHE_NAME = "salita-quest-v5-5-10-persistent-navigation-r52";
 const AVATAR_CASE_DISPLAY_HOTFIX = "2026-08-01-compact-display-share-stack-1";
 const TOPBAR_WORLD_PROGRESS_HOTFIX = "2026-08-01-separated-heading-rail-1";
 const SHARE_IMAGE_TRANSPORT_DELIVERY = "2026-08-02-direct-loader-1";
