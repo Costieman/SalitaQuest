@@ -51,9 +51,6 @@ if (router.includes("mobileShareAvailable") || router.includes("hasMobileNativeS
 if (router.includes("&quote=") || router.includes("&hashtag=")) {
   fail("Facebook sharing must use the simple URL-post endpoint without unsupported prefill parameters.");
 }
-if (/provider\s*===\s*"facebook"[\s\S]{0,500}navigator\.share/.test(router)) {
-  fail("The Facebook feed action must not call navigator.share.");
-}
 if (/navigator\.share\(\{[^}]*files:/.test(router)) {
   fail("No social-post route may degrade into an image-only attachment.");
 }
@@ -71,6 +68,9 @@ if (!publicComposer[1].includes("await ensureHostedShare()")) {
 }
 if (!publicComposer[1].includes("composerUrl(provider,hosted)")) {
   fail("Public feed posting must route through the dedicated social composer map.");
+}
+if (publicComposer[1].includes("navigator.share")) {
+  fail("Dedicated public feed composers must not use the generic operating-system share sheet.");
 }
 if (publicComposer[1].includes("prepared.url") || publicComposer[1].includes("shareRoot")) {
   fail("Public feed posting must never fall back to the learner-login application URL.");
