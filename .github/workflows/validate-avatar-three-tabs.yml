@@ -1,0 +1,21 @@
+name: Validate Avatar Collection three tabs
+
+on:
+  pull_request:
+    paths:
+      - 'avatar-collection-tabs-phase6-1-v1.js'
+      - 'avatar-collection-tabs-phase6-1-v1.css'
+      - 'coin-avatar-shop-topbar-v1.js'
+      - 'scripts/validate-avatar-three-tabs.mjs'
+      - '.github/workflows/validate-avatar-three-tabs.yml'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: node --check avatar-collection-tabs-phase6-1-v1.js
+      - run: node scripts/validate-avatar-three-tabs.mjs
