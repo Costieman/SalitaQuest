@@ -4,7 +4,7 @@
   const INSTALL_FLAG = "__salitaQuestProfileEmblemControlInstalled";
   const RELEASE_VERSION = "5.5.6";
   const AVATAR_CASE_VERSION = "5.5.9";
-  const SHARING_VERSION = "5.5.10.4";
+  const SHARING_VERSION = "5.5.11.1";
   let assetPromise = null;
 
   function addStylesheet(key, href) {
@@ -44,6 +44,7 @@
     addStylesheet("weekly-css", `./weekly-avatar-shard-rewards-v1.css?v=${RELEASE_VERSION}`);
     addStylesheet("unlock-css", `./avatar-unlock-celebration-v1.css?v=${RELEASE_VERSION}`);
     addStylesheet("hotfix-css", `./avatar-progression-hotfix-v551.css?v=${RELEASE_VERSION}`);
+    addStylesheet("sharing-router-css", `./achievement-sharing-router-v2.css?v=${SHARING_VERSION}`);
 
     assetPromise = (async () => {
       if (!window.SalitaAvatarModel) {
@@ -59,14 +60,10 @@
       await loadScript("weekly", `./weekly-avatar-shard-rewards-v1.js?v=${RELEASE_VERSION}`, "Weekly avatar rewards could not be loaded.");
       await loadScript("level", `./level-avatar-rewards-v1.js?v=${RELEASE_VERSION}`, "Level avatar rewards could not be loaded.");
       await loadScript("unlock", `./avatar-unlock-celebration-v1.js?v=${RELEASE_VERSION}`, "Avatar unlock celebration could not be loaded.");
-
-      // Load the image-first transport directly rather than depending on the
-      // compatibility bridge. The versioned URL prevents an installed app from
-      // retaining the older Facebook link-composer path.
       await loadScript(
-        "achievement-image-transport",
-        `./achievement-sharing-image-transport-v1.js?v=${SHARING_VERSION}`,
-        "Achievement image sharing could not be loaded."
+        "achievement-sharing-router",
+        `./achievement-sharing-router-v2.js?v=${SHARING_VERSION}`,
+        "Achievement sharing choices could not be loaded."
       );
       await loadScript(
         "sharing",
