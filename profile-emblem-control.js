@@ -4,7 +4,7 @@
   const INSTALL_FLAG = "__salitaQuestProfileEmblemControlInstalled";
   const RELEASE_VERSION = "5.5.6";
   const AVATAR_CASE_VERSION = "5.5.9";
-  const SHARING_VERSION = "5.5.13.1";
+  const SHARING_VERSION = "5.5.14.1";
   let assetPromise = null;
 
   function addStylesheet(key, href) {
