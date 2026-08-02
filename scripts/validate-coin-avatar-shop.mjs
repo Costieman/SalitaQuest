@@ -6,8 +6,10 @@ const shop = read("coin-avatar-shard-shop-v1.js");
 const badges = read("coin-avatar-shop-badges-v1.js");
 const loader = read("profile-emblem-control.js");
 const weekly = read("weekly-avatar-shard-rewards-v1.js");
+const topbar = read("coin-avatar-shop-topbar-v1.js");
+const topbarCss = read("coin-avatar-shop-topbar-v1.css");
 
-for (const [name,source] of [["shop",shop],["badges",badges],["loader",loader]]) {
+for (const [name,source] of [["shop",shop],["badges",badges],["loader",loader],["topbar",topbar]]) {
   new vm.Script(source,{filename:name});
 }
 
@@ -16,6 +18,10 @@ const required = [
   [shop,"const SHARDS_PER_PACK = 25"],[shop,"Math.floor(Math.random() * pool.length)"],
   [shop,"!account.collection.ownedAvatarIds.includes(item.id)"],
   [loader,"coin-avatar-shard-shop-v1.js"],[loader,"coin-avatar-shop-badges-v1.js"],
+  [loader,"coin-avatar-shop-topbar-v1.js"],[loader,"coin-avatar-shop-topbar-v1.css"],
+  [topbar,"insertAdjacentElement(\"afterend\", button)"],[topbar,"data-topbar-coin-shop"],
+  [topbar,".sq-avatar-collection-header [data-open-coin-shop]"],
+  [topbarCss,"z-index:2147483000!important"],
   [badges,"lt_coins_500000"],[badges,"lt_coins_1000000"],
   [badges,"chain(\"coins_spent\""],[badges,"chain(\"packs\""],
   [badges,"chain(\"common_owned\""],[badges,"chain(\"uncommon_owned\""],[badges,"chain(\"rare_owned\""]
