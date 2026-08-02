@@ -2,7 +2,7 @@
   "use strict";
 
   const INSTALL_FLAG = "__salitaQuestAchievementSharingRouterV2Installed";
-  const RELEASE = "5.5.11-explicit-sharing-router";
+  const RELEASE = "5.5.12-playable-social-posts";
   const MODAL_ID = "achievementShareModalV4";
   const PREVIEW_ID = "achievementSharePreview";
   const PROFILE_STORE = "salitaQuestLocalProfilesV1";
@@ -24,19 +24,14 @@
     level_up:"level-up"
   });
 
-  function modal() {
-    return document.getElementById(MODAL_ID);
-  }
+  const modal = () => document.getElementById(MODAL_ID);
+  const preview = () => document.getElementById(PREVIEW_ID);
 
-  function preview() {
-    return document.getElementById(PREVIEW_ID);
-  }
-
-  function setStatus(message, error = false) {
+  function setStatus(message,error=false) {
     const node = document.getElementById("achievementShareStatus");
     if (!node) return;
     node.textContent = message || "";
-    node.classList.toggle("error", Boolean(error));
+    node.classList.toggle("error",Boolean(error));
   }
 
   function activeProfile() {
@@ -44,9 +39,7 @@
       const store = JSON.parse(localStorage.getItem(PROFILE_STORE) || "null");
       const id = sessionStorage.getItem(ACTIVE_PROFILE);
       return store?.profiles?.find(profile => profile.id === id) || null;
-    } catch {
-      return null;
-    }
+    } catch { return null; }
   }
 
   function courseLabel() {
@@ -54,11 +47,7 @@
   }
 
   function cleanFilePart(value) {
-    return String(value || "achievement")
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g,"-")
-      .replace(/^-+|-+$/g,"")
-      .slice(0,56) || "achievement";
+    return String(value || "achievement").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"").slice(0,56) || "achievement";
   }
 
   function titleFromModal() {
@@ -67,10 +56,6 @@
 
   function textFromModal() {
     return document.getElementById("achievementShareDescription")?.textContent?.trim() || "My Salita Quest achievement.";
-  }
-
-  function campaignFor(type) {
-    return TYPE_CAMPAIGN[type] || "achievement-share";
   }
 
   function dataUrl(blob) {
@@ -83,9 +68,7 @@
   }
 
   function canvasBlob(canvas) {
-    return new Promise((resolve,reject) => {
-      canvas.toBlob(blob => blob ? resolve(blob) : reject(new Error("The social preview could not be created.")),"image/png",1);
-    });
+    return new Promise((resolve,reject) => canvas.toBlob(blob => blob ? resolve(blob) : reject(new Error("The social preview could not be created.")),"image/png",1));
   }
 
   function loadImage(source) {
@@ -97,7 +80,7 @@
     });
   }
 
-  function wrapText(context, text, x, y, maxWidth, lineHeight, maxLines) {
+  function wrapText(context,text,x,y,maxWidth,lineHeight,maxLines) {
     const words = String(text || "").split(/\s+/).filter(Boolean);
     const lines = [];
     let current = "";
@@ -112,7 +95,7 @@
     lines.slice(0,maxLines).forEach((line,index) => context.fillText(line,x,y + index * lineHeight));
   }
 
-  async function openGraphBlob(squareSource, title, text) {
+  async function openGraphBlob(squareSource,title,text) {
     const image = await loadImage(squareSource);
     const canvas = document.createElement("canvas");
     canvas.width = 1200;
@@ -158,13 +141,9 @@
     return canvasBlob(canvas);
   }
 
-  function currentSource() {
-    return preview()?.src || "";
-  }
-
   function ensureImageFile() {
     if (!prepared?.source) return Promise.reject(new Error("The achievement image is not ready."));
-    if (prepared.file && prepared.source === currentSource()) return Promise.resolve(prepared.file);
+    if (prepared.file) return Promise.resolve(prepared.file);
     if (imageFilePromise) return imageFilePromise;
     imageFilePromise = fetch(prepared.source)
       .then(response => {
@@ -180,26 +159,16 @@
     return imageFilePromise;
   }
 
-  function socialApi() {
-    return window.SalitaQuestSocialConnections || null;
-  }
-
-  function validateHostedResponse(data, apiBase) {
+  function validateHostedResponse(data,apiBase) {
     let share;
     let image;
     try {
       share = new URL(data?.shareUrl || "");
       image = new URL(data?.imageUrl || "");
-    } catch {
-      throw new Error("The public achievement page returned an invalid address.");
-    }
+    } catch { throw new Error("The public achievement page returned an invalid address."); }
     const apiOrigin = new URL(apiBase).origin;
-    if (share.protocol !== "https:" || share.origin !== apiOrigin || !share.pathname.startsWith("/share/")) {
-      throw new Error("The public achievement page is not a valid hosted share page.");
-    }
-    if (image.protocol !== "https:" || image.origin !== apiOrigin || !image.pathname.startsWith("/media/")) {
-      throw new Error("The public achievement image is not available.");
-    }
+    if (share.protocol !== "https:" || share.origin !== apiOrigin || !share.pathname.startsWith("/share/")) throw new Error("The public achievement page is not a valid hosted share page.");
+    if (image.protocol !== "https:" || image.origin !== apiOrigin || !image.pathname.startsWith("/media/")) throw new Error("The public achievement image is not available.");
     return data;
   }
 
@@ -207,14 +176,11 @@
     if (!prepared) return Promise.reject(new Error("No achievement is ready to share."));
     if (prepared.hosted) return Promise.resolve(prepared.hosted);
     if (hostedPromise) return hostedPromise;
-
     hostedPromise = (async () => {
-      const api = socialApi();
+      const api = window.SalitaQuestSocialConnections || null;
       const base = String(api?.apiBase?.() || "").replace(/\/$/,"");
       if (!base) throw new Error("Public achievement posts are temporarily unavailable.");
-      if (api?.ensureHosted && !(await api.ensureHosted())) {
-        throw new Error("Public achievement posts are temporarily unavailable.");
-      }
+      if (api?.ensureHosted && !(await api.ensureHosted())) throw new Error("Public achievement posts are temporarily unavailable.");
       setStatus("Creating your public achievement post…");
       const file = await ensureImageFile();
       const ogBlob = await openGraphBlob(prepared.source,prepared.title,prepared.text);
@@ -237,14 +203,13 @@
       const data = await response.json().catch(() => ({}));
       if (!response.ok) throw new Error(data.message || `Public achievement post failed (${response.status}).`);
       prepared.hosted = validateHostedResponse(data,base);
-      prepared.caption = `${prepared.text} Start learning a Filipino language free with Salita Quest: ${prepared.hosted.shareUrl}`;
-      setStatus("Your public achievement post is ready.");
+      prepared.caption = `${prepared.text} Play Salita Quest free: ${prepared.hosted.shareUrl}`;
+      setStatus("Your playable achievement post is ready.");
       return prepared.hosted;
     })().catch(error => {
-      setStatus(`${error.message || "The public achievement post could not be prepared."} Use Share image instead or try again.`,true);
+      setStatus(`${error.message || "The public achievement post could not be prepared."} Try again.`,true);
       throw error;
     }).finally(() => { hostedPromise = null; });
-
     return hostedPromise;
   }
 
@@ -255,59 +220,42 @@
   async function openPublicComposer(provider) {
     const popup = blankPopup();
     if (!popup) throw new Error("Allow pop-ups so Salita Quest can open the post composer.");
-    try {
-      popup.document.write("<title>Preparing Salita Quest post…</title><p style='font:18px system-ui;padding:30px'>Creating your public achievement post…</p>");
-    } catch {}
+    try { popup.document.write("<title>Preparing Salita Quest post…</title><p style='font:18px system-ui;padding:30px'>Creating your playable achievement post…</p>"); } catch {}
     try {
       const hosted = await ensureHostedShare();
       const url = encodeURIComponent(hosted.shareUrl);
-      const text = encodeURIComponent(prepared.caption || prepared.text);
+      const text = encodeURIComponent(prepared.caption);
       let destination = "";
       if (provider === "facebook") destination = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
       else if (provider === "linkedin") destination = `https://www.linkedin.com/sharing/share-offsite/?url=${url}`;
       else if (provider === "x") destination = `https://twitter.com/intent/tweet?text=${text}`;
       if (!destination) throw new Error("This public destination is not supported.");
       popup.location.replace(destination);
-      setStatus(`${provider === "facebook" ? "Facebook" : provider === "linkedin" ? "LinkedIn" : "X"} opened with your hosted achievement card.`);
+      setStatus("The social composer opened with the hosted card and play link.");
     } catch (error) {
       try { popup.close(); } catch {}
       throw error;
     }
   }
 
-  async function sendPrivately() {
+  async function sharePlayablePost() {
     const hosted = await ensureHostedShare();
-    if (!navigator.share) throw new Error("This browser cannot open private sharing. Copy the message instead.");
-    await navigator.share({
-      title:prepared.title,
-      text:prepared.text,
-      url:hosted.shareUrl
-    });
-    setStatus("Private sharing opened with the achievement link.");
+    if (!navigator.share) throw new Error("This browser cannot open app sharing. Copy the post instead.");
+    await navigator.share({title:prepared.title,text:prepared.text,url:hosted.shareUrl});
+    setStatus("App sharing opened with the hosted card and play link.");
   }
 
   async function openWhatsApp() {
     const hosted = await ensureHostedShare();
-    const caption = prepared.caption || `${prepared.text} ${hosted.shareUrl}`;
-    window.open(`https://wa.me/?text=${encodeURIComponent(caption)}`,"_blank","noopener");
-    setStatus("WhatsApp opened with the achievement link.");
+    window.open(`https://wa.me/?text=${encodeURIComponent(prepared.caption)}`,"_blank","noopener");
+    setStatus("WhatsApp opened with the hosted card link.");
   }
 
-  async function copyPrivateMessage() {
-    const hosted = await ensureHostedShare();
-    const caption = prepared.caption || `${prepared.text} ${hosted.shareUrl}`;
-    if (!navigator.clipboard?.writeText) throw new Error("This browser cannot copy the message.");
-    await navigator.clipboard.writeText(caption);
-    setStatus("Achievement message and public link copied.");
-  }
-
-  async function shareImage() {
-    const file = await ensureImageFile();
-    if (!navigator.share || !navigator.canShare?.({files:[file]})) {
-      throw new Error("This browser cannot attach the image directly. Download it instead.");
-    }
-    await navigator.share({files:[file],title:prepared.title,text:prepared.text});
-    setStatus("The achievement image was sent to your chosen app.");
+  async function copyPost() {
+    await ensureHostedShare();
+    if (!navigator.clipboard?.writeText) throw new Error("This browser cannot copy the post.");
+    await navigator.clipboard.writeText(prepared.caption);
+    setStatus("Playable post copied.");
   }
 
   async function downloadImage() {
@@ -319,89 +267,75 @@
     link.click();
     link.remove();
     window.setTimeout(() => URL.revokeObjectURL(link.href),1500);
-    setStatus("Achievement image downloaded.");
+    setStatus("Achievement image downloaded. Downloading does not create a playable social post.");
   }
 
   function renderActions() {
     const platformHost = document.getElementById("achievementSharePlatforms");
     const secondary = modal()?.querySelector(".achievement-share-secondary");
     if (!platformHost || !secondary) return;
-
     platformHost.className = "achievement-share-router-v2";
     platformHost.innerHTML = `
       <section class="achievement-share-mode-group">
-        <div class="achievement-share-mode-heading"><span>POST PUBLICLY</span><small>Clickable achievement card and learn-free link</small></div>
+        <div class="achievement-share-mode-heading"><span>POST WITH A CARD + PLAY LINK</span><small>Every post below can bring a new learner into Salita Quest</small></div>
         <div class="achievement-share-mode-actions public-actions">
-          <button type="button" data-sq-share-feed="facebook"><strong>Facebook Feed</strong><small>Normal feed post</small></button>
-          <button type="button" data-sq-share-feed="linkedin"><strong>LinkedIn</strong><small>Hosted card post</small></button>
-          <button type="button" data-sq-share-feed="x"><strong>X</strong><small>Post link and caption</small></button>
+          <button type="button" data-sq-share-feed="facebook"><strong>Post to Facebook</strong><small>Hosted achievement card and play link</small></button>
+          <button type="button" data-sq-share-app><strong>Post with another app</strong><small>Hosted card link for your chosen social app</small></button>
+          <button type="button" data-sq-share-feed="linkedin"><strong>Post to LinkedIn</strong><small>Hosted achievement card and play link</small></button>
+          <button type="button" data-sq-share-feed="x"><strong>Post to X</strong><small>Caption and playable link</small></button>
         </div>
       </section>
       <section class="achievement-share-mode-group">
-        <div class="achievement-share-mode-heading"><span>SEND TO PEOPLE</span><small>Clickable link for Messenger, messages, email or WhatsApp</small></div>
+        <div class="achievement-share-mode-heading"><span>SEND THE PLAY LINK</span><small>For messages and direct sharing</small></div>
         <div class="achievement-share-mode-actions private-actions">
-          <button type="button" data-sq-share-private><strong>Send privately</strong><small>Open your device share sheet</small></button>
-          <button type="button" data-sq-share-whatsapp><strong>WhatsApp</strong><small>Send link and caption</small></button>
-          <button type="button" data-sq-share-copy><strong>Copy message</strong><small>Paste into any conversation</small></button>
+          <button type="button" data-sq-share-private><strong>Send privately</strong><small>Card link through your device share sheet</small></button>
+          <button type="button" data-sq-share-whatsapp><strong>WhatsApp</strong><small>Caption and playable link</small></button>
+          <button type="button" data-sq-share-copy><strong>Copy post</strong><small>Paste the caption and playable link anywhere</small></button>
         </div>
       </section>
       <section class="achievement-share-mode-group">
-        <div class="achievement-share-mode-heading"><span>USE THE IMAGE</span><small>Image-only sharing for stories and visual apps</small></div>
+        <div class="achievement-share-mode-heading"><span>DOWNLOAD ONLY</span><small>This does not create a clickable post</small></div>
         <div class="achievement-share-mode-actions image-actions">
-          <button type="button" data-sq-share-image><strong>Share image to an app</strong><small>Instagram, TikTok, Messenger and more</small></button>
-          <button type="button" data-sq-share-download><strong>Download image</strong><small>Save the square card</small></button>
+          <button type="button" data-sq-share-download><strong>Download image</strong><small>Save the square achievement card</small></button>
         </div>
       </section>`;
     secondary.hidden = true;
   }
 
-  async function runAction(button, action) {
+  async function runAction(button,action) {
     if (actionInProgress) return;
     actionInProgress = true;
-    const original = button?.innerHTML;
-    if (button) {
-      button.disabled = true;
-      button.dataset.busy = "true";
-    }
-    try {
-      await action();
-    } catch (error) {
-      if (error?.name === "AbortError") setStatus("Sharing cancelled.");
-      else setStatus(error?.message || "The sharing action could not be completed.",true);
-    } finally {
+    if (button) { button.disabled = true; button.dataset.busy = "true"; }
+    try { await action(); }
+    catch (error) { setStatus(error?.name === "AbortError" ? "Sharing cancelled." : error?.message || "The sharing action could not be completed.",error?.name !== "AbortError"); }
+    finally {
       actionInProgress = false;
-      if (button) {
-        button.disabled = false;
-        delete button.dataset.busy;
-        if (original) button.innerHTML = original;
-      }
+      if (button) { button.disabled = false; delete button.dataset.busy; }
     }
   }
 
   function handleClick(event) {
-    const button = event.target.closest?.("[data-sq-share-feed],[data-sq-share-private],[data-sq-share-whatsapp],[data-sq-share-copy],[data-sq-share-image],[data-sq-share-download]");
+    const button = event.target.closest?.("[data-sq-share-feed],[data-sq-share-app],[data-sq-share-private],[data-sq-share-whatsapp],[data-sq-share-copy],[data-sq-share-download]");
     if (!button || !prepared || modal()?.hidden) return;
     event.preventDefault();
     event.stopPropagation();
     event.stopImmediatePropagation?.();
     if (button.dataset.sqShareFeed) return runAction(button,() => openPublicComposer(button.dataset.sqShareFeed));
-    if (button.hasAttribute("data-sq-share-private")) return runAction(button,sendPrivately);
+    if (button.hasAttribute("data-sq-share-app") || button.hasAttribute("data-sq-share-private")) return runAction(button,sharePlayablePost);
     if (button.hasAttribute("data-sq-share-whatsapp")) return runAction(button,openWhatsApp);
-    if (button.hasAttribute("data-sq-share-copy")) return runAction(button,copyPrivateMessage);
-    if (button.hasAttribute("data-sq-share-image")) return runAction(button,shareImage);
+    if (button.hasAttribute("data-sq-share-copy")) return runAction(button,copyPost);
     if (button.hasAttribute("data-sq-share-download")) return runAction(button,downloadImage);
   }
 
   document.addEventListener("click",handleClick,true);
   document.addEventListener("salita:achievement-share-prepared",event => {
-    const source = currentSource();
     prepared = {
       type:event.detail?.type || "badge",
       title:titleFromModal(),
       text:textFromModal(),
-      campaign:campaignFor(event.detail?.type),
+      campaign:TYPE_CAMPAIGN[event.detail?.type] || "achievement-share",
       fileName:`salita-quest-${cleanFilePart(event.detail?.type)}-${cleanFilePart(titleFromModal())}.png`,
-      source,
+      source:preview()?.src || "",
       file:null,
       hosted:null,
       caption:""
@@ -410,7 +344,7 @@
     hostedPromise = null;
     renderActions();
     ensureImageFile().catch(() => {});
-    setStatus("Choose whether to post publicly, send a link privately, or share only the image.");
+    setStatus("Choose where to publish the hosted card and playable Salita Quest link.");
   });
 
   document.addEventListener("salita:achievement-share-closed",() => {
@@ -422,10 +356,10 @@
   window.SalitaQuestSharingRouter = Object.freeze({
     version:2,
     release:RELEASE,
-    modes:Object.freeze(["feed_link","private_link","image_file"]),
+    modes:Object.freeze(["feed_link","app_link","private_link","download_file"]),
     ensureHostedShare,
-    sendPrivately,
-    shareImage
+    sendPrivately:sharePlayablePost,
+    sharePlayablePost
   });
   document.documentElement.dataset.achievementSharingRouter = RELEASE;
 })();
