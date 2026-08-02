@@ -8,6 +8,7 @@
   const ACTIVE_PROFILE = "salitaQuestActiveProfileId";
   const PROGRESS_STORE = "salitaQuestProgress";
   const SHARDS_PER_PACK = 25;
+  const MYSTERY_PACK_COST = 2500;
   const PACKS = Object.freeze({
     common:{cost:1000,label:"Common",icon:"🌿"},
     uncommon:{cost:2000,label:"Uncommon",icon:"🌺"},
@@ -69,6 +70,7 @@
     const current = balance();
     const data = economy();
     if (lastKnownBalance == null) { lastKnownBalance = current; saveProgress(); return; }
+    const balanceChanged = current !== lastKnownBalance;
     if (!internalBalanceWrite && current > lastKnownBalance) {
       data.lifetimeEarned += current - lastKnownBalance;
       saveProgress();
@@ -76,7 +78,7 @@
     }
     lastKnownBalance = current;
     internalBalanceWrite = false;
-    updateOpenShop();
+    if (balanceChanged) updateOpenShop();
   }
 
   function readAccount() {
@@ -176,11 +178,19 @@
     const account = readAccount();
     if (!modal || !account) return;
     modal.querySelector(".sq-coin-shop-balance").textContent = `🪙 ${balance().toLocaleString()} coins`;
-    modal.querySelector(".sq-coin-shop-grid").innerHTML = Object.entries(PACKS).map(([rarity,pack]) => {
+    const grid = modal.querySelector(".sq-coin-shop-grid");
+    const mysteryCard = grid.querySelector(".sq-coin-pack.mystery");
+    grid.innerHTML = Object.entries(PACKS).map(([rarity,pack]) => {
       const remaining = eligible(account,rarity).length;
       const affordable = balance() >= pack.cost;
       return `<article class="sq-coin-pack ${rarity}"><span class="sq-coin-pack-icon">${pack.icon}</span><h3>${pack.label} pack</h3><strong>25 random shards</strong><p>${remaining ? `${remaining} incomplete avatars available` : `All ${pack.label} avatars collected`}</p><button type="button" data-coin-pack="${rarity}" ${!remaining || !affordable ? "disabled" : ""}>${remaining ? `${pack.cost.toLocaleString()} coins` : "Collected"}</button></article>`;
     }).join("");
+    if (mysteryCard) {
+      const rareCard = grid.querySelector(".sq-coin-pack.rare");
+      grid.insertBefore(mysteryCard, rareCard || null);
+      const mysteryButton = mysteryCard.querySelector('[data-coin-pack="mystery"]');
+      if (mysteryButton) mysteryButton.disabled = balance() < MYSTERY_PACK_COST;
+    }
   }
 
   function updateOpenShop() { if (modal && !modal.hidden) render(); }
