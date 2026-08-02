@@ -3,12 +3,14 @@ import vm from "node:vm";
 
 const read = path => fs.readFileSync(path,"utf8");
 const shop = read("coin-avatar-shard-shop-v1.js");
+const reveal = read("coin-avatar-shop-reveal-v1.js");
+const revealCss = read("coin-avatar-shop-reveal-v1.css");
 const badges = read("coin-avatar-shop-badges-v1.js");
 const loader = read("profile-emblem-control.js");
 const weekly = read("weekly-avatar-shard-rewards-v1.js");
 const topbar = read("coin-avatar-shop-topbar-v1.js");
 
-for (const [name,source] of [["shop",shop],["badges",badges],["loader",loader],["topbar",topbar]]) {
+for (const [name,source] of [["shop",shop],["reveal",reveal],["badges",badges],["loader",loader],["topbar",topbar]]) {
   new vm.Script(source,{filename:name});
 }
 
@@ -20,8 +22,16 @@ const required = [
   [shop,"saveProgress();"],[shop,"refreshWalletUI();"],
   [shop,"coinValue"],[shop,"mobileCoinValue"],[shop,"salita:coin-balance-changed"],
   [shop,"No shards were awarded"],
+  [shop,"coin-avatar-shop-reveal-v1.js?v=5.6.4"],
+  [shop,"coin-avatar-shop-reveal-v1.css?v=5.6.4"],
   [loader,"coin-avatar-shard-shop-v1.js"],[loader,"coin-avatar-shop-badges-v1.js"],
-  [loader,'const COIN_SHOP_VERSION = "5.6.3"'],
+  [loader,'const COIN_SHOP_VERSION = "5.6.4"'],
+  [reveal,'const GRANT_AMOUNT = 10000'],[reveal,'coinShopAnimation10000V1'],
+  [reveal,'payload.testingGrants[GRANT_ID]'],[reveal,'payload.coins ='],
+  [reveal,'salita:coin-shard-pack-purchased'],[reveal,'Choosing your avatar'],
+  [reveal,'detail.before'],[reveal,'detail.after'],[reveal,'Avatar complete!'],
+  [revealCss,'.sq-coin-reveal-colour'],[revealCss,'clip-path'],
+  [revealCss,'.sq-coin-reveal.complete'],[revealCss,'sq-complete-burst'],
   [badges,"lt_coins_500000"],[badges,"lt_coins_1000000"],
   [badges,"chain(\"coins_spent\""],[badges,"chain(\"packs\""],
   [badges,"chain(\"common_owned\""],[badges,"chain(\"uncommon_owned\""],[badges,"chain(\"rare_owned\""]
@@ -39,5 +49,9 @@ const shardWriteIndex = shop.indexOf("account.collection.shards[item.id] = after
 if (spendIndex < 0 || shardWriteIndex < 0 || spendIndex > shardWriteIndex) {
   throw new Error("Coins must be deducted successfully before shards are awarded");
 }
+
+const grantMarkerIndex = reveal.indexOf("if (payload.testingGrants[GRANT_ID]) return false");
+const grantWriteIndex = reveal.indexOf("payload.coins =");
+if (grantMarkerIndex < 0 || grantWriteIndex < grantMarkerIndex) throw new Error("Testing grant must be one-time and marker governed");
 
 console.log("Coin avatar shard shop validation passed.");
