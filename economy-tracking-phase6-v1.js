@@ -1,10 +1,10 @@
 (() => {
   "use strict";
 
-  if (window.__salitaEconomyTrackingPhase6V1Installed) return;
-  window.__salitaEconomyTrackingPhase6V1Installed = true;
+  if (window.__salitaEconomyTrackingPhase6V2Installed) return;
+  window.__salitaEconomyTrackingPhase6V2Installed = true;
 
-  const RELEASE = "economy-v2-phase6-tracking";
+  const RELEASE = "economy-v2-phase6-tracking-pane";
   let panel = null;
 
   function globalValue(name) {
@@ -32,13 +32,17 @@
 
   function ensurePanel() {
     const dialog = document.querySelector(".sq-avatar-collection-dialog");
-    const summary = dialog?.querySelector(".sq-avatar-collection-summary");
-    if (!dialog || !summary) return null;
+    if (!dialog) return null;
     if (panel?.isConnected) return panel;
+    panel = dialog.querySelector(".sq-economy-tracking-panel");
+    if (panel) return panel;
+
     panel = document.createElement("section");
     panel.className = "sq-economy-tracking-panel";
     panel.dataset.economyTracking = RELEASE;
-    dialog.insertBefore(panel, summary.nextSibling);
+    const statisticsPane = dialog.querySelector(":scope > .sq-avatar-statistics-pane");
+    if (statisticsPane) statisticsPane.appendChild(panel);
+    else dialog.appendChild(panel);
     return panel;
   }
 
@@ -61,19 +65,11 @@
     ].join("")}</div>`;
   }
 
-  function scheduleRender() {
-    window.setTimeout(render,0);
-  }
-
-  [
-    "salita:open-avatar-collection",
-    "salita:coin-balance-changed",
-    "salita:coin-shard-pack-purchased",
-    "salita:avatar-collection-changed"
-  ].forEach(name => document.addEventListener(name,scheduleRender));
+  function scheduleRender() { window.setTimeout(render,0); }
+  ["salita:open-avatar-collection","salita:coin-balance-changed","salita:coin-shard-pack-purchased","salita:avatar-collection-changed","salita:avatar-collection-tabs-ready"].forEach(name => document.addEventListener(name,scheduleRender));
 
   new MutationObserver(records => {
-    if (records.some(record => [...record.addedNodes].some(node => node instanceof Element && (node.matches?.(".sq-avatar-collection-dialog") || node.querySelector?.(".sq-avatar-collection-dialog"))))) scheduleRender();
+    if (records.some(record => [...record.addedNodes].some(node => node instanceof Element && (node.matches?.(".sq-avatar-collection-dialog, .sq-avatar-statistics-pane") || node.querySelector?.(".sq-avatar-collection-dialog, .sq-avatar-statistics-pane"))))) scheduleRender();
   }).observe(document.documentElement,{childList:true,subtree:true});
 
   render();
