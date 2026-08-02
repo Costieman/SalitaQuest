@@ -6,7 +6,7 @@
   const AVATAR_CASE_VERSION = "5.5.9";
   const SHARING_VERSION = "5.5.16.1";
   const BADGE_EXPANSION_VERSION = "5.6.0";
-  const COIN_SHOP_VERSION = "5.6.1";
+  const COIN_SHOP_VERSION = "5.6.2";
   let assetPromise = null;
 
   function addStylesheet(key, href) {
@@ -48,6 +48,7 @@
     addStylesheet("hotfix-css", `./avatar-progression-hotfix-v551.css?v=${RELEASE_VERSION}`);
     addStylesheet("sharing-router-css", `./achievement-sharing-router-v2.css?v=${SHARING_VERSION}`);
     addStylesheet("coin-shop-css", `./coin-avatar-shard-shop-v1.css?v=${COIN_SHOP_VERSION}`);
+    addStylesheet("coin-shop-topbar-css", `./coin-avatar-shop-topbar-v1.css?v=${COIN_SHOP_VERSION}`);
 
     assetPromise = (async () => {
       if (!window.SalitaAvatarModel) {
@@ -87,6 +88,11 @@
         "coin-avatar-shop-badges",
         `./coin-avatar-shop-badges-v1.js?v=${COIN_SHOP_VERSION}`,
         "Coin shop badge catalogue could not be loaded."
+      );
+      await loadScript(
+        "coin-avatar-shop-topbar",
+        `./coin-avatar-shop-topbar-v1.js?v=${COIN_SHOP_VERSION}`,
+        "Topbar shard shop control could not be loaded."
       );
       window.SalitaAvatarArtwork?.syncEquipped();
       document.dispatchEvent(new CustomEvent("salita:avatar-progression-ready", {
