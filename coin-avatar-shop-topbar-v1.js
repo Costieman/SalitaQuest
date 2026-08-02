@@ -9,7 +9,7 @@
   if (!document.querySelector('link[data-sq-reveal-rarity]')) {
     const link = document.createElement("link");
     link.rel = "stylesheet";
-    link.href = "./coin-avatar-reveal-rarity-v1.css?v=5.6.5";
+    link.href = "./coin-avatar-reveal-rarity-v1.css?v=5.6.6";
     link.dataset.sqRevealRarity = "true";
     document.head.appendChild(link);
   }
