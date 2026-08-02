@@ -7,8 +7,8 @@
     "node": ">=20"
   },
   "scripts": {
-    "start": "node index.js",
-    "check": "node --check index.js"
+    "start": "node index-v2.js",
+    "check": "node --check index-v2.js"
   },
   "dependencies": {
     "@google-cloud/storage": "^7.16.0",
