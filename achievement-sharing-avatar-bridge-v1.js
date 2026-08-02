@@ -2,8 +2,7 @@
   "use strict";
 
   const INSTALL_FLAG = "__salitaQuestAchievementSharingAvatarCompatibilityV558Installed";
-  const RELEASE = "5.5.10-facebook-card-image";
-  const IMAGE_TRANSPORT_SRC = "./achievement-sharing-image-transport-v1.js?v=5.5.10.2";
+  const RELEASE = "5.5.11-explicit-sharing-router";
 
   if (window[INSTALL_FLAG]) return;
   window[INSTALL_FLAG] = true;
@@ -73,17 +72,6 @@
     scope?.querySelectorAll?.(".sq-avatar-detail-card").forEach(decorateCard);
   }
 
-  function loadImageTransport() {
-    if (window.__salitaQuestAchievementImageTransportV1Installed) return;
-    if (document.querySelector('script[data-sq-achievement-image-transport="v1"]')) return;
-    const script = document.createElement("script");
-    script.src = IMAGE_TRANSPORT_SRC;
-    script.async = false;
-    script.dataset.sqAchievementImageTransport = "v1";
-    script.onerror = () => console.warn("Achievement image sharing transport could not be loaded.");
-    document.body.appendChild(script);
-  }
-
   const compatibilityApi = Object.freeze({
     release:RELEASE,
     equippedAvatar,
@@ -91,16 +79,15 @@
     openBadge(...args) { return controller()?.openBadge?.(...args); },
     openChest(...args) { return controller()?.openChest?.(...args); },
     openAvatar(...args) { return controller()?.openAvatar?.(...args); },
+    openAvatarCase(...args) { return controller()?.openAvatarCase?.(...args); },
     openLevel(...args) { return controller()?.openLevel?.(...args); }
   });
 
   // Compatibility only. This bridge deliberately does not replace the shared
-  // controller and does not own badge, avatar or level share-card generation.
-  // It only loads the separate image transport used by mobile share targets.
+  // controller, install click handlers, or choose a sharing transport.
   window.SalitaAchievementAvatarBridge = compatibilityApi;
   document.documentElement.dataset.avatarSharingBridge = RELEASE;
 
-  loadImageTransport();
   decorateAvatarDetails();
   new MutationObserver(records => {
     for (const record of records) {
@@ -111,9 +98,9 @@
   }).observe(document.documentElement, {childList:true, subtree:true});
 
   document.addEventListener("salita:avatar-collection-changed", () => {
-    window.setTimeout(() => decorateAvatarDetails(), 30);
+    window.setTimeout(() => decorateAvatarDetails(),30);
   });
   document.dispatchEvent(new CustomEvent("salita:avatar-sharing-bridge-ready", {
-    detail:{release:RELEASE, compatibilityOnly:true, imageTransport:true}
+    detail:{release:RELEASE, compatibilityOnly:true, transportOwner:false}
   }));
 })();
