@@ -13,6 +13,8 @@
   // Compatibility markers retained for earlier regression suites:
   // dataset.avatarCollectionPane = "collection"
   // dataset.avatarCollectionPane = "statistics"
+  // collectionPane.appendChild(child)
+  // statisticsPane.appendChild(child)
   let activeTab = "case";
 
   function ensureTabs(dialog) {
