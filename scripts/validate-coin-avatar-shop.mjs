@@ -6,12 +6,13 @@ const shop = read("coin-avatar-shard-shop-v1.js");
 const reveal = read("coin-avatar-shop-reveal-v1.js");
 const revealCss = read("coin-avatar-shop-reveal-v1.css");
 const rarityCss = read("coin-avatar-reveal-rarity-v1.css");
+const testingGrant = read("coin-testing-grant-100k-v1.js");
 const badges = read("coin-avatar-shop-badges-v1.js");
 const loader = read("profile-emblem-control.js");
 const weekly = read("weekly-avatar-shard-rewards-v1.js");
 const topbar = read("coin-avatar-shop-topbar-v1.js");
 
-for (const [name,source] of [["shop",shop],["reveal",reveal],["badges",badges],["loader",loader],["topbar",topbar]]) {
+for (const [name,source] of [["shop",shop],["reveal",reveal],["testingGrant",testingGrant],["badges",badges],["loader",loader],["topbar",topbar]]) {
   new vm.Script(source,{filename:name});
 }
 
@@ -34,7 +35,13 @@ const required = [
   [revealCss,'.sq-coin-reveal-colour'],[revealCss,'clip-path'],
   [revealCss,'.sq-coin-reveal.complete'],[revealCss,'sq-complete-burst'],
   [topbar,'coin-avatar-reveal-rarity-v1.css?v=5.6.6'],
+  [topbar,'coin-testing-grant-100k-v1.js?v=5.6.8'],
   [topbar,'host.dataset.rarity = rarity'],
+  [testingGrant,'const GRANT_AMOUNT = 100000'],
+  [testingGrant,'coinShopTesting100000V1'],
+  [testingGrant,'if (payload.testingGrants[GRANT_ID]) return false'],
+  [testingGrant,'payload.coins ='],
+  [testingGrant,'salita:coin-balance-changed'],
   [rarityCss,'.sq-coin-reveal-art{background:#d6dcda}'],
   [rarityCss,'data-rarity="common"'],[rarityCss,'#c5e2f7'],
   [rarityCss,'data-rarity="uncommon"'],[rarityCss,'#f5caca'],
@@ -60,6 +67,10 @@ if (spendIndex < 0 || shardWriteIndex < 0 || spendIndex > shardWriteIndex) {
 
 const grantMarkerIndex = reveal.indexOf("if (payload.testingGrants[GRANT_ID]) return false");
 const grantWriteIndex = reveal.indexOf("payload.coins =");
-if (grantMarkerIndex < 0 || grantWriteIndex < grantMarkerIndex) throw new Error("Testing grant must be one-time and marker governed");
+if (grantMarkerIndex < 0 || grantWriteIndex < grantMarkerIndex) throw new Error("Original testing grant must remain one-time and marker governed");
+
+const grant100kMarkerIndex = testingGrant.indexOf("if (payload.testingGrants[GRANT_ID]) return false");
+const grant100kWriteIndex = testingGrant.indexOf("payload.coins =");
+if (grant100kMarkerIndex < 0 || grant100kWriteIndex < grant100kMarkerIndex) throw new Error("100k testing grant must be one-time and marker governed");
 
 console.log("Coin avatar shard shop validation passed.");
