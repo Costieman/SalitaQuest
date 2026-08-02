@@ -208,25 +208,31 @@
       const baseRenderDailyQuests = renderDailyQuests;
       renderDailyQuests = function renderEconomyV2DailyQuests() {
         const result = baseRenderDailyQuests.apply(this, arguments);
-        const title = document.getElementById("questChestTitle");
-        const text = document.getElementById("questChestText");
-        const current = ensureDailyActivity();
-        if (title && !current.chestClaimed) title.textContent = "Complete all 4 quests";
-        if (text && !current.chestClaimed) text.textContent = `Bonus: +${DAILY_CHEST_XP} XP and +${DAILY_CHEST_COINS} coins`;
+        if (typeof document !== "undefined") {
+          const title = document.getElementById("questChestTitle");
+          const text = document.getElementById("questChestText");
+          const current = ensureDailyActivity();
+          if (title && !current.chestClaimed) title.textContent = "Complete all 4 quests";
+          if (text && !current.chestClaimed) text.textContent = `Bonus: +${DAILY_CHEST_XP} XP and +${DAILY_CHEST_COINS} coins`;
+        }
         return result;
       };
     }
 
-    document.documentElement.dataset.coinEconomy = ECONOMY_RELEASE;
-    document.dispatchEvent(new CustomEvent("salita:economy-v2-phase1-ready", {
-      detail:{
-        release:ECONOMY_RELEASE,
-        dailyQuestReward:DAILY_QUEST_REWARD,
-        dailyChestCoins:DAILY_CHEST_COINS,
-        bossRewardCoins:BOSS_REWARD_COINS,
-        rewardedBossesPerDay:MAX_REWARDED_BOSSES_PER_DAY
+    if (typeof document !== "undefined") {
+      document.documentElement.dataset.coinEconomy = ECONOMY_RELEASE;
+      if (typeof CustomEvent === "function") {
+        document.dispatchEvent(new CustomEvent("salita:economy-v2-phase1-ready", {
+          detail:{
+            release:ECONOMY_RELEASE,
+            dailyQuestReward:DAILY_QUEST_REWARD,
+            dailyChestCoins:DAILY_CHEST_COINS,
+            bossRewardCoins:BOSS_REWARD_COINS,
+            rewardedBossesPerDay:MAX_REWARDED_BOSSES_PER_DAY
+          }
+        }));
       }
-    }));
+    }
 
     if (typeof updateAll === "function") updateAll();
   }
