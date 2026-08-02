@@ -2,11 +2,12 @@
   "use strict";
 
   const INSTALL_FLAG = "__salitaQuestPersistentNavigationV1Installed";
-  const RELEASE = "5.5.10-persistent-navigation";
+  const RELEASE = "economy-v2-phase4-shop-navigation";
   const REQUIRED_DESKTOP_VIEWS = Object.freeze([
     "home","learn","review","audioReview","dictionary","skills","boss","progress","badges","settings"
   ]);
   const REQUIRED_MOBILE_MORE_VIEWS = Object.freeze(["skills","boss","progress","badges","settings"]);
+  const REQUIRED_MENU_ACTIONS = Object.freeze(["shop","avatar-collection"]);
 
   function retry() {
     window.setTimeout(install,80);
@@ -17,6 +18,14 @@
       <path d="M22 8h20l5 13-15 11-15-11Z" fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/>
       <circle cx="32" cy="39" r="14" fill="none" stroke="currentColor" stroke-width="4"/>
       <path d="m32 31 2.7 5.5 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1-4.4-4.3 6.1-.9Z" fill="currentColor"/>
+    </svg>`;
+  }
+
+  function shopIcon() {
+    return `<svg class="pictogram" viewBox="0 0 64 64" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+      <path d="M14 24h36l-3 30H17Z" fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/>
+      <path d="M23 27v-7a9 9 0 0 1 18 0v7" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+      <circle cx="32" cy="40" r="6" fill="none" stroke="currentColor" stroke-width="4"/>
     </svg>`;
   }
 
@@ -94,6 +103,10 @@
       const badges=makeNavButton({view:"badges",label:"Badges",icon:badgeIcon(),title:"Open badges and Badge Chest"});
       nav.insertBefore(badges,settings||null);
     }
+    if(!nav.querySelector('[data-sq-nav-action="shop"]')){
+      const shop=makeNavButton({action:"shop",label:"Shop",icon:shopIcon(),title:"Open the Avatar Shard Shop"});
+      nav.insertBefore(shop,settings||null);
+    }
     if(!nav.querySelector('[data-sq-nav-action="avatar-collection"]')){
       const avatar=currentAvatar();
       const avatarButton=makeNavButton({
@@ -131,6 +144,9 @@
     const settings=grid.querySelector('[data-view="settings"]');
     if(!grid.querySelector('[data-view="badges"]')){
       grid.insertBefore(makeMobileRoute({view:"badges",icon:"🏅",label:"Badges",detail:"Catalogue and Badge Chest"}),settings||null);
+    }
+    if(!grid.querySelector('[data-sq-nav-action="shop"]')){
+      grid.insertBefore(makeMobileRoute({action:"shop",icon:"🛍️",label:"Shop",detail:"Spend coins on avatar shards"}),settings||null);
     }
     if(!grid.querySelector('[data-sq-nav-action="avatar-collection"]')){
       const avatar=currentAvatar();
@@ -188,6 +204,24 @@
     }));
   }
 
+  function openShop(attempt=0) {
+    closeMobileNavigation();
+    const shop=window.SalitaCoinAvatarShop;
+    if(typeof shop?.open==="function"){
+      shop.open();
+      document.dispatchEvent(new CustomEvent("salita:shop-opened",{detail:{source:"persistent-navigation",release:RELEASE}}));
+      return true;
+    }
+    if(attempt<20){
+      window.setTimeout(()=>openShop(attempt+1),100);
+      return false;
+    }
+    document.dispatchEvent(new CustomEvent("salita:open-avatar-collection",{
+      detail:{source:"shop-navigation-fallback",release:RELEASE}
+    }));
+    return false;
+  }
+
   function install() {
     try {
       if(typeof switchView!=="function"||typeof renderBadges!=="function"||typeof state==="undefined"){
@@ -233,6 +267,10 @@
       event.preventDefault();
       openAvatarCollection();
     }));
+    document.querySelectorAll('[data-sq-nav-action="shop"]').forEach(button=>button.addEventListener("click",event=>{
+      event.preventDefault();
+      openShop();
+    }));
 
     const baseSwitchView=switchView;
     switchView=function switchViewWithPersistentNavigation(view){
@@ -260,7 +298,7 @@
     updateAvatarNavigation();
     document.documentElement.dataset.persistentNavigation=RELEASE;
     window.SalitaQuestPersistentNavigation=Object.freeze({
-      version:1,release:RELEASE,requiredDesktopViews:REQUIRED_DESKTOP_VIEWS,requiredMobileMoreViews:REQUIRED_MOBILE_MORE_VIEWS,sync:syncActiveState,openAvatarCollection
+      version:2,release:RELEASE,requiredDesktopViews:REQUIRED_DESKTOP_VIEWS,requiredMobileMoreViews:REQUIRED_MOBILE_MORE_VIEWS,requiredMenuActions:REQUIRED_MENU_ACTIONS,sync:syncActiveState,openAvatarCollection,openShop
     });
   }
 
