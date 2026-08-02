@@ -6,6 +6,7 @@
 
   const PROFILE_STORE = "salitaQuestLocalProfilesV1";
   const ACTIVE_PROFILE = "salitaQuestActiveProfileId";
+  const PROGRESS_STORE = "salitaQuestProgress";
   const SHARDS_PER_PACK = 25;
   const PACKS = Object.freeze({
     common:{cost:1000,label:"Common",icon:"🌿"},
@@ -17,14 +18,41 @@
   let lastKnownBalance = null;
   let internalBalanceWrite = false;
 
-  const esc = value => String(value ?? "").replace(/[&<>'\"]/g, character => ({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'\"':"&quot;"}[character]));
-  const globalValue = name => { try { return eval(`typeof ${name} !== "undefined" ? ${name} : undefined`); } catch { return undefined; } };
-  const appState = () => globalValue("state") || window.state || null;
-  const save = () => { const fn = globalValue("saveState") || window.saveState; if (typeof fn === "function") fn(); };
-  const syncBadges = () => {
-    try { (globalValue("syncEarned") || window.syncEarned)?.(); (globalValue("renderCatalogue") || window.renderCatalogue)?.(); } catch {}
+  const globalValue = name => {
+    try { return eval(`typeof ${name} !== "undefined" ? ${name} : undefined`); }
+    catch { return undefined; }
   };
+  const appState = () => globalValue("state") || window.state || null;
   const balance = () => Math.max(0, Math.floor(Number(appState()?.coins || 0)));
+
+  function saveProgress() {
+    const saveState = globalValue("saveState") || window.saveState;
+    if (typeof saveState === "function") {
+      saveState();
+      return;
+    }
+    const state = appState();
+    if (state) localStorage.setItem(PROGRESS_STORE, JSON.stringify(state));
+  }
+
+  function refreshWalletUI() {
+    try { (globalValue("updateGlobalUI") || window.updateGlobalUI)?.(); } catch {}
+    const amount = String(balance());
+    for (const id of ["coinValue", "mobileCoinValue"]) {
+      const node = document.getElementById(id);
+      if (node) node.textContent = amount;
+    }
+    document.dispatchEvent(new CustomEvent("salita:coin-balance-changed", {
+      detail:{coins:balance()}
+    }));
+  }
+
+  function syncBadges() {
+    try {
+      (globalValue("syncEarned") || window.syncEarned)?.();
+      (globalValue("renderCatalogue") || window.renderCatalogue)?.();
+    } catch {}
+  }
 
   function economy() {
     const state = appState();
@@ -47,12 +75,12 @@
     const data = economy();
     if (lastKnownBalance == null) {
       lastKnownBalance = current;
-      save();
+      saveProgress();
       return;
     }
     if (!internalBalanceWrite && current > lastKnownBalance) {
       data.lifetimeEarned += current - lastKnownBalance;
-      save();
+      saveProgress();
       syncBadges();
     }
     lastKnownBalance = current;
@@ -83,6 +111,19 @@
     return account.model.list({rarity}).filter(item => !account.collection.ownedAvatarIds.includes(item.id));
   }
 
+  function spendCoins(cost) {
+    const state = appState();
+    const before = balance();
+    if (!state || before < cost) return false;
+    const after = before - cost;
+    internalBalanceWrite = true;
+    state.coins = after;
+    lastKnownBalance = after;
+    saveProgress();
+    refreshWalletUI();
+    return balance() === after;
+  }
+
   function purchase(rarity) {
     const pack = PACKS[rarity];
     const state = appState();
@@ -96,6 +137,9 @@
     const before = Math.max(0, Number(account.collection.shards[item.id]) || 0);
     const after = Math.min(item.shardRequirement, before + SHARDS_PER_PACK);
     const unlocked = after >= item.shardRequirement;
+
+    if (!spendCoins(pack.cost)) return {ok:false,message:"The coin balance could not be updated. No shards were awarded."};
+
     account.collection.shards[item.id] = after;
     if (unlocked && !account.collection.ownedAvatarIds.includes(item.id)) {
       account.collection.ownedAvatarIds.push(item.id);
@@ -104,19 +148,17 @@
     writeAccount(account);
 
     const data = economy();
-    internalBalanceWrite = true;
-    state.coins = balance() - pack.cost;
-    lastKnownBalance = state.coins;
     data.lifetimeSpent += pack.cost;
     data.shardPacksPurchased += 1;
     data.packsByRarity[rarity] += 1;
     data.purchaseHistory.push({rarity,avatarId:item.id,cost:pack.cost,shards:SHARDS_PER_PACK,before,after,unlocked,purchasedAt:new Date().toISOString()});
     data.purchaseHistory = data.purchaseHistory.slice(-100);
-    save();
+    saveProgress();
+    refreshWalletUI();
     syncBadges();
     document.dispatchEvent(new CustomEvent("salita:avatar-collection-changed",{detail:{avatarId:item.id,source:"coin_shard_pack"}}));
-    document.dispatchEvent(new CustomEvent("salita:coin-shard-pack-purchased",{detail:{rarity,avatar:item,cost:pack.cost,before,after,unlocked}}));
-    return {ok:true,item,before,after,unlocked,cost:pack.cost};
+    document.dispatchEvent(new CustomEvent("salita:coin-shard-pack-purchased",{detail:{rarity,avatar:item,cost:pack.cost,before,after,unlocked,coinsRemaining:balance()}}));
+    return {ok:true,item,before,after,unlocked,cost:pack.cost,coinsRemaining:balance()};
   }
 
   function ensureModal() {
@@ -133,7 +175,7 @@
       const result = purchase(button.dataset.coinPack);
       const message = modal.querySelector(".sq-coin-shop-message");
       message.textContent = result.ok
-        ? `${result.item.name} received 25 shards${result.unlocked ? " and was unlocked!" : ` (${result.after}/100).`}`
+        ? `${result.item.name} received 25 shards${result.unlocked ? " and was unlocked!" : ` (${result.after}/100).`} ${result.coinsRemaining.toLocaleString()} coins remain.`
         : result.message;
       render();
     });
@@ -172,11 +214,11 @@
     if (!window.SalitaAvatarModel || !appState()) { window.setTimeout(install,120); return; }
     economy();
     lastKnownBalance = balance();
-    save();
+    saveProgress();
     installButton();
     new MutationObserver(installButton).observe(document.body,{childList:true,subtree:true});
     window.setInterval(trackExternalCoinChanges,750);
-    window.SalitaCoinAvatarShop = Object.freeze({packs:PACKS,shardsPerPack:SHARDS_PER_PACK,open,purchase,eligible});
+    window.SalitaCoinAvatarShop = Object.freeze({packs:PACKS,shardsPerPack:SHARDS_PER_PACK,open,purchase,eligible,balance});
     document.dispatchEvent(new CustomEvent("salita:coin-avatar-shop-ready"));
   }
 

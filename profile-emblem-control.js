@@ -6,7 +6,7 @@
   const AVATAR_CASE_VERSION = "5.5.9";
   const SHARING_VERSION = "5.5.16.1";
   const BADGE_EXPANSION_VERSION = "5.6.0";
-  const COIN_SHOP_VERSION = "5.6.2";
+  const COIN_SHOP_VERSION = "5.6.3";
   let assetPromise = null;
 
   function addStylesheet(key, href) {
