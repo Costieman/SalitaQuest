@@ -5,6 +5,7 @@
   window.__salitaProfileInstallPromptV1 = true;
 
   let deferredPrompt = null;
+  let landingObserver = null;
   const isStandalone = () => window.matchMedia?.("(display-mode: standalone)")?.matches || window.navigator.standalone === true;
   const isIOS = () => /iphone|ipad|ipod/i.test(navigator.userAgent || "");
 
@@ -17,9 +18,43 @@
     showMessage.timer = window.setTimeout(() => { toast.hidden = true; }, 5000);
   }
 
+  function renderInstallLanding() {
+    if (isStandalone()) return;
+    const panel = document.getElementById("profilePanel");
+    if (!panel || panel.dataset.installLanding === "true") return;
+    panel.dataset.installLanding = "true";
+    panel.innerHTML = `
+      <div class="profile-install-hero">
+        <p class="profile-eyebrow">YOUR PHILIPPINE LANGUAGE JOURNEY</p>
+        <h2>Start speaking like a local.</h2>
+        <p>Learn Tagalog or Bisaya through short lessons, speaking practice, and daily progress.</p>
+        <div class="profile-install-benefits" aria-label="Salita Quest features">
+          <span>Tagalog + Bisaya</span>
+          <span>Short daily lessons</span>
+          <span>Progress saved locally</span>
+        </div>
+      </div>`;
+  }
+
+  function keepLandingVisible() {
+    if (isStandalone()) {
+      landingObserver?.disconnect();
+      landingObserver = null;
+      return;
+    }
+    const panel = document.getElementById("profilePanel");
+    if (!panel || landingObserver) return;
+    landingObserver = new MutationObserver(() => {
+      if (!isStandalone() && panel.dataset.installLanding !== "true") renderInstallLanding();
+    });
+    landingObserver.observe(panel, {childList:true});
+  }
+
   function installButton() {
     const gate = document.getElementById("profileGate");
     if (!gate || document.querySelector("[data-install-salita]")) return;
+    if (!isStandalone()) renderInstallLanding();
+
     const button = document.createElement("button");
     button.type = "button";
     button.className = "profile-install-app";
@@ -43,6 +78,7 @@
     });
     gate.appendChild(button);
     if (isStandalone()) button.hidden = true;
+    keepLandingVisible();
   }
 
   window.addEventListener("beforeinstallprompt", event => {
@@ -53,7 +89,7 @@
   window.addEventListener("appinstalled", () => {
     deferredPrompt = null;
     document.querySelector("[data-install-salita]")?.setAttribute("hidden", "");
-    showMessage("Salita Quest was installed successfully.");
+    showMessage("Salita Quest was installed. Open it from your home screen to create your learner profile.");
   });
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", installButton, {once:true});
