@@ -11,6 +11,21 @@
   <link rel="apple-touch-icon" href="icons/icon-192.png" />
   <link rel="stylesheet" href="profile-shell.css?v=5.4.25" />
   <script src="avatar-catalogue-v1.js?v=5.5.0"></script>
+  <style>
+    .course-choice-shell{display:grid;gap:22px;text-align:center}
+    .course-choice-identity{display:grid;justify-items:center;gap:8px}
+    .course-choice-identity img{width:76px;height:76px;object-fit:contain;image-rendering:pixelated;border-radius:22px;background:#edf7f3;border:1px solid #dbe8e4;padding:7px}
+    .course-choice-identity h2{margin:0;max-width:520px;font-size:clamp(1.65rem,5vw,2.35rem);line-height:1.12;color:#173a37}
+    .course-choice-identity p:not(.profile-eyebrow){margin:0;color:#607773;line-height:1.5}
+    .course-choice-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+    .course-choice-button{min-height:132px;border:2px solid #dbe8e4;border-radius:20px;background:#f7fbf9;color:#173a37;padding:20px 16px;display:grid;align-content:center;gap:6px;cursor:pointer;box-shadow:0 7px 0 #d5e5df;transition:transform .15s ease,border-color .15s ease,box-shadow .15s ease}
+    .course-choice-button:hover,.course-choice-button:focus-visible{transform:translateY(-2px);border-color:#0b6f67;box-shadow:0 9px 0 #c7ddd5;outline:none}
+    .course-choice-button:active{transform:translateY(4px);box-shadow:0 3px 0 #c7ddd5}
+    .course-choice-button strong{font-size:1.45rem}
+    .course-choice-button small{color:#607773;font-weight:700;line-height:1.35}
+    .course-choice-back{justify-self:center}
+    @media(max-width:620px){.course-choice-grid{grid-template-columns:1fr}.course-choice-button{min-height:108px}}
+  </style>
 </head>
 <body>
   <main id="profileGate" class="profile-gate" aria-live="polite">
@@ -19,7 +34,7 @@
       <div>
         <p class="profile-eyebrow">LOCAL LEARNER PROFILES</p>
         <h1>Salita Quest</h1>
-        <p>Your Tagalog journey stays on this device.</p>
+        <p>Your Tagalog or Bisaya journey stays on this device.</p>
       </div>
     </section>
     <section id="profilePanel" class="profile-panel"><p>Loading learner profiles…</p></section>
@@ -31,6 +46,7 @@
 
     const STORE = "salitaQuestLocalProfilesV1";
     const ACTIVE = "salitaQuestActiveProfileId";
+    const ACTIVE_COURSE = "salitaQuestActiveCourse";
     const BASE = "salitaQuestProgress";
     const OWNER = "salitaQuestBaseProgressOwner";
     const PREFIX = "salitaQuestProgress.profile.";
@@ -100,6 +116,7 @@
     }
 
     const progressKey = id => PREFIX + id;
+    const courseProgressKey = (id, course) => `${PREFIX}${id}.${course}`;
 
     function makeId() {
       return crypto.randomUUID
@@ -145,17 +162,24 @@
     function recoverOwner() {
       const owner = localStorage.getItem(OWNER);
       const progress = localStorage.getItem(BASE);
-      if (owner && progress && read().profiles.some(profile => profile.id === owner)) {
-        localStorage.setItem(progressKey(owner), progress);
-      }
+      if (!owner || !progress) return;
+      const separator = owner.lastIndexOf(":");
+      const profileId = separator > 0 ? owner.slice(0, separator) : owner;
+      const course = separator > 0 ? owner.slice(separator + 1) : "tagalog";
+      if (!read().profiles.some(profile => profile.id === profileId)) return;
+      localStorage.setItem(courseProgressKey(profileId, course), progress);
+      if (course === "tagalog") localStorage.setItem(progressKey(profileId), progress);
     }
 
-    function loadProgress(profile) {
+    function loadProgress(profile, course) {
       recoverOwner();
-      const progress = localStorage.getItem(progressKey(profile.id));
+      const courseId = course === "cebuano" ? "cebuano" : "tagalog";
+      const progress = localStorage.getItem(courseProgressKey(profile.id, courseId))
+        || (courseId === "tagalog" ? localStorage.getItem(progressKey(profile.id)) : null);
       if (progress) localStorage.setItem(BASE, progress);
       else localStorage.removeItem(BASE);
-      localStorage.setItem(OWNER, profile.id);
+      localStorage.setItem(OWNER, `${profile.id}:${courseId}`);
+      sessionStorage.setItem(ACTIVE_COURSE, courseId);
     }
 
     function clearShared() {
@@ -163,7 +187,7 @@
       localStorage.removeItem(OWNER);
     }
 
-    function openProfile(profile) {
+    function renderCourseChoice(profile) {
       const store = read();
       const saved = store.profiles.find(item => item.id === profile.id);
       if (!saved) {
@@ -173,13 +197,65 @@
       migrateProfile(saved);
       saved.lastUsedAt = new Date().toISOString();
       write(store);
-      loadProgress(saved);
       sessionStorage.setItem(ACTIVE, saved.id);
+      sessionStorage.removeItem(ACTIVE_COURSE);
+      panel.dataset.courseProfile = saved.id;
+      const selected = avatar(equippedId(saved));
+      panel.innerHTML = `
+        <div class="course-choice-shell">
+          <div class="course-choice-identity">
+            <img src="${selected.image}" alt="">
+            <p class="profile-eyebrow">${esc(saved.name).toUpperCase()}</p>
+            <h2>Which language will you be learning today?</h2>
+            <p>Choose the course before any placement questions begin.</p>
+          </div>
+          <div class="course-choice-grid" role="group" aria-label="Choose a language course">
+            <button class="course-choice-button" type="button" data-course-choice="cebuano">
+              <strong>Bisaya</strong>
+              <small>Cebuano / Bisayan course</small>
+            </button>
+            <button class="course-choice-button" type="button" data-course-choice="tagalog">
+              <strong>Tagalog</strong>
+              <small>Tagalog course</small>
+            </button>
+          </div>
+          <button class="profile-btn secondary course-choice-back" type="button" data-back>Choose another learner</button>
+        </div>`;
       try { navigator.storage?.persist?.(); } catch {}
-      window.location.replace(`app.html?profile=${encodeURIComponent(saved.id)}`);
+    }
+
+    function openCourse(profile, course) {
+      const courseId = course === "cebuano" ? "cebuano" : "tagalog";
+      const store = read();
+      const saved = store.profiles.find(item => item.id === profile.id);
+      if (!saved) {
+        renderChoices();
+        return;
+      }
+      saved.lastCourse = courseId;
+      saved.lastUsedAt = new Date().toISOString();
+      write(store);
+      sessionStorage.setItem(ACTIVE, saved.id);
+      loadProgress(saved, courseId);
+      window.location.replace(
+        courseId === "cebuano"
+          ? `bisaya.html?profile=${encodeURIComponent(saved.id)}`
+          : `app.html?profile=${encodeURIComponent(saved.id)}`
+      );
+    }
+
+    function openProfile(profile) {
+      const store = read();
+      const saved = store.profiles.find(item => item.id === profile.id);
+      if (!saved) {
+        renderChoices();
+        return;
+      }
+      renderCourseChoice(saved);
     }
 
     function renderChoices() {
+      delete panel.dataset.courseProfile;
       const store = read();
       const profiles = [...store.profiles].sort(
         (a, b) => String(b.lastUsedAt || "").localeCompare(String(a.lastUsedAt || ""))
@@ -217,6 +293,7 @@
     }
 
     function renderLogin(id) {
+      delete panel.dataset.courseProfile;
       const profile = read().profiles.find(item => item.id === id);
       if (!profile) {
         renderChoices();
@@ -240,7 +317,7 @@
           <div id="profileError" class="profile-error"></div>
           <div class="profile-actions">
             <button class="profile-btn secondary" type="button" data-back>Back</button>
-            <button class="profile-btn" type="submit">Open Salita Quest</button>
+            <button class="profile-btn" type="submit">Continue</button>
           </div>
         </form>
         <div class="profile-info-note">This is a casual local profile lock, not a secure online account.</div>`;
@@ -259,7 +336,7 @@
         if (await hashPin(pin, profile.pinSalt) !== profile.pinHash) {
           error.textContent = "That PIN is not correct.";
           submit.disabled = false;
-          submit.textContent = "Open Salita Quest";
+          submit.textContent = "Continue";
           document.getElementById("loginPin").select();
           return;
         }
@@ -268,6 +345,7 @@
     }
 
     function renderCreate() {
+      delete panel.dataset.courseProfile;
       const hasProfiles = read().profiles.length > 0;
       if (!model || starters.length !== 4) {
         panel.innerHTML = "<h2>Avatar catalogue unavailable</h2><p>Reload Salita Quest to continue.</p>";
@@ -320,7 +398,7 @@
           <div id="profileError" class="profile-error"></div>
           <div class="profile-actions">
             ${hasProfiles ? '<button class="profile-btn secondary" type="button" data-back>Back</button>' : ""}
-            <button class="profile-btn" type="submit">Create and continue</button>
+            <button class="profile-btn" type="submit">Create and choose language</button>
           </div>
         </form>`;
 
@@ -383,20 +461,37 @@
         const existingProgress = store.profiles.length ? null : findLegacyProgress();
         store.profiles.push(profile);
         write(store);
-        if (existingProgress) localStorage.setItem(progressKey(profile.id), existingProgress);
+        if (existingProgress) {
+          localStorage.setItem(progressKey(profile.id), existingProgress);
+          localStorage.setItem(courseProgressKey(profile.id, "tagalog"), existingProgress);
+        }
         showToast(existingProgress
-          ? "Profile created. Existing progress was preserved."
+          ? "Profile created. Existing Tagalog progress was preserved."
           : "Learner profile created.");
         openProfile(profile);
       });
     }
 
     panel.addEventListener("click", event => {
-      const target = event.target.closest("[data-profile],[data-new],[data-back]");
+      const target = event.target.closest("[data-profile],[data-new],[data-back],[data-course-choice]");
       if (!target) return;
-      if (target.dataset.profile) renderLogin(target.dataset.profile);
-      else if (target.hasAttribute("data-new")) renderCreate();
-      else renderChoices();
+      if (target.dataset.profile) {
+        renderLogin(target.dataset.profile);
+      } else if (target.hasAttribute("data-new")) {
+        renderCreate();
+      } else if (target.dataset.courseChoice) {
+        const id = panel.dataset.courseProfile || sessionStorage.getItem(ACTIVE);
+        const profile = read().profiles.find(item => item.id === id);
+        if (profile) openCourse(profile, target.dataset.courseChoice);
+        else renderChoices();
+      } else {
+        if (panel.dataset.courseProfile) {
+          sessionStorage.removeItem(ACTIVE);
+          sessionStorage.removeItem(ACTIVE_COURSE);
+          clearShared();
+        }
+        renderChoices();
+      }
     });
 
     try {
@@ -406,10 +501,10 @@
       const store = read();
       const active = store.profiles.find(profile => profile.id === sessionStorage.getItem(ACTIVE));
       if (active) {
-        loadProgress(active);
-        window.location.replace(`app.html?profile=${encodeURIComponent(active.id)}`);
+        renderCourseChoice(active);
       } else {
         sessionStorage.removeItem(ACTIVE);
+        sessionStorage.removeItem(ACTIVE_COURSE);
         clearShared();
         renderChoices();
       }
