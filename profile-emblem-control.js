@@ -5,6 +5,7 @@
   const RELEASE_VERSION = "5.5.6";
   const AVATAR_CASE_VERSION = "5.5.9";
   const SHARING_VERSION = "5.5.16.1";
+  const BADGE_EXPANSION_VERSION = "5.6.0";
   let assetPromise = null;
 
   function addStylesheet(key, href) {
@@ -70,9 +71,14 @@
         `./achievement-sharing-avatar-bridge-v1.js?v=${SHARING_VERSION}`,
         "Avatar-aware sharing could not be loaded."
       );
+      await loadScript(
+        "long-term-badges",
+        `./long-term-badges-v1.js?v=${BADGE_EXPANSION_VERSION}`,
+        "Long-term badge catalogue could not be loaded."
+      );
       window.SalitaAvatarArtwork?.syncEquipped();
       document.dispatchEvent(new CustomEvent("salita:avatar-progression-ready", {
-        detail:{version:RELEASE_VERSION,avatarCaseVersion:AVATAR_CASE_VERSION,sharingVersion:SHARING_VERSION}
+        detail:{version:RELEASE_VERSION,avatarCaseVersion:AVATAR_CASE_VERSION,sharingVersion:SHARING_VERSION,badgeExpansionVersion:BADGE_EXPANSION_VERSION}
       }));
     })().catch(error => console.warn("Salita Quest avatar progression did not fully load", error));
     return assetPromise;
