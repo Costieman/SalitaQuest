@@ -1,0 +1,31 @@
+name: Validate long-term badges
+
+on:
+  pull_request:
+    paths:
+      - "long-term-badges-v1.js"
+      - "profile-emblem-control.js"
+      - "scripts/validate-long-term-badges.mjs"
+      - ".github/workflows/validate-long-term-badges.yml"
+  push:
+    branches: [main]
+    paths:
+      - "long-term-badges-v1.js"
+      - "profile-emblem-control.js"
+      - "scripts/validate-long-term-badges.mjs"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Validate long-term badge catalogue
+        run: node scripts/validate-long-term-badges.mjs
+      - name: Validate existing badge stability
+        run: node scripts/validate-badge-stability.mjs
