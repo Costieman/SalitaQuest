@@ -44,6 +44,7 @@
   // avatar-collection-tabs-phase6-1-v1.js?v=5.7.1
   // avatar-collection-tabs-phase6-1-v1.css?v=5.7.3
   // avatar-collection-tabs-phase6-1-v1.js?v=5.7.3
+  // avatar-collection-tabs-phase6-1-v1.css?v=5.7.4
 
   document.addEventListener("salita:coin-shard-pack-purchased", event => {
     const host = document.querySelector(".sq-coin-reveal-backdrop");
