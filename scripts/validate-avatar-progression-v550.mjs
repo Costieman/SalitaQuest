@@ -17,7 +17,8 @@ const validators = [
   {file:"scripts/validate-weekly-avatar-shards.mjs", args:[]},
   {file:"scripts/validate-stage1-popup-governance-v553.mjs", args:[]},
   {file:"scripts/validate-avatar-runtime-v556.mjs", args:[]},
-  {file:"scripts/validate-persistent-navigation.mjs", args:[]}
+  {file:"scripts/validate-persistent-navigation.mjs", args:[]},
+  {file:"scripts/validate-achievement-image-transport.mjs", args:[]}
 ];
 
 for (const validator of validators) {
@@ -43,6 +44,7 @@ const runtimeFiles = [
   "level-progression-v2.js",
   "level-up-mobile-safety-v552.js",
   "avatar-unlock-celebration-v1.js",
+  "achievement-sharing-image-transport-v1.js",
   "achievement-sharing-avatar-bridge-v1.js",
   "avatar-progression-migration-v1.js",
   "desktop-navigation-refinement.js",
@@ -73,7 +75,8 @@ const orderedTokens = [
   'await loadScript("weekly"',
   'await loadScript("level"',
   'await loadScript("unlock"',
-  'await loadScript("sharing"'
+  '        "achievement-image-transport",',
+  '        "sharing",'
 ];
 let lastIndex = -1;
 for (const token of orderedTokens) {
@@ -83,6 +86,7 @@ for (const token of orderedTokens) {
 }
 if (!loader.includes('const RELEASE_VERSION = "5.5.6"')) fail("Shared avatar loader is not cache-busted to its canonical runtime release");
 if (!loader.includes('const AVATAR_CASE_VERSION = "5.5.9"')) fail("Shared avatar loader does not version the Avatar Case runtime");
+if (!loader.includes('const SHARING_VERSION = "5.5.10.4"')) fail("Shared avatar loader does not version the image-first sharing transport");
 if (loader.includes("repair(document)")) fail("Shared loader must not run a document-wide avatar repair pass");
 
 const artwork = read("avatar-artwork-registry-v554.js");
@@ -120,6 +124,8 @@ if (navigation.includes("salitaQuestDesktopNavigationCollapsed")) fail("Persiste
 const serviceWorker = read("service-worker.js");
 if (!serviceWorker.includes('const PREVIOUS_CACHE_NAME = "salita-quest-v5-5-9-avatar-case-r51"')) fail("Service worker does not retain the Avatar Case release boundary");
 if (!serviceWorker.includes('const CACHE_NAME = "salita-quest-v5-5-10-persistent-navigation-r52"')) fail("Service worker cache version is not the persistent-navigation release");
+if (!serviceWorker.includes('const SHARE_IMAGE_TRANSPORT_DELIVERY = "2026-08-02-direct-loader-1"')) fail("Service worker does not advertise the image-sharing delivery update");
+if (!serviceWorker.includes('"./achievement-sharing-image-transport-v1.js"')) fail("Service worker does not precache the image-first sharing transport");
 if (!serviceWorker.includes('"./avatar-case-v1.js"') || !serviceWorker.includes('"./avatar-case-v1.css"')) fail("Service worker does not precache the Avatar Case runtime");
 if (!serviceWorker.includes('"./desktop-navigation-refinement.js"') || !serviceWorker.includes('"./desktop-navigation-refinement.css"')) fail("Service worker does not precache persistent navigation");
 const cachedCanonical = [...serviceWorker.matchAll(/"\.\/avatars\/canonical\/[^"]+\.png"/g)];
@@ -142,4 +148,4 @@ for (const marker of [
   if (!releaseNotes.toLowerCase().includes(marker.toLowerCase())) fail(`5.5.6 release notes are missing ${marker}`);
 }
 
-console.log(`Avatar progression integration validation passed: ${model.catalogue.length} direct canonical avatars, four-slot Avatar Case, persistent labelled navigation, compatibility-only sharing bridge, preserved learner state and r52 offline delivery.`);
+console.log(`Avatar progression integration validation passed: ${model.catalogue.length} direct canonical avatars, four-slot Avatar Case, persistent labelled navigation, directly delivered image-first sharing, compatibility-only bridge, preserved learner state and r52 offline delivery.`);
