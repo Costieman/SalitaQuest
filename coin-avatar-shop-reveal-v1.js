@@ -12,11 +12,65 @@
   const MYSTERY_COST = 2500;
   const SHARDS_PER_PACK = 25;
   const MYSTERY_ODDS = Object.freeze({common:40, uncommon:35, rare:25});
+  const STARTER_RANDOM_RARITY = "common";
   const sleep = ms => new Promise(resolve => window.setTimeout(resolve, ms));
 
   function globalValue(name) {
     try { return eval(`typeof ${name} !== "undefined" ? ${name} : undefined`); }
     catch { return undefined; }
+  }
+
+  function shopRandomPoolActive() {
+    const backdrop = document.querySelector(".sq-coin-shop-backdrop");
+    return Boolean(backdrop && !backdrop.hidden);
+  }
+
+  function installRandomPoolModel() {
+    const model = window.SalitaAvatarModel;
+    if (!model || model.phase3RandomPools) return model;
+
+    const catalogue = Object.freeze(model.catalogue.map(item => Object.freeze(
+      model.starterIds.includes(item.id)
+        ? {...item, randomRarity:STARTER_RANDOM_RARITY, shardRequirement:100}
+        : {...item, randomRarity:item.rarity}
+    )));
+    const byId = Object.freeze(Object.fromEntries(catalogue.map(item => [item.id, item])));
+    const get = value => byId[model.normaliseId(value)] || null;
+
+    function list(filters = {}) {
+      if (shopRandomPoolActive() && ["common", "uncommon", "rare"].includes(filters.rarity)) {
+        return catalogue.filter(item => (item.randomRarity || item.rarity) === filters.rarity && item.levelReward == null)
+          .filter(item => Object.entries(filters).every(([key, value]) => key === "rarity" || value == null || item[key] === value));
+      }
+      return catalogue.filter(item => Object.entries(filters).every(([key, value]) => value == null || item[key] === value));
+    }
+
+    function normaliseCollectionState(input = {}, fallbackAvatarId = "") {
+      const source = input && typeof input === "object" ? input : {};
+      const collection = model.normaliseCollectionState(source, fallbackAvatarId);
+      const ownedAvatarIds = collection.ownedAvatarIds;
+      for (const id of model.starterIds) {
+        const amount = ownedAvatarIds.includes(id) ? 100 : Math.max(0, Math.min(100, Math.floor(Number(source.shards?.[id]) || 0)));
+        if (amount > 0) collection.shards[id] = amount;
+      }
+      return collection;
+    }
+
+    function progress(value, state = {}) {
+      const item = get(value);
+      if (!item) return null;
+      const collection = normaliseCollectionState(state);
+      const owned = collection.ownedAvatarIds.includes(item.id);
+      const required = item.shardRequirement || 0;
+      const shards = owned ? required : Math.max(0, Number(collection.shards[item.id]) || 0);
+      const percent = required === 0 ? (owned ? 100 : 0) : Math.min(100, Math.round(shards / required * 100));
+      return Object.freeze({avatarId:item.id, owned, shards, required, percent});
+    }
+
+    window.SalitaAvatarCatalogue = catalogue;
+    window.SalitaAvatarModel = Object.freeze({...model, phase3RandomPools:true, catalogue, byId, get, list, normaliseCollectionState, progress});
+    document.dispatchEvent(new CustomEvent("salita:avatar-random-pools-ready"));
+    return window.SalitaAvatarModel;
   }
 
   function appState() { return globalValue("state") || window.state || null; }
@@ -66,7 +120,7 @@
       const store = JSON.parse(localStorage.getItem(PROFILE_STORE) || "null");
       const activeId = sessionStorage.getItem(ACTIVE_PROFILE);
       const profile = store?.profiles?.find(item => item.id === activeId);
-      const model = window.SalitaAvatarModel;
+      const model = installRandomPoolModel();
       if (!store || !profile || !model) return null;
       const collection = model.normaliseCollectionState(profile.avatarCollection, profile.avatarId);
       return {store, profile, model, collection};
@@ -81,7 +135,12 @@
   }
 
   function eligible(account, rarity) {
-    return account.model.list({rarity}).filter(item => !account.collection.ownedAvatarIds.includes(item.id));
+    const claimedLevels = new Set((account.collection.levelRewardsClaimed || []).map(Number));
+    return account.model.list({rarity}).filter(item => {
+      if (account.collection.ownedAvatarIds.includes(item.id)) return false;
+      if (item.levelReward && !claimedLevels.has(Number(item.levelReward))) return false;
+      return true;
+    });
   }
 
   function rollMysteryRarity(account) {
@@ -185,7 +244,7 @@
 
   async function runReveal(detail) {
     const host = ensureReveal();
-    const model = window.SalitaAvatarModel;
+    const model = installRandomPoolModel();
     if (!model || !detail?.avatar) return;
     const finalItem = detail.avatar;
     const reduced = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
@@ -256,6 +315,7 @@
       window.setTimeout(install, 120);
       return;
     }
+    installRandomPoolModel();
     awardTestingCoins();
     ensureReveal();
     installMysteryCard();
