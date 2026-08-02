@@ -148,9 +148,11 @@
     */
     const baseRecordDailyAnswer = recordDailyAnswer;
     recordDailyAnswer = function recordDailyAnswerWithQuickItemTracking(correct, isReview = false) {
-      const wasQuickReview = session?.mode === "quick";
-      const teachingItem = Boolean(currentExercise?.teaching);
-      const combo = Math.max(0, Number(session?.combo || 0));
+      const activeSession = typeof session !== "undefined" ? session : null;
+      const activeExercise = typeof currentExercise !== "undefined" ? currentExercise : null;
+      const wasQuickReview = activeSession?.mode === "quick";
+      const teachingItem = Boolean(activeExercise?.teaching);
+      const combo = Math.max(0, Number(activeSession?.combo || 0));
 
       if (wasQuickReview) {
         const current = ensureDailyActivity();
@@ -159,7 +161,7 @@
 
       const result = baseRecordDailyAnswer.apply(this, arguments);
 
-      if (correct && !teachingItem) {
+      if (correct && !teachingItem && activeExercise) {
         const data = economyState();
         const originalReward = 2 + (combo >= 3 ? 1 : 0);
         let balancedReward = 1;
@@ -179,9 +181,10 @@
 
     const baseFinishSession = finishSession;
     finishSession = function finishSessionWithEconomyV2() {
-      const completedDaily = session?.mode === "daily";
-      const bossAttempt = Boolean(session?.boss);
-      const bossPassed = bossAttempt && Array.isArray(session?.queue) && session.queue.length > 0 && (Number(session.correct || 0) / session.queue.length) >= 0.8;
+      const activeSession = typeof session !== "undefined" ? session : null;
+      const completedDaily = activeSession?.mode === "daily";
+      const bossAttempt = Boolean(activeSession?.boss);
+      const bossPassed = bossAttempt && Array.isArray(activeSession?.queue) && activeSession.queue.length > 0 && (Number(activeSession.correct || 0) / activeSession.queue.length) >= 0.8;
 
       if (completedDaily) {
         const current = ensureDailyActivity();
