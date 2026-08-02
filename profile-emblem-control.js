@@ -4,6 +4,7 @@
   const INSTALL_FLAG = "__salitaQuestProfileEmblemControlInstalled";
   const RELEASE_VERSION = "5.5.6";
   const AVATAR_CASE_VERSION = "5.5.9";
+  const SHARING_VERSION = "5.5.10.4";
   let assetPromise = null;
 
   function addStylesheet(key, href) {
@@ -58,9 +59,24 @@
       await loadScript("weekly", `./weekly-avatar-shard-rewards-v1.js?v=${RELEASE_VERSION}`, "Weekly avatar rewards could not be loaded.");
       await loadScript("level", `./level-avatar-rewards-v1.js?v=${RELEASE_VERSION}`, "Level avatar rewards could not be loaded.");
       await loadScript("unlock", `./avatar-unlock-celebration-v1.js?v=${RELEASE_VERSION}`, "Avatar unlock celebration could not be loaded.");
-      await loadScript("sharing", `./achievement-sharing-avatar-bridge-v1.js?v=${RELEASE_VERSION}`, "Avatar-aware sharing could not be loaded.");
+
+      // Load the image-first transport directly rather than depending on the
+      // compatibility bridge. The versioned URL prevents an installed app from
+      // retaining the older Facebook link-composer path.
+      await loadScript(
+        "achievement-image-transport",
+        `./achievement-sharing-image-transport-v1.js?v=${SHARING_VERSION}`,
+        "Achievement image sharing could not be loaded."
+      );
+      await loadScript(
+        "sharing",
+        `./achievement-sharing-avatar-bridge-v1.js?v=${SHARING_VERSION}`,
+        "Avatar-aware sharing could not be loaded."
+      );
       window.SalitaAvatarArtwork?.syncEquipped();
-      document.dispatchEvent(new CustomEvent("salita:avatar-progression-ready", {detail:{version:RELEASE_VERSION,avatarCaseVersion:AVATAR_CASE_VERSION}}));
+      document.dispatchEvent(new CustomEvent("salita:avatar-progression-ready", {
+        detail:{version:RELEASE_VERSION,avatarCaseVersion:AVATAR_CASE_VERSION,sharingVersion:SHARING_VERSION}
+      }));
     })().catch(error => console.warn("Salita Quest avatar progression did not fully load", error));
     return assetPromise;
   }
