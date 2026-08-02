@@ -28,11 +28,13 @@
   loadStyle('link[data-sq-collection-rarity-fill]', "./avatar-collection-rarity-fill-v1.css?v=5.6.7", "sqCollectionRarityFill");
   loadStyle('link[data-sq-collection-summary]', "./avatar-collection-summary-v1.css?v=5.6.9", "sqCollectionSummary");
   loadStyle('link[data-sq-economy-phase6]', "./economy-tracking-phase6-v1.css?v=5.7.0", "sqEconomyPhase6");
+  loadStyle('link[data-sq-collection-tabs-phase61]', "./avatar-collection-tabs-phase6-1-v1.css?v=5.7.1", "sqCollectionTabsPhase61");
 
   loadScript('script[data-sq-testing-grant-100k]', "./coin-testing-grant-100k-v1.js?v=5.6.8", "sqTestingGrant100k");
   loadScript('script[data-sq-testing-grant-50k-phase5]', "./coin-testing-grant-50k-phase5-v1.js?v=5.6.9", "sqTestingGrant50kPhase5");
   loadScript('script[data-sq-collection-summary]', "./avatar-collection-summary-v1.js?v=5.6.9", "sqCollectionSummary");
   loadScript('script[data-sq-economy-phase6]', "./economy-tracking-phase6-v1.js?v=5.7.0", "sqEconomyPhase6");
+  loadScript('script[data-sq-collection-tabs-phase61]', "./avatar-collection-tabs-phase6-1-v1.js?v=5.7.1", "sqCollectionTabsPhase61");
 
   document.addEventListener("salita:coin-shard-pack-purchased", event => {
     const host = document.querySelector(".sq-coin-reveal-backdrop");
