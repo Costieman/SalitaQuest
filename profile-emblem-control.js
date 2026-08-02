@@ -4,7 +4,7 @@
   const INSTALL_FLAG = "__salitaQuestProfileEmblemControlInstalled";
   const RELEASE_VERSION = "5.5.6";
   const AVATAR_CASE_VERSION = "5.5.9";
-  const SHARING_VERSION = "5.5.11.1";
+  const SHARING_VERSION = "5.5.11.2";
   let assetPromise = null;
 
   function addStylesheet(key, href) {
@@ -60,6 +60,11 @@
       await loadScript("weekly", `./weekly-avatar-shard-rewards-v1.js?v=${RELEASE_VERSION}`, "Weekly avatar rewards could not be loaded.");
       await loadScript("level", `./level-avatar-rewards-v1.js?v=${RELEASE_VERSION}`, "Level avatar rewards could not be loaded.");
       await loadScript("unlock", `./avatar-unlock-celebration-v1.js?v=${RELEASE_VERSION}`, "Avatar unlock celebration could not be loaded.");
+      await loadScript(
+        "facebook-feed-link-share",
+        `./facebook-feed-link-share-v1.js?v=${SHARING_VERSION}`,
+        "Mobile Facebook feed sharing could not be loaded."
+      );
       await loadScript(
         "achievement-sharing-router",
         `./achievement-sharing-router-v2.js?v=${SHARING_VERSION}`,
