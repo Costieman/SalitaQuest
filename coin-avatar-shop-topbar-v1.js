@@ -22,6 +22,14 @@
     document.head.appendChild(link);
   }
 
+  if (!document.querySelector('script[data-sq-testing-grant-100k]')) {
+    const script = document.createElement("script");
+    script.src = "./coin-testing-grant-100k-v1.js?v=5.6.8";
+    script.async = false;
+    script.dataset.sqTestingGrant100k = "true";
+    document.body.appendChild(script);
+  }
+
   document.addEventListener("salita:coin-shard-pack-purchased", event => {
     const host = document.querySelector(".sq-coin-reveal-backdrop");
     if (!host) return;
