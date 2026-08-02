@@ -1,0 +1,19 @@
+name: Validate avatar collection rarity fill
+
+on:
+  pull_request:
+    paths:
+      - "avatar-collection-rarity-fill-v1.css"
+      - "coin-avatar-shop-topbar-v1.js"
+      - "scripts/validate-avatar-collection-rarity-fill.mjs"
+      - ".github/workflows/validate-avatar-collection-rarity-fill.yml"
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: node scripts/validate-avatar-collection-rarity-fill.mjs
