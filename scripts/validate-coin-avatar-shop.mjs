@@ -5,6 +5,7 @@ const read = path => fs.readFileSync(path,"utf8");
 const shop = read("coin-avatar-shard-shop-v1.js");
 const reveal = read("coin-avatar-shop-reveal-v1.js");
 const revealCss = read("coin-avatar-shop-reveal-v1.css");
+const rarityCss = read("coin-avatar-reveal-rarity-v1.css");
 const badges = read("coin-avatar-shop-badges-v1.js");
 const loader = read("profile-emblem-control.js");
 const weekly = read("weekly-avatar-shard-rewards-v1.js");
@@ -32,6 +33,11 @@ const required = [
   [reveal,'detail.before'],[reveal,'detail.after'],[reveal,'Avatar complete!'],
   [revealCss,'.sq-coin-reveal-colour'],[revealCss,'clip-path'],
   [revealCss,'.sq-coin-reveal.complete'],[revealCss,'sq-complete-burst'],
+  [topbar,'coin-avatar-reveal-rarity-v1.css?v=5.6.5'],
+  [topbar,'host.dataset.rarity = rarity'],
+  [rarityCss,'data-rarity="common"'],[rarityCss,'#dcefff'],
+  [rarityCss,'data-rarity="uncommon"'],[rarityCss,'#ffe1e1'],
+  [rarityCss,'data-rarity="rare"'],[rarityCss,'#ddf4df'],
   [badges,"lt_coins_500000"],[badges,"lt_coins_1000000"],
   [badges,"chain(\"coins_spent\""],[badges,"chain(\"packs\""],
   [badges,"chain(\"common_owned\""],[badges,"chain(\"uncommon_owned\""],[badges,"chain(\"rare_owned\""]
