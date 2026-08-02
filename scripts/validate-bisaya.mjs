@@ -123,7 +123,7 @@ const exerciseFixes = read("exercise-fixes-v545.js");
 for (const marker of [
   "__salitaQuestSentenceBuilderInteractionRecoveryInstalled",
   "updateSentenceBuilderUIWithReliableTouchTargets",
-  "data.builderSelectedIndex",
+  "dataset.builderSelectedIndex",
   "removeSelectedWord(id)",
   "selectBuilderWord(tile.id)",
   "touch-action:manipulation"
