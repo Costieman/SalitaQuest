@@ -44,6 +44,7 @@ const runtimeFiles = [
   "level-progression-v2.js",
   "level-up-mobile-safety-v552.js",
   "avatar-unlock-celebration-v1.js",
+  "facebook-feed-link-share-v1.js",
   "achievement-sharing-router-v2.js",
   "achievement-sharing-avatar-bridge-v1.js",
   "avatar-progression-migration-v1.js",
@@ -75,6 +76,7 @@ const orderedTokens = [
   'await loadScript("weekly"',
   'await loadScript("level"',
   'await loadScript("unlock"',
+  '        "facebook-feed-link-share",',
   '        "achievement-sharing-router",',
   '        "sharing",'
 ];
@@ -86,7 +88,7 @@ for (const token of orderedTokens) {
 }
 if (!loader.includes('const RELEASE_VERSION = "5.5.6"')) fail("Shared avatar loader is not cache-busted to its canonical runtime release");
 if (!loader.includes('const AVATAR_CASE_VERSION = "5.5.9"')) fail("Shared avatar loader does not version the Avatar Case runtime");
-if (!loader.includes('const SHARING_VERSION = "5.5.11.1"')) fail("Shared avatar loader does not version the explicit sharing router");
+if (!loader.includes('const SHARING_VERSION = "5.5.11.2"')) fail("Shared avatar loader does not version the Facebook feed link release");
 if (loader.includes("repair(document)")) fail("Shared loader must not run a document-wide avatar repair pass");
 
 const artwork = read("avatar-artwork-registry-v554.js");
@@ -126,6 +128,8 @@ const serviceWorker = read("service-worker.js");
 if (!serviceWorker.includes('const PREVIOUS_CACHE_NAME = "salita-quest-v5-5-9-avatar-case-r51"')) fail("Service worker does not retain the Avatar Case release boundary");
 if (!serviceWorker.includes('const CACHE_NAME = "salita-quest-v5-5-10-persistent-navigation-r52"')) fail("Service worker cache version is not the persistent-navigation release");
 if (!serviceWorker.includes('const EXPLICIT_SHARING_ROUTER_DELIVERY = "2026-08-02-feed-private-image-router-1"')) fail("Service worker does not advertise the explicit sharing-router update");
+if (!serviceWorker.includes('const FACEBOOK_FEED_LINK_DELIVERY = "2026-08-02-mobile-link-preview-1"')) fail("Service worker does not advertise the mobile Facebook link release");
+if (!serviceWorker.includes('"./facebook-feed-link-share-v1.js"')) fail("Service worker does not precache the mobile Facebook link transport");
 if (!serviceWorker.includes('"./achievement-sharing-router-v2.js"') || !serviceWorker.includes('"./achievement-sharing-router-v2.css"')) fail("Service worker does not precache the explicit sharing router");
 if (!serviceWorker.includes('"./avatar-case-v1.js"') || !serviceWorker.includes('"./avatar-case-v1.css"')) fail("Service worker does not precache the Avatar Case runtime");
 if (!serviceWorker.includes('"./desktop-navigation-refinement.js"') || !serviceWorker.includes('"./desktop-navigation-refinement.css"')) fail("Service worker does not precache persistent navigation");
@@ -149,4 +153,4 @@ for (const marker of [
   if (!releaseNotes.toLowerCase().includes(marker.toLowerCase())) fail(`5.5.6 release notes are missing ${marker}`);
 }
 
-console.log(`Avatar progression integration validation passed: ${model.catalogue.length} direct canonical avatars, four-slot Avatar Case, persistent labelled navigation, explicit feed/private/image sharing router, compatibility-only bridge, preserved learner state and r52 offline delivery.`);
+console.log(`Avatar progression integration validation passed: ${model.catalogue.length} direct canonical avatars, four-slot Avatar Case, persistent labelled navigation, mobile Facebook feed link delivery, explicit feed/private/image sharing router, compatibility-only bridge, preserved learner state and r52 offline delivery.`);
