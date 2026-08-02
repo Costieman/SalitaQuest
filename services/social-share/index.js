@@ -7,7 +7,7 @@ const BUCKET_NAME = String(process.env.SHARE_BUCKET || "").trim();
 const APP_URL = String(process.env.PUBLIC_APP_URL || "https://costieman.github.io/SalitaQuest/").trim();
 const MAX_IMAGE_BYTES = 8 * 1024 * 1024;
 const MAX_UPLOADS_PER_HOUR = Number(process.env.MAX_UPLOADS_PER_HOUR || 30);
-const SERVICE_VERSION = "5.5.8-sharing-foundation";
+const SERVICE_VERSION = "5.5.13-facebook-card-link";
 const SHARE_TYPE_META = Object.freeze({
   badge: {label:"BADGE EARNED", defaultTitle:"Salita Quest badge"},
   badge_chest: {label:"BADGE CHEST", defaultTitle:"Salita Quest Badge Chest"},
@@ -124,7 +124,7 @@ app.use((req, res, next) => {
     res.set("Vary", "Origin");
     res.set("Access-Control-Allow-Credentials", "true");
     res.set("Access-Control-Allow-Headers", "Content-Type");
-    res.set("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
+    res.set("Access-Control-Allow-Methods", "GET,HEAD,POST,OPTIONS");
   }
   if (req.method === "OPTIONS") return originAllowed(origin) ? res.sendStatus(204) : res.sendStatus(403);
   next();
@@ -137,6 +137,10 @@ app.get("/health", (_req, res) => {
     bucketConfigured: Boolean(bucket),
     supportedTypes: Object.keys(SHARE_TYPE_META)
   });
+});
+
+app.get("/robots.txt", (_req, res) => {
+  res.type("text/plain").set("Cache-Control", "public,max-age=3600").send("User-agent: *\nAllow: /share/\nAllow: /media/\n");
 });
 
 app.post("/api/share-cards", async (req, res) => {
@@ -190,24 +194,40 @@ app.post("/api/share-cards", async (req, res) => {
   }
 });
 
-app.get("/media/:id/:variant.png", async (req, res) => {
+async function sendImage(req, res, headOnly = false) {
   if (!bucket) return res.sendStatus(503);
   const id = safeId(req.params.id);
   const variant = req.params.variant === "square" ? "square" : req.params.variant === "og" ? "og" : "";
   if (!id || !variant) return res.sendStatus(404);
-  res.set({
-    "Content-Type": "image/png",
-    "Cache-Control": "public,max-age=31536000,immutable",
-    "X-Content-Type-Options": "nosniff"
-  });
-  const stream = bucket.file(`images/${id}-${variant}.png`).createReadStream();
-  stream.on("error", error => {
-    console.error("Image read failed", error);
-    if (!res.headersSent) res.sendStatus(error.code === 404 ? 404 : 500);
-    else res.destroy(error);
-  });
-  stream.pipe(res);
-});
+
+  const file = bucket.file(`images/${id}-${variant}.png`);
+  try {
+    const [metadata] = await file.getMetadata();
+    const headers = {
+      "Content-Type": "image/png",
+      "Cache-Control": "public,max-age=31536000,immutable",
+      "Accept-Ranges": "bytes",
+      "X-Robots-Tag": "all",
+      "X-Content-Type-Options": "nosniff"
+    };
+    if (Number(metadata.size) > 0) headers["Content-Length"] = String(metadata.size);
+    res.set(headers);
+    if (headOnly) return res.status(200).end();
+    const stream = file.createReadStream();
+    stream.on("error", error => {
+      console.error("Image read failed", error);
+      if (!res.headersSent) res.sendStatus(error.code === 404 ? 404 : 500);
+      else res.destroy(error);
+    });
+    stream.pipe(res);
+  } catch (error) {
+    console.error("Image metadata read failed", error);
+    return res.sendStatus(error.code === 404 ? 404 : 500);
+  }
+}
+
+app.head("/media/:id/:variant.png", (req, res) => sendImage(req, res, true));
+app.get("/media/:id/:variant.png", (req, res) => sendImage(req, res, false));
 
 app.get("/share/:id", async (req, res) => {
   if (!bucket) return res.sendStatus(503);
@@ -227,7 +247,8 @@ app.get("/share/:id", async (req, res) => {
 
     res.set({
       "Content-Type": "text/html; charset=utf-8",
-      "Cache-Control": "public,max-age=31536000,immutable",
+      "Cache-Control": "public,max-age=300,must-revalidate",
+      "X-Robots-Tag": "all",
       "Content-Security-Policy": "default-src 'none'; img-src 'self'; style-src 'unsafe-inline'; base-uri 'none'; frame-ancestors 'none'; form-action 'none'",
       "X-Content-Type-Options": "nosniff",
       "Referrer-Policy": "strict-origin-when-cross-origin"
@@ -237,7 +258,7 @@ app.get("/share/:id", async (req, res) => {
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="robots" content="noindex,nofollow">
+<meta name="robots" content="index,follow,max-image-preview:large">
 <title>${title} · Salita Quest</title>
 <link rel="canonical" href="${canonical}">
 <meta name="description" content="${description}">
@@ -247,6 +268,7 @@ app.get("/share/:id", async (req, res) => {
 <meta property="og:title" content="${title}">
 <meta property="og:description" content="${description}">
 <meta property="og:image" content="${image}">
+<meta property="og:image:url" content="${image}">
 <meta property="og:image:secure_url" content="${image}">
 <meta property="og:image:type" content="image/png">
 <meta property="og:image:width" content="1200">
@@ -256,6 +278,7 @@ app.get("/share/:id", async (req, res) => {
 <meta name="twitter:title" content="${title}">
 <meta name="twitter:description" content="${description}">
 <meta name="twitter:image" content="${image}">
+<meta name="twitter:image:alt" content="${title}">
 <style>
 :root{color-scheme:dark;font-family:Inter,system-ui,sans-serif;background:#071427;color:#fff}*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:radial-gradient(circle at 80% 10%,#155e63 0,#071427 48%,#040b17 100%);padding:28px}.card{width:min(100%,760px);background:rgba(8,24,42,.94);border:1px solid rgba(111,211,193,.35);border-radius:28px;padding:24px;box-shadow:0 30px 90px rgba(0,0,0,.45)}img{display:block;width:100%;border-radius:20px;border:1px solid rgba(247,201,72,.45)}.copy{padding:24px 6px 6px}.eyebrow{margin:0 0 8px;color:#7ad9c8;font-weight:900;letter-spacing:.14em;font-size:12px}.meta{color:#9eb8b7;font-weight:700}.cta{display:inline-flex;margin-top:20px;padding:15px 22px;border-radius:999px;background:#f7c948;color:#10213b;text-decoration:none;font-weight:950;box-shadow:0 8px 0 #b78419}.cta:active{transform:translateY(3px);box-shadow:0 5px 0 #b78419}h1{font-size:clamp(28px,5vw,48px);margin:0 0 10px}p{line-height:1.55;color:#d5e6e3}</style>
 </head>
