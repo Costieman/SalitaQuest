@@ -86,7 +86,7 @@ for (const token of orderedTokens) {
 }
 if (!loader.includes('const RELEASE_VERSION = "5.5.6"')) fail("Shared avatar loader is not cache-busted to its canonical runtime release");
 if (!loader.includes('const AVATAR_CASE_VERSION = "5.5.9"')) fail("Shared avatar loader does not version the Avatar Case runtime");
-if (!loader.includes('const SHARING_VERSION = "5.5.11.1"')) fail("Shared avatar loader does not version the explicit sharing router");
+if (!loader.includes('const SHARING_VERSION = "5.5.13.1"')) fail("Shared avatar loader does not version the Facebook link-card router");
 if (loader.includes("repair(document)")) fail("Shared loader must not run a document-wide avatar repair pass");
 
 const artwork = read("avatar-artwork-registry-v554.js");
@@ -149,4 +149,4 @@ for (const marker of [
   if (!releaseNotes.toLowerCase().includes(marker.toLowerCase())) fail(`5.5.6 release notes are missing ${marker}`);
 }
 
-console.log(`Avatar progression integration validation passed: ${model.catalogue.length} direct canonical avatars, four-slot Avatar Case, persistent labelled navigation, explicit feed/private/image sharing router, compatibility-only bridge, preserved learner state and r52 offline delivery.`);
+console.log(`Avatar progression integration validation passed: ${model.catalogue.length} direct canonical avatars, four-slot Avatar Case, persistent labelled navigation, Facebook link-card sharing router, compatibility-only bridge, preserved learner state and r52 offline delivery.`);

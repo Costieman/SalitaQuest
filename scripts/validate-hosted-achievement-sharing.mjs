@@ -86,7 +86,7 @@ requireMarkers(connectionCss, [
 
 const service = read("services/social-share/index.js");
 requireMarkers(service, [
-  'const SERVICE_VERSION = "5.5.8-sharing-foundation"',
+  'const SERVICE_VERSION = "5.5.13-facebook-link-card"',
   "const SHARE_TYPE_META = Object.freeze({",
   'badge: {label:"BADGE EARNED"',
   'badge_chest: {label:"BADGE CHEST"',
@@ -94,17 +94,20 @@ requireMarkers(service, [
   'avatar_case: {label:"AVATAR CASE"',
   'level_up: {label:"LEVEL UP"',
   "function normaliseShareType(value)",
-  "supportedTypes: Object.keys(SHARE_TYPE_META)",
+  "supportedTypes:Object.keys(SHARE_TYPE_META)",
   'app.get("/health"',
   'app.post("/api/share-cards"',
-  'decodePngDataUrl(req.body.squareImageDataUrl, "squareImageDataUrl", 1080, 1080)',
-  'decodePngDataUrl(req.body.ogImageDataUrl, "ogImageDataUrl", 1200, 630)',
+  'decodePngDataUrl(req.body.squareImageDataUrl,"squareImageDataUrl",1080,1080)',
+  'decodePngDataUrl(req.body.ogImageDataUrl,"ogImageDataUrl",1200,630)',
   'crypto.randomBytes(18).toString("base64url")',
   'saveObject(`images/${id}-square.png`',
   'saveObject(`images/${id}-og.png`',
+  'app.head("/media/:id/:variant.png"',
   'app.get("/media/:id/:variant.png"',
+  '"Content-Length":String(metadata.size || "")',
   'app.get("/share/:id"',
   '<meta property="og:image" content="${image}">',
+  '<meta property="og:image:url" content="${image}">',
   '<meta property="og:image:secure_url" content="${image}">',
   '<meta property="og:image:width" content="1200">',
   '<meta property="og:image:height" content="630">',
@@ -112,15 +115,17 @@ requireMarkers(service, [
   "Start learning a Filipino language free",
   "MAX_UPLOADS_PER_HOUR",
   "ALLOWED_ORIGINS",
-  "Cache-Control"
+  '"Cache-Control":"public,max-age=300,stale-while-revalidate=86400"'
 ], "Cloud Run Open Graph service");
 requirePatterns(service, [
   [/const type\s*=\s*normaliseShareType\(req\.body\.type\)/, "normalized unified share type"],
   [/shareLabel:\s*typeMeta\.label/, "type-specific share-page label"],
   [/serviceVersion:\s*SERVICE_VERSION/, "stored service version"],
-  [/type,\s*\n\s*shareUrl:/, "normalized share type in upload response"]
+  [/type,\s*\n\s*shareUrl:/, "normalized share type in upload response"],
+  [/FACEBOOK|facebookexternalhit|og:image:url|Content-Length/, "crawler-compatible card delivery"]
 ], "Unified Cloud Run share contract");
 if (service.includes('app.get("/healthz"')) fail("The service must avoid Cloud Run's reserved health path");
+if (/noindex\s*,\s*nofollow/i.test(service)) fail("Hosted share pages must not discourage Meta from following the card link");
 
 for (const file of ["services/social-share/index.js", "social-connections-v2.js", "achievement-sharing-v4.js"]) {
   const check = spawnSync("node", ["--check", file], {encoding: "utf8"});
@@ -201,4 +206,4 @@ requireMarkers(serviceDocs, [
   "Start learning a Filipino language free"
 ], "Share-service documentation");
 
-console.log("Validated unified badge/chest/avatar/Avatar Case/level share types, hosted-to-local fallbacks, exact Open Graph images, Cloud Run service structure, both language loaders and persistent-navigation offline release.");
+console.log("Validated unified badge/chest/avatar/Avatar Case/level share types, crawler-compatible Open Graph images, Cloud Run service structure, both language loaders and persistent-navigation offline release.");

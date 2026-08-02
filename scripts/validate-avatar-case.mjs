@@ -148,9 +148,11 @@ if (!(collectionZ < detailZ && detailZ < pickerZ && pickerZ < shareZ)) {
 }
 
 requireMarkers(service,[
-  'avatar_case: {label:"AVATAR CASE"',
-  "supportedTypes: Object.keys(SHARE_TYPE_META)"
+  'avatar_case: {label:"AVATAR CASE"'
 ],"Hosted Avatar Case contract");
+if (!/supportedTypes\s*:\s*Object\.keys\(SHARE_TYPE_META\)/.test(service)) {
+  fail("Hosted Avatar Case contract is missing the supported share-type list");
+}
 
 for (const htmlFile of ["app.html","bisaya.html"]) {
   const html = read(htmlFile);

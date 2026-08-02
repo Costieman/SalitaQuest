@@ -23,34 +23,43 @@ for (const [file,source] of [
 ]) new vm.Script(source,{filename:file});
 
 requireMarkers(router,[
-  'const RELEASE = "5.5.12-playable-social-posts"',
+  'const RELEASE = "5.5.13-facebook-link-card"',
   'modes:Object.freeze(["feed_link","app_link","private_link","download_file"])',
   'data-sq-share-feed="facebook"',
   'data-sq-share-app',
   'data-sq-share-private',
-  'Creating your public achievement post…',
-  'validateHostedResponse(data,base)',
-  'share.pathname.startsWith("/share/")',
-  'image.pathname.startsWith("/media/")',
+  'data-sq-hosted-action',
+  'Preparing the card and playable link…',
+  'setHostedActionsReady(true)',
+  'ensureHostedShare().catch(() => {})',
+  'if (provider === "facebook" && hasMobileNativeShare())',
+  'await navigator.share(nativeLinkPayload(hosted))',
+  'Choose Facebook, then Feed',
   'https://www.facebook.com/sharer/sharer.php?u=',
   'https://www.linkedin.com/sharing/share-offsite/?url=',
   'https://twitter.com/intent/tweet?text=',
   'https://wa.me/?text=',
   'POST WITH A CARD + PLAY LINK',
-  'Every post below can bring a new learner into Salita Quest',
+  'Choose Messenger or another messaging app',
   'document.addEventListener("click",handleClick,true)',
   'document.addEventListener("salita:achievement-share-prepared"'
-],"Playable sharing router");
+],"Facebook link-card sharing router");
 
-const appPayload = router.match(/await navigator\.share\(\{title:prepared\.title,text:prepared\.text,url:hosted\.shareUrl\}\);/);
-if (!appPayload) fail("App and private sharing must include the hosted playable URL.");
-if (/navigator\.share\(\{[^}]*files:/.test(router)) fail("No social-post route may degrade into an image-only attachment.");
+if (/navigator\.share\(\{[^}]*files:/.test(router)) fail("No feed or private route may degrade into an image-only attachment.");
 if (!router.includes('data-sq-share-download')) fail("The explicit non-clickable image download must remain available.");
 
-const publicComposer = router.match(/async function openPublicComposer\(provider\)([\s\S]*?)\n  async function sharePlayablePost/);
-if (!publicComposer) fail("Public composer function could not be located.");
-if (!publicComposer[1].includes("await ensureHostedShare()")) fail("Public feed posting must require a hosted achievement page.");
-if (publicComposer[1].includes("prepared.url") || publicComposer[1].includes("shareRoot")) fail("Public feed posting must never fall back to the learner-login application URL.");
+const facebookFunction = router.match(/async function openPublicComposer\(provider\)([\s\S]*?)\n  async function sharePlayablePost/);
+if (!facebookFunction) fail("Facebook public composer function could not be located.");
+const mobileBranch = facebookFunction[1].indexOf('provider === "facebook" && hasMobileNativeShare()');
+const nativeShare = facebookFunction[1].indexOf('navigator.share(nativeLinkPayload(hosted))');
+const legacyComposer = facebookFunction[1].indexOf('facebook.com/sharer/sharer.php');
+if (mobileBranch < 0 || nativeShare <= mobileBranch) fail("Mobile Facebook must use the hosted link-only native share payload.");
+if (legacyComposer <= nativeShare) fail("The legacy Facebook web composer must remain desktop fallback only.");
+if (!facebookFunction[1].includes("const hosted = requireHosted();")) fail("Facebook posting must use an already-prepared hosted link without an upload after the tap.");
+
+const preparedHandler = router.match(/document\.addEventListener\("salita:achievement-share-prepared"([\s\S]*?)\n  \}\);/);
+if (!preparedHandler || !preparedHandler[1].includes("ensureHostedShare().catch")) fail("The hosted card must prewarm when the share window opens.");
+if (!preparedHandler[1].includes("setHostedActionsReady(false)")) fail("Hosted actions must remain disabled until the card link is ready.");
 
 requireMarkers(routerCss,[
   ".achievement-share-router-v2",
@@ -61,14 +70,14 @@ requireMarkers(routerCss,[
 ],"Sharing router styles");
 
 requireMarkers(loader,[
-  'const SHARING_VERSION = "5.5.12.1"',
+  'const SHARING_VERSION = "5.5.13.1"',
   'addStylesheet("sharing-router-css"',
   '`./achievement-sharing-router-v2.css?v=${SHARING_VERSION}`',
   '"achievement-sharing-router"',
   '`./achievement-sharing-router-v2.js?v=${SHARING_VERSION}`',
   '`./achievement-sharing-avatar-bridge-v1.js?v=${SHARING_VERSION}`',
   'sharingVersion:SHARING_VERSION'
-],"Playable sharing-router loader");
+],"Facebook link-card loader");
 
 const routerLoadIndex = loader.indexOf('"achievement-sharing-router"');
 const bridgeLoadIndex = loader.indexOf('"sharing"',routerLoadIndex + 1);
@@ -88,4 +97,4 @@ requireMarkers(bridge,[
 ],"Compatibility-only avatar bridge");
 if (bridge.includes('document.addEventListener("click"')) fail("The avatar bridge must not intercept sharing actions.");
 
-console.log("Validated acquisition-ready achievement sharing: every visible social-post route carries the hosted card and playable Salita Quest URL; image-only behavior is restricted to download.");
+console.log("Validated Facebook acquisition posts: hosted card prewarms before the tap, mobile Facebook receives a link-only native payload, desktop retains a link composer fallback, Messenger remains available, and image-only behavior is restricted to download.");
