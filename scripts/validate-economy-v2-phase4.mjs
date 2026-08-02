@@ -8,6 +8,7 @@ const mystery = fs.readFileSync("coin-avatar-shop-reveal-v1.js", "utf8");
 const fail = message => { throw new Error(message); };
 
 new vm.Script(nav, {filename:"desktop-navigation-refinement.js"});
+new vm.Script(shop, {filename:"coin-avatar-shard-shop-v1.js"});
 
 [
   'const PHASE4_RELEASE = "economy-v2-phase4-shop-navigation"',
@@ -47,4 +48,16 @@ if (!mystery.includes("const MYSTERY_COST = 2500")) fail("Mystery Pack cost chan
 if (!mystery.includes("const MYSTERY_ODDS = Object.freeze({common:40, uncommon:35, rare:25})")) fail("Mystery odds changed.");
 if (!mystery.includes("item.levelReward == null")) fail("Guaranteed level avatars must remain outside random pools.");
 
-console.log("Validated desktop/mobile Shop navigation, topmost overlay presentation, four clear pack cards, and unchanged Economy v2 pack rules.");
+[
+  "const balanceChanged = current !== lastKnownBalance",
+  "if (balanceChanged) updateOpenShop()",
+  'const mysteryCard = grid.querySelector(".sq-coin-pack.mystery")',
+  "grid.insertBefore(mysteryCard, rareCard || null)"
+].forEach(marker => {
+  if (!shop.includes(marker)) fail(`Missing Mystery menu stability guard: ${marker}`);
+});
+if (shop.includes("internalBalanceWrite = false;\n    updateOpenShop();")) {
+  fail("The open shop must not rebuild every polling cycle.");
+}
+
+console.log("Validated stable desktop/mobile Shop navigation, preserved Mystery card rendering, topmost overlay presentation, and unchanged Economy v2 pack rules.");
