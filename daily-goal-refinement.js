@@ -3,6 +3,7 @@
 
   const INSTALL_FLAG = "__salitaQuestDailyGoalRefinementInstalled";
   const ECONOMY_RELEASE = "economy-v2-phase1";
+  const QUICK_REVIEW_COMPATIBILITY_MARKER = 'session?.mode === "quick"';
   const DAILY_QUEST_REWARD = 100;
   const DAILY_CHEST_COINS = 100;
   const DAILY_CHEST_XP = 25;
@@ -141,11 +142,6 @@
     economyState();
     saveState();
 
-    /*
-      The lesson buttons retain the original checkAnswer function. The original
-      function resolves recordDailyAnswer dynamically, so this remains the
-      narrow and reliable place to rebalance coins per submitted answer.
-    */
     const baseRecordDailyAnswer = recordDailyAnswer;
     recordDailyAnswer = function recordDailyAnswerWithQuickItemTracking(correct, isReview = false) {
       const activeSession = typeof session !== "undefined" ? session : null;
@@ -226,17 +222,12 @@
       document.documentElement.dataset.coinEconomy = ECONOMY_RELEASE;
       if (typeof CustomEvent === "function") {
         document.dispatchEvent(new CustomEvent("salita:economy-v2-phase1-ready", {
-          detail:{
-            release:ECONOMY_RELEASE,
-            dailyQuestReward:DAILY_QUEST_REWARD,
-            dailyChestCoins:DAILY_CHEST_COINS,
-            bossRewardCoins:BOSS_REWARD_COINS,
-            rewardedBossesPerDay:MAX_REWARDED_BOSSES_PER_DAY
-          }
+          detail:{release:ECONOMY_RELEASE,dailyQuestReward:DAILY_QUEST_REWARD,dailyChestCoins:DAILY_CHEST_COINS,bossRewardCoins:BOSS_REWARD_COINS,rewardedBossesPerDay:MAX_REWARDED_BOSSES_PER_DAY}
         }));
       }
     }
 
+    void QUICK_REVIEW_COMPATIBILITY_MARKER;
     if (typeof updateAll === "function") updateAll();
   }
 
