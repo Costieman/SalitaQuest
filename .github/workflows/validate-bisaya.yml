@@ -54,7 +54,9 @@ jobs:
         run: node scripts/validate-bisaya-audio-library.mjs
       - name: Validate hosted achievement previews
         run: node scripts/validate-hosted-achievement-sharing.mjs
-      - name: Validate image-first achievement sharing
+      - name: Validate hosted deployment verifier
+        run: node scripts/validate-social-share-deployment-verifier.mjs
+      - name: Validate explicit achievement sharing modes
         run: node scripts/validate-achievement-image-transport.mjs
       - name: Validate Badge Chest and achievement sharing stability
         run: node scripts/validate-badge-stability.mjs
