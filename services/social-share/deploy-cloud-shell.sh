@@ -94,7 +94,6 @@ SERVICE_URL=""
 
 # Cloud Run can report both a deterministic URL and a hashed legacy URL. Verify
 # the endpoint instead of assuming every reported hostname is routed correctly.
-# Use a health route that does not end with a reserved suffix.
 for candidate in "${DESCRIBED_URL}" "${DETERMINISTIC_URL}"; do
   [[ -n "${candidate}" ]] || continue
   if curl --fail --silent --show-error --max-time 30 "${candidate}/health" >/tmp/salita-share-health.json 2>/dev/null; then
@@ -116,8 +115,13 @@ echo
 echo "Health check:"
 cat /tmp/salita-share-health.json
 rm -f /tmp/salita-share-health.json
+
 echo
+echo "Running end-to-end public-card verification..."
+SALITA_APP_ORIGIN="https://costieman.github.io" \
+  node services/social-share/verify-deployment.mjs "${SERVICE_URL}"
+
 echo
-echo "Paste this URL into Salita Quest:"
-echo "Settings → Connected accounts → Connection service"
+echo "Hosted achievement sharing is ready."
+echo "The built-in Salita Quest client should use:"
 echo "${SERVICE_URL}"
