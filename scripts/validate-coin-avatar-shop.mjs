@@ -17,8 +17,8 @@ const required = [
   [shop,"!account.collection.ownedAvatarIds.includes(item.id)"],
   [loader,"coin-avatar-shard-shop-v1.js"],[loader,"coin-avatar-shop-badges-v1.js"],
   [badges,"lt_coins_500000"],[badges,"lt_coins_1000000"],
-  [badges,"shop_coins_spent"],[badges,"shop_packs"],
-  [badges,"common_owned"],[badges,"uncommon_owned"],[badges,"rare_owned"]
+  [badges,"chain(\"coins_spent\""],[badges,"chain(\"packs\""],
+  [badges,"chain(\"common_owned\""],[badges,"chain(\"uncommon_owned\""],[badges,"chain(\"rare_owned\""]
 ];
 for (const [source,token] of required) if (!source.includes(token)) throw new Error(`Missing required token: ${token}`);
 
