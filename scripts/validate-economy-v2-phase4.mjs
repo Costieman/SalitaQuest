@@ -23,8 +23,11 @@ new vm.Script(nav, {filename:"desktop-navigation-refinement.js"});
   if (!nav.includes(marker)) fail(`Missing Phase 4 navigation marker: ${marker}`);
 });
 
-if ((nav.match(/data-sq-nav-action=\\"shop\\"/g) || []).length < 3) {
-  fail("Shop must be installed and wired in desktop and mobile navigation.");
+if ((nav.match(/action:"shop"/g) || []).length < 2) {
+  fail("Shop must be created in both desktop and mobile navigation.");
+}
+if (!nav.includes("document.querySelectorAll('[data-sq-nav-action=\"shop\"]')")) {
+  fail("Shop navigation actions must share one safe click handler.");
 }
 if (nav.includes("new MutationObserver(installButton)") || nav.includes("new MutationObserver(installTopbar")) {
   fail("Phase 4 must not restore the crashing broad shop-button observer.");
