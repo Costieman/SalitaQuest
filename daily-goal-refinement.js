@@ -147,7 +147,7 @@
       narrow and reliable place to rebalance coins per submitted answer.
     */
     const baseRecordDailyAnswer = recordDailyAnswer;
-    recordDailyAnswer = function recordDailyAnswerWithEconomyV2(correct, isReview = false) {
+    recordDailyAnswer = function recordDailyAnswerWithQuickItemTracking(correct, isReview = false) {
       const wasQuickReview = session?.mode === "quick";
       const teachingItem = Boolean(currentExercise?.teaching);
       const combo = Math.max(0, Number(session?.combo || 0));
