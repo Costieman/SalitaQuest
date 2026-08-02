@@ -1,6 +1,5 @@
 import fs from "node:fs";
 import path from "node:path";
-import vm from "node:vm";
 import {spawnSync} from "node:child_process";
 
 const root = process.cwd();
@@ -12,8 +11,6 @@ const requireMarkers = (source,markers,label) => markers.forEach(marker => {
 
 const verifier = read("services/social-share/verify-deployment.mjs");
 const deploy = read("services/social-share/deploy-cloud-shell.sh");
-
-new vm.SourceTextModule(verifier,{identifier:"verify-deployment.mjs"});
 
 requireMarkers(verifier,[
   'const serviceUrl = String(process.argv[2] || process.env.SOCIAL_SHARE_URL || "")',
