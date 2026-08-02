@@ -147,6 +147,74 @@
     unlockStructureBox();
   };
 
+  function installSentenceBuilderInteractionRecovery() {
+    const flag = "__salitaQuestSentenceBuilderInteractionRecoveryInstalled";
+    if (window[flag]) return;
+    if (
+      typeof updateSentenceBuilderUI !== "function" ||
+      typeof removeSelectedWord !== "function" ||
+      typeof selectBuilderWord !== "function"
+    ) return;
+    window[flag] = true;
+
+    const baseUpdateSentenceBuilderUI = updateSentenceBuilderUI;
+    updateSentenceBuilderUI = function updateSentenceBuilderUIWithReliableTouchTargets() {
+      const result = baseUpdateSentenceBuilderUI.apply(this, arguments);
+      const builder = document.getElementById("sentenceBuilder");
+      if (!builder || builder.classList.contains("hidden")) return result;
+
+      const unlocked = !sentenceBuilderState.locked;
+      const selectedButtons = [...builder.querySelectorAll("#builtSentence .selected-word-tile")];
+      selectedButtons.forEach((button, index) => {
+        button.dataset.builderSelectedIndex = String(index);
+        button.disabled = !unlocked;
+        button.setAttribute("aria-label", unlocked
+          ? `Remove ${button.textContent || "word"} from the sentence`
+          : button.textContent || "Selected word");
+      });
+
+      const bankButtons = [...builder.querySelectorAll("#wordBank .word-tile")];
+      bankButtons.forEach((button, index) => {
+        button.dataset.builderTileIndex = String(index);
+        const tile = sentenceBuilderState.tiles[index];
+        const used = tile ? sentenceBuilderState.selected.includes(tile.id) : true;
+        button.disabled = !unlocked || used;
+      });
+      return result;
+    };
+
+    document.addEventListener("click", event => {
+      const selected = event.target.closest?.("#sentenceBuilder .selected-word-tile");
+      if (selected && !sentenceBuilderState.locked) {
+        const index = Number(selected.dataset.builderSelectedIndex);
+        const id = sentenceBuilderState.selected[index];
+        if (id) {
+          event.preventDefault();
+          event.stopPropagation();
+          event.stopImmediatePropagation?.();
+          removeSelectedWord(id);
+        }
+        return;
+      }
+
+      const available = event.target.closest?.("#sentenceBuilder .word-tile");
+      if (available && !sentenceBuilderState.locked && !available.classList.contains("used")) {
+        const index = Number(available.dataset.builderTileIndex);
+        const tile = sentenceBuilderState.tiles[index];
+        if (tile && !sentenceBuilderState.selected.includes(tile.id)) {
+          event.preventDefault();
+          event.stopPropagation();
+          event.stopImmediatePropagation?.();
+          selectBuilderWord(tile.id);
+        }
+      }
+    }, true);
+
+    try { updateSentenceBuilderUI(); } catch {}
+  }
+
+  installSentenceBuilderInteractionRecovery();
+
   const style = document.createElement("style");
   style.textContent = `
     .correct-answer-word {
@@ -160,6 +228,15 @@
       background:#e8f8ef;
       color:#173a37;
       font-weight:850;
+    }
+    #sentenceBuilder .word-tile,
+    #sentenceBuilder .selected-word-tile {
+      pointer-events:auto;
+      touch-action:manipulation;
+      -webkit-tap-highlight-color:transparent;
+    }
+    #sentenceBuilder .selected-word-tile:not(:disabled) {
+      cursor:pointer;
     }
     body.dark-mode .feedback-box,
     body.dark-mode .feedback-box h3,
