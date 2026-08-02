@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import vm from "node:vm";
+import {spawnSync} from "node:child_process";
 
 const root = process.cwd();
 const read = file => fs.readFileSync(path.join(root,file),"utf8");
@@ -23,9 +24,10 @@ for (const [file,source] of [
   ["facebook-feed-link-share-v1.js",facebookFeed],
   ["achievement-sharing-avatar-bridge-v1.js",bridge],
   ["profile-emblem-control.js",loader],
-  ["service-worker.js",worker],
-  ["services/social-share/index-v2.js",service]
+  ["service-worker.js",worker]
 ]) new vm.Script(source,{filename:file});
+const serviceSyntax = spawnSync(process.execPath,["--check","services/social-share/index-v2.js"],{cwd:root,encoding:"utf8"});
+if (serviceSyntax.status !== 0) fail(`Crawler-compatible service failed syntax check: ${serviceSyntax.stderr}`);
 
 requireMarkers(router,[
   'const RELEASE = "5.5.11-explicit-sharing-router"',
