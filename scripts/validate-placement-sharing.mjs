@@ -125,7 +125,7 @@ for (const marker of [
   "loadProgress(saved, courseId)",
   'courseId === "cebuano"',
   "Create and choose language",
-  "courseProgressKey(profile.id, \"tagalog\")"
+  'courseProgressKey(profile.id, "tagalog")'
 ]) if (!index.includes(marker)) fail(`Profile language-choice marker missing: ${marker}`);
 if (index.includes('window.location.replace(`app.html?profile=${encodeURIComponent(active.id)}`)')) {
   fail("Returning learners must choose Tagalog or Bisaya before a course and placement test opens");
