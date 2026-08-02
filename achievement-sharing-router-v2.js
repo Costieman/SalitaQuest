@@ -2,7 +2,7 @@
   "use strict";
 
   const INSTALL_FLAG = "__salitaQuestAchievementSharingRouterV2Installed";
-  const RELEASE = "5.5.13-facebook-card-link";
+  const RELEASE = "5.5.14-direct-social-link-posts";
   const MODAL_ID = "achievementShareModalV4";
   const PREVIEW_ID = "achievementSharePreview";
   const PROFILE_STORE = "salitaQuestLocalProfilesV1";
@@ -181,7 +181,7 @@
       const base = String(api?.apiBase?.() || "").replace(/\/$/,"");
       if (!base) throw new Error("Public achievement posts are temporarily unavailable.");
       if (api?.ensureHosted && !(await api.ensureHosted())) throw new Error("Public achievement posts are temporarily unavailable.");
-      setStatus("Creating your public achievement post…");
+      setStatus("Preparing the normal link post…");
       const file = await ensureImageFile();
       const ogBlob = await openGraphBlob(prepared.source,prepared.title,prepared.text);
       const [squareImageDataUrl,ogImageDataUrl] = await Promise.all([dataUrl(file),dataUrl(ogBlob)]);
@@ -204,57 +204,57 @@
       if (!response.ok) throw new Error(data.message || `Public achievement post failed (${response.status}).`);
       prepared.hosted = validateHostedResponse(data,base);
       prepared.caption = `${prepared.text}\n\nPlay Salita Quest free:\n${prepared.hosted.shareUrl}`;
-      setStatus("Your playable achievement post is ready.");
+      setStatus("Your normal link post is ready.");
       return prepared.hosted;
     })().catch(error => {
-      setStatus(`${error.message || "The public achievement post could not be prepared."} Try again.`,true);
+      setStatus(`${error.message || "The normal link post could not be prepared."} Try again.`,true);
       throw error;
     }).finally(() => { hostedPromise = null; });
     return hostedPromise;
-  }
-
-  function mobileShareAvailable() {
-    return Boolean(navigator.share && (matchMedia("(max-width: 900px)").matches || /Android|iPhone|iPad|Mobile/i.test(navigator.userAgent)));
-  }
-
-  async function shareVisibleLinkText(statusMessage) {
-    await ensureHostedShare();
-    if (!navigator.share) throw new Error("This browser cannot open app sharing. Copy the post instead.");
-    await navigator.share({title:prepared.title,text:prepared.caption});
-    setStatus(statusMessage);
   }
 
   function blankPopup() {
     return window.open("about:blank","salitaAchievementFeedPost","popup=yes,width=720,height=760");
   }
 
-  async function openPublicComposer(provider) {
-    if (provider === "facebook" && mobileShareAvailable()) {
-      return shareVisibleLinkText("Choose Facebook to publish the card and visible play link to your Feed.");
-    }
+  function composerUrl(provider,hosted) {
+    const url = encodeURIComponent(hosted.shareUrl);
+    const text = encodeURIComponent(prepared.caption);
+    if (provider === "facebook") return `https://www.facebook.com/sharer/sharer.php?u=${url}`;
+    if (provider === "linkedin") return `https://www.linkedin.com/sharing/share-offsite/?url=${url}`;
+    if (provider === "x") return `https://twitter.com/intent/tweet?text=${text}`;
+    return "";
+  }
 
+  async function openPublicComposer(provider) {
     const popup = blankPopup();
-    if (!popup) throw new Error("Allow pop-ups so Salita Quest can open the post composer.");
-    try { popup.document.write("<title>Preparing Salita Quest post…</title><p style='font:18px system-ui;padding:30px'>Creating your playable achievement post…</p>"); } catch {}
+    if (popup) {
+      try { popup.document.write("<title>Preparing Salita Quest post…</title><p style='font:18px system-ui;padding:30px'>Preparing the normal link post…</p>"); } catch {}
+    }
     try {
       const hosted = await ensureHostedShare();
-      const url = encodeURIComponent(hosted.shareUrl);
-      const text = encodeURIComponent(prepared.caption);
-      let destination = "";
-      if (provider === "facebook") destination = `https://www.facebook.com/sharer/sharer.php?u=${url}&quote=${text}&hashtag=%23SalitaQuest`;
-      else if (provider === "linkedin") destination = `https://www.linkedin.com/sharing/share-offsite/?url=${url}`;
-      else if (provider === "x") destination = `https://twitter.com/intent/tweet?text=${text}`;
+      const destination = composerUrl(provider,hosted);
       if (!destination) throw new Error("This public destination is not supported.");
-      popup.location.replace(destination);
-      setStatus("The social composer opened with the hosted card and a visible play-link fallback.");
+      if (popup) popup.location.replace(destination);
+      else window.location.assign(destination);
+      setStatus(provider === "facebook"
+        ? "Facebook opened a normal link post. Add any message you want, then publish."
+        : "The social composer opened with the hosted card and playable link.");
     } catch (error) {
-      try { popup.close(); } catch {}
+      try { popup?.close(); } catch {}
       throw error;
     }
   }
 
   async function sharePlayablePost() {
-    return shareVisibleLinkText("App sharing opened with the visible hosted-card link.");
+    const hosted = await ensureHostedShare();
+    if (!navigator.share) throw new Error("This browser cannot open app sharing. Copy the post instead.");
+    await navigator.share({
+      title:prepared.title,
+      text:prepared.text,
+      url:hosted.shareUrl
+    });
+    setStatus("App sharing opened with the hosted card link.");
   }
 
   async function openWhatsApp() {
@@ -279,7 +279,7 @@
     link.click();
     link.remove();
     window.setTimeout(() => URL.revokeObjectURL(link.href),1500);
-    setStatus("Achievement image downloaded. Downloading does not create a playable social post.");
+    setStatus("Achievement image downloaded. Downloading does not create a clickable post.");
   }
 
   function renderActions() {
@@ -289,12 +289,12 @@
     platformHost.className = "achievement-share-router-v2";
     platformHost.innerHTML = `
       <section class="achievement-share-mode-group">
-        <div class="achievement-share-mode-heading"><span>POST WITH A CARD + PLAY LINK</span><small>The playable URL is included visibly as well as in the card attachment</small></div>
+        <div class="achievement-share-mode-heading"><span>POST A NORMAL LINK CARD</span><small>The social network builds the card from the hosted Salita Quest link</small></div>
         <div class="achievement-share-mode-actions public-actions">
-          <button type="button" data-sq-share-feed="facebook"><strong>Post to Facebook Feed</strong><small>Choose Facebook on phone; card + visible play link</small></button>
-          <button type="button" data-sq-share-app><strong>Post with another app</strong><small>Visible hosted-card link for your chosen social app</small></button>
-          <button type="button" data-sq-share-feed="linkedin"><strong>Post to LinkedIn</strong><small>Hosted achievement card and play link</small></button>
-          <button type="button" data-sq-share-feed="x"><strong>Post to X</strong><small>Caption and visible playable link</small></button>
+          <button type="button" data-sq-share-feed="facebook"><strong>Post to Facebook Feed</strong><small>Open Facebook’s normal link-post composer</small></button>
+          <button type="button" data-sq-share-feed="linkedin"><strong>Post to LinkedIn</strong><small>Open a normal LinkedIn link post</small></button>
+          <button type="button" data-sq-share-feed="x"><strong>Post to X</strong><small>Post the caption and playable link</small></button>
+          <button type="button" data-sq-share-app><strong>Post with another app</strong><small>Share the hosted link through your device</small></button>
         </div>
       </section>
       <section class="achievement-share-mode-group">
@@ -356,7 +356,7 @@
     hostedPromise = null;
     renderActions();
     ensureImageFile().catch(() => {});
-    setStatus("Choose where to publish the hosted card and visible Salita Quest play link.");
+    ensureHostedShare().catch(() => {});
   });
 
   document.addEventListener("salita:achievement-share-closed",() => {
