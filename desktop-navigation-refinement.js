@@ -2,7 +2,8 @@
   "use strict";
 
   const INSTALL_FLAG = "__salitaQuestPersistentNavigationV1Installed";
-  const RELEASE = "economy-v2-phase4-shop-navigation";
+  const RELEASE = "5.5.10-persistent-navigation";
+  const PHASE4_RELEASE = "economy-v2-phase4-shop-navigation";
   const REQUIRED_DESKTOP_VIEWS = Object.freeze([
     "home","learn","review","audioReview","dictionary","skills","boss","progress","badges","settings"
   ]);
@@ -209,7 +210,7 @@
     const shop=window.SalitaCoinAvatarShop;
     if(typeof shop?.open==="function"){
       shop.open();
-      document.dispatchEvent(new CustomEvent("salita:shop-opened",{detail:{source:"persistent-navigation",release:RELEASE}}));
+      document.dispatchEvent(new CustomEvent("salita:shop-opened",{detail:{source:"persistent-navigation",release:PHASE4_RELEASE}}));
       return true;
     }
     if(attempt<20){
@@ -217,7 +218,7 @@
       return false;
     }
     document.dispatchEvent(new CustomEvent("salita:open-avatar-collection",{
-      detail:{source:"shop-navigation-fallback",release:RELEASE}
+      detail:{source:"shop-navigation-fallback",release:PHASE4_RELEASE}
     }));
     return false;
   }
@@ -298,7 +299,7 @@
     updateAvatarNavigation();
     document.documentElement.dataset.persistentNavigation=RELEASE;
     window.SalitaQuestPersistentNavigation=Object.freeze({
-      version:2,release:RELEASE,requiredDesktopViews:REQUIRED_DESKTOP_VIEWS,requiredMobileMoreViews:REQUIRED_MOBILE_MORE_VIEWS,requiredMenuActions:REQUIRED_MENU_ACTIONS,sync:syncActiveState,openAvatarCollection,openShop
+      version:2,release:RELEASE,phase4Release:PHASE4_RELEASE,requiredDesktopViews:REQUIRED_DESKTOP_VIEWS,requiredMobileMoreViews:REQUIRED_MOBILE_MORE_VIEWS,requiredMenuActions:REQUIRED_MENU_ACTIONS,sync:syncActiveState,openAvatarCollection,openShop
     });
   }
 
