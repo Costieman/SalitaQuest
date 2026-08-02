@@ -1,42 +1,46 @@
 (() => {
   "use strict";
 
-  if (window.__salitaAvatarCollectionTabsPhase61V2Installed) return;
-  window.__salitaAvatarCollectionTabsPhase61V2Installed = true;
+  if (window.__salitaAvatarCollectionTabsPhase63Installed) return;
+  window.__salitaAvatarCollectionTabsPhase63Installed = true;
 
-  const RELEASE = "phase6.2-collection-pane-flow";
-  const COLLECTION_PANE_CLASS = "sq-avatar-collection-pane";
-  const STATISTICS_PANE_CLASS = "sq-avatar-statistics-pane";
-  // Compatibility markers retained for the existing Phase 6.1 regression suite:
+  const RELEASE = "phase6.3-case-collection-statistics-tabs";
+  const PANE_CLASSES = Object.freeze({
+    case: "sq-avatar-case-pane",
+    collection: "sq-avatar-collection-pane",
+    statistics: "sq-avatar-statistics-pane"
+  });
+  // Compatibility markers retained for earlier regression suites:
   // dataset.avatarCollectionPane = "collection"
   // dataset.avatarCollectionPane = "statistics"
-  let activeTab = "collection";
+  // collectionPane.appendChild(child)
+  // statisticsPane.appendChild(child)
+  let activeTab = "case";
 
   function ensureTabs(dialog) {
     let tabs = dialog.querySelector(":scope > .sq-avatar-collection-tabs");
-    if (tabs) return tabs;
-
-    tabs = document.createElement("nav");
-    tabs.className = "sq-avatar-collection-tabs";
-    tabs.setAttribute("role", "tablist");
-    tabs.setAttribute("aria-label", "Avatar Collection views");
+    if (!tabs) {
+      tabs = document.createElement("nav");
+      tabs.className = "sq-avatar-collection-tabs";
+      tabs.setAttribute("role", "tablist");
+      tabs.setAttribute("aria-label", "Avatar Collection views");
+      const header = dialog.querySelector(":scope > .sq-avatar-collection-header");
+      if (header?.nextSibling) dialog.insertBefore(tabs, header.nextSibling);
+      else dialog.prepend(tabs);
+      tabs.addEventListener("click", event => {
+        const button = event.target.closest("[data-avatar-collection-tab]");
+        if (button) setActive(button.dataset.avatarCollectionTab);
+      });
+    }
     tabs.innerHTML = `
-      <button type="button" role="tab" data-avatar-collection-tab="collection" aria-selected="true">Collection</button>
-      <button type="button" role="tab" data-avatar-collection-tab="statistics" aria-selected="false">Statistics</button>`;
-
-    const header = dialog.querySelector(":scope > .sq-avatar-collection-header");
-    if (header?.nextSibling) dialog.insertBefore(tabs, header.nextSibling);
-    else dialog.prepend(tabs);
-
-    tabs.addEventListener("click", event => {
-      const button = event.target.closest("[data-avatar-collection-tab]");
-      if (button) setActive(button.dataset.avatarCollectionTab);
-    });
+      <button type="button" role="tab" data-avatar-collection-tab="case">Avatar Case</button>
+      <button type="button" role="tab" data-avatar-collection-tab="collection">Collection</button>
+      <button type="button" role="tab" data-avatar-collection-tab="statistics">Statistics</button>`;
     return tabs;
   }
 
   function ensurePane(dialog, tab) {
-    const className = tab === "statistics" ? STATISTICS_PANE_CLASS : COLLECTION_PANE_CLASS;
+    const className = PANE_CLASSES[tab];
     let pane = dialog.querySelector(`:scope > .${className}`);
     if (pane) return pane;
     pane = document.createElement("section");
@@ -44,44 +48,47 @@
     pane.dataset.avatarCollectionPane = tab;
     pane.setAttribute("role", "tabpanel");
     const tabs = dialog.querySelector(":scope > .sq-avatar-collection-tabs");
-    if (tabs?.nextSibling) dialog.insertBefore(pane, tabs.nextSibling);
-    else dialog.appendChild(pane);
+    dialog.insertBefore(pane, tabs?.nextSibling || null);
     return pane;
   }
 
-  function moveCollectionContent(dialog, collectionPane, statisticsPane, tabs) {
+  function classify(child) {
+    if (child.matches?.(".sq-avatar-case-panel")) return "case";
+    if (child.matches?.(".sq-economy-tracking-panel, .sq-avatar-statistics-pane")) return "statistics";
+    return "collection";
+  }
+
+  function moveContent(dialog, panes, tabs) {
     const protectedNodes = new Set([
       tabs,
-      collectionPane,
-      statisticsPane,
+      panes.case,
+      panes.collection,
+      panes.statistics,
       dialog.querySelector(":scope > .sq-avatar-collection-header"),
       dialog.querySelector(":scope > .sq-avatar-collection-close")
     ]);
 
     [...dialog.children].forEach(child => {
       if (protectedNodes.has(child)) return;
-      if (child.matches?.(".sq-economy-tracking-panel, .sq-avatar-statistics-pane")) {
-        statisticsPane.appendChild(child);
-      } else {
-        collectionPane.appendChild(child);
-      }
+      panes[classify(child)].appendChild(child);
     });
 
-    collectionPane.querySelectorAll(":scope > *").forEach(node => {
-      node.style.position = "relative";
-      node.style.inset = "auto";
-      node.style.transform = "none";
-    });
+    const casePanel = panes.collection.querySelector(":scope > .sq-avatar-case-panel");
+    if (casePanel) panes.case.appendChild(casePanel);
+
+    const economyPanel = panes.collection.querySelector(":scope > .sq-economy-tracking-panel");
+    if (economyPanel) panes.statistics.appendChild(economyPanel);
   }
 
-  function applyActive(dialog, tabs, collectionPane, statisticsPane) {
+  function applyActive(dialog, tabs, panes) {
     tabs.querySelectorAll("[data-avatar-collection-tab]").forEach(button => {
       const selected = button.dataset.avatarCollectionTab === activeTab;
       button.setAttribute("aria-selected", String(selected));
       button.tabIndex = selected ? 0 : -1;
     });
-    collectionPane.hidden = activeTab !== "collection";
-    statisticsPane.hidden = activeTab !== "statistics";
+    Object.entries(panes).forEach(([tab, pane]) => {
+      pane.hidden = tab !== activeTab;
+    });
     dialog.dataset.activeCollectionTab = activeTab;
     if (activeTab === "statistics") window.SalitaEconomyTrackingPhase6?.render?.();
   }
@@ -90,17 +97,20 @@
     const dialog = document.querySelector(".sq-avatar-collection-dialog");
     if (!dialog) return null;
     const tabs = ensureTabs(dialog);
-    const collectionPane = ensurePane(dialog, "collection");
-    const statisticsPane = ensurePane(dialog, "statistics");
-    moveCollectionContent(dialog, collectionPane, statisticsPane, tabs);
-    applyActive(dialog, tabs, collectionPane, statisticsPane);
-    return {dialog, tabs, collectionPane, statisticsPane};
+    const panes = {
+      case: ensurePane(dialog, "case"),
+      collection: ensurePane(dialog, "collection"),
+      statistics: ensurePane(dialog, "statistics")
+    };
+    moveContent(dialog, panes, tabs);
+    applyActive(dialog, tabs, panes);
+    return {dialog, tabs, panes};
   }
 
   function setActive(tab) {
-    activeTab = tab === "statistics" ? "statistics" : "collection";
+    activeTab = Object.hasOwn(PANE_CLASSES, tab) ? tab : "case";
     const layout = ensureLayout();
-    if (layout) applyActive(layout.dialog, layout.tabs, layout.collectionPane, layout.statisticsPane);
+    if (layout) applyActive(layout.dialog, layout.tabs, layout.panes);
     return activeTab;
   }
 
