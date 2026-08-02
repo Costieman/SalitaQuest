@@ -52,11 +52,34 @@ requireMarkers(finalLayoutCss, [
   '.mastery-points-compact',
   '@media (min-width:1001px) and (max-width:1180px)',
   '@media (min-width:1001px) and (max-width:1120px)'
-], "Final non-overlapping top bar and World Progress layout");
+], "Final non-overlapping desktop top bar and World Progress layout");
+
+const mobileFlowCss = read("mobile-world-progress-flow.css");
+requireMarkers(mobileFlowCss, [
+  '@media (max-width: 860px)',
+  'body[data-current-view]:not([data-current-view="home"]) .mastery-rail-shell',
+  'display: none !important',
+  'body[data-current-view="home"] .mastery-rail-shell',
+  'position: relative !important',
+  'top: auto !important',
+  'grid-template-rows: auto 50px auto !important',
+  'overflow-x: hidden !important',
+  'scrollbar-width: none !important',
+  '.mastery-rail-shell::-webkit-scrollbar',
+  '.mastery-milestone[data-even-milestone="10"]',
+  'left: calc(100% - 18px) !important',
+  '.mastery-next-copy::before',
+  'content: "Next:" !important'
+], "Mobile Home-only World Progress page flow");
+if (/body\[data-current-view="home"\][^{]*\.mastery-rail-shell\s*\{[^}]*position:\s*(?:sticky|fixed)/s.test(mobileFlowCss)) {
+  fail("Mobile World Progress must not return to a sticky or fixed overlay.");
+}
 
 const topbar = read("clean-topbar.js");
 requireMarkers(topbar, [
-  'const STYLE_HREF = "topbar-world-progress-hotfix.css?v=5.5.10.1"',
+  'const STYLESHEETS = [',
+  'topbar-world-progress-hotfix.css?v=5.5.10.1',
+  'mobile-world-progress-flow.css?v=5.5.10.2',
   'function ensureStylesheet()',
   'function directChild(parent, selector)',
   'function structureMasteryShell()',
@@ -68,7 +91,7 @@ requireMarkers(topbar, [
   'title.textContent = "World Progress"',
   'nextRegion.textContent = regionName',
   '${remaining} MP to go'
-], "Top bar rerender normalization");
+], "Top bar rerender normalization and final responsive styles");
 if (topbar.includes('if (shell.dataset.compactMastery === "true") return true;')) {
   fail("World Progress must not skip structural normalization merely because an old dataset marker remains after rerendering.");
 }
@@ -101,6 +124,7 @@ for (const htmlFile of ["app.html", "bisaya.html"]) {
     'compact-home-dashboard.css?v=5.4.21',
     'weekly-avatar-chest.css?v=5.4.21',
     'clean-topbar.css?v=5.4.21',
+    'clean-topbar.js?v=5.4.21',
     'weekly-avatar-polish.js?v=5.4.21'
   ], `${htmlFile} Home release assets`);
 }
@@ -126,4 +150,4 @@ requireMarkers(serviceWorker, [
   '"./profile-app.js"'
 ], "Home offline release");
 
-console.log("Validated the focused Home dashboard, rerender-safe World Progress structure, separate heading and milestone rows, responsive top-stat layout, reliable profile autosave, Home-only Daily Key celebration, and current offline release.");
+console.log("Validated the focused Home dashboard, rerender-safe World Progress structure, separate desktop heading and milestone rows, non-sticky Home-only mobile World Progress flow, hidden mobile scrollbar, unclipped final milestone, reliable profile autosave, Home-only Daily Key celebration, and current offline release.");
