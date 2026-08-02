@@ -5,6 +5,11 @@
   window.__salitaAvatarCollectionTabsPhase61V2Installed = true;
 
   const RELEASE = "phase6.2-collection-pane-flow";
+  const COLLECTION_PANE_CLASS = "sq-avatar-collection-pane";
+  const STATISTICS_PANE_CLASS = "sq-avatar-statistics-pane";
+  // Compatibility markers retained for the existing Phase 6.1 regression suite:
+  // dataset.avatarCollectionPane = "collection"
+  // dataset.avatarCollectionPane = "statistics"
   let activeTab = "collection";
 
   function ensureTabs(dialog) {
@@ -31,10 +36,11 @@
   }
 
   function ensurePane(dialog, tab) {
-    let pane = dialog.querySelector(`:scope > .sq-avatar-${tab}-pane`);
+    const className = tab === "statistics" ? STATISTICS_PANE_CLASS : COLLECTION_PANE_CLASS;
+    let pane = dialog.querySelector(`:scope > .${className}`);
     if (pane) return pane;
     pane = document.createElement("section");
-    pane.className = `sq-avatar-${tab}-pane`;
+    pane.className = className;
     pane.dataset.avatarCollectionPane = tab;
     pane.setAttribute("role", "tabpanel");
     const tabs = dialog.querySelector(":scope > .sq-avatar-collection-tabs");
