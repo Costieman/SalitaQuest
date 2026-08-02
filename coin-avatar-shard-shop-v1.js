@@ -27,10 +27,7 @@
 
   function saveProgress() {
     const saveState = globalValue("saveState") || window.saveState;
-    if (typeof saveState === "function") {
-      saveState();
-      return;
-    }
+    if (typeof saveState === "function") { saveState(); return; }
     const state = appState();
     if (state) localStorage.setItem(PROGRESS_STORE, JSON.stringify(state));
   }
@@ -42,9 +39,7 @@
       const node = document.getElementById(id);
       if (node) node.textContent = amount;
     }
-    document.dispatchEvent(new CustomEvent("salita:coin-balance-changed", {
-      detail:{coins:balance()}
-    }));
+    document.dispatchEvent(new CustomEvent("salita:coin-balance-changed", {detail:{coins:balance()}}));
   }
 
   function syncBadges() {
@@ -73,11 +68,7 @@
     if (!state) return;
     const current = balance();
     const data = economy();
-    if (lastKnownBalance == null) {
-      lastKnownBalance = current;
-      saveProgress();
-      return;
-    }
+    if (lastKnownBalance == null) { lastKnownBalance = current; saveProgress(); return; }
     if (!internalBalanceWrite && current > lastKnownBalance) {
       data.lifetimeEarned += current - lastKnownBalance;
       saveProgress();
@@ -137,7 +128,6 @@
     const before = Math.max(0, Number(account.collection.shards[item.id]) || 0);
     const after = Math.min(item.shardRequirement, before + SHARDS_PER_PACK);
     const unlocked = after >= item.shardRequirement;
-
     if (!spendCoins(pack.cost)) return {ok:false,message:"The coin balance could not be updated. No shards were awarded."};
 
     account.collection.shards[item.id] = after;
@@ -210,8 +200,26 @@
     return true;
   }
 
+  function loadRevealAddon() {
+    if (!document.querySelector('link[data-sq-coin-reveal]')) {
+      const link = document.createElement("link");
+      link.rel = "stylesheet";
+      link.href = "./coin-avatar-shop-reveal-v1.css?v=5.6.4";
+      link.dataset.sqCoinReveal = "true";
+      document.head.appendChild(link);
+    }
+    if (!document.querySelector('script[data-sq-coin-reveal]')) {
+      const script = document.createElement("script");
+      script.src = "./coin-avatar-shop-reveal-v1.js?v=5.6.4";
+      script.async = false;
+      script.dataset.sqCoinReveal = "true";
+      document.body.appendChild(script);
+    }
+  }
+
   function install() {
     if (!window.SalitaAvatarModel || !appState()) { window.setTimeout(install,120); return; }
+    loadRevealAddon();
     economy();
     lastKnownBalance = balance();
     saveProgress();
