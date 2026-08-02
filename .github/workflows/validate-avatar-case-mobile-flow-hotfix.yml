@@ -1,0 +1,19 @@
+name: Validate Avatar Case mobile flow hotfix
+
+on:
+  pull_request:
+    paths:
+      - "avatar-case-mobile-flow-hotfix-v1.css"
+      - "coin-avatar-shop-topbar-v1.js"
+      - "scripts/validate-avatar-case-mobile-flow-hotfix.mjs"
+      - ".github/workflows/validate-avatar-case-mobile-flow-hotfix.yml"
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: node scripts/validate-avatar-case-mobile-flow-hotfix.mjs
