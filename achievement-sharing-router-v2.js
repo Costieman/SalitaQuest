@@ -2,7 +2,7 @@
   "use strict";
 
   const INSTALL_FLAG = "__salitaQuestAchievementSharingRouterV2Installed";
-  const RELEASE = "5.5.14-direct-social-link-posts";
+  const RELEASE = "5.5.15-facebook-photo-caption";
   const MODAL_ID = "achievementShareModalV4";
   const PREVIEW_ID = "achievementSharePreview";
   const PROFILE_STORE = "salitaQuestLocalProfilesV1";
@@ -181,7 +181,7 @@
       const base = String(api?.apiBase?.() || "").replace(/\/$/,"");
       if (!base) throw new Error("Public achievement posts are temporarily unavailable.");
       if (api?.ensureHosted && !(await api.ensureHosted())) throw new Error("Public achievement posts are temporarily unavailable.");
-      setStatus("Preparing the normal link post…");
+      setStatus("Preparing the image and clickable caption…");
       const file = await ensureImageFile();
       const ogBlob = await openGraphBlob(prepared.source,prepared.title,prepared.text);
       const [squareImageDataUrl,ogImageDataUrl] = await Promise.all([dataUrl(file),dataUrl(ogBlob)]);
@@ -204,13 +204,76 @@
       if (!response.ok) throw new Error(data.message || `Public achievement post failed (${response.status}).`);
       prepared.hosted = validateHostedResponse(data,base);
       prepared.caption = `${prepared.text}\n\nPlay Salita Quest free:\n${prepared.hosted.shareUrl}`;
-      setStatus("Your normal link post is ready.");
+      setStatus("Ready. The large-image option copies the clickable caption before opening sharing.");
       return prepared.hosted;
     })().catch(error => {
-      setStatus(`${error.message || "The normal link post could not be prepared."} Try again.`,true);
+      setStatus(`${error.message || "The share post could not be prepared."} Try again.`,true);
       throw error;
     }).finally(() => { hostedPromise = null; });
     return hostedPromise;
+  }
+
+  async function copyText(value) {
+    const text = String(value || "");
+    if (!text) throw new Error("The post caption is not ready.");
+    try {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(text);
+        return;
+      }
+    } catch {}
+    const textarea = document.createElement("textarea");
+    textarea.value = text;
+    textarea.setAttribute("readonly","");
+    textarea.style.position = "fixed";
+    textarea.style.opacity = "0";
+    textarea.style.pointerEvents = "none";
+    document.body.appendChild(textarea);
+    textarea.select();
+    textarea.setSelectionRange(0,textarea.value.length);
+    const copied = document.execCommand?.("copy");
+    textarea.remove();
+    if (!copied) throw new Error("The caption could not be copied. Use Copy post instead.");
+  }
+
+  function canShareImage(file) {
+    if (!navigator.share) return false;
+    if (!navigator.canShare) return true;
+    try { return navigator.canShare({files:[file]}); }
+    catch { return false; }
+  }
+
+  async function shareLargeImagePost(statusMessage) {
+    await ensureHostedShare();
+    const file = await ensureImageFile();
+    await copyText(prepared.caption);
+    setStatus("Caption copied. Choose Facebook, then paste the caption if Facebook removes it.");
+    if (!canShareImage(file)) {
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(file);
+      link.download = prepared.fileName;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.setTimeout(() => URL.revokeObjectURL(link.href),1500);
+      window.open("https://www.facebook.com/","_blank","noopener");
+      setStatus("Image downloaded and caption copied. Upload the image to Facebook, then paste the caption.");
+      return;
+    }
+    await navigator.share({
+      title:prepared.title,
+      text:prepared.caption,
+      files:[file]
+    });
+    setStatus(statusMessage);
+  }
+
+  async function shareFacebookImagePost() {
+    return shareLargeImagePost("Facebook image sharing opened. Paste the copied caption if Facebook left the text blank.");
+  }
+
+  async function shareImageWithAnotherApp() {
+    return shareLargeImagePost("Image sharing opened. Paste the copied caption if the selected app removed the text.");
   }
 
   function blankPopup() {
@@ -220,7 +283,7 @@
   function composerUrl(provider,hosted) {
     const url = encodeURIComponent(hosted.shareUrl);
     const text = encodeURIComponent(prepared.caption);
-    if (provider === "facebook") return `https://www.facebook.com/sharer/sharer.php?u=${url}`;
+    if (provider === "facebook_link") return `https://www.facebook.com/sharer/sharer.php?u=${url}`;
     if (provider === "linkedin") return `https://www.linkedin.com/sharing/share-offsite/?url=${url}`;
     if (provider === "x") return `https://twitter.com/intent/tweet?text=${text}`;
     return "";
@@ -229,7 +292,7 @@
   async function openPublicComposer(provider) {
     const popup = blankPopup();
     if (popup) {
-      try { popup.document.write("<title>Preparing Salita Quest post…</title><p style='font:18px system-ui;padding:30px'>Preparing the normal link post…</p>"); } catch {}
+      try { popup.document.write("<title>Preparing Salita Quest post…</title><p style='font:18px system-ui;padding:30px'>Preparing the hosted link…</p>"); } catch {}
     }
     try {
       const hosted = await ensureHostedShare();
@@ -237,8 +300,8 @@
       if (!destination) throw new Error("This public destination is not supported.");
       if (popup) popup.location.replace(destination);
       else window.location.assign(destination);
-      setStatus(provider === "facebook"
-        ? "Facebook opened a normal link post. Add any message you want, then publish."
+      setStatus(provider === "facebook_link"
+        ? "Facebook opened the clickable link-card composer. Facebook controls whether that card is compact or large."
         : "The social composer opened with the hosted card and playable link.");
     } catch (error) {
       try { popup?.close(); } catch {}
@@ -265,9 +328,8 @@
 
   async function copyPost() {
     await ensureHostedShare();
-    if (!navigator.clipboard?.writeText) throw new Error("This browser cannot copy the post.");
-    await navigator.clipboard.writeText(prepared.caption);
-    setStatus("Playable post copied.");
+    await copyText(prepared.caption);
+    setStatus("Caption and playable link copied.");
   }
 
   async function downloadImage() {
@@ -279,7 +341,7 @@
     link.click();
     link.remove();
     window.setTimeout(() => URL.revokeObjectURL(link.href),1500);
-    setStatus("Achievement image downloaded. Downloading does not create a clickable post.");
+    setStatus("Achievement image downloaded. Use Copy post to add the clickable link.");
   }
 
   function renderActions() {
@@ -289,12 +351,19 @@
     platformHost.className = "achievement-share-router-v2";
     platformHost.innerHTML = `
       <section class="achievement-share-mode-group">
-        <div class="achievement-share-mode-heading"><span>POST A NORMAL LINK CARD</span><small>The social network builds the card from the hosted Salita Quest link</small></div>
+        <div class="achievement-share-mode-heading"><span>LARGE IMAGE + CLICKABLE LINK</span><small>The caption is copied before sharing so the play link can appear beneath the image</small></div>
         <div class="achievement-share-mode-actions public-actions">
-          <button type="button" data-sq-share-feed="facebook"><strong>Post to Facebook Feed</strong><small>Open Facebook’s normal link-post composer</small></button>
+          <button type="button" data-sq-share-facebook-image><strong>Large Facebook image post</strong><small>Choose Facebook, then paste if its caption box is blank</small></button>
+          <button type="button" data-sq-share-image-app><strong>Large image with another app</strong><small>Image plus copied caption for another social app</small></button>
+        </div>
+      </section>
+      <section class="achievement-share-mode-group">
+        <div class="achievement-share-mode-heading"><span>CLICKABLE LINK CARD</span><small>Facebook decides whether this preview is compact or large</small></div>
+        <div class="achievement-share-mode-actions public-actions">
+          <button type="button" data-sq-share-feed="facebook_link"><strong>Facebook clickable card</strong><small>Clickable, but Facebook may show the small thumbnail layout</small></button>
           <button type="button" data-sq-share-feed="linkedin"><strong>Post to LinkedIn</strong><small>Open a normal LinkedIn link post</small></button>
           <button type="button" data-sq-share-feed="x"><strong>Post to X</strong><small>Post the caption and playable link</small></button>
-          <button type="button" data-sq-share-app><strong>Post with another app</strong><small>Share the hosted link through your device</small></button>
+          <button type="button" data-sq-share-app><strong>Send a hosted link with another app</strong><small>Share the clickable hosted link through your device</small></button>
         </div>
       </section>
       <section class="achievement-share-mode-group">
@@ -306,7 +375,7 @@
         </div>
       </section>
       <section class="achievement-share-mode-group">
-        <div class="achievement-share-mode-heading"><span>DOWNLOAD ONLY</span><small>This does not create a clickable post</small></div>
+        <div class="achievement-share-mode-heading"><span>DOWNLOAD ONLY</span><small>This does not add a clickable link by itself</small></div>
         <div class="achievement-share-mode-actions image-actions">
           <button type="button" data-sq-share-download><strong>Download image</strong><small>Save the square achievement card</small></button>
         </div>
@@ -319,7 +388,7 @@
     actionInProgress = true;
     if (button) { button.disabled = true; button.dataset.busy = "true"; }
     try { await action(); }
-    catch (error) { setStatus(error?.name === "AbortError" ? "Sharing cancelled." : error?.message || "The sharing action could not be completed.",error?.name !== "AbortError"); }
+    catch (error) { setStatus(error?.name === "AbortError" ? "Sharing cancelled. The caption remains copied." : error?.message || "The sharing action could not be completed.",error?.name !== "AbortError"); }
     finally {
       actionInProgress = false;
       if (button) { button.disabled = false; delete button.dataset.busy; }
@@ -327,11 +396,13 @@
   }
 
   function handleClick(event) {
-    const button = event.target.closest?.("[data-sq-share-feed],[data-sq-share-app],[data-sq-share-private],[data-sq-share-whatsapp],[data-sq-share-copy],[data-sq-share-download]");
+    const button = event.target.closest?.("[data-sq-share-facebook-image],[data-sq-share-image-app],[data-sq-share-feed],[data-sq-share-app],[data-sq-share-private],[data-sq-share-whatsapp],[data-sq-share-copy],[data-sq-share-download]");
     if (!button || !prepared || modal()?.hidden) return;
     event.preventDefault();
     event.stopPropagation();
     event.stopImmediatePropagation?.();
+    if (button.hasAttribute("data-sq-share-facebook-image")) return runAction(button,shareFacebookImagePost);
+    if (button.hasAttribute("data-sq-share-image-app")) return runAction(button,shareImageWithAnotherApp);
     if (button.dataset.sqShareFeed) return runAction(button,() => openPublicComposer(button.dataset.sqShareFeed));
     if (button.hasAttribute("data-sq-share-app") || button.hasAttribute("data-sq-share-private")) return runAction(button,sharePlayablePost);
     if (button.hasAttribute("data-sq-share-whatsapp")) return runAction(button,openWhatsApp);
@@ -368,10 +439,11 @@
   window.SalitaQuestSharingRouter = Object.freeze({
     version:2,
     release:RELEASE,
-    modes:Object.freeze(["feed_link","app_link","private_link","download_file"]),
+    modes:Object.freeze(["facebook_image_caption","feed_link","app_link","private_link","download_file"]),
     ensureHostedShare,
     sendPrivately:sharePlayablePost,
-    sharePlayablePost
+    sharePlayablePost,
+    shareFacebookImagePost
   });
   document.documentElement.dataset.achievementSharingRouter = RELEASE;
 })();
