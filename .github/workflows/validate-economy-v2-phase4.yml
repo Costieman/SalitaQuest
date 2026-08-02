@@ -1,0 +1,16 @@
+name: Validate Economy v2 Phase 4
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Validate Phase 4 shop navigation and presentation
+        run: node scripts/validate-economy-v2-phase4.mjs
