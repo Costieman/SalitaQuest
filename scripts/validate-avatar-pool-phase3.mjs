@@ -15,7 +15,8 @@ new vm.Script(source, {filename:"coin-avatar-shop-reveal-v1.js"});
   "shopRandomPoolActive()",
   "source.shards?.[id]",
   "ownedAvatarIds.includes(id) ? 100",
-  "Object.freeze({...model, catalogue, byId, get, list, normaliseCollectionState, progress})"
+  "phase3RandomPools:true",
+  "catalogue, byId, get, list, normaliseCollectionState, progress"
 ].forEach(marker => {
   if (!source.includes(marker)) fail(`Missing Phase 3 marker: ${marker}`);
 });
