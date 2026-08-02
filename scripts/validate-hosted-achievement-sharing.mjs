@@ -86,7 +86,7 @@ requireMarkers(connectionCss, [
 
 const service = read("services/social-share/index.js");
 requireMarkers(service, [
-  'const SERVICE_VERSION = "5.5.8-sharing-foundation"',
+  'const SERVICE_VERSION = "5.5.13-facebook-card-link"',
   "const SHARE_TYPE_META = Object.freeze({",
   'badge: {label:"BADGE EARNED"',
   'badge_chest: {label:"BADGE CHEST"',
@@ -96,15 +96,19 @@ requireMarkers(service, [
   "function normaliseShareType(value)",
   "supportedTypes: Object.keys(SHARE_TYPE_META)",
   'app.get("/health"',
+  'app.get("/robots.txt"',
   'app.post("/api/share-cards"',
   'decodePngDataUrl(req.body.squareImageDataUrl, "squareImageDataUrl", 1080, 1080)',
   'decodePngDataUrl(req.body.ogImageDataUrl, "ogImageDataUrl", 1200, 630)',
   'crypto.randomBytes(18).toString("base64url")',
   'saveObject(`images/${id}-square.png`',
   'saveObject(`images/${id}-og.png`',
+  'app.head("/media/:id/:variant.png"',
   'app.get("/media/:id/:variant.png"',
   'app.get("/share/:id"',
+  '<meta name="robots" content="index,follow,max-image-preview:large">',
   '<meta property="og:image" content="${image}">',
+  '<meta property="og:image:url" content="${image}">',
   '<meta property="og:image:secure_url" content="${image}">',
   '<meta property="og:image:width" content="1200">',
   '<meta property="og:image:height" content="630">',
@@ -121,6 +125,7 @@ requirePatterns(service, [
   [/type,\s*\n\s*shareUrl:/, "normalized share type in upload response"]
 ], "Unified Cloud Run share contract");
 if (service.includes('app.get("/healthz"')) fail("The service must avoid Cloud Run's reserved health path");
+if (/noindex|nofollow/.test(service)) fail("The hosted service must not block social crawlers");
 
 for (const file of ["services/social-share/index.js", "social-connections-v2.js", "achievement-sharing-v4.js"]) {
   const check = spawnSync("node", ["--check", file], {encoding: "utf8"});
@@ -201,4 +206,4 @@ requireMarkers(serviceDocs, [
   "Start learning a Filipino language free"
 ], "Share-service documentation");
 
-console.log("Validated unified badge/chest/avatar/Avatar Case/level share types, hosted-to-local fallbacks, exact Open Graph images, Cloud Run service structure, both language loaders and persistent-navigation offline release.");
+console.log("Validated unified badge/chest/avatar/Avatar Case/level share types, Facebook-crawlable Open Graph pages, exact hosted images, Cloud Run service structure, both language loaders and persistent-navigation offline release.");
