@@ -61,10 +61,15 @@ if (!facebookFunction[1].includes("await ensureHostedShare()")) {
 requireMarkers(routerCss,[
   ".achievement-share-router-v2",
   ".achievement-share-mode-group",
-  ".achievement-share-mode-actions.public-actions",
+  ".achievement-share-mode-actions{",
   ".achievement-share-mode-actions.image-actions",
   ".achievement-share-secondary[hidden]"
 ],"Explicit sharing router styles");
+requireMarkers(router,[
+  'class="achievement-share-mode-actions public-actions"',
+  'class="achievement-share-mode-actions private-actions"',
+  'class="achievement-share-mode-actions image-actions"'
+],"Explicit sharing action groups");
 
 requireMarkers(loader,[
   'const SHARING_VERSION = "5.5.11.1"',
