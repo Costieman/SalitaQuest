@@ -2,6 +2,7 @@ import zlib from "node:zlib";
 
 const serviceUrl = String(process.argv[2] || process.env.SOCIAL_SHARE_URL || "").trim().replace(/\/$/,"");
 const allowedOrigin = String(process.env.SALITA_APP_ORIGIN || "https://costieman.github.io").trim().replace(/\/$/,"");
+const FACEBOOK_USER_AGENT = "facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)";
 
 function fail(message) {
   throw new Error(message);
@@ -38,11 +39,7 @@ function solidPng(width,height,[red,green,blue,alpha = 255]) {
   ihdr.writeUInt32BE(height,4);
   ihdr[8] = 8;
   ihdr[9] = 6;
-  ihdr[10] = 0;
-  ihdr[11] = 0;
-  ihdr[12] = 0;
   const row = Buffer.alloc(1 + width * 4);
-  row[0] = 0;
   for (let x = 0; x < width; x += 1) {
     const offset = 1 + x * 4;
     row[offset] = red;
@@ -52,11 +49,10 @@ function solidPng(width,height,[red,green,blue,alpha = 255]) {
   }
   const raw = Buffer.alloc(row.length * height);
   for (let y = 0; y < height; y += 1) row.copy(raw,y * row.length);
-  const compressed = zlib.deflateSync(raw,{level:9});
   return Buffer.concat([
     signature,
     pngChunk("IHDR",ihdr),
-    pngChunk("IDAT",compressed),
+    pngChunk("IDAT",zlib.deflateSync(raw,{level:9})),
     pngChunk("IEND",Buffer.alloc(0))
   ]);
 }
@@ -77,8 +73,13 @@ async function jsonResponse(response,label) {
   return data;
 }
 
-async function fetchPng(url,expectedWidth,expectedHeight,label) {
-  const response = await fetch(url,{headers:{Accept:"image/png"},redirect:"follow"});
+async function fetchPng(url,expectedWidth,expectedHeight,label,userAgent = "SalitaQuestDeploymentVerifier/1.0") {
+  const head = await fetch(url,{method:"HEAD",headers:{Accept:"image/png","User-Agent":userAgent},redirect:"follow"});
+  assert(head.ok,`${label} HEAD returned ${head.status}.`);
+  assert(String(head.headers.get("content-type") || "").startsWith("image/png"),`${label} HEAD did not return image/png.`);
+  assert(Number(head.headers.get("content-length")) > 0,`${label} HEAD did not expose a positive Content-Length.`);
+
+  const response = await fetch(url,{headers:{Accept:"image/png","User-Agent":userAgent},redirect:"follow"});
   assert(response.ok,`${label} returned ${response.status}.`);
   assert(String(response.headers.get("content-type") || "").startsWith("image/png"),`${label} did not return image/png.`);
   const buffer = Buffer.from(await response.arrayBuffer());
@@ -99,23 +100,23 @@ async function main() {
   const expectedTypes = ["badge","badge_chest","avatar","avatar_case","level_up"];
   for (const type of expectedTypes) assert(health.supportedTypes?.includes(type),`Health response is missing share type: ${type}`);
 
-  const title = `Salita Quest deployment test ${new Date().toISOString()}`;
+  const robots = await fetch(`${serviceUrl}/robots.txt`,{headers:{"User-Agent":FACEBOOK_USER_AGENT}});
+  assert(robots.ok,"robots.txt is not publicly available.");
+  assert((await robots.text()).includes("Allow: /share/"),"robots.txt does not allow hosted share pages.");
+
+  const title = `Salita Quest Facebook preview test ${new Date().toISOString()}`;
   const description = "A temporary verification card confirming public achievement sharing is ready.";
   const uploadResponse = await fetch(`${serviceUrl}/api/share-cards`,{
     method:"POST",
     credentials:"omit",
-    headers:{
-      "Content-Type":"application/json",
-      Accept:"application/json",
-      Origin:allowedOrigin
-    },
+    headers:{"Content-Type":"application/json",Accept:"application/json",Origin:allowedOrigin},
     body:JSON.stringify({
       type:"avatar_case",
       title,
       description,
       learnerName:"Release verifier",
       course:"Tagalog",
-      campaign:"deployment-verification",
+      campaign:"facebook-preview-verification",
       squareImageDataUrl:pngDataUrl(1080,1080,[15,118,110,255]),
       ogImageDataUrl:pngDataUrl(1200,630,[7,20,39,255])
     })
@@ -131,22 +132,28 @@ async function main() {
   assert(squareImageUrl.origin === base.origin && squareImageUrl.pathname.startsWith("/media/"),"Square image URL is invalid.");
   assert(appUrl.protocol === "https:","Learn-free destination is not HTTPS.");
 
-  const pageResponse = await fetch(shareUrl,{headers:{Accept:"text/html"},redirect:"follow"});
-  assert(pageResponse.ok,`Public share page returned ${pageResponse.status}.`);
+  const pageResponse = await fetch(shareUrl,{headers:{Accept:"text/html","User-Agent":FACEBOOK_USER_AGENT},redirect:"follow"});
+  assert(pageResponse.ok,`Facebook crawler request returned ${pageResponse.status}.`);
+  assert(String(pageResponse.headers.get("x-robots-tag") || "").toLowerCase() === "all","Share page does not explicitly allow social crawling.");
   const page = await pageResponse.text();
+  assert(page.includes('<meta name="robots" content="index,follow,max-image-preview:large">'),"Public page does not allow large social-image previews.");
+  assert(!/noindex|nofollow/i.test(page),"Public page still blocks Facebook crawling.");
   assert(page.includes(`<meta property="og:url" content="${shareUrl}">`),"Public page is missing its canonical Open Graph URL.");
   assert(page.includes(`<meta property="og:image" content="${imageUrl}">`),"Public page is missing its Open Graph achievement image.");
+  assert(page.includes(`<meta property="og:image:url" content="${imageUrl}">`),"Public page is missing og:image:url.");
   assert(page.includes('<meta property="og:image:width" content="1200">'),"Public page is missing the Open Graph width.");
   assert(page.includes('<meta property="og:image:height" content="630">'),"Public page is missing the Open Graph height.");
   assert(page.includes('Start learning a Filipino language free'),"Public page is missing the learn-free call to action.");
   assert(page.includes(`href="${String(appUrl).replace(/&/g,"&amp;")}"`) || page.includes(`href="${appUrl}"`),"Public page does not link to the Salita Quest destination.");
   assert(!/Learner Login/i.test(page),"Public achievement page incorrectly exposes the Learner Login preview.");
 
-  await fetchPng(imageUrl,1200,630,"Open Graph image");
+  await fetchPng(imageUrl,1200,630,"Facebook Open Graph image",FACEBOOK_USER_AGENT);
   await fetchPng(squareImageUrl,1080,1080,"Square achievement image");
 
   console.log(JSON.stringify({
     status:"PASS",
+    facebookCrawlerVerified:true,
+    visibleLinkFallbackRequired:true,
     serviceUrl,
     version:health.version,
     bucketConfigured:health.bucketConfigured,
