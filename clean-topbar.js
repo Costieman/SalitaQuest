@@ -2,16 +2,20 @@
   "use strict";
 
   const INSTALL_FLAG = "__salitaQuestCleanTopbarInstalled";
-  const STYLE_ID = "salita-topbar-world-progress-hotfix";
-  const STYLE_HREF = "topbar-world-progress-hotfix.css?v=5.5.10.1";
+  const STYLESHEETS = [
+    {id:"salita-topbar-world-progress-hotfix",href:"topbar-world-progress-hotfix.css?v=5.5.10.1"},
+    {id:"salita-mobile-world-progress-flow",href:"mobile-world-progress-flow.css?v=5.5.10.2"}
+  ];
 
   function ensureStylesheet() {
-    if (document.getElementById(STYLE_ID)) return;
-    const link = document.createElement("link");
-    link.id = STYLE_ID;
-    link.rel = "stylesheet";
-    link.href = STYLE_HREF;
-    document.head.appendChild(link);
+    STYLESHEETS.forEach(({id,href}) => {
+      if (document.getElementById(id)) return;
+      const link = document.createElement("link");
+      link.id = id;
+      link.rel = "stylesheet";
+      link.href = href;
+      document.head.appendChild(link);
+    });
   }
 
   function retryInstall() {
