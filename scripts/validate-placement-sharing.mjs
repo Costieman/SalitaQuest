@@ -95,7 +95,8 @@ for (const asset of [
   '"./avatar-case-v1.js"',
   '"./avatar-case-v1.css"',
   '"./desktop-navigation-refinement.js"',
-  '"./desktop-navigation-refinement.css"'
+  '"./desktop-navigation-refinement.css"',
+  '"./exercise-fixes-v545.js"'
 ]) if (!worker.includes(asset)) fail(`Offline cache is missing ${asset}`);
 if (!worker.includes('const PREVIOUS_CACHE_NAME = "salita-quest-v5-5-9-avatar-case-r51"')) {
   fail("Previous service-worker cache boundary is missing");
@@ -105,8 +106,32 @@ if (!worker.includes('const CACHE_NAME = "salita-quest-v5-5-10-persistent-naviga
 }
 
 const index = read("index.html");
+const indexScripts = [...index.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/gi)]
+  .map(match => match[1].trim())
+  .filter(Boolean);
+indexScripts.forEach((source, scriptIndex) => new vm.Script(source, {filename:`index.html#inline-${scriptIndex + 1}`}));
 if (!index.includes("profile-shell.css?v=5.4.25") || !index.includes("service-worker.js?v=5.4.29")) {
   fail("Profile gate was not advanced to the stable profile release");
+}
+for (const marker of [
+  'const ACTIVE_COURSE = "salitaQuestActiveCourse"',
+  "Which language will you be learning today?",
+  'data-course-choice="cebuano"',
+  'data-course-choice="tagalog"',
+  "Choose the course before any placement questions begin.",
+  "function renderCourseChoice(profile)",
+  "function openCourse(profile, course)",
+  "renderCourseChoice(active)",
+  "loadProgress(saved, courseId)",
+  'courseId === "cebuano"',
+  "Create and choose language",
+  'courseProgressKey(profile.id, "tagalog")'
+]) if (!index.includes(marker)) fail(`Profile language-choice marker missing: ${marker}`);
+if (index.includes('window.location.replace(`app.html?profile=${encodeURIComponent(active.id)}`)')) {
+  fail("Returning learners must choose Tagalog or Bisaya before a course and placement test opens");
+}
+if (!index.includes('localStorage.setItem(OWNER, `${profile.id}:${courseId}`)')) {
+  fail("The profile gate must preserve separate Tagalog and Bisaya progress ownership");
 }
 
 const readme = read("README.md");
@@ -117,4 +142,4 @@ for (const marker of [
   "validate-placement-sharing.mjs"
 ]) if (!readme.includes(marker)) fail(`README is missing: ${marker}`);
 
-console.log("Validated 20-question placement, non-destructive content access, badge catalogue render boundary, stable Badge Chest ownership, both language loaders and persistent-navigation offline release.");
+console.log("Validated pre-placement Tagalog/Bisaya choice, per-course local progress, 20-question placement, non-destructive content access, badge catalogue render boundary, stable Badge Chest ownership, both language loaders and persistent-navigation offline release.");

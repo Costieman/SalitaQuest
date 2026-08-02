@@ -9,7 +9,7 @@ const fail = message => {
   throw new Error(message);
 };
 
-for (const file of ["bisaya-app-loader.js", "bisaya-review-regions.js", "profile-app.js", "service-worker.js"]) {
+for (const file of ["bisaya-app-loader.js", "bisaya-review-regions.js", "profile-app.js", "exercise-fixes-v545.js", "service-worker.js"]) {
   new vm.Script(read(file), {filename:file});
 }
 
@@ -112,14 +112,32 @@ for (const marker of [
   "const BADGES =",
   "async function handsFreeSpeak",
   "async function speakFilipino",
-  "async function checkVoiceService"
+  "async function checkVoiceService",
+  "function removeSelectedWord(id)",
+  "function selectBuilderWord(id)"
 ]) {
   if (!engine.includes(marker)) fail(`Shared engine marker missing: ${marker}`);
+}
+
+const exerciseFixes = read("exercise-fixes-v545.js");
+for (const marker of [
+  "__salitaQuestSentenceBuilderInteractionRecoveryInstalled",
+  "updateSentenceBuilderUIWithReliableTouchTargets",
+  "dataset.builderSelectedIndex",
+  "removeSelectedWord(id)",
+  "selectBuilderWord(tile.id)",
+  "touch-action:manipulation"
+]) {
+  if (!exerciseFixes.includes(marker)) fail(`Bisaya sentence-builder interaction marker missing: ${marker}`);
+}
+if (!exerciseFixes.includes('document.addEventListener("click", event =>')) {
+  fail("Sentence-builder recovery must use delegated click handling for generated Bisaya word tiles");
 }
 
 const loader = read("bisaya-app-loader.js");
 if (loader.includes('/api/speech')) fail("Bisaya loader must not call the Tagalog speech endpoint");
 if (!loader.includes('"ceb-PH"')) fail("Bisaya loader must specify the Cebuano language tag");
+if (!loader.includes('loadScript("./exercise-fixes-v545.js')) fail("Bisaya loader must load the sentence-builder interaction fixes");
 
 const reviewRuntime = read("bisaya-review-regions.js");
 for (const marker of [
@@ -146,11 +164,27 @@ if (challengeCount !== 10) fail(`Campfire Review must contain exactly ten challe
 const profileApp = read("profile-app.js");
 if (!profileApp.includes("bisaya-review-regions.js")) fail("The Bisaya profile runtime must load the review-region script");
 
+const index = read("index.html");
+for (const marker of [
+  "Which language will you be learning today?",
+  'data-course-choice="cebuano"',
+  'data-course-choice="tagalog"',
+  "renderCourseChoice(active)",
+  "loadProgress(saved, courseId)",
+  'courseId === "cebuano"'
+]) {
+  if (!index.includes(marker)) fail(`Pre-placement language choice marker missing: ${marker}`);
+}
+if (index.includes('window.location.replace(`app.html?profile=${encodeURIComponent(active.id)}`)')) {
+  fail("An active learner must see the language choice instead of being sent directly to Tagalog");
+}
+
 const serviceWorker = read("service-worker.js");
 for (const packName of manifest.packs) {
   const expectedPath = `./languages/cebuano/modules/${packName}`;
   if (!serviceWorker.includes(expectedPath)) fail(`Offline cache is missing module pack: ${expectedPath}`);
 }
 if (!serviceWorker.includes("./bisaya-review-regions.js")) fail("Offline cache is missing the Bisaya review-region runtime");
+if (!serviceWorker.includes("./exercise-fixes-v545.js")) fail("Offline cache is missing the sentence-builder interaction fixes");
 
-console.log(`Validated ${course.map.length} locations, ${course.modules.length} modules, ${items.length} items, ${exercises.length} starter exercises, and ${reviewMap.length} review regions.`);
+console.log(`Validated ${course.map.length} locations, ${course.modules.length} modules, ${items.length} items, ${exercises.length} starter exercises, removable Bisaya sentence words, pre-placement language choice, and ${reviewMap.length} review regions.`);
