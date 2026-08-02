@@ -23,7 +23,7 @@ for (const [file,source] of [
 ]) new vm.Script(source,{filename:file});
 
 requireMarkers(router,[
-  'const RELEASE = "5.5.12-playable-social-posts"',
+  'const RELEASE = "5.5.13-facebook-card-link"',
   'modes:Object.freeze(["feed_link","app_link","private_link","download_file"])',
   'data-sq-share-feed="facebook"',
   'data-sq-share-app',
@@ -32,24 +32,29 @@ requireMarkers(router,[
   'validateHostedResponse(data,base)',
   'share.pathname.startsWith("/share/")',
   'image.pathname.startsWith("/media/")',
+  'Play Salita Quest free:',
+  'mobileShareAvailable()',
+  'shareVisibleLinkText',
   'https://www.facebook.com/sharer/sharer.php?u=',
+  '&quote=${text}',
   'https://www.linkedin.com/sharing/share-offsite/?url=',
   'https://twitter.com/intent/tweet?text=',
   'https://wa.me/?text=',
   'POST WITH A CARD + PLAY LINK',
-  'Every post below can bring a new learner into Salita Quest',
+  'The playable URL is included visibly as well as in the card attachment',
   'document.addEventListener("click",handleClick,true)',
   'document.addEventListener("salita:achievement-share-prepared"'
-],"Playable sharing router");
+],"Facebook acquisition sharing router");
 
-const appPayload = router.match(/await navigator\.share\(\{title:prepared\.title,text:prepared\.text,url:hosted\.shareUrl\}\);/);
-if (!appPayload) fail("App and private sharing must include the hosted playable URL.");
+const nativePayload = router.match(/await navigator\.share\(\{title:prepared\.title,text:prepared\.caption\}\);/);
+if (!nativePayload) fail("Mobile and private sharing must put the playable URL inside visible shared text.");
+if (/navigator\.share\(\{[^}]*url:/.test(router)) fail("Native sharing must not place the URL in a discardable separate field.");
 if (/navigator\.share\(\{[^}]*files:/.test(router)) fail("No social-post route may degrade into an image-only attachment.");
 if (!router.includes('data-sq-share-download')) fail("The explicit non-clickable image download must remain available.");
 
 const publicComposer = router.match(/async function openPublicComposer\(provider\)([\s\S]*?)\n  async function sharePlayablePost/);
 if (!publicComposer) fail("Public composer function could not be located.");
-if (!publicComposer[1].includes("await ensureHostedShare()")) fail("Public feed posting must require a hosted achievement page.");
+if (!publicComposer[1].includes("await ensureHostedShare()") && !publicComposer[1].includes("shareVisibleLinkText")) fail("Public feed posting must require a hosted achievement page.");
 if (publicComposer[1].includes("prepared.url") || publicComposer[1].includes("shareRoot")) fail("Public feed posting must never fall back to the learner-login application URL.");
 
 requireMarkers(routerCss,[
@@ -61,14 +66,14 @@ requireMarkers(routerCss,[
 ],"Sharing router styles");
 
 requireMarkers(loader,[
-  'const SHARING_VERSION = "5.5.12.1"',
+  'const SHARING_VERSION = "5.5.13.1"',
   'addStylesheet("sharing-router-css"',
   '`./achievement-sharing-router-v2.css?v=${SHARING_VERSION}`',
   '"achievement-sharing-router"',
   '`./achievement-sharing-router-v2.js?v=${SHARING_VERSION}`',
   '`./achievement-sharing-avatar-bridge-v1.js?v=${SHARING_VERSION}`',
   'sharingVersion:SHARING_VERSION'
-],"Playable sharing-router loader");
+],"Facebook card-link sharing loader");
 
 const routerLoadIndex = loader.indexOf('"achievement-sharing-router"');
 const bridgeLoadIndex = loader.indexOf('"sharing"',routerLoadIndex + 1);
@@ -88,4 +93,4 @@ requireMarkers(bridge,[
 ],"Compatibility-only avatar bridge");
 if (bridge.includes('document.addEventListener("click"')) fail("The avatar bridge must not intercept sharing actions.");
 
-console.log("Validated acquisition-ready achievement sharing: every visible social-post route carries the hosted card and playable Salita Quest URL; image-only behavior is restricted to download.");
+console.log("Validated Facebook acquisition sharing: hosted card required, mobile URL embedded in visible text, desktop quote fallback, no image-only social post, and no learner-login fallback.");
