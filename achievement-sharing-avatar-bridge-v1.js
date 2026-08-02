@@ -100,6 +100,15 @@
   document.addEventListener("salita:avatar-collection-changed", () => {
     window.setTimeout(() => decorateAvatarDetails(),30);
   });
+
+  if (!document.querySelector('script[data-facebook-share-link]')) {
+    const script = document.createElement("script");
+    script.src = "./facebook-share-link-v1.js?v=1.0.0";
+    script.dataset.facebookShareLink = "true";
+    script.onerror = () => console.warn("Facebook share link formatting could not be loaded.");
+    document.body.appendChild(script);
+  }
+
   document.dispatchEvent(new CustomEvent("salita:avatar-sharing-bridge-ready", {
     detail:{release:RELEASE, compatibilityOnly:true, transportOwner:false}
   }));
