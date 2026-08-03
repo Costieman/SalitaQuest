@@ -22,6 +22,15 @@
     document.body.appendChild(script);
   }
 
+  function ensureProjectedWeeklyUnlockFix() {
+    if (window.__salitaWeeklyAvatarProjectedUnlockFixV1Installed || document.querySelector('script[data-sq-weekly-projected-unlock-fix]')) return;
+    const script = document.createElement("script");
+    script.src = "./weekly-avatar-projected-unlock-fix-v1.js?v=1.0";
+    script.dataset.sqWeeklyProjectedUnlockFix = "true";
+    script.onerror = () => console.warn("Weekly avatar projected unlock fix could not be loaded.");
+    document.body.appendChild(script);
+  }
+
   function ensureUniversalShare() {
     if (!document.querySelector('link[data-sq-universal-share]')) {
       const link = document.createElement("link");
@@ -150,6 +159,7 @@
   document.addEventListener("salita:avatar-case-changed", () => patchAll());
   document.addEventListener("salita:avatar-collection-changed", () => window.setTimeout(patchAll, 0));
   ensureDailyKeyReconciliation();
+  ensureProjectedWeeklyUnlockFix();
   ensureUniversalShare();
   patchAll();
 })();
