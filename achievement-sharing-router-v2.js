@@ -2,7 +2,7 @@
   "use strict";
 
   const INSTALL_FLAG = "__salitaQuestAchievementSharingRouterV2Installed";
-  const RELEASE = "5.5.16-streamlined-social-menu";
+  const RELEASE = "5.5.17-two-action-share";
   const MODAL_ID = "achievementShareModalV4";
   const PREVIEW_ID = "achievementSharePreview";
   const PROFILE_STORE = "salitaQuestLocalProfilesV1";
@@ -167,7 +167,7 @@
       image = new URL(data?.imageUrl || "");
     } catch { throw new Error("The public achievement page returned an invalid address."); }
     const apiOrigin = new URL(apiBase).origin;
-    if (share.protocol !== "https:" || share.origin !== apiOrigin || !share.pathname.startsWith("/share/")) throw new Error("The public achievement page is not a valid hosted share page.");
+    if (share.protocol !== "https:" || share.origin !== apiOrigin || !share.pathname.startsWith("/share/")) throw new Error("The public achievement page is not valid.");
     if (image.protocol !== "https:" || image.origin !== apiOrigin || !image.pathname.startsWith("/media/")) throw new Error("The public achievement image is not available.");
     return data;
   }
@@ -179,9 +179,8 @@
     hostedPromise = (async () => {
       const api = window.SalitaQuestSocialConnections || null;
       const base = String(api?.apiBase?.() || "").replace(/\/$/,"");
-      if (!base) throw new Error("Public achievement posts are temporarily unavailable.");
-      if (api?.ensureHosted && !(await api.ensureHosted())) throw new Error("Public achievement posts are temporarily unavailable.");
-      setStatus("Preparing your achievement share…");
+      if (!base) throw new Error("Sharing is temporarily unavailable.");
+      if (api?.ensureHosted && !(await api.ensureHosted())) throw new Error("Sharing is temporarily unavailable.");
       const file = await ensureImageFile();
       const ogBlob = await openGraphBlob(prepared.source,prepared.title,prepared.text);
       const [squareImageDataUrl,ogImageDataUrl] = await Promise.all([dataUrl(file),dataUrl(ogBlob)]);
@@ -201,90 +200,24 @@
         })
       });
       const data = await response.json().catch(() => ({}));
-      if (!response.ok) throw new Error(data.message || `Public achievement post failed (${response.status}).`);
+      if (!response.ok) throw new Error(data.message || `Sharing failed (${response.status}).`);
       prepared.hosted = validateHostedResponse(data,base);
-      prepared.caption = `${prepared.text}\n\nPlay Salita Quest free:\n${prepared.hosted.shareUrl}`;
-      setStatus("Ready to post or send.");
       return prepared.hosted;
-    })().catch(error => {
-      setStatus(`${error.message || "The share could not be prepared."} Try again.`,true);
-      throw error;
-    }).finally(() => { hostedPromise = null; });
+    })().finally(() => { hostedPromise = null; });
     return hostedPromise;
   }
 
-  async function copyText(value) {
-    const text = String(value || "");
-    if (!text) throw new Error("The post caption is not ready.");
-    try {
-      if (navigator.clipboard?.writeText) {
-        await navigator.clipboard.writeText(text);
-        return;
-      }
-    } catch {}
-    const textarea = document.createElement("textarea");
-    textarea.value = text;
-    textarea.setAttribute("readonly","");
-    textarea.style.position = "fixed";
-    textarea.style.opacity = "0";
-    textarea.style.pointerEvents = "none";
-    document.body.appendChild(textarea);
-    textarea.select();
-    textarea.setSelectionRange(0,textarea.value.length);
-    const copied = document.execCommand?.("copy");
-    textarea.remove();
-    if (!copied) throw new Error("The caption could not be copied. Use Copy caption and link instead.");
-  }
-
-  function canShareImage(file) {
-    if (!navigator.share) return false;
-    if (!navigator.canShare) return true;
-    try { return navigator.canShare({files:[file]}); }
-    catch { return false; }
-  }
-
-  async function shareSocialPost() {
-    await ensureHostedShare();
-    const file = await ensureImageFile();
-    await copyText(prepared.caption);
-    setStatus("Caption and play link copied. Choose your social app, then paste if its caption box is blank.");
-    if (!canShareImage(file)) {
-      const link = document.createElement("a");
-      link.href = URL.createObjectURL(file);
-      link.download = prepared.fileName;
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-      window.setTimeout(() => URL.revokeObjectURL(link.href),1500);
-      setStatus("Image downloaded and caption copied. Upload it to your social app, then paste the caption.");
-      return;
-    }
-    await navigator.share({
-      title:prepared.title,
-      text:prepared.caption,
-      files:[file]
-    });
-    setStatus("Social sharing opened. Paste the copied caption if the app removed it.");
-  }
-
-  async function shareMessageLink() {
+  async function shareAchievement() {
     const hosted = await ensureHostedShare();
-    if (!navigator.share) throw new Error("This browser cannot open messaging apps. Copy the caption and link instead.");
+    if (!navigator.share) throw new Error("This browser cannot open app sharing.");
     await navigator.share({
       title:prepared.title,
       text:prepared.text,
       url:hosted.shareUrl
     });
-    setStatus("Messaging share opened with the clickable Salita Quest link.");
   }
 
-  async function copyPost() {
-    await ensureHostedShare();
-    await copyText(prepared.caption);
-    setStatus("Caption and playable link copied.");
-  }
-
-  async function downloadImage() {
+  async function saveAchievement() {
     const file = await ensureImageFile();
     const link = document.createElement("a");
     link.href = URL.createObjectURL(file);
@@ -293,34 +226,16 @@
     link.click();
     link.remove();
     window.setTimeout(() => URL.revokeObjectURL(link.href),1500);
-    setStatus("Achievement image downloaded.");
   }
 
   function renderActions() {
     const platformHost = document.getElementById("achievementSharePlatforms");
     const secondary = modal()?.querySelector(".achievement-share-secondary");
     if (!platformHost || !secondary) return;
-    platformHost.className = "achievement-share-router-v2";
+    platformHost.className = "achievement-share-router-v2 achievement-share-two-actions";
     platformHost.innerHTML = `
-      <section class="achievement-share-mode-group">
-        <div class="achievement-share-mode-heading"><span>POST</span><small>For Facebook and other social feeds</small></div>
-        <div class="achievement-share-mode-actions public-actions">
-          <button type="button" data-sq-share-social><strong>Post to social media</strong><small>Large image with the caption and play link copied</small></button>
-        </div>
-      </section>
-      <section class="achievement-share-mode-group">
-        <div class="achievement-share-mode-heading"><span>SEND</span><small>For Messenger and other messaging apps</small></div>
-        <div class="achievement-share-mode-actions private-actions">
-          <button type="button" data-sq-share-message><strong>Send in a messaging app</strong><small>Send the clickable Salita Quest link</small></button>
-          <button type="button" data-sq-share-copy><strong>Copy caption and link</strong><small>Paste the complete post anywhere</small></button>
-        </div>
-      </section>
-      <section class="achievement-share-mode-group">
-        <div class="achievement-share-mode-heading"><span>SAVE</span></div>
-        <div class="achievement-share-mode-actions image-actions">
-          <button type="button" data-sq-share-download><strong>Download image</strong><small>Save the achievement card</small></button>
-        </div>
-      </section>`;
+      <button class="achievement-share-primary" type="button" data-sq-share-main>Share</button>
+      <button class="achievement-share-save" type="button" data-sq-share-save>Save</button>`;
     secondary.hidden = true;
   }
 
@@ -328,24 +243,25 @@
     if (actionInProgress) return;
     actionInProgress = true;
     if (button) { button.disabled = true; button.dataset.busy = "true"; }
-    try { await action(); }
-    catch (error) { setStatus(error?.name === "AbortError" ? "Sharing cancelled." : error?.message || "The sharing action could not be completed.",error?.name !== "AbortError"); }
-    finally {
+    try {
+      await action();
+      setStatus("");
+    } catch (error) {
+      if (error?.name !== "AbortError") setStatus(error?.message || "The action could not be completed.",true);
+    } finally {
       actionInProgress = false;
       if (button) { button.disabled = false; delete button.dataset.busy; }
     }
   }
 
   function handleClick(event) {
-    const button = event.target.closest?.("[data-sq-share-social],[data-sq-share-message],[data-sq-share-copy],[data-sq-share-download]");
+    const button = event.target.closest?.("[data-sq-share-main],[data-sq-share-save]");
     if (!button || !prepared || modal()?.hidden) return;
     event.preventDefault();
     event.stopPropagation();
     event.stopImmediatePropagation?.();
-    if (button.hasAttribute("data-sq-share-social")) return runAction(button,shareSocialPost);
-    if (button.hasAttribute("data-sq-share-message")) return runAction(button,shareMessageLink);
-    if (button.hasAttribute("data-sq-share-copy")) return runAction(button,copyPost);
-    if (button.hasAttribute("data-sq-share-download")) return runAction(button,downloadImage);
+    if (button.hasAttribute("data-sq-share-main")) return runAction(button,shareAchievement);
+    if (button.hasAttribute("data-sq-share-save")) return runAction(button,saveAchievement);
   }
 
   document.addEventListener("click",handleClick,true);
@@ -358,8 +274,7 @@
       fileName:`salita-quest-${cleanFilePart(event.detail?.type)}-${cleanFilePart(titleFromModal())}.png`,
       source:preview()?.src || "",
       file:null,
-      hosted:null,
-      caption:""
+      hosted:null
     };
     imageFilePromise = null;
     hostedPromise = null;
@@ -377,11 +292,10 @@
   window.SalitaQuestSharingRouter = Object.freeze({
     version:2,
     release:RELEASE,
-    modes:Object.freeze(["social_image_caption","message_link","copy_post","download_file"]),
+    modes:Object.freeze(["share","save"]),
     ensureHostedShare,
-    shareSocialPost,
-    sendPrivately:shareMessageLink,
-    shareMessageLink
+    shareAchievement,
+    saveAchievement
   });
   document.documentElement.dataset.achievementSharingRouter = RELEASE;
 })();
