@@ -1,8 +1,8 @@
 (() => {
   "use strict";
 
-  if (window.__salitaDailyKeyWeekdayReconciliationV1Installed) return;
-  window.__salitaDailyKeyWeekdayReconciliationV1Installed = true;
+  if (window.__salitaDailyKeyWeekdayReconciliationV2Installed) return;
+  window.__salitaDailyKeyWeekdayReconciliationV2Installed = true;
 
   const KEY_TARGET = 6;
   const DAY_NAMES = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
@@ -22,7 +22,19 @@
     return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
   }
 
-  function weekKey(value = new Date()) {
+  function activityDateKey() {
+    try {
+      if (typeof ensureDailyActivity === "function") {
+        const activity = ensureDailyActivity();
+        if (/^\d{4}-\d{2}-\d{2}$/.test(String(activity?.date || ""))) return activity.date;
+      }
+    } catch {}
+    const stateDate = appState()?.dailyActivity?.date || appState()?.daily?.date;
+    if (/^\d{4}-\d{2}-\d{2}$/.test(String(stateDate || ""))) return stateDate;
+    return localDateKey(new Date());
+  }
+
+  function weekKey(value) {
     const date = value instanceof Date ? new Date(value) : parseLocalDateKey(value);
     if (!date) return null;
     const offset = (date.getDay() + 6) % 7;
@@ -30,15 +42,10 @@
     return localDateKey(date);
   }
 
-  function currentWeeklyState() {
-    const chest = appState()?.weeklyAvatarChest;
-    return chest && typeof chest === "object" ? chest : null;
-  }
-
   function currentWeekRecord() {
-    const chest = currentWeeklyState();
-    const currentWeek = weekKey(new Date());
-    if (!chest || !currentWeek) return {count:0, claim:null, week:currentWeek};
+    const chest = appState()?.weeklyAvatarChest;
+    const currentWeek = weekKey(activityDateKey());
+    if (!chest || typeof chest !== "object" || !currentWeek) return {count:0, claim:null};
 
     const liveDates = [...new Set((Array.isArray(chest.keyDates) ? chest.keyDates : [])
       .filter(value => weekKey(value) === currentWeek))];
@@ -49,22 +56,17 @@
       ? [...new Set(claim.keyDates.filter(value => weekKey(value) === currentWeek))]
       : [];
 
-    return {
-      count:Math.min(KEY_TARGET, Math.max(liveDates.length, claimedDates.length)),
-      claim,
-      week:currentWeek
-    };
+    return {count:Math.min(KEY_TARGET, Math.max(liveDates.length, claimedDates.length)), claim};
+  }
+
+  function setText(node, value) {
+    if (node && node.textContent !== value) node.textContent = value;
   }
 
   function ensureOpenButton(host) {
     const status = host.querySelector("#questChestStatus, .weekly-key-action");
-    if (!status) return;
-    let button = status.querySelector('[data-weekly-chest-action="open"]');
-    if (!button) {
-      status.innerHTML = '<button class="weekly-chest-button" type="button" data-weekly-chest-action="open">Open chest</button>';
-      button = status.querySelector('[data-weekly-chest-action="open"]');
-    }
-    if (button) button.hidden = false;
+    if (!status || status.querySelector('[data-weekly-chest-action="open"]')) return;
+    status.innerHTML = '<button class="weekly-chest-button" type="button" data-weekly-chest-action="open">Open chest</button>';
   }
 
   function patchDailyKeys() {
@@ -76,33 +78,32 @@
     const meter = host.querySelector(".weekly-key-meter");
 
     if (meter) {
-      meter.setAttribute("aria-label", `${count} of ${KEY_TARGET} weekly keys collected`);
+      const label = `${count} of ${KEY_TARGET} weekly keys collected`;
+      if (meter.getAttribute("aria-label") !== label) meter.setAttribute("aria-label", label);
       [...meter.children].forEach((slot, index) => {
-        slot.classList.toggle("collected", index < count);
-        slot.textContent = index < count ? "🔑" : "";
+        const collected = index < count;
+        slot.classList.toggle("collected", collected);
+        setText(slot, collected ? "🔑" : "");
       });
     }
 
     if (count >= KEY_TARGET && !claim) {
       host.classList.add("weekly-ready", "unlocked");
       host.classList.remove("locked", "weekly-claimed");
-      if (title) title.textContent = "Weekly chest ready!";
-      if (text) text.textContent = "Six Daily Keys collected. Open the chest to reveal your reward.";
+      setText(title, "Weekly chest ready!");
+      setText(text, "Six Daily Keys collected. Open the chest to reveal your reward.");
       ensureOpenButton(host);
-      return;
-    }
-
-    if (!claim) {
-      if (title) title.textContent = `Daily Keys collected · ${count}/${KEY_TARGET}`;
+    } else if (!claim) {
+      setText(title, `Daily Keys collected · ${count}/${KEY_TARGET}`);
     }
   }
 
-  function patchMomentumWeekday(root = document) {
-    const today = DAY_NAMES[new Date().getDay()];
-    const candidates = [...root.querySelectorAll?.("section, article, div") || []].filter(node => {
-      const text = node.textContent || "";
-      return /weekly momentum/i.test(text) && node.children.length > 0;
-    });
+  function patchMomentumWeekday() {
+    const activityDate = parseLocalDateKey(activityDateKey());
+    const today = DAY_NAMES[(activityDate || new Date()).getDay()];
+    const candidates = [...document.querySelectorAll("section, article, div")].filter(node =>
+      /weekly momentum/i.test(node.textContent || "") && node.children.length > 0
+    );
     const host = candidates.sort((a,b) => a.textContent.length - b.textContent.length)[0];
     if (!host) return;
 
@@ -110,32 +111,35 @@
     while (walker.nextNode()) {
       const node = walker.currentNode;
       const value = String(node.nodeValue || "");
-      if (/\b(Sunday|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday)\b/.test(value)) {
-        node.nodeValue = value.replace(/\b(Sunday|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday)\b/g, today);
-      }
+      const next = value.replace(/\b(Sunday|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday)\b/g, today);
+      if (next !== value) node.nodeValue = next;
     }
-    host.dataset.localWeekday = today;
+    if (host.dataset.localWeekday !== today) host.dataset.localWeekday = today;
   }
 
-  let queued = false;
-  function schedule() {
-    if (queued) return;
-    queued = true;
+  let scheduled = false;
+  function schedule(delay = 0) {
+    if (delay) {
+      window.setTimeout(() => schedule(), delay);
+      return;
+    }
+    if (scheduled) return;
+    scheduled = true;
     requestAnimationFrame(() => {
-      queued = false;
+      scheduled = false;
       patchDailyKeys();
       patchMomentumWeekday();
     });
   }
 
-  new MutationObserver(records => {
-    if (records.some(record => record.addedNodes.length || record.type === "characterData")) schedule();
-  }).observe(document.documentElement, {subtree:true, childList:true, characterData:true});
-
   ["salita:state-changed", "salita:daily-quests-rendered", "salita:weekly-chest-rendered"].forEach(name => {
-    document.addEventListener(name, schedule);
+    document.addEventListener(name, () => schedule());
   });
   document.addEventListener("visibilitychange", () => { if (!document.hidden) schedule(); });
-  window.addEventListener("focus", schedule);
+  window.addEventListener("focus", () => schedule());
+  document.addEventListener("DOMContentLoaded", () => schedule(), {once:true});
+
   schedule();
+  schedule(250);
+  schedule(900);
 })();
