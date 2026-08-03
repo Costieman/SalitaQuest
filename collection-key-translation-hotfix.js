@@ -14,6 +14,15 @@
     "component of the expression"
   ]);
 
+  function ensureAvatarCaseStyles() {
+    if (document.querySelector('link[data-sq-avatar-case-desktop-safety]')) return;
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = "./avatar-case-desktop-safety.css?v=5.5.11";
+    link.dataset.sqAvatarCaseDesktopSafety = "true";
+    document.head.appendChild(link);
+  }
+
   function dateKeyToNumber(value) {
     const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(value || ""));
     if (!match) return null;
@@ -37,9 +46,6 @@
         if (!Array.isArray(tokens)) return;
         tokens.forEach(token => {
           if (!Array.isArray(token) || token.length < 2 || !isPlaceholder(token[1])) return;
-          /* Only use an item-level meaning when the item contains one token. A full
-             phrase translation is not a valid substitute for one token in a
-             multi-token expression. */
           token[1] = tokens.length === 1 && item.meaning
             ? item.meaning
             : "Translation pending content review";
@@ -114,12 +120,17 @@
   }
 
   function patchCollectionModal(root = document) {
-    const modals = root.querySelectorAll?.(".avatar-collection-modal, [data-avatar-collection-modal], #avatarCollectionModal") || [];
+    const selector = ".sq-avatar-case-picker, .avatar-collection-modal, [data-avatar-collection-modal], #avatarCollectionModal";
+    const modals = [];
+    if (root instanceof Element && root.matches(selector)) modals.push(root);
+    root.querySelectorAll?.(selector).forEach(modal => modals.push(modal));
+
     modals.forEach(modal => {
       modal.classList.add("sq-desktop-collection-safe");
       modal.querySelectorAll("img").forEach(image => {
         image.style.objectFit = "contain";
         image.style.objectPosition = "center";
+        image.style.transform = "none";
       });
     });
   }
@@ -136,6 +147,7 @@
     });
   }
 
+  ensureAvatarCaseStyles();
   cleanTokenTranslations();
   const observer = new MutationObserver(records => {
     const relevant = records.some(record => [...record.addedNodes].some(node => node.nodeType === Node.ELEMENT_NODE));
