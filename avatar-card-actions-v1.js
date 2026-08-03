@@ -14,27 +14,11 @@
   document.head.appendChild(style);
 
   function ensureDailyKeyReconciliation() {
-    if (window.__salitaDailyKeyWeekdayReconciliationV1Installed || document.querySelector('script[data-sq-daily-key-reconciliation]')) return;
+    if (window.__salitaDailyKeyWeekdayReconciliationV2Installed || document.querySelector('script[data-sq-daily-key-reconciliation]')) return;
     const script = document.createElement("script");
-    script.src = "./daily-key-weekday-reconciliation-v1.js?v=1.1";
+    script.src = "./daily-key-weekday-reconciliation-v1.js?v=2.0";
     script.dataset.sqDailyKeyReconciliation = "true";
     script.onerror = () => console.warn("Daily Key reconciliation could not be loaded.");
-    document.body.appendChild(script);
-  }
-
-  function ensureProgressReveal() {
-    if (!document.querySelector('link[data-sq-avatar-progress-reveal]')) {
-      const link = document.createElement("link");
-      link.rel = "stylesheet";
-      link.href = "./avatar-progress-reveal-v1.css?v=1.0";
-      link.dataset.sqAvatarProgressReveal = "true";
-      document.head.appendChild(link);
-    }
-    if (window.__salitaAvatarProgressRevealV1Installed || document.querySelector('script[data-sq-avatar-progress-reveal]')) return;
-    const script = document.createElement("script");
-    script.src = "./avatar-progress-reveal-v1.js?v=1.0";
-    script.dataset.sqAvatarProgressReveal = "true";
-    script.onerror = () => console.warn("Avatar progress colour reveal could not be loaded.");
     document.body.appendChild(script);
   }
 
@@ -161,6 +145,5 @@
   document.addEventListener("salita:avatar-case-changed", () => patchAll());
   document.addEventListener("salita:avatar-collection-changed", () => window.setTimeout(patchAll, 0));
   ensureDailyKeyReconciliation();
-  ensureProgressReveal();
   patchAll();
 })();
