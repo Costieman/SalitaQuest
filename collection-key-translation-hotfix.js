@@ -32,6 +32,22 @@
     document.body.appendChild(script);
   }
 
+  function ensureAvatarCollectionPage() {
+    if (!document.querySelector('link[data-sq-avatar-collection-page]')) {
+      const link = document.createElement("link");
+      link.rel = "stylesheet";
+      link.href = "./avatar-collection-page-v2.css?v=5.5.12";
+      link.dataset.sqAvatarCollectionPage = "true";
+      document.head.appendChild(link);
+    }
+    if (window.__salitaQuestAvatarCollectionPageV2Installed || document.querySelector('script[data-sq-avatar-collection-page]')) return;
+    const script = document.createElement("script");
+    script.src = "./avatar-collection-page-v2.js?v=5.5.12";
+    script.dataset.sqAvatarCollectionPage = "true";
+    script.onerror = () => console.warn("Avatar Collection page could not be loaded.");
+    document.body.appendChild(script);
+  }
+
   function dateKeyToNumber(value) {
     const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(value || ""));
     if (!match) return null;
@@ -158,6 +174,7 @@
 
   ensureAvatarCaseStyles();
   ensureMysteryRarityRoll();
+  ensureAvatarCollectionPage();
   cleanTokenTranslations();
   const observer = new MutationObserver(records => {
     const relevant = records.some(record => [...record.addedNodes].some(node => node.nodeType === Node.ELEMENT_NODE));
