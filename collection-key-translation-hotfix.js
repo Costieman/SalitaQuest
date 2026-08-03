@@ -23,6 +23,15 @@
     document.head.appendChild(link);
   }
 
+  function ensureMysteryRarityRoll() {
+    if (window.__salitaMysteryRarityRollV1Installed || document.querySelector('script[data-sq-mystery-rarity-roll]')) return;
+    const script = document.createElement("script");
+    script.src = "./mystery-rarity-roll-v1.js?v=5.5.11";
+    script.dataset.sqMysteryRarityRoll = "true";
+    script.onerror = () => console.warn("Enhanced Mystery Pack rarity roll could not be loaded.");
+    document.body.appendChild(script);
+  }
+
   function dateKeyToNumber(value) {
     const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(value || ""));
     if (!match) return null;
@@ -148,6 +157,7 @@
   }
 
   ensureAvatarCaseStyles();
+  ensureMysteryRarityRoll();
   cleanTokenTranslations();
   const observer = new MutationObserver(records => {
     const relevant = records.some(record => [...record.addedNodes].some(node => node.nodeType === Node.ELEMENT_NODE));
