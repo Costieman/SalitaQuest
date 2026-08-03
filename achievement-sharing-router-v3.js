@@ -2,7 +2,7 @@
   "use strict";
 
   const INSTALL_FLAG = "__salitaQuestAchievementSharingRouterV3Installed";
-  const RELEASE = "5.5.18-two-action-qr";
+  const RELEASE = "5.5.19-large-image-share";
   const MODAL_ID = "achievementShareModalV4";
   const PREVIEW_ID = "achievementSharePreview";
   const APP_URL = "https://costieman.github.io/SalitaQuest/";
@@ -13,7 +13,6 @@
 
   let prepared = null;
   let decoratedPromise = null;
-  let hostedPromise = null;
   let actionInProgress = false;
 
   const modal = () => document.getElementById(MODAL_ID);
@@ -80,18 +79,6 @@
     return decoratedPromise;
   }
 
-  function activeProfile() {
-    try {
-      const store = JSON.parse(localStorage.getItem("salitaQuestLocalProfilesV1") || "null");
-      const id = sessionStorage.getItem("salitaQuestActiveProfileId");
-      return store?.profiles?.find(profile => profile.id === id) || null;
-    } catch { return null; }
-  }
-
-  function courseLabel() {
-    return document.body.dataset.course === "cebuano" ? "Cebuano / Bisaya" : "Tagalog";
-  }
-
   function titleFromModal() {
     return document.getElementById("achievementShareTitle")?.textContent?.trim() || "Salita Quest achievement";
   }
@@ -104,62 +91,22 @@
     return String(value || "achievement").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"").slice(0,56) || "achievement";
   }
 
-  function dataUrl(blob) {
-    return new Promise((resolve,reject) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = () => reject(reader.error || new Error("The achievement image could not be read."));
-      reader.readAsDataURL(blob);
-    });
+  async function copyCaption() {
+    const caption = `${prepared.text}\n\nPlay Salita Quest free:\n${APP_URL}`;
+    try {
+      if (navigator.clipboard?.writeText) await navigator.clipboard.writeText(caption);
+    } catch {}
+    return caption;
   }
 
-  function ensureHostedShare() {
-    if (!prepared) return Promise.reject(new Error("No achievement is ready to share."));
-    if (prepared.hosted) return Promise.resolve(prepared.hosted);
-    if (hostedPromise) return hostedPromise;
-    hostedPromise = (async () => {
-      const api = window.SalitaQuestSocialConnections || null;
-      const base = String(api?.apiBase?.() || "").replace(/\/$/,"");
-      if (!base || (api?.ensureHosted && !(await api.ensureHosted()))) return null;
-      const file = await ensureDecoratedFile();
-      const squareImageDataUrl = await dataUrl(file);
-      const response = await fetch(`${base}/api/share-cards`, {
-        method:"POST",
-        credentials:"omit",
-        headers:{"Content-Type":"application/json"},
-        body:JSON.stringify({
-          type:prepared.type,
-          title:prepared.title,
-          description:prepared.text,
-          learnerName:activeProfile()?.name || "",
-          course:courseLabel(),
-          campaign:prepared.type || "achievement-share",
-          squareImageDataUrl,
-          ogImageDataUrl:squareImageDataUrl
-        })
-      });
-      if (!response.ok) return null;
-      const data = await response.json().catch(() => null);
-      return data?.shareUrl ? data : null;
-    })().then(result => {
-      prepared.hosted = result;
-      return result;
-    }).catch(() => null).finally(() => { hostedPromise = null; });
-    return hostedPromise;
+  function canShareFile(file) {
+    if (!navigator.share) return false;
+    if (!navigator.canShare) return true;
+    try { return navigator.canShare({files:[file]}); }
+    catch { return false; }
   }
 
-  async function shareAchievement() {
-    const hosted = await ensureHostedShare();
-    const url = hosted?.shareUrl || APP_URL;
-    if (navigator.share) {
-      await navigator.share({title:prepared.title,text:prepared.text,url});
-      return;
-    }
-    await navigator.clipboard?.writeText?.(`${prepared.text}\n\n${url}`);
-  }
-
-  async function saveAchievement() {
-    const file = await ensureDecoratedFile();
+  async function downloadFile(file) {
     const href = URL.createObjectURL(file);
     const link = document.createElement("a");
     link.href = href;
@@ -168,6 +115,26 @@
     link.click();
     link.remove();
     window.setTimeout(() => URL.revokeObjectURL(href), 1500);
+  }
+
+  async function shareAchievement() {
+    const file = await ensureDecoratedFile();
+    const caption = await copyCaption();
+    if (canShareFile(file)) {
+      await navigator.share({
+        title:prepared.title,
+        text:caption,
+        files:[file]
+      });
+      return;
+    }
+    await downloadFile(file);
+    window.open("https://www.facebook.com/", "_blank", "noopener");
+  }
+
+  async function saveAchievement() {
+    const file = await ensureDecoratedFile();
+    await downloadFile(file);
   }
 
   function renderActions() {
@@ -216,11 +183,9 @@
       source:preview()?.src || "",
       fileName:`salita-quest-${cleanFilePart(event.detail?.type)}-${cleanFilePart(titleFromModal())}.png`,
       file:null,
-      hosted:null,
       previewObjectUrl:""
     };
     decoratedPromise = null;
-    hostedPromise = null;
     renderActions();
     ensureDecoratedFile().catch(error => console.warn("QR card preparation failed", error));
   });
@@ -229,14 +194,12 @@
     if (prepared?.previewObjectUrl) URL.revokeObjectURL(prepared.previewObjectUrl);
     prepared = null;
     decoratedPromise = null;
-    hostedPromise = null;
   });
 
   window.SalitaQuestSharingRouter = Object.freeze({
     version:3,
     release:RELEASE,
-    modes:Object.freeze(["share","save"]),
-    ensureHostedShare,
+    modes:Object.freeze(["large_image_share","save"]),
     shareAchievement,
     saveAchievement
   });
