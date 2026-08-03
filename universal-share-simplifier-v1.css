@@ -1,7 +1,16 @@
 .achievement-share-platforms[hidden]{display:none!important}
 .achievement-share-universal-actions{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;gap:12px!important;margin-top:18px!important}
-.achievement-share-universal-actions button{min-height:52px!important;border-radius:14px!important;font-size:.82rem!important;font-weight:900!important;padding:12px 16px!important}
+.achievement-share-universal-actions button{min-height:52px!important;border-radius:14px!important;font-size:.9rem!important;font-weight:900!important;padding:12px 16px!important}
 .achievement-share-main-action{border:1px solid #0f766e!important;background:#0f766e!important;color:#fff!important;box-shadow:0 10px 22px rgba(15,118,110,.22)!important}
 .achievement-share-download-action{border:1px solid #ccd9d6!important;background:#fff!important;color:#164f4a!important}
 .dark-mode .achievement-share-download-action{background:#202e43!important;border-color:#405166!important;color:#e4f3ef!important}
+@media(min-width:651px){
+  .achievement-share-two-action-only .achievement-share-content>.eyebrow,
+  .achievement-share-two-action-only #achievementShareTitle,
+  .achievement-share-two-action-only #achievementShareDescription,
+  .achievement-share-two-action-only #achievementShareStatus,
+  .achievement-share-two-action-only .achievement-share-preview small{display:none!important}
+  .achievement-share-two-action-only .achievement-share-content{display:flex!important;align-items:center!important;justify-content:center!important;padding:22px!important}
+  .achievement-share-two-action-only .achievement-share-universal-actions{width:min(420px,100%)!important;margin:0!important}
+}
 @media(max-width:650px){.achievement-share-universal-actions{grid-template-columns:1fr!important}.achievement-share-universal-actions button{width:100%!important}}
