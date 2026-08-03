@@ -2,10 +2,11 @@
   "use strict";
 
   const INSTALL_FLAG = "__salitaQuestAchievementSharingRouterV3Installed";
-  const RELEASE = "5.5.19-large-image-share";
+  const RELEASE = "5.5.20-mobile-locked-desktop-facebook";
   const MODAL_ID = "achievementShareModalV4";
   const PREVIEW_ID = "achievementSharePreview";
   const APP_URL = "https://costieman.github.io/SalitaQuest/";
+  const FACEBOOK_URL = "https://www.facebook.com/";
   const QR_DATA_URL = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAXIAAAFyAQAAAADAX2ykAAACgklEQVR4nO2bQYrbQBBF308LZqmGHGCO0rpZ8JFyA+koPkBAWgZkfhZS2/KYZGbAY6xQtbLot/hQ7q5fpZbMZ2L49ikcgg8++OCDDz74v/Fao0HdJDFIUgfAVNe6B+oJ/s58sW2P4EMGda0NnKSOZNv2Nf/VeoK/Mz+ddyjJlKPkg17sHpDUPFpP8PfhmzfPKgaGDJQx66Z7ejb9wX+SH/JJ7tsZdaTb5vjp9Qd/FXX/tgYmAJJVji/WkBHlJ2yz/Gz6g/8QP0iSMlCONeVlTKvJkqTH6gn+Tjy+Dmhn7BGgtVdjfY7+2fQH/04sWS22KSOw+OfaELkHNpmO/O6M3/hnD69GcJKHPAKkmTJmYKrH89PpD/5D/CAJJq3W+cdRskeQXmdivrFffq2/PQCtbY/JtuftY9/OxPm8S75uzmUgmXyV1bPd8lz/B8+mP/h34uKal1z2pI3TWp00xP7dJ1/3ZWtTxlTbIGB1zUsTnMI/75M/90frMbwmeaytURmpC5HfHfJnc5zsntVLLYf05cyO+rtbvu7fEaqh8m39Df+8V34zn6yPc12o5XgpwpHfPfOTtGzdIQO0M1I+Sd3UAO3veL+wZ17KyfZRgqlZrNVShId8EkNOMb/aJ7/Mn9fstUbFpwamZplEU3pQ6R+mJ/iv4C/3J1l73ZnVZE0NDHH/auf88pp3BB9UD+lDrk1ScdTfnfKb/qjOqi4Lc/0d73//F36xVvaMOtaeeDOEfnr9wV/H2/uxlPH7DFNePJdogaF7mJ7g78vf3J8cOmTauREki6mZRfurcs+mP/h3Yns5g1Qn0a29GVeuQ+iov/vjb79Q+GfE993BBx988MEHfwf+D6Z73lFZDxYnAAAAAElFTkSuQmCC";
 
   if (window[INSTALL_FLAG]) return;
@@ -17,6 +18,7 @@
 
   const modal = () => document.getElementById(MODAL_ID);
   const preview = () => document.getElementById(PREVIEW_ID);
+  const isMobileShareDevice = () => window.matchMedia("(max-width: 800px), (pointer: coarse)").matches;
 
   function hideLegacyText() {
     const root = modal();
@@ -91,11 +93,26 @@
     return String(value || "achievement").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"").slice(0,56) || "achievement";
   }
 
+  function captionText() {
+    return `${prepared.text}\n\nPlay Salita Quest free:\n${APP_URL}`;
+  }
+
   async function copyCaption() {
-    const caption = `${prepared.text}\n\nPlay Salita Quest free:\n${APP_URL}`;
+    const caption = captionText();
     try {
-      if (navigator.clipboard?.writeText) await navigator.clipboard.writeText(caption);
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(caption);
+        return caption;
+      }
     } catch {}
+    const textarea = document.createElement("textarea");
+    textarea.value = caption;
+    textarea.setAttribute("readonly", "");
+    textarea.style.cssText = "position:fixed;opacity:0;pointer-events:none";
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand?.("copy");
+    textarea.remove();
     return caption;
   }
 
@@ -117,19 +134,34 @@
     window.setTimeout(() => URL.revokeObjectURL(href), 1500);
   }
 
-  async function shareAchievement() {
+  async function shareOnMobile() {
     const file = await ensureDecoratedFile();
     const caption = await copyCaption();
     if (canShareFile(file)) {
-      await navigator.share({
-        title:prepared.title,
-        text:caption,
-        files:[file]
-      });
+      await navigator.share({title:prepared.title,text:caption,files:[file]});
       return;
     }
     await downloadFile(file);
-    window.open("https://www.facebook.com/", "_blank", "noopener");
+  }
+
+  async function shareOnDesktop() {
+    const facebookWindow = window.open("about:blank", "salitaQuestFacebookPost");
+    try {
+      if (facebookWindow) {
+        facebookWindow.document.title = "Preparing Salita Quest post";
+        facebookWindow.document.body.innerHTML = "<p style='font:18px system-ui;padding:28px'>Preparing your Salita Quest image…</p>";
+      }
+    } catch {}
+    const file = await ensureDecoratedFile();
+    await copyCaption();
+    await downloadFile(file);
+    if (facebookWindow && !facebookWindow.closed) facebookWindow.location.replace(FACEBOOK_URL);
+    else window.open(FACEBOOK_URL, "_blank", "noopener");
+  }
+
+  async function shareAchievement() {
+    if (isMobileShareDevice()) return shareOnMobile();
+    return shareOnDesktop();
   }
 
   async function saveAchievement() {
@@ -199,7 +231,7 @@
   window.SalitaQuestSharingRouter = Object.freeze({
     version:3,
     release:RELEASE,
-    modes:Object.freeze(["large_image_share","save"]),
+    modes:Object.freeze(["mobile_native_image_share","desktop_facebook_image_workflow","save"]),
     shareAchievement,
     saveAchievement
   });
