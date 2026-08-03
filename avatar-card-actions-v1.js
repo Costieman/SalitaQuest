@@ -4,6 +4,15 @@
   if (window.__salitaAvatarCardActionsV1Installed) return;
   window.__salitaAvatarCardActionsV1Installed = true;
 
+  const style = document.createElement("style");
+  style.textContent = `
+    .avatar-page-card.is-owned .avatar-page-card-actions{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .avatar-page-card.is-owned .avatar-page-card-actions button{width:100%}
+    .avatar-page-card.is-locked .avatar-page-card-actions{grid-template-columns:1fr}
+    @media(max-width:650px){.avatar-page-card.is-owned .avatar-page-card-actions{grid-template-columns:1fr 1fr}.avatar-page-card.is-owned .avatar-page-card-actions button{display:block!important}}
+  `;
+  document.head.appendChild(style);
+
   function getItem(id) {
     return window.SalitaAvatarModel?.get?.(id) || null;
   }
