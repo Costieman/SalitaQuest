@@ -13,6 +13,15 @@
   `;
   document.head.appendChild(style);
 
+  function ensureDailyKeyReconciliation() {
+    if (window.__salitaDailyKeyWeekdayReconciliationV1Installed || document.querySelector('script[data-sq-daily-key-reconciliation]')) return;
+    const script = document.createElement("script");
+    script.src = "./daily-key-weekday-reconciliation-v1.js?v=1.0";
+    script.dataset.sqDailyKeyReconciliation = "true";
+    script.onerror = () => console.warn("Daily Key reconciliation could not be loaded.");
+    document.body.appendChild(script);
+  }
+
   function getItem(id) {
     return window.SalitaAvatarModel?.get?.(id) || null;
   }
@@ -135,5 +144,6 @@
 
   document.addEventListener("salita:avatar-case-changed", () => patchAll());
   document.addEventListener("salita:avatar-collection-changed", () => window.setTimeout(patchAll, 0));
+  ensureDailyKeyReconciliation();
   patchAll();
 })();
