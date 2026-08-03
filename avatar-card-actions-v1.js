@@ -14,9 +14,9 @@
   document.head.appendChild(style);
 
   function ensureDailyKeyReconciliation() {
-    if (window.__salitaDailyKeyWeekdayReconciliationV2Installed || document.querySelector('script[data-sq-daily-key-reconciliation]')) return;
+    if (window.__salitaDailyKeyWeekdayReconciliationV3Installed || document.querySelector('script[data-sq-daily-key-reconciliation]')) return;
     const script = document.createElement("script");
-    script.src = "./daily-key-weekday-reconciliation-v1.js?v=2.0";
+    script.src = "./daily-key-weekday-reconciliation-v1.js?v=3.0";
     script.dataset.sqDailyKeyReconciliation = "true";
     script.onerror = () => console.warn("Daily Key reconciliation could not be loaded.");
     document.body.appendChild(script);
