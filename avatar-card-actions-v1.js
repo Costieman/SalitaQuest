@@ -22,6 +22,22 @@
     document.body.appendChild(script);
   }
 
+  function ensureUniversalShare() {
+    if (!document.querySelector('link[data-sq-universal-share]')) {
+      const link = document.createElement("link");
+      link.rel = "stylesheet";
+      link.href = "./universal-share-simplifier-v1.css?v=1.0";
+      link.dataset.sqUniversalShare = "true";
+      document.head.appendChild(link);
+    }
+    if (window.__salitaUniversalShareSimplifierV1Installed || document.querySelector('script[data-sq-universal-share]')) return;
+    const script = document.createElement("script");
+    script.src = "./universal-share-simplifier-v1.js?v=1.0";
+    script.dataset.sqUniversalShare = "true";
+    script.onerror = () => console.warn("Universal sharing controls could not be loaded.");
+    document.body.appendChild(script);
+  }
+
   function getItem(id) {
     return window.SalitaAvatarModel?.get?.(id) || null;
   }
@@ -54,26 +70,15 @@
     api.setIds([...ids, id]);
   }
 
-  async function shareAvatar(id) {
+  async function shareAvatar(id, button = null) {
     const item = getItem(id);
     if (!item) return;
-    const text = `I unlocked ${item.name}, a ${item.rarity} avatar in Salita Quest.`;
-    const shareData = {title:`${item.name} — Salita Quest`, text, url:location.origin};
-    try {
-      if (navigator.share) {
-        await navigator.share(shareData);
-        return;
-      }
-      await navigator.clipboard.writeText(`${text} ${location.origin}`);
-      const button = document.querySelector(`[data-avatar-page-share="${CSS.escape(id)}"]`);
-      if (button) {
-        const original = button.textContent;
-        button.textContent = "Copied";
-        window.setTimeout(() => { button.textContent = original; }, 1200);
-      }
-    } catch (error) {
-      if (error?.name !== "AbortError") console.warn("Avatar sharing was unavailable", error);
+    const api = window.SalitaQuestAchievementSharing;
+    if (api?.openAvatar) {
+      await api.openAvatar(item.id, {context:"collection"}, button);
+      return;
     }
+    document.dispatchEvent(new CustomEvent("salita:open-avatar-share", {detail:{avatarId:item.id}}));
   }
 
   function patchCard(card) {
@@ -133,7 +138,7 @@
     if (share) {
       event.preventDefault();
       event.stopImmediatePropagation();
-      shareAvatar(share.dataset.avatarPageShare);
+      shareAvatar(share.dataset.avatarPageShare, share);
     }
   }, true);
 
@@ -145,5 +150,6 @@
   document.addEventListener("salita:avatar-case-changed", () => patchAll());
   document.addEventListener("salita:avatar-collection-changed", () => window.setTimeout(patchAll, 0));
   ensureDailyKeyReconciliation();
+  ensureUniversalShare();
   patchAll();
 })();
