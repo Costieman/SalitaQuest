@@ -23,13 +23,23 @@
     document.head.appendChild(link);
   }
 
-  function ensureMysteryRarityRoll() {
-    if (window.__salitaMysteryRarityRollV1Installed || document.querySelector('script[data-sq-mystery-rarity-roll]')) return;
+  function ensureScript({flag, selector, src, datasetKey, message}) {
+    if (window[flag] || document.querySelector(selector)) return;
     const script = document.createElement("script");
-    script.src = "./mystery-rarity-roll-v1.js?v=5.5.11";
-    script.dataset.sqMysteryRarityRoll = "true";
-    script.onerror = () => console.warn("Enhanced Mystery Pack rarity roll could not be loaded.");
+    script.src = src;
+    script.dataset[datasetKey] = "true";
+    script.onerror = () => console.warn(message);
     document.body.appendChild(script);
+  }
+
+  function ensureMysteryRarityRoll() {
+    ensureScript({
+      flag:"__salitaMysteryRarityRollV1Installed",
+      selector:'script[data-sq-mystery-rarity-roll]',
+      src:"./mystery-rarity-roll-v1.js?v=5.5.11",
+      datasetKey:"sqMysteryRarityRoll",
+      message:"Enhanced Mystery Pack rarity roll could not be loaded."
+    });
   }
 
   function ensureAvatarCollectionPage() {
@@ -40,12 +50,30 @@
       link.dataset.sqAvatarCollectionPage = "true";
       document.head.appendChild(link);
     }
-    if (window.__salitaQuestAvatarCollectionPageV2Installed || document.querySelector('script[data-sq-avatar-collection-page]')) return;
-    const script = document.createElement("script");
-    script.src = "./avatar-collection-page-v2.js?v=5.5.12";
-    script.dataset.sqAvatarCollectionPage = "true";
-    script.onerror = () => console.warn("Avatar Collection page could not be loaded.");
-    document.body.appendChild(script);
+    ensureScript({
+      flag:"__salitaQuestAvatarCollectionPageV2Installed",
+      selector:'script[data-sq-avatar-collection-page]',
+      src:"./avatar-collection-page-v2.js?v=5.5.12",
+      datasetKey:"sqAvatarCollectionPage",
+      message:"Avatar Collection page could not be loaded."
+    });
+  }
+
+  function ensureAvatarCollectionExtras() {
+    ensureScript({
+      flag:"__salitaAvatarCasePageTabV1Installed",
+      selector:'script[data-sq-avatar-case-page-tab]',
+      src:"./avatar-case-page-tab-v1.js?v=1.1",
+      datasetKey:"sqAvatarCasePageTab",
+      message:"Avatar Display Case tab could not be loaded."
+    });
+    ensureScript({
+      flag:"__salitaAvatarCardActionsV1Installed",
+      selector:'script[data-sq-avatar-card-actions]',
+      src:"./avatar-card-actions-v1.js?v=1.1",
+      datasetKey:"sqAvatarCardActions",
+      message:"Avatar card actions could not be loaded."
+    });
   }
 
   function dateKeyToNumber(value) {
@@ -175,6 +203,7 @@
   ensureAvatarCaseStyles();
   ensureMysteryRarityRoll();
   ensureAvatarCollectionPage();
+  ensureAvatarCollectionExtras();
   cleanTokenTranslations();
   const observer = new MutationObserver(records => {
     const relevant = records.some(record => [...record.addedNodes].some(node => node.nodeType === Node.ELEMENT_NODE));
