@@ -7,7 +7,7 @@
   const MODAL_ID = "achievementShareModalV4";
 
   function simplify(modal) {
-    if (!modal || modal.dataset.universalShareSimplified === "true") return;
+    if (!modal) return;
 
     const platforms = modal.querySelector("#achievementSharePlatforms");
     const actions = modal.querySelector(".achievement-share-secondary");
@@ -21,13 +21,11 @@
 
     actions.classList.add("achievement-share-universal-actions");
     actions.innerHTML = `
-      <button class="achievement-share-main-action" type="button" data-achievement-platform="whatsapp">Share</button>
-      <button class="achievement-share-download-action" type="button" data-achievement-download>Download Card</button>`;
+      <button class="achievement-share-main-action" type="button" data-achievement-platform="whatsapp">Send</button>
+      <button class="achievement-share-download-action" type="button" data-achievement-download>Save</button>`;
 
-    if (previewNote) {
-      previewNote.textContent = "Share opens the messaging-app post flow. Download saves the card as a PNG.";
-    }
-
+    if (previewNote) previewNote.hidden = true;
+    modal.classList.add("achievement-share-two-action-only");
     modal.dataset.universalShareSimplified = "true";
   }
 
