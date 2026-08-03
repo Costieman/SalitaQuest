@@ -1,9 +1,0 @@
-.avatar-page-card-art{position:relative;isolation:isolate}
-.avatar-page-card-art .avatar-page-reveal-base,.avatar-page-card-art .avatar-page-reveal-colour{position:absolute;inset:14px;width:calc(100% - 28px);height:calc(100% - 28px);object-fit:contain;object-position:center;pointer-events:none}
-.avatar-page-card-art .avatar-page-reveal-base{filter:grayscale(1) saturate(0);opacity:.48;z-index:1}
-.avatar-page-card-art .avatar-page-reveal-colour{z-index:2;clip-path:inset(calc(100% - var(--avatar-reveal,0%)) 0 0 0);transition:clip-path .28s ease}
-.avatar-page-card-art .avatar-page-status{z-index:3}
-.avatar-page-card.is-owned .avatar-page-reveal-base{opacity:0}
-.avatar-page-card.is-owned .avatar-page-reveal-colour{clip-path:inset(0 0 0 0)}
-@media(max-width:650px){.avatar-page-card-art .avatar-page-reveal-base,.avatar-page-card-art .avatar-page-reveal-colour{inset:8px;width:calc(100% - 16px);height:calc(100% - 16px)}}
-@media(prefers-reduced-motion:reduce){.avatar-page-card-art .avatar-page-reveal-colour{transition:none}}
