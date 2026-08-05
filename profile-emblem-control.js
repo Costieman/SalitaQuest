@@ -54,7 +54,7 @@
       if (!window.SalitaAvatarModel) {
         await loadScript("catalogue", `./src/features/avatar/avatar-catalogue-v1.js?v=${RELEASE_VERSION}`, "Avatar catalogue could not be loaded.");
       }
-      await loadScript("artwork-runtime", `./avatar-artwork-registry-v554.js?v=${RELEASE_VERSION}`, "Avatar artwork resolver could not be loaded.");
+      await loadScript("artwork-runtime", `./src/features/avatar/avatar-artwork-registry-v554.js?v=${RELEASE_VERSION}`, "Avatar artwork resolver could not be loaded.");
       await loadScript("hotfix-runtime", `./avatar-progression-hotfix-v551.js?v=${RELEASE_VERSION}`, "Avatar progression compatibility could not be loaded.");
       await window.SalitaAvatarHotfixReady;
       await window.SalitaAvatarArtworkReady;
