@@ -18,9 +18,11 @@ const worker = read("service-worker.js");
 const css = read("avatar-case-v1.css");
 const collectionCss = read("avatar-collection-screen-v1.css");
 const service = read("services/social-share/index.js");
+const courseManifestSource = read("src/config/course-manifest.js");
 
 new vm.Script(runtime,{filename:"avatar-case-v1.js"});
 new vm.Script(sharing,{filename:"achievement-sharing-v4.js"});
+new vm.Script(courseManifestSource,{filename:"src/config/course-manifest.js"});
 
 requireMarkers(runtime,[
   "const MAX_CASE_AVATARS = 4",
@@ -79,8 +81,8 @@ requireMarkers(loader,[
 ],"Shared avatar loader");
 
 requireMarkers(worker,[
-  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-5-9-avatar-case-r51"',
-  'const CACHE_NAME = "salita-quest-v5-5-10-persistent-navigation-r52"',
+  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-5-10-persistent-navigation-r52"',
+  'const CACHE_NAME = "salita-quest-v5-6-0-modular-bootstrap-r53"',
   'const AVATAR_CASE_DISPLAY_HOTFIX = "2026-08-01-compact-display-share-stack-1"',
   '"./avatar-case-v1.js"',
   '"./avatar-case-v1.css"',
@@ -152,9 +154,22 @@ requireMarkers(service,[
   "supportedTypes: Object.keys(SHARE_TYPE_META)"
 ],"Hosted Avatar Case contract");
 
-for (const htmlFile of ["app.html","bisaya.html"]) {
+const manifestContext = {window:{}};
+vm.createContext(manifestContext);
+vm.runInContext(courseManifestSource,manifestContext,{filename:"src/config/course-manifest.js"});
+const courseManifest = manifestContext.window.SalitaQuestCourseManifest;
+if(!courseManifest?.courses)fail("The modular course manifest was not installed");
+for (const [htmlFile,courseId] of [["app.html","tagalog"],["bisaya.html","cebuano"]]) {
   const html = read(htmlFile);
-  if (!html.includes("profile-emblem-control.js")) fail(`${htmlFile} does not load the shared avatar progression entry point`);
+  requireMarkers(html,[
+    "src/config/course-manifest.js?v=5.6.0",
+    "src/app/course-bootstrap.js?v=5.6.0",
+    `courseId: "${courseId}"`
+  ],`${htmlFile} modular entry point`);
+  const scripts=courseManifest.courses[courseId]?.scripts;
+  if(!Array.isArray(scripts)||!scripts.includes("profile-emblem-control.js?v=5.5.4")) {
+    fail(`${htmlFile} does not load the shared avatar progression entry point through its course manifest`);
+  }
 }
 
 const records = ["a","b","c","d","e"].map((id,index) => ({

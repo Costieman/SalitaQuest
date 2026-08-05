@@ -16,6 +16,8 @@ for (const file of [
   "mastery-feedback.js",
   "lesson-side-launcher.js",
   "mobile-session-refinement.js",
+  "src/config/course-manifest.js",
+  "src/app/course-bootstrap.js",
   "service-worker.js"
 ]) new vm.Script(read(file), {filename:file});
 
@@ -68,18 +70,33 @@ requireMarkers(launcher, [
   'longTerm.insertAdjacentElement("afterend", audioButton)'
 ], "Lesson pronunciation control");
 
-for (const htmlFile of ["app.html", "bisaya.html"]) {
+const manifestContext = {window:{}};
+vm.createContext(manifestContext);
+vm.runInContext(read("src/config/course-manifest.js"), manifestContext, {filename:"src/config/course-manifest.js"});
+const courseManifest = manifestContext.window.SalitaQuestCourseManifest;
+if (!courseManifest?.courses) fail("The modular course manifest was not installed.");
+
+for (const [htmlFile, courseId] of [["app.html", "tagalog"], ["bisaya.html", "cebuano"]]) {
   const html = read(htmlFile);
   requireMarkers(html, [
+    "src/config/course-manifest.js?v=5.6.0",
+    "src/app/course-bootstrap.js?v=5.6.0",
+    `courseId: "${courseId}"`
+  ], `${htmlFile} modular entry point`);
+
+  const scripts = courseManifest.courses[courseId]?.scripts;
+  if (!Array.isArray(scripts)) fail(`${courseId} has no script manifest.`);
+  const scriptSource = scripts.join("\n");
+  requireMarkers(scriptSource, [
     "ui-quality-fixes.js?v=5.4.21",
     "incorrect-order-feedback.js?v=5.4.21",
     "mastery-feedback.js?v=5.4.21",
     "lesson-side-launcher.js?v=5.4.21",
     "mobile-session-refinement.js?v=5.4.21"
   ], `${htmlFile} shared assets`);
-  const masteryIndex = html.indexOf("mastery-feedback.js?v=5.4.21");
-  const launcherIndex = html.indexOf("lesson-side-launcher.js?v=5.4.21");
-  const mobileIndex = html.indexOf("mobile-session-refinement.js?v=5.4.21");
+  const masteryIndex = scripts.indexOf("mastery-feedback.js?v=5.4.21");
+  const launcherIndex = scripts.indexOf("lesson-side-launcher.js?v=5.4.21");
+  const mobileIndex = scripts.indexOf("mobile-session-refinement.js?v=5.4.21");
   if (!(masteryIndex >= 0 && launcherIndex > masteryIndex && mobileIndex > launcherIndex)) {
     fail(`${htmlFile} has an invalid mastery → launcher → mobile load order.`);
   }
@@ -95,4 +112,4 @@ requireMarkers(serviceWorker, [
   '"./mobile-session-refinement.js"'
 ], "Offline shared UI release");
 
-console.log("Validated answer feedback, sentence correction, three-day durable mastery, Daily/Quick launchers, pronunciation hidden during idle and pre-answer production, post-answer audio, both course loaders, and offline delivery.");
+console.log("Validated answer feedback, sentence correction, three-day durable mastery, Daily/Quick launchers, pronunciation hidden during idle and pre-answer production, post-answer audio, modular course loaders, and offline delivery.");

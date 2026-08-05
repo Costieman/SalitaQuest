@@ -1,5 +1,5 @@
-const PREVIOUS_CACHE_NAME = "salita-quest-v5-5-9-avatar-case-r51";
-const CACHE_NAME = "salita-quest-v5-5-10-persistent-navigation-r52";
+const PREVIOUS_CACHE_NAME = "salita-quest-v5-5-10-persistent-navigation-r52";
+const CACHE_NAME = "salita-quest-v5-6-0-modular-bootstrap-r53";
 const AVATAR_CASE_DISPLAY_HOTFIX = "2026-08-01-compact-display-share-stack-1";
 const TOPBAR_WORLD_PROGRESS_HOTFIX = "2026-08-01-separated-heading-rail-1";
 const SHARE_IMAGE_TRANSPORT_DELIVERY = "2026-08-02-direct-loader-1";
@@ -7,7 +7,8 @@ const EXPLICIT_SHARING_ROUTER_DELIVERY = "2026-08-02-feed-private-image-router-1
 
 const CORE_FILES = [
   "./", "./index.html", "./app.html", "./bisaya.html", "./mobile-refresh.html",
-  "./style.css", "./app.js", "./manifest.webmanifest", "./icons/icon-192.png", "./icons/icon-512.png",
+  "./style.css", "./app.js", "./src/config/course-manifest.js", "./src/app/course-bootstrap.js",
+  "./manifest.webmanifest", "./icons/icon-192.png", "./icons/icon-512.png",
   "./profile-shell.css", "./profile-app.js", "./profile-emblem-control.js", "./profile-emblem-control.css",
   "./profile-install-prompt-v1.js", "./profile-install-prompt-v1.css",
   "./audio/audio_manifest.json"
