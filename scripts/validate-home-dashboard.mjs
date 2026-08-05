@@ -15,6 +15,7 @@ for (const file of [
   "clean-topbar.js",
   "profile-app.js",
   "mobile-session-refinement.js",
+  "src/config/course-manifest.js",
   "service-worker.js"
 ]) new vm.Script(read(file), {filename:file});
 
@@ -118,18 +119,35 @@ requireMarkers(keyAnimation, [
   'duration:2350'
 ], "Home-only Daily Key celebration");
 
-for (const htmlFile of ["app.html", "bisaya.html"]) {
+const manifestContext = {window:{}};
+vm.createContext(manifestContext);
+vm.runInContext(read("src/config/course-manifest.js"), manifestContext, {filename:"src/config/course-manifest.js"});
+const courseManifest = manifestContext.window.SalitaQuestCourseManifest;
+if (!courseManifest?.courses) fail("The modular course manifest was not installed.");
+
+for (const [htmlFile, courseId] of [["app.html", "tagalog"], ["bisaya.html", "cebuano"]]) {
   const html = read(htmlFile);
   requireMarkers(html, [
+    "src/config/course-manifest.js?v=5.6.0",
+    "src/app/course-bootstrap.js?v=5.6.0",
+    `courseId: "${courseId}"`
+  ], `${htmlFile} modular entry point`);
+  const course = courseManifest.courses[courseId];
+  if (!course) fail(`${courseId} is missing from the course manifest.`);
+  const styleSource = course.styles.join("\n");
+  const scriptSource = course.scripts.join("\n");
+  requireMarkers(styleSource, [
     'compact-home-dashboard.css?v=5.4.21',
     'weekly-avatar-chest.css?v=5.4.21',
-    'clean-topbar.css?v=5.4.21',
+    'clean-topbar.css?v=5.4.21'
+  ], `${htmlFile} Home release styles`);
+  requireMarkers(scriptSource, [
     'clean-topbar.js?v=5.4.21',
     'weekly-avatar-polish.js?v=5.4.21'
-  ], `${htmlFile} Home release assets`);
+  ], `${htmlFile} Home release scripts`);
 }
-if (!/profile-app\.js\?v=(?:5\.4\.21|5\.5\.2|5\.5\.3|5\.5\.4)/.test(read("app.html"))) {
-  fail("Tagalog does not load the shared profile runtime directly.");
+if (!courseManifest.courses.tagalog.scripts.some(path => /^profile-app\.js\?v=(?:5\.4\.21|5\.5\.2|5\.5\.3|5\.5\.4)$/.test(path))) {
+  fail("Tagalog does not load the shared profile runtime directly through its course manifest.");
 }
 if (!read("bisaya-app-loader.js").includes('loadScript("./profile-app.js')) fail("Bisaya does not load the shared profile runtime through its course loader.");
 
@@ -150,4 +168,4 @@ requireMarkers(serviceWorker, [
   '"./profile-app.js"'
 ], "Home offline release");
 
-console.log("Validated the focused Home dashboard, rerender-safe World Progress structure, separate desktop heading and milestone rows, non-sticky Home-only mobile World Progress flow, hidden mobile scrollbar, unclipped final milestone, reliable profile autosave, Home-only Daily Key celebration, and current offline release.");
+console.log("Validated the focused Home dashboard, rerender-safe World Progress structure, separate desktop heading and milestone rows, non-sticky Home-only mobile World Progress flow, hidden mobile scrollbar, unclipped final milestone, reliable profile autosave, Home-only Daily Key celebration, modular course loading, and current offline release.");
