@@ -1,0 +1,2455 @@
+{
+  "schemaVersion": 1,
+  "baseline": {
+    "ref": "1f954fec0af3e8dd3fecf699565aae94d4b0df75",
+    "sha": "1f954fec0af3e8dd3fecf699565aae94d4b0df75",
+    "runtime": {
+      "files": 66,
+      "bytes": 820056,
+      "lines": 17116,
+      "categories": {
+        "root-runtime": 66
+      },
+      "rootFiles": 66,
+      "compatibilityCoordinators": 0,
+      "compatibilityCoordinatorBytes": 0,
+      "compatibilityCoordinatorFiles": []
+    },
+    "boundaries": {
+      "storageCallSites": 111,
+      "storageFiles": 25,
+      "storageFilesOutsideAdapters": 25,
+      "rootStorageFiles": 25,
+      "activeProfileReaderCount": 21,
+      "activeProfileReaders": [
+        "achievement-sharing-avatar-bridge-v1.js",
+        "achievement-sharing-v4.js",
+        "avatar-artwork-registry-v554.js",
+        "avatar-card-actions-v1.js",
+        "avatar-case-v1.js",
+        "avatar-collection-page-v2.js",
+        "avatar-collection-screen-v1.js",
+        "avatar-collection-summary-v1.js",
+        "avatar-unlock-celebration-v1.js",
+        "coin-avatar-shard-shop-v1.js",
+        "coin-avatar-shop-badges-v1.js",
+        "coin-avatar-shop-reveal-v1.js",
+        "daily-key-weekday-reconciliation-v1.js",
+        "desktop-navigation-refinement.js",
+        "level-avatar-rewards-v1.js",
+        "long-term-badges-v1.js",
+        "profile-app.js",
+        "profile-shell.js",
+        "social-connections-v2.js",
+        "weekly-avatar-projected-unlock-fix-v1.js",
+        "weekly-avatar-shard-rewards-v1.js"
+      ],
+      "duplicatedStorageKeys": [
+        {
+          "key": "sessionStorage:salitaQuestActiveProfileId",
+          "owners": [
+            "achievement-sharing-avatar-bridge-v1.js",
+            "avatar-card-actions-v1.js",
+            "coin-avatar-shop-badges-v1.js",
+            "daily-key-weekday-reconciliation-v1.js",
+            "desktop-navigation-refinement.js",
+            "level-progression-v2.js",
+            "long-term-badges-v1.js"
+          ],
+          "ownerCount": 7
+        },
+        {
+          "key": "localStorage:salitaQuestLocalProfilesV1",
+          "owners": [
+            "achievement-sharing-avatar-bridge-v1.js",
+            "avatar-card-actions-v1.js",
+            "coin-avatar-shop-badges-v1.js",
+            "daily-key-weekday-reconciliation-v1.js",
+            "desktop-navigation-refinement.js",
+            "long-term-badges-v1.js"
+          ],
+          "ownerCount": 6
+        }
+      ],
+      "switchViewCallSites": 11,
+      "switchViewFilesOutsideAdapters": 4,
+      "wrapperHotspots": [
+        {
+          "target": "switchView",
+          "owners": [
+            "badge-catalogue-v2.js",
+            "desktop-navigation-refinement.js",
+            "home-reward-coordinator.js",
+            "lesson-side-launcher.js",
+            "level-progression-v2.js",
+            "mobile-session-refinement.js",
+            "weekly-avatar-polish.js"
+          ],
+          "ownerCount": 7
+        },
+        {
+          "target": "finishSession",
+          "owners": [
+            "adaptive-scenarios.js",
+            "bisaya-review-regions.js",
+            "daily-goal-refinement.js",
+            "lesson-side-launcher.js",
+            "mobile-session-refinement.js",
+            "ui-quality-fixes.js"
+          ],
+          "ownerCount": 6
+        },
+        {
+          "target": "renderExercise",
+          "owners": [
+            "adaptive-scenarios.js",
+            "lesson-side-launcher.js",
+            "mastery-feedback.js",
+            "mobile-session-refinement.js"
+          ],
+          "ownerCount": 4
+        },
+        {
+          "target": "saveState",
+          "owners": [
+            "coin-avatar-shard-shop-v1.js",
+            "coin-avatar-shop-reveal-v1.js",
+            "profile-app.js",
+            "weekly-avatar-projected-unlock-fix-v1.js"
+          ],
+          "ownerCount": 4
+        },
+        {
+          "target": "loadBossExercise",
+          "owners": [
+            "adaptive-scenarios.js",
+            "bisaya-review-regions.js"
+          ],
+          "ownerCount": 2
+        },
+        {
+          "target": "recordDailyAnswer",
+          "owners": [
+            "badge-catalogue-v2.js",
+            "daily-goal-refinement.js"
+          ],
+          "ownerCount": 2
+        },
+        {
+          "target": "updateBoss",
+          "owners": [
+            "adaptive-scenarios.js",
+            "bisaya-review-regions.js"
+          ],
+          "ownerCount": 2
+        },
+        {
+          "target": "recordDailySession",
+          "owners": [
+            "badge-catalogue-v2.js"
+          ],
+          "ownerCount": 1
+        },
+        {
+          "target": "renderBadges",
+          "owners": [
+            "badge-catalogue-v2.js"
+          ],
+          "ownerCount": 1
+        }
+      ],
+      "engineTokenHotspots": [
+        {
+          "token": "state",
+          "ownerCount": 28,
+          "owners": [
+            "achievement-sharing-avatar-bridge-v1.js",
+            "adaptive-scenarios.js",
+            "app.js",
+            "avatar-progression-migration-v1.js",
+            "badge-catalogue-v2.js",
+            "bisaya-review-regions.js",
+            "coin-avatar-shard-shop-v1.js",
+            "coin-avatar-shop-badges-v1.js",
+            "coin-avatar-shop-reveal-v1.js",
+            "coin-testing-grant-100k-v1.js",
+            "coin-testing-grant-50k-phase5-v1.js",
+            "collection-key-translation-hotfix.js",
+            "daily-goal-refinement.js",
+            "daily-key-weekday-reconciliation-v1.js",
+            "desktop-navigation-refinement.js",
+            "economy-tracking-phase6-v1.js",
+            "home-reward-coordinator.js",
+            "incorrect-order-feedback.js",
+            "key-run-refinement.js",
+            "lesson-side-launcher.js",
+            "level-progression-v2.js",
+            "mastery-feedback.js",
+            "progression-v54.js",
+            "social-connections-v2.js",
+            "ui-quality-fixes.js",
+            "weekly-avatar-chest.js",
+            "weekly-avatar-polish.js",
+            "weekly-avatar-projected-unlock-fix-v1.js"
+          ]
+        },
+        {
+          "token": "saveState",
+          "ownerCount": 15,
+          "owners": [
+            "adaptive-scenarios.js",
+            "app.js",
+            "badge-catalogue-v2.js",
+            "bisaya-review-regions.js",
+            "coin-avatar-shard-shop-v1.js",
+            "coin-avatar-shop-reveal-v1.js",
+            "daily-goal-refinement.js",
+            "home-reward-coordinator.js",
+            "key-run-refinement.js",
+            "lesson-side-launcher.js",
+            "level-progression-v2.js",
+            "profile-app.js",
+            "weekly-avatar-chest.js",
+            "weekly-avatar-polish.js",
+            "weekly-avatar-projected-unlock-fix-v1.js"
+          ]
+        },
+        {
+          "token": "switchView",
+          "ownerCount": 11,
+          "owners": [
+            "adaptive-scenarios.js",
+            "app.js",
+            "badge-catalogue-v2.js",
+            "bisaya-review-regions.js",
+            "desktop-navigation-refinement.js",
+            "home-reward-coordinator.js",
+            "key-run-refinement.js",
+            "lesson-side-launcher.js",
+            "level-progression-v2.js",
+            "mobile-session-refinement.js",
+            "weekly-avatar-polish.js"
+          ]
+        },
+        {
+          "token": "currentExercise",
+          "ownerCount": 8,
+          "owners": [
+            "adaptive-scenarios.js",
+            "app.js",
+            "bisaya-review-regions.js",
+            "daily-goal-refinement.js",
+            "incorrect-order-feedback.js",
+            "lesson-side-launcher.js",
+            "mastery-feedback.js",
+            "mobile-session-refinement.js"
+          ]
+        },
+        {
+          "token": "finishSession",
+          "ownerCount": 8,
+          "owners": [
+            "adaptive-scenarios.js",
+            "app.js",
+            "bisaya-review-regions.js",
+            "daily-goal-refinement.js",
+            "lesson-side-launcher.js",
+            "mobile-session-refinement.js",
+            "profile-app.js",
+            "ui-quality-fixes.js"
+          ]
+        },
+        {
+          "token": "session",
+          "ownerCount": 8,
+          "owners": [
+            "adaptive-scenarios.js",
+            "app.js",
+            "badge-catalogue-v2.js",
+            "bisaya-review-regions.js",
+            "daily-goal-refinement.js",
+            "lesson-side-launcher.js",
+            "mobile-session-refinement.js",
+            "ui-quality-fixes.js"
+          ]
+        },
+        {
+          "token": "toast",
+          "ownerCount": 7,
+          "owners": [
+            "adaptive-scenarios.js",
+            "app.js",
+            "bisaya-review-regions.js",
+            "profile-install-prompt-v1.js",
+            "profile-shell.js",
+            "progression-v54.js",
+            "pronunciation-release-control.js"
+          ]
+        },
+        {
+          "token": "levelInfo",
+          "ownerCount": 5,
+          "owners": [
+            "app.js",
+            "avatar-unlock-celebration-v1.js",
+            "badge-catalogue-v2.js",
+            "level-avatar-rewards-v1.js",
+            "level-progression-v2.js"
+          ]
+        },
+        {
+          "token": "MODULES",
+          "ownerCount": 5,
+          "owners": [
+            "adaptive-scenarios.js",
+            "app.js",
+            "bisaya-review-regions.js",
+            "even-progress-rail.js",
+            "progression-v54.js"
+          ]
+        },
+        {
+          "token": "renderExercise",
+          "ownerCount": 5,
+          "owners": [
+            "adaptive-scenarios.js",
+            "bisaya-review-regions.js",
+            "lesson-side-launcher.js",
+            "mastery-feedback.js",
+            "mobile-session-refinement.js"
+          ]
+        },
+        {
+          "token": "ITEMS",
+          "ownerCount": 4,
+          "owners": [
+            "adaptive-scenarios.js",
+            "app.js",
+            "collection-key-translation-hotfix.js",
+            "progression-v54.js"
+          ]
+        },
+        {
+          "token": "selectedChoice",
+          "ownerCount": 4,
+          "owners": [
+            "adaptive-scenarios.js",
+            "app.js",
+            "bisaya-review-regions.js",
+            "ui-quality-fixes.js"
+          ]
+        },
+        {
+          "token": "BADGES",
+          "ownerCount": 3,
+          "owners": [
+            "app.js",
+            "badge-catalogue-v2.js",
+            "bisaya-review-regions.js"
+          ]
+        },
+        {
+          "token": "loadBossExercise",
+          "ownerCount": 3,
+          "owners": [
+            "adaptive-scenarios.js",
+            "app.js",
+            "bisaya-review-regions.js"
+          ]
+        },
+        {
+          "token": "renderBadges",
+          "ownerCount": 3,
+          "owners": [
+            "app.js",
+            "badge-catalogue-v2.js",
+            "desktop-navigation-refinement.js"
+          ]
+        },
+        {
+          "token": "updateBoss",
+          "ownerCount": 3,
+          "owners": [
+            "adaptive-scenarios.js",
+            "app.js",
+            "bisaya-review-regions.js"
+          ]
+        }
+      ],
+      "appWindowSymbolCount": 53,
+      "customEventCount": 48,
+      "addEventListenerSites": 173,
+      "fetchSites": 9
+    },
+    "manifest": {
+      "source": "unavailable",
+      "tagalogEntries": null,
+      "cebuanoEntries": null,
+      "uniqueEntries": null
+    },
+    "records": [
+      {
+        "file": "achievement-sharing-avatar-bridge-v1.js",
+        "category": "root-runtime",
+        "bytes": 4431,
+        "lines": 115,
+        "storageCallSites": 2,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": [
+          "profiles",
+          "active-id"
+        ]
+      },
+      {
+        "file": "achievement-sharing-image-transport-v1.js",
+        "category": "root-runtime",
+        "bytes": 6293,
+        "lines": 181,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "achievement-sharing-router-v2.js",
+        "category": "root-runtime",
+        "bytes": 518,
+        "lines": 12,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "achievement-sharing-router-v3.js",
+        "category": "root-runtime",
+        "bytes": 8346,
+        "lines": 204,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "achievement-sharing-v4.js",
+        "category": "root-runtime",
+        "bytes": 41131,
+        "lines": 895,
+        "storageCallSites": 2,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": [
+          "profiles",
+          "active-id"
+        ]
+      },
+      {
+        "file": "adaptive-scenarios.js",
+        "category": "root-runtime",
+        "bytes": 14743,
+        "lines": 377,
+        "storageCallSites": 0,
+        "switchViewCallSites": 1,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "app.js",
+        "category": "root-runtime",
+        "bytes": 181417,
+        "lines": 3043,
+        "storageCallSites": 4,
+        "switchViewCallSites": 7,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "avatar-artwork-registry-v554.js",
+        "category": "root-runtime",
+        "bytes": 5920,
+        "lines": 159,
+        "storageCallSites": 2,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": [
+          "profiles",
+          "active-id"
+        ]
+      },
+      {
+        "file": "avatar-card-actions-v1.js",
+        "category": "root-runtime",
+        "bytes": 6410,
+        "lines": 165,
+        "storageCallSites": 2,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": [
+          "profiles",
+          "active-id"
+        ]
+      },
+      {
+        "file": "avatar-case-page-tab-v1.js",
+        "category": "root-runtime",
+        "bytes": 5910,
+        "lines": 147,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "avatar-case-v1.js",
+        "category": "root-runtime",
+        "bytes": 14487,
+        "lines": 325,
+        "storageCallSites": 3,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": [
+          "profiles",
+          "active-id"
+        ]
+      },
+      {
+        "file": "avatar-catalogue-v1.js",
+        "category": "root-runtime",
+        "bytes": 14245,
+        "lines": 190,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "avatar-collection-page-v2.js",
+        "category": "root-runtime",
+        "bytes": 12599,
+        "lines": 275,
+        "storageCallSites": 4,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": [
+          "profiles",
+          "active-id"
+        ]
+      },
+      {
+        "file": "avatar-collection-screen-v1.js",
+        "category": "root-runtime",
+        "bytes": 13857,
+        "lines": 323,
+        "storageCallSites": 3,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": [
+          "profiles",
+          "active-id"
+        ]
+      },
+      {
+        "file": "avatar-collection-summary-v1.js",
+        "category": "root-runtime",
+        "bytes": 3383,
+        "lines": 81,
+        "storageCallSites": 2,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": [
+          "profiles",
+          "active-id"
+        ]
+      },
+      {
+        "file": "avatar-collection-tabs-phase6-1-v1.js",
+        "category": "root-runtime",
+        "bytes": 5486,
+        "lines": 141,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "avatar-progression-hotfix-v551.js",
+        "category": "root-runtime",
+        "bytes": 10492,
+        "lines": 222,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "avatar-progression-migration-v1.js",
+        "category": "root-runtime",
+        "bytes": 9066,
+        "lines": 253,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": [
+          "profiles"
+        ]
+      },
+      {
+        "file": "avatar-unlock-celebration-v1.js",
+        "category": "root-runtime",
+        "bytes": 11498,
+        "lines": 241,
+        "storageCallSites": 4,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": [
+          "profiles",
+          "active-id"
+        ]
+      },
+      {
+        "file": "badge-catalogue-v2.js",
+        "category": "root-runtime",
+        "bytes": 17068,
+        "lines": 288,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "badge-chest-v2.js",
+        "category": "root-runtime",
+        "bytes": 15360,
+        "lines": 416,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "bisaya-app-loader.js",
+        "category": "root-runtime",
+        "bytes": 14053,
+        "lines": 240,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "bisaya-review-regions.js",
+        "category": "root-runtime",
+        "bytes": 14161,
+        "lines": 58,
+        "storageCallSites": 0,
+        "switchViewCallSites": 2,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "clean-topbar.js",
+        "category": "root-runtime",
+        "bytes": 5065,
+        "lines": 154,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "coin-avatar-shard-shop-v1.js",
+        "category": "root-runtime",
+        "bytes": 11617,
+        "lines": 244,
+        "storageCallSites": 4,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": [
+          "profiles",
+          "active-id"
+        ]
+      },
+      {
+        "file": "coin-avatar-shop-badges-v1.js",
+        "category": "root-runtime",
+        "bytes": 4109,
+        "lines": 53,
+        "storageCallSites": 2,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": [
+          "profiles",
+          "active-id"
+        ]
+      },
+      {
+        "file": "coin-avatar-shop-reveal-v1.js",
+        "category": "root-runtime",
+        "bytes": 16804,
+        "lines": 328,
+        "storageCallSites": 6,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": [
+          "profiles",
+          "active-id"
+        ]
+      },
+      {
+        "file": "coin-avatar-shop-topbar-v1.js",
+        "category": "root-runtime",
+        "bytes": 3115,
+        "lines": 59,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "coin-testing-grant-100k-v1.js",
+        "category": "root-runtime",
+        "bytes": 2109,
+        "lines": 65,
+        "storageCallSites": 3,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "coin-testing-grant-50k-phase5-v1.js",
+        "category": "root-runtime",
+        "bytes": 2080,
+        "lines": 56,
+        "storageCallSites": 3,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "collection-key-translation-hotfix.js",
+        "category": "root-runtime",
+        "bytes": 8247,
+        "lines": 218,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "compact-desktop-layout.js",
+        "category": "root-runtime",
+        "bytes": 2993,
+        "lines": 74,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "daily-goal-refinement.js",
+        "category": "root-runtime",
+        "bytes": 8206,
+        "lines": 65,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "daily-key-weekday-reconciliation-v1.js",
+        "category": "root-runtime",
+        "bytes": 5591,
+        "lines": 142,
+        "storageCallSites": 2,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": [
+          "profiles",
+          "active-id"
+        ]
+      },
+      {
+        "file": "desktop-navigation-refinement.js",
+        "category": "root-runtime",
+        "bytes": 13172,
+        "lines": 307,
+        "storageCallSites": 2,
+        "switchViewCallSites": 1,
+        "activeProfileKeys": [
+          "profiles",
+          "active-id"
+        ]
+      },
+      {
+        "file": "economy-tracking-phase6-v1.js",
+        "category": "root-runtime",
+        "bytes": 3503,
+        "lines": 78,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "even-progress-rail.js",
+        "category": "root-runtime",
+        "bytes": 2891,
+        "lines": 85,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "exercise-fixes-v545.js",
+        "category": "root-runtime",
+        "bytes": 10731,
+        "lines": 259,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "facebook-share-link-v1.js",
+        "category": "root-runtime",
+        "bytes": 1392,
+        "lines": 45,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "home-reward-coordinator.js",
+        "category": "root-runtime",
+        "bytes": 8027,
+        "lines": 192,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "incorrect-order-feedback.js",
+        "category": "root-runtime",
+        "bytes": 5880,
+        "lines": 168,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "key-run-refinement.js",
+        "category": "root-runtime",
+        "bytes": 24682,
+        "lines": 563,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "lesson-side-launcher.js",
+        "category": "root-runtime",
+        "bytes": 10061,
+        "lines": 265,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "level-avatar-rewards-v1.js",
+        "category": "root-runtime",
+        "bytes": 12786,
+        "lines": 262,
+        "storageCallSites": 4,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": [
+          "profiles",
+          "active-id"
+        ]
+      },
+      {
+        "file": "level-progression-v2.js",
+        "category": "root-runtime",
+        "bytes": 11374,
+        "lines": 187,
+        "storageCallSites": 2,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": [
+          "active-id"
+        ]
+      },
+      {
+        "file": "level-up-mobile-safety-v552.js",
+        "category": "root-runtime",
+        "bytes": 1057,
+        "lines": 31,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "long-term-badges-v1.js",
+        "category": "root-runtime",
+        "bytes": 11592,
+        "lines": 164,
+        "storageCallSites": 2,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": [
+          "profiles",
+          "active-id"
+        ]
+      },
+      {
+        "file": "mastery-feedback.js",
+        "category": "root-runtime",
+        "bytes": 11930,
+        "lines": 308,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "mobile-session-refinement.js",
+        "category": "root-runtime",
+        "bytes": 8201,
+        "lines": 214,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "mystery-rarity-roll-v1.js",
+        "category": "root-runtime",
+        "bytes": 10311,
+        "lines": 177,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "placement-onboarding-v1.js",
+        "category": "root-runtime",
+        "bytes": 16244,
+        "lines": 331,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "popup-governor-v1.js",
+        "category": "root-runtime",
+        "bytes": 6238,
+        "lines": 196,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "profile-app.js",
+        "category": "root-runtime",
+        "bytes": 15909,
+        "lines": 353,
+        "storageCallSites": 21,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": [
+          "profiles",
+          "active-id"
+        ]
+      },
+      {
+        "file": "profile-emblem-control.js",
+        "category": "root-runtime",
+        "bytes": 9125,
+        "lines": 194,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "profile-install-prompt-v1.js",
+        "category": "root-runtime",
+        "bytes": 3848,
+        "lines": 97,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "profile-shell.js",
+        "category": "root-runtime",
+        "bytes": 14276,
+        "lines": 364,
+        "storageCallSites": 19,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": [
+          "profiles",
+          "active-id"
+        ]
+      },
+      {
+        "file": "progression-v54.js",
+        "category": "root-runtime",
+        "bytes": 5734,
+        "lines": 136,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "pronunciation-release-control.js",
+        "category": "root-runtime",
+        "bytes": 2943,
+        "lines": 90,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "service-worker.js",
+        "category": "root-runtime",
+        "bytes": 11245,
+        "lines": 192,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "social-connections-v2.js",
+        "category": "root-runtime",
+        "bytes": 12737,
+        "lines": 210,
+        "storageCallSites": 6,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": [
+          "profiles",
+          "active-id"
+        ]
+      },
+      {
+        "file": "ui-quality-fixes.js",
+        "category": "root-runtime",
+        "bytes": 7689,
+        "lines": 188,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "universal-share-simplifier-v1.js",
+        "category": "root-runtime",
+        "bytes": 327,
+        "lines": 8,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "weekly-avatar-chest.js",
+        "category": "root-runtime",
+        "bytes": 19091,
+        "lines": 474,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "weekly-avatar-polish.js",
+        "category": "root-runtime",
+        "bytes": 15558,
+        "lines": 392,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "weekly-avatar-projected-unlock-fix-v1.js",
+        "category": "root-runtime",
+        "bytes": 6318,
+        "lines": 174,
+        "storageCallSites": 3,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": [
+          "profiles",
+          "active-id"
+        ]
+      },
+      {
+        "file": "weekly-avatar-shard-rewards-v1.js",
+        "category": "root-runtime",
+        "bytes": 24374,
+        "lines": 603,
+        "storageCallSites": 4,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": [
+          "profiles",
+          "active-id"
+        ]
+      }
+    ]
+  },
+  "current": {
+    "ref": "b7db34dd9f633e8bc014fde1ce04a5f54e40d3d0",
+    "sha": "b7db34dd9f633e8bc014fde1ce04a5f54e40d3d0",
+    "runtime": {
+      "files": 101,
+      "bytes": 889534,
+      "lines": 18864,
+      "categories": {
+        "compatibility-coordinator": 28,
+        "root-runtime": 38,
+        "adapter": 7,
+        "other-src": 1,
+        "config": 1,
+        "feature": 26
+      },
+      "rootFiles": 38,
+      "compatibilityCoordinators": 28,
+      "compatibilityCoordinatorBytes": 45054,
+      "compatibilityCoordinatorFiles": [
+        "achievement-sharing-avatar-bridge-v1.js",
+        "achievement-sharing-router-v2.js",
+        "achievement-sharing-router-v3.js",
+        "avatar-artwork-registry-v554.js",
+        "avatar-case-v1.js",
+        "avatar-catalogue-v1.js",
+        "avatar-collection-screen-v1.js",
+        "avatar-collection-summary-v1.js",
+        "avatar-collection-tabs-phase6-1-v1.js",
+        "avatar-progression-hotfix-v551.js",
+        "avatar-progression-migration-v1.js",
+        "badge-catalogue-v2.js",
+        "clean-topbar.js",
+        "coin-avatar-shop-badges-v1.js",
+        "coin-avatar-shop-topbar-v1.js",
+        "collection-key-translation-hotfix.js",
+        "compact-desktop-layout.js",
+        "economy-tracking-phase6-v1.js",
+        "even-progress-rail.js",
+        "facebook-share-link-v1.js",
+        "home-reward-coordinator.js",
+        "incorrect-order-feedback.js",
+        "level-avatar-rewards-v1.js",
+        "level-up-mobile-safety-v552.js",
+        "long-term-badges-v1.js",
+        "popup-governor-v1.js",
+        "pronunciation-release-control.js",
+        "social-connections-v2.js"
+      ]
+    },
+    "boundaries": {
+      "storageCallSites": 119,
+      "storageFiles": 24,
+      "storageFilesOutsideAdapters": 19,
+      "rootStorageFiles": 15,
+      "activeProfileReaderCount": 20,
+      "activeProfileReaders": [
+        "achievement-sharing-v4.js",
+        "avatar-card-actions-v1.js",
+        "avatar-unlock-celebration-v1.js",
+        "coin-avatar-shard-shop-v1.js",
+        "coin-avatar-shop-reveal-v1.js",
+        "daily-key-weekday-reconciliation-v1.js",
+        "desktop-navigation-refinement.js",
+        "profile-app.js",
+        "profile-shell.js",
+        "src/adapters/avatar/avatar-case-profile-runtime-v1.js",
+        "src/adapters/avatar/avatar-collection-profile-runtime-v1.js",
+        "src/adapters/badges/badge-catalogue-runtime-v1.js",
+        "src/adapters/badges/coin-shop-badge-runtime-v1.js",
+        "src/adapters/sharing/social-connections-runtime-v1.js",
+        "src/config/course-manifest.js",
+        "src/features/avatar/avatar-artwork-registry-v554.js",
+        "src/features/avatar/avatar-collection-summary-v1.js",
+        "src/features/avatar/level-avatar-rewards-v1.js",
+        "weekly-avatar-projected-unlock-fix-v1.js",
+        "weekly-avatar-shard-rewards-v1.js"
+      ],
+      "duplicatedStorageKeys": [
+        {
+          "key": "sessionStorage:salitaQuestActiveProfileId",
+          "owners": [
+            "avatar-card-actions-v1.js",
+            "daily-key-weekday-reconciliation-v1.js",
+            "desktop-navigation-refinement.js",
+            "level-progression-v2.js"
+          ],
+          "ownerCount": 4
+        },
+        {
+          "key": "localStorage:salitaQuestLocalProfilesV1",
+          "owners": [
+            "avatar-card-actions-v1.js",
+            "daily-key-weekday-reconciliation-v1.js",
+            "desktop-navigation-refinement.js"
+          ],
+          "ownerCount": 3
+        }
+      ],
+      "switchViewCallSites": 13,
+      "switchViewFilesOutsideAdapters": 4,
+      "wrapperHotspots": [
+        {
+          "target": "switchView",
+          "owners": [
+            "desktop-navigation-refinement.js",
+            "lesson-side-launcher.js",
+            "level-progression-v2.js",
+            "mobile-session-refinement.js",
+            "src/adapters/navigation/avatar-collections-navigation-v551.js",
+            "src/adapters/sharing/social-connections-runtime-v1.js",
+            "src/features/progression/home-reward-coordinator.js",
+            "weekly-avatar-polish.js"
+          ],
+          "ownerCount": 8
+        },
+        {
+          "target": "finishSession",
+          "owners": [
+            "adaptive-scenarios.js",
+            "bisaya-review-regions.js",
+            "daily-goal-refinement.js",
+            "lesson-side-launcher.js",
+            "mobile-session-refinement.js",
+            "ui-quality-fixes.js"
+          ],
+          "ownerCount": 6
+        },
+        {
+          "target": "renderExercise",
+          "owners": [
+            "adaptive-scenarios.js",
+            "lesson-side-launcher.js",
+            "mastery-feedback.js",
+            "mobile-session-refinement.js"
+          ],
+          "ownerCount": 4
+        },
+        {
+          "target": "saveState",
+          "owners": [
+            "coin-avatar-shard-shop-v1.js",
+            "coin-avatar-shop-reveal-v1.js",
+            "profile-app.js",
+            "weekly-avatar-projected-unlock-fix-v1.js"
+          ],
+          "ownerCount": 4
+        },
+        {
+          "target": "loadBossExercise",
+          "owners": [
+            "adaptive-scenarios.js",
+            "bisaya-review-regions.js"
+          ],
+          "ownerCount": 2
+        },
+        {
+          "target": "updateBoss",
+          "owners": [
+            "adaptive-scenarios.js",
+            "bisaya-review-regions.js"
+          ],
+          "ownerCount": 2
+        },
+        {
+          "target": "recordDailyAnswer",
+          "owners": [
+            "daily-goal-refinement.js"
+          ],
+          "ownerCount": 1
+        },
+        {
+          "target": "renderBadges",
+          "owners": [
+            "src/adapters/navigation/avatar-collections-navigation-v551.js"
+          ],
+          "ownerCount": 1
+        }
+      ],
+      "engineTokenHotspots": [
+        {
+          "token": "state",
+          "ownerCount": 27,
+          "owners": [
+            "adaptive-scenarios.js",
+            "app.js",
+            "bisaya-review-regions.js",
+            "coin-avatar-shard-shop-v1.js",
+            "coin-avatar-shop-reveal-v1.js",
+            "coin-testing-grant-100k-v1.js",
+            "coin-testing-grant-50k-phase5-v1.js",
+            "daily-goal-refinement.js",
+            "daily-key-weekday-reconciliation-v1.js",
+            "desktop-navigation-refinement.js",
+            "key-run-refinement.js",
+            "lesson-side-launcher.js",
+            "level-progression-v2.js",
+            "mastery-feedback.js",
+            "progression-v54.js",
+            "src/adapters/badges/badge-catalogue-runtime-v1.js",
+            "src/adapters/badges/coin-shop-badge-runtime-v1.js",
+            "src/features/avatar/avatar-progression-migration-v1.js",
+            "src/features/badges/badge-catalogue-v2.js",
+            "src/features/economy/economy-tracking-phase6-v1.js",
+            "src/features/interface/collection-key-translation-hotfix.js",
+            "src/features/progression/home-reward-coordinator.js",
+            "src/features/sharing/social-connections-v2.js",
+            "ui-quality-fixes.js",
+            "weekly-avatar-chest.js",
+            "weekly-avatar-polish.js",
+            "weekly-avatar-projected-unlock-fix-v1.js"
+          ]
+        },
+        {
+          "token": "saveState",
+          "ownerCount": 14,
+          "owners": [
+            "adaptive-scenarios.js",
+            "app.js",
+            "bisaya-review-regions.js",
+            "coin-avatar-shard-shop-v1.js",
+            "coin-avatar-shop-reveal-v1.js",
+            "daily-goal-refinement.js",
+            "key-run-refinement.js",
+            "lesson-side-launcher.js",
+            "level-progression-v2.js",
+            "profile-app.js",
+            "src/features/progression/home-reward-coordinator.js",
+            "weekly-avatar-chest.js",
+            "weekly-avatar-polish.js",
+            "weekly-avatar-projected-unlock-fix-v1.js"
+          ]
+        },
+        {
+          "token": "switchView",
+          "ownerCount": 12,
+          "owners": [
+            "adaptive-scenarios.js",
+            "app.js",
+            "bisaya-review-regions.js",
+            "desktop-navigation-refinement.js",
+            "key-run-refinement.js",
+            "lesson-side-launcher.js",
+            "level-progression-v2.js",
+            "mobile-session-refinement.js",
+            "src/adapters/navigation/avatar-collections-navigation-v551.js",
+            "src/adapters/sharing/social-connections-runtime-v1.js",
+            "src/features/progression/home-reward-coordinator.js",
+            "weekly-avatar-polish.js"
+          ]
+        },
+        {
+          "token": "currentExercise",
+          "ownerCount": 8,
+          "owners": [
+            "adaptive-scenarios.js",
+            "app.js",
+            "bisaya-review-regions.js",
+            "daily-goal-refinement.js",
+            "lesson-side-launcher.js",
+            "mastery-feedback.js",
+            "mobile-session-refinement.js",
+            "src/adapters/exercise/incorrect-order-feedback-runtime-v1.js"
+          ]
+        },
+        {
+          "token": "finishSession",
+          "ownerCount": 8,
+          "owners": [
+            "adaptive-scenarios.js",
+            "app.js",
+            "bisaya-review-regions.js",
+            "daily-goal-refinement.js",
+            "lesson-side-launcher.js",
+            "mobile-session-refinement.js",
+            "profile-app.js",
+            "ui-quality-fixes.js"
+          ]
+        },
+        {
+          "token": "session",
+          "ownerCount": 8,
+          "owners": [
+            "adaptive-scenarios.js",
+            "app.js",
+            "bisaya-review-regions.js",
+            "daily-goal-refinement.js",
+            "lesson-side-launcher.js",
+            "mobile-session-refinement.js",
+            "src/adapters/badges/badge-catalogue-runtime-v1.js",
+            "ui-quality-fixes.js"
+          ]
+        },
+        {
+          "token": "toast",
+          "ownerCount": 7,
+          "owners": [
+            "adaptive-scenarios.js",
+            "app.js",
+            "bisaya-review-regions.js",
+            "profile-install-prompt-v1.js",
+            "profile-shell.js",
+            "progression-v54.js",
+            "src/features/audio/pronunciation-release-control.js"
+          ]
+        },
+        {
+          "token": "MODULES",
+          "ownerCount": 5,
+          "owners": [
+            "adaptive-scenarios.js",
+            "app.js",
+            "bisaya-review-regions.js",
+            "progression-v54.js",
+            "src/features/progression/even-progress-rail.js"
+          ]
+        },
+        {
+          "token": "renderExercise",
+          "ownerCount": 5,
+          "owners": [
+            "adaptive-scenarios.js",
+            "bisaya-review-regions.js",
+            "lesson-side-launcher.js",
+            "mastery-feedback.js",
+            "mobile-session-refinement.js"
+          ]
+        },
+        {
+          "token": "ITEMS",
+          "ownerCount": 4,
+          "owners": [
+            "adaptive-scenarios.js",
+            "app.js",
+            "progression-v54.js",
+            "src/features/interface/collection-key-translation-hotfix.js"
+          ]
+        },
+        {
+          "token": "levelInfo",
+          "ownerCount": 4,
+          "owners": [
+            "app.js",
+            "avatar-unlock-celebration-v1.js",
+            "level-progression-v2.js",
+            "src/features/avatar/level-avatar-rewards-v1.js"
+          ]
+        },
+        {
+          "token": "selectedChoice",
+          "ownerCount": 4,
+          "owners": [
+            "adaptive-scenarios.js",
+            "app.js",
+            "bisaya-review-regions.js",
+            "ui-quality-fixes.js"
+          ]
+        },
+        {
+          "token": "loadBossExercise",
+          "ownerCount": 3,
+          "owners": [
+            "adaptive-scenarios.js",
+            "app.js",
+            "bisaya-review-regions.js"
+          ]
+        },
+        {
+          "token": "renderBadges",
+          "ownerCount": 3,
+          "owners": [
+            "app.js",
+            "desktop-navigation-refinement.js",
+            "src/adapters/navigation/avatar-collections-navigation-v551.js"
+          ]
+        },
+        {
+          "token": "updateBoss",
+          "ownerCount": 3,
+          "owners": [
+            "adaptive-scenarios.js",
+            "app.js",
+            "bisaya-review-regions.js"
+          ]
+        },
+        {
+          "token": "BADGES",
+          "ownerCount": 2,
+          "owners": [
+            "app.js",
+            "bisaya-review-regions.js"
+          ]
+        }
+      ],
+      "appWindowSymbolCount": 77,
+      "customEventCount": 48,
+      "addEventListenerSites": 243,
+      "fetchSites": 10
+    },
+    "manifest": {
+      "source": "module-contracts.generated.json",
+      "tagalogEntries": 34,
+      "cebuanoEntries": 31,
+      "uniqueEntries": 35
+    },
+    "records": [
+      {
+        "file": "achievement-sharing-avatar-bridge-v1.js",
+        "category": "compatibility-coordinator",
+        "bytes": 2517,
+        "lines": 60,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "achievement-sharing-image-transport-v1.js",
+        "category": "root-runtime",
+        "bytes": 6293,
+        "lines": 181,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "achievement-sharing-router-v2.js",
+        "category": "compatibility-coordinator",
+        "bytes": 539,
+        "lines": 12,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "achievement-sharing-router-v3.js",
+        "category": "compatibility-coordinator",
+        "bytes": 1017,
+        "lines": 24,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "achievement-sharing-v4.js",
+        "category": "root-runtime",
+        "bytes": 41131,
+        "lines": 895,
+        "storageCallSites": 2,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": [
+          "profiles",
+          "active-id"
+        ]
+      },
+      {
+        "file": "adaptive-scenarios.js",
+        "category": "root-runtime",
+        "bytes": 14743,
+        "lines": 377,
+        "storageCallSites": 0,
+        "switchViewCallSites": 1,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "app.js",
+        "category": "root-runtime",
+        "bytes": 181417,
+        "lines": 3043,
+        "storageCallSites": 4,
+        "switchViewCallSites": 7,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "avatar-artwork-registry-v554.js",
+        "category": "compatibility-coordinator",
+        "bytes": 978,
+        "lines": 24,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "avatar-card-actions-v1.js",
+        "category": "root-runtime",
+        "bytes": 6410,
+        "lines": 165,
+        "storageCallSites": 2,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": [
+          "profiles",
+          "active-id"
+        ]
+      },
+      {
+        "file": "avatar-case-page-tab-v1.js",
+        "category": "root-runtime",
+        "bytes": 5910,
+        "lines": 147,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "avatar-case-v1.js",
+        "category": "compatibility-coordinator",
+        "bytes": 2869,
+        "lines": 70,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "avatar-catalogue-v1.js",
+        "category": "compatibility-coordinator",
+        "bytes": 1170,
+        "lines": 30,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "avatar-collection-page-v2.js",
+        "category": "root-runtime",
+        "bytes": 11411,
+        "lines": 254,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "avatar-collection-screen-v1.js",
+        "category": "compatibility-coordinator",
+        "bytes": 2660,
+        "lines": 53,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "avatar-collection-summary-v1.js",
+        "category": "compatibility-coordinator",
+        "bytes": 1095,
+        "lines": 28,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "avatar-collection-tabs-phase6-1-v1.js",
+        "category": "compatibility-coordinator",
+        "bytes": 1103,
+        "lines": 28,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "avatar-progression-hotfix-v551.js",
+        "category": "compatibility-coordinator",
+        "bytes": 2155,
+        "lines": 45,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "avatar-progression-migration-v1.js",
+        "category": "compatibility-coordinator",
+        "bytes": 1221,
+        "lines": 30,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "avatar-unlock-celebration-v1.js",
+        "category": "root-runtime",
+        "bytes": 11498,
+        "lines": 241,
+        "storageCallSites": 4,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": [
+          "profiles",
+          "active-id"
+        ]
+      },
+      {
+        "file": "badge-catalogue-v2.js",
+        "category": "compatibility-coordinator",
+        "bytes": 2308,
+        "lines": 49,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "badge-chest-v2.js",
+        "category": "root-runtime",
+        "bytes": 15360,
+        "lines": 416,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "bisaya-app-loader.js",
+        "category": "root-runtime",
+        "bytes": 14053,
+        "lines": 240,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "bisaya-review-regions.js",
+        "category": "root-runtime",
+        "bytes": 14161,
+        "lines": 58,
+        "storageCallSites": 0,
+        "switchViewCallSites": 2,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "clean-topbar.js",
+        "category": "compatibility-coordinator",
+        "bytes": 1068,
+        "lines": 28,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "coin-avatar-shard-shop-v1.js",
+        "category": "root-runtime",
+        "bytes": 11617,
+        "lines": 244,
+        "storageCallSites": 4,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": [
+          "profiles",
+          "active-id"
+        ]
+      },
+      {
+        "file": "coin-avatar-shop-badges-v1.js",
+        "category": "compatibility-coordinator",
+        "bytes": 1994,
+        "lines": 46,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "coin-avatar-shop-reveal-v1.js",
+        "category": "root-runtime",
+        "bytes": 16804,
+        "lines": 328,
+        "storageCallSites": 6,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": [
+          "profiles",
+          "active-id"
+        ]
+      },
+      {
+        "file": "coin-avatar-shop-topbar-v1.js",
+        "category": "compatibility-coordinator",
+        "bytes": 3176,
+        "lines": 59,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "coin-testing-grant-100k-v1.js",
+        "category": "root-runtime",
+        "bytes": 2109,
+        "lines": 65,
+        "storageCallSites": 3,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "coin-testing-grant-50k-phase5-v1.js",
+        "category": "root-runtime",
+        "bytes": 2080,
+        "lines": 56,
+        "storageCallSites": 3,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "collection-key-translation-hotfix.js",
+        "category": "compatibility-coordinator",
+        "bytes": 1146,
+        "lines": 28,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "compact-desktop-layout.js",
+        "category": "compatibility-coordinator",
+        "bytes": 1104,
+        "lines": 28,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "daily-goal-refinement.js",
+        "category": "root-runtime",
+        "bytes": 8206,
+        "lines": 65,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "daily-key-weekday-reconciliation-v1.js",
+        "category": "root-runtime",
+        "bytes": 5591,
+        "lines": 142,
+        "storageCallSites": 2,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": [
+          "profiles",
+          "active-id"
+        ]
+      },
+      {
+        "file": "desktop-navigation-refinement.js",
+        "category": "root-runtime",
+        "bytes": 13172,
+        "lines": 307,
+        "storageCallSites": 2,
+        "switchViewCallSites": 1,
+        "activeProfileKeys": [
+          "profiles",
+          "active-id"
+        ]
+      },
+      {
+        "file": "economy-tracking-phase6-v1.js",
+        "category": "compatibility-coordinator",
+        "bytes": 1079,
+        "lines": 28,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "even-progress-rail.js",
+        "category": "compatibility-coordinator",
+        "bytes": 1099,
+        "lines": 28,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "exercise-fixes-v545.js",
+        "category": "root-runtime",
+        "bytes": 10731,
+        "lines": 259,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "facebook-share-link-v1.js",
+        "category": "compatibility-coordinator",
+        "bytes": 1075,
+        "lines": 24,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "home-reward-coordinator.js",
+        "category": "compatibility-coordinator",
+        "bytes": 1123,
+        "lines": 28,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "incorrect-order-feedback.js",
+        "category": "compatibility-coordinator",
+        "bytes": 2942,
+        "lines": 70,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "key-run-refinement.js",
+        "category": "root-runtime",
+        "bytes": 24682,
+        "lines": 563,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "lesson-side-launcher.js",
+        "category": "root-runtime",
+        "bytes": 10061,
+        "lines": 265,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "level-avatar-rewards-v1.js",
+        "category": "compatibility-coordinator",
+        "bytes": 1092,
+        "lines": 24,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "level-progression-v2.js",
+        "category": "root-runtime",
+        "bytes": 11374,
+        "lines": 187,
+        "storageCallSites": 2,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": [
+          "active-id"
+        ]
+      },
+      {
+        "file": "level-up-mobile-safety-v552.js",
+        "category": "compatibility-coordinator",
+        "bytes": 1111,
+        "lines": 28,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "long-term-badges-v1.js",
+        "category": "compatibility-coordinator",
+        "bytes": 2845,
+        "lines": 70,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "mastery-feedback.js",
+        "category": "root-runtime",
+        "bytes": 11930,
+        "lines": 308,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "mobile-session-refinement.js",
+        "category": "root-runtime",
+        "bytes": 8201,
+        "lines": 214,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "mystery-rarity-roll-v1.js",
+        "category": "root-runtime",
+        "bytes": 10311,
+        "lines": 177,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "placement-onboarding-v1.js",
+        "category": "root-runtime",
+        "bytes": 16244,
+        "lines": 331,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "popup-governor-v1.js",
+        "category": "compatibility-coordinator",
+        "bytes": 1071,
+        "lines": 28,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "profile-app.js",
+        "category": "root-runtime",
+        "bytes": 15929,
+        "lines": 353,
+        "storageCallSites": 21,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": [
+          "profiles",
+          "active-id"
+        ]
+      },
+      {
+        "file": "profile-emblem-control.js",
+        "category": "root-runtime",
+        "bytes": 11279,
+        "lines": 222,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "profile-install-prompt-v1.js",
+        "category": "root-runtime",
+        "bytes": 3848,
+        "lines": 97,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "profile-shell.js",
+        "category": "root-runtime",
+        "bytes": 14276,
+        "lines": 364,
+        "storageCallSites": 19,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": [
+          "profiles",
+          "active-id"
+        ]
+      },
+      {
+        "file": "progression-v54.js",
+        "category": "root-runtime",
+        "bytes": 5734,
+        "lines": 136,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "pronunciation-release-control.js",
+        "category": "compatibility-coordinator",
+        "bytes": 1147,
+        "lines": 28,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "service-worker.js",
+        "category": "root-runtime",
+        "bytes": 13759,
+        "lines": 212,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "social-connections-v2.js",
+        "category": "compatibility-coordinator",
+        "bytes": 2350,
+        "lines": 49,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "src/adapters/avatar/avatar-case-profile-runtime-v1.js",
+        "category": "adapter",
+        "bytes": 2715,
+        "lines": 84,
+        "storageCallSites": 3,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": [
+          "profiles",
+          "active-id"
+        ]
+      },
+      {
+        "file": "src/adapters/avatar/avatar-collection-profile-runtime-v1.js",
+        "category": "adapter",
+        "bytes": 2465,
+        "lines": 77,
+        "storageCallSites": 3,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": [
+          "profiles",
+          "active-id"
+        ]
+      },
+      {
+        "file": "src/adapters/badges/badge-catalogue-runtime-v1.js",
+        "category": "adapter",
+        "bytes": 3763,
+        "lines": 122,
+        "storageCallSites": 2,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": [
+          "profiles",
+          "active-id"
+        ]
+      },
+      {
+        "file": "src/adapters/badges/coin-shop-badge-runtime-v1.js",
+        "category": "adapter",
+        "bytes": 2443,
+        "lines": 78,
+        "storageCallSites": 2,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": [
+          "profiles",
+          "active-id"
+        ]
+      },
+      {
+        "file": "src/adapters/exercise/incorrect-order-feedback-runtime-v1.js",
+        "category": "adapter",
+        "bytes": 2796,
+        "lines": 78,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "src/adapters/navigation/avatar-collections-navigation-v551.js",
+        "category": "adapter",
+        "bytes": 4747,
+        "lines": 87,
+        "storageCallSites": 0,
+        "switchViewCallSites": 2,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "src/adapters/sharing/social-connections-runtime-v1.js",
+        "category": "adapter",
+        "bytes": 2045,
+        "lines": 70,
+        "storageCallSites": 5,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": [
+          "profiles",
+          "active-id"
+        ]
+      },
+      {
+        "file": "src/app/course-bootstrap.js",
+        "category": "other-src",
+        "bytes": 5513,
+        "lines": 160,
+        "storageCallSites": 15,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "src/config/course-manifest.js",
+        "category": "config",
+        "bytes": 6960,
+        "lines": 145,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": [
+          "profiles",
+          "active-id"
+        ]
+      },
+      {
+        "file": "src/features/audio/pronunciation-release-control.js",
+        "category": "feature",
+        "bytes": 2943,
+        "lines": 90,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "src/features/avatar/avatar-artwork-registry-v554.js",
+        "category": "feature",
+        "bytes": 5920,
+        "lines": 159,
+        "storageCallSites": 2,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": [
+          "profiles",
+          "active-id"
+        ]
+      },
+      {
+        "file": "src/features/avatar/avatar-case-v1.js",
+        "category": "feature",
+        "bytes": 13262,
+        "lines": 284,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "src/features/avatar/avatar-catalogue-v1.js",
+        "category": "feature",
+        "bytes": 14245,
+        "lines": 190,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "src/features/avatar/avatar-collection-screen-v1.js",
+        "category": "feature",
+        "bytes": 13057,
+        "lines": 304,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "src/features/avatar/avatar-collection-summary-v1.js",
+        "category": "feature",
+        "bytes": 3383,
+        "lines": 81,
+        "storageCallSites": 2,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": [
+          "profiles",
+          "active-id"
+        ]
+      },
+      {
+        "file": "src/features/avatar/avatar-collection-tabs-phase6-1-v1.js",
+        "category": "feature",
+        "bytes": 5486,
+        "lines": 141,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "src/features/avatar/avatar-progression-migration-v1.js",
+        "category": "feature",
+        "bytes": 9066,
+        "lines": 253,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": [
+          "profiles"
+        ]
+      },
+      {
+        "file": "src/features/avatar/avatar-progression-model-v551.js",
+        "category": "feature",
+        "bytes": 5787,
+        "lines": 133,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "src/features/avatar/level-avatar-rewards-v1.js",
+        "category": "feature",
+        "bytes": 12786,
+        "lines": 262,
+        "storageCallSites": 4,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": [
+          "profiles",
+          "active-id"
+        ]
+      },
+      {
+        "file": "src/features/badges/badge-catalogue-v2.js",
+        "category": "feature",
+        "bytes": 17594,
+        "lines": 303,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "src/features/badges/long-term-badges-v1.js",
+        "category": "feature",
+        "bytes": 10925,
+        "lines": 155,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "src/features/economy/coin-avatar-shop-badges-v1.js",
+        "category": "feature",
+        "bytes": 3137,
+        "lines": 61,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "src/features/economy/economy-tracking-phase6-v1.js",
+        "category": "feature",
+        "bytes": 3503,
+        "lines": 78,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "src/features/exercise/incorrect-order-feedback.js",
+        "category": "feature",
+        "bytes": 4892,
+        "lines": 135,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "src/features/interface/clean-topbar.js",
+        "category": "feature",
+        "bytes": 5065,
+        "lines": 154,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "src/features/interface/collection-key-translation-hotfix.js",
+        "category": "feature",
+        "bytes": 8705,
+        "lines": 228,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "src/features/interface/compact-desktop-layout.js",
+        "category": "feature",
+        "bytes": 2993,
+        "lines": 74,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "src/features/interface/level-up-mobile-safety-v552.js",
+        "category": "feature",
+        "bytes": 1057,
+        "lines": 31,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "src/features/interface/popup-governor-v1.js",
+        "category": "feature",
+        "bytes": 6238,
+        "lines": 196,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "src/features/progression/even-progress-rail.js",
+        "category": "feature",
+        "bytes": 2891,
+        "lines": 85,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "src/features/progression/home-reward-coordinator.js",
+        "category": "feature",
+        "bytes": 8027,
+        "lines": 192,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "src/features/sharing/achievement-sharing-avatar-bridge-v1.js",
+        "category": "feature",
+        "bytes": 4261,
+        "lines": 116,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "src/features/sharing/achievement-sharing-router-v3.js",
+        "category": "feature",
+        "bytes": 8346,
+        "lines": 204,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "src/features/sharing/facebook-share-link-v1.js",
+        "category": "feature",
+        "bytes": 1392,
+        "lines": 45,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "src/features/sharing/social-connections-v2.js",
+        "category": "feature",
+        "bytes": 12390,
+        "lines": 211,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "ui-quality-fixes.js",
+        "category": "root-runtime",
+        "bytes": 7689,
+        "lines": 188,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "universal-share-simplifier-v1.js",
+        "category": "root-runtime",
+        "bytes": 327,
+        "lines": 8,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "weekly-avatar-chest.js",
+        "category": "root-runtime",
+        "bytes": 19091,
+        "lines": 474,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "weekly-avatar-polish.js",
+        "category": "root-runtime",
+        "bytes": 15558,
+        "lines": 392,
+        "storageCallSites": 0,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": []
+      },
+      {
+        "file": "weekly-avatar-projected-unlock-fix-v1.js",
+        "category": "root-runtime",
+        "bytes": 6318,
+        "lines": 174,
+        "storageCallSites": 3,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": [
+          "profiles",
+          "active-id"
+        ]
+      },
+      {
+        "file": "weekly-avatar-shard-rewards-v1.js",
+        "category": "root-runtime",
+        "bytes": 24374,
+        "lines": 603,
+        "storageCallSites": 4,
+        "switchViewCallSites": 0,
+        "activeProfileKeys": [
+          "profiles",
+          "active-id"
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "runtimeFileDelta": 35,
+    "runtimeByteDelta": 69478,
+    "storageCallSiteDelta": 8,
+    "storageFilesOutsideAdaptersDelta": -6,
+    "rootStorageFilesDelta": -10,
+    "activeProfileReaderDelta": -1,
+    "tagalogStartupEntryDelta": null,
+    "cebuanoStartupEntryDelta": null
+  },
+  "decision": {
+    "verdict": "Meaningful architectural streamlining with temporary migration overhead.",
+    "meaningfulBoundaryImprovement": true,
+    "structuralOverhead": true,
+    "actions": [
+      "Consolidate active-profile lookup: 20 runtime files currently contain both profile-store keys.",
+      "Create a retirement plan for 28 compatibility coordinators; do not add coordinators without an explicit removal condition.",
+      "Do not extract Badge Chest until shared profile access and wrapper ownership have been reviewed against this report.",
+      "Approve future extraction only when it removes duplicate storage/global ownership, not merely when it relocates code."
+    ]
+  }
+}
