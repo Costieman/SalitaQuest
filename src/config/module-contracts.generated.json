@@ -35,7 +35,8 @@
       "src/features/badges/badge-catalogue-v2.js",
       "badge-chest-v2.js",
       "placement-onboarding-v1.js",
-      "social-connections-v2.js",
+      "src/adapters/sharing/social-connections-runtime-v1.js",
+      "src/features/sharing/social-connections-v2.js",
       "achievement-sharing-v4.js",
       "src/features/interface/collection-key-translation-hotfix.js"
     ],
@@ -68,16 +69,17 @@
       "src/features/badges/badge-catalogue-v2.js",
       "badge-chest-v2.js",
       "placement-onboarding-v1.js",
-      "social-connections-v2.js",
+      "src/adapters/sharing/social-connections-runtime-v1.js",
+      "src/features/sharing/social-connections-v2.js",
       "achievement-sharing-v4.js"
     ]
   },
   "summary": {
-    "modules": 70,
+    "modules": 71,
     "dependencyEdges": 183,
     "storageContracts": 21,
     "salitaEvents": 36,
-    "extractionCandidates": 29,
+    "extractionCandidates": 30,
     "prepareAdapters": 23,
     "highCoupling": 7,
     "held": 11
@@ -2530,7 +2532,7 @@
     },
     {
       "file": "service-worker.js",
-      "bytes": 13651,
+      "bytes": 13760,
       "contexts": [
         "worker"
       ],
@@ -2590,6 +2592,7 @@
         "src/adapters/badges/coin-shop-badge-runtime-v1.js",
         "src/adapters/exercise/incorrect-order-feedback-runtime-v1.js",
         "src/adapters/navigation/avatar-collections-navigation-v551.js",
+        "src/adapters/sharing/social-connections-runtime-v1.js",
         "src/app/course-bootstrap.js",
         "src/config/course-manifest.js",
         "src/features/audio/pronunciation-release-control.js",
@@ -2617,6 +2620,7 @@
         "src/features/sharing/achievement-sharing-avatar-bridge-v1.js",
         "src/features/sharing/achievement-sharing-router-v3.js",
         "src/features/sharing/facebook-share-link-v1.js",
+        "src/features/sharing/social-connections-v2.js",
         "ui-quality-fixes.js",
         "weekly-avatar-chest.js",
         "weekly-avatar-polish.js",
@@ -2649,94 +2653,6 @@
       "role": "offline-runtime",
       "readiness": "hold",
       "risk": 3
-    },
-    {
-      "file": "social-connections-v2.js",
-      "bytes": 12738,
-      "contexts": [
-        "cebuano",
-        "tagalog"
-      ],
-      "courses": [
-        "cebuano",
-        "tagalog"
-      ],
-      "references": [],
-      "loads": [],
-      "fetches": [],
-      "workers": [],
-      "coreGlobals": [
-        "switchView"
-      ],
-      "window": {
-        "provides": [
-          "__salitaQuestSocialConnectionsV2Installed",
-          "__salitaQuestSocialConnectionsV3Installed",
-          "SalitaQuestSocialConnections"
-        ],
-        "consumes": [
-          "SALITA_SOCIAL_API_BASE"
-        ]
-      },
-      "storage": [
-        {
-          "store": "localStorage",
-          "operation": "getItem",
-          "key": "salitaQuestLocalProfilesV1"
-        },
-        {
-          "store": "sessionStorage",
-          "operation": "getItem",
-          "key": "salitaQuestActiveProfileId"
-        },
-        {
-          "store": "localStorage",
-          "operation": "getItem",
-          "key": "salitaQuestSocialApiBase"
-        },
-        {
-          "store": "localStorage",
-          "operation": "getItem",
-          "key": "salitaQuestSocialApiBase"
-        },
-        {
-          "store": "localStorage",
-          "operation": "setItem",
-          "key": "salitaQuestSocialApiBase"
-        },
-        {
-          "store": "localStorage",
-          "operation": "removeItem",
-          "key": "salitaQuestSocialApiBase"
-        }
-      ],
-      "dom": {
-        "ids": [
-          "badgesView",
-          "settingsView",
-          "socialApiBaseInput",
-          "socialConnectionsStatus",
-          "socialLinksCard"
-        ],
-        "selectors": [
-          "[data-open-badges]",
-          "[data-save-social-api]",
-          "[data-social-connect]"
-        ],
-        "datasets": [
-          "socialConnect"
-        ]
-      },
-      "events": {
-        "listens": [
-          "click",
-          "message"
-        ],
-        "dispatches": []
-      },
-      "role": "feature-extension",
-      "readiness": "prepare-adapter",
-      "risk": 32
     },
     {
       "file": "src/adapters/avatar/avatar-case-profile-runtime-v1.js",
@@ -3077,6 +2993,73 @@
       "risk": 25
     },
     {
+      "file": "src/adapters/sharing/social-connections-runtime-v1.js",
+      "bytes": 2046,
+      "contexts": [
+        "cebuano",
+        "tagalog"
+      ],
+      "courses": [
+        "cebuano",
+        "tagalog"
+      ],
+      "references": [],
+      "loads": [],
+      "fetches": [],
+      "workers": [],
+      "coreGlobals": [
+        "switchView"
+      ],
+      "window": {
+        "provides": [
+          "__salitaQuestSocialConnectionsRuntimeV1Installed",
+          "SalitaQuestSocialConnectionsRuntimeV1"
+        ],
+        "consumes": [
+          "SALITA_SOCIAL_API_BASE"
+        ]
+      },
+      "storage": [
+        {
+          "store": "localStorage",
+          "operation": "getItem",
+          "key": "salitaQuestLocalProfilesV1"
+        },
+        {
+          "store": "sessionStorage",
+          "operation": "getItem",
+          "key": "salitaQuestActiveProfileId"
+        },
+        {
+          "store": "localStorage",
+          "operation": "getItem",
+          "key": "salitaQuestSocialApiBase"
+        },
+        {
+          "store": "localStorage",
+          "operation": "setItem",
+          "key": "salitaQuestSocialApiBase"
+        },
+        {
+          "store": "localStorage",
+          "operation": "removeItem",
+          "key": "salitaQuestSocialApiBase"
+        }
+      ],
+      "dom": {
+        "ids": [],
+        "selectors": [],
+        "datasets": []
+      },
+      "events": {
+        "listens": [],
+        "dispatches": []
+      },
+      "role": "feature-extension",
+      "readiness": "prepare-adapter",
+      "risk": 22
+    },
+    {
       "file": "src/app/course-bootstrap.js",
       "bytes": 5514,
       "contexts": [
@@ -3192,7 +3175,7 @@
     },
     {
       "file": "src/config/course-manifest.js",
-      "bytes": 6781,
+      "bytes": 6961,
       "contexts": [
         "bootstrap"
       ],
@@ -3215,9 +3198,9 @@
         "profile-app.js",
         "profile-emblem-control.js",
         "progression-v54.js",
-        "social-connections-v2.js",
         "src/adapters/badges/badge-catalogue-runtime-v1.js",
         "src/adapters/exercise/incorrect-order-feedback-runtime-v1.js",
+        "src/adapters/sharing/social-connections-runtime-v1.js",
         "src/features/audio/pronunciation-release-control.js",
         "src/features/badges/badge-catalogue-v2.js",
         "src/features/exercise/incorrect-order-feedback.js",
@@ -3228,6 +3211,7 @@
         "src/features/interface/popup-governor-v1.js",
         "src/features/progression/even-progress-rail.js",
         "src/features/progression/home-reward-coordinator.js",
+        "src/features/sharing/social-connections-v2.js",
         "ui-quality-fixes.js",
         "weekly-avatar-chest.js",
         "weekly-avatar-polish.js"
@@ -4574,6 +4558,59 @@
       "risk": 4
     },
     {
+      "file": "src/features/sharing/social-connections-v2.js",
+      "bytes": 12391,
+      "contexts": [
+        "cebuano",
+        "tagalog"
+      ],
+      "courses": [
+        "cebuano",
+        "tagalog"
+      ],
+      "references": [],
+      "loads": [],
+      "fetches": [],
+      "workers": [],
+      "coreGlobals": [],
+      "window": {
+        "provides": [
+          "__salitaQuestSocialConnectionsV2Installed",
+          "__salitaQuestSocialConnectionsV3Installed",
+          "SalitaQuestSocialConnections"
+        ],
+        "consumes": []
+      },
+      "storage": [],
+      "dom": {
+        "ids": [
+          "badgesView",
+          "settingsView",
+          "socialApiBaseInput",
+          "socialConnectionsStatus",
+          "socialLinksCard"
+        ],
+        "selectors": [
+          "[data-open-badges]",
+          "[data-save-social-api]",
+          "[data-social-connect]"
+        ],
+        "datasets": [
+          "socialConnect"
+        ]
+      },
+      "events": {
+        "listens": [
+          "click",
+          "message"
+        ],
+        "dispatches": []
+      },
+      "role": "feature-extension",
+      "readiness": "extraction-candidate",
+      "risk": 13
+    },
+    {
       "file": "ui-quality-fixes.js",
       "bytes": 7690,
       "contexts": [
@@ -4957,7 +4994,7 @@
     },
     {
       "from": "achievement-sharing-v4.js",
-      "to": "social-connections-v2.js",
+      "to": "src/features/sharing/social-connections-v2.js",
       "type": "window-api",
       "symbols": [
         "SalitaQuestSocialConnections"
@@ -5814,14 +5851,6 @@
       ]
     },
     {
-      "from": "social-connections-v2.js",
-      "to": "app.js",
-      "type": "core-globals",
-      "symbols": [
-        "switchView"
-      ]
-    },
-    {
       "from": "src/adapters/avatar/avatar-case-profile-runtime-v1.js",
       "to": "coin-avatar-shop-reveal-v1.js",
       "type": "window-api",
@@ -5933,6 +5962,14 @@
         "closeMobileMenu",
         "pictogram",
         "renderBadges",
+        "switchView"
+      ]
+    },
+    {
+      "from": "src/adapters/sharing/social-connections-runtime-v1.js",
+      "to": "app.js",
+      "type": "core-globals",
+      "symbols": [
         "switchView"
       ]
     },
@@ -6556,11 +6593,11 @@
         "coin-avatar-shop-reveal-v1.js",
         "desktop-navigation-refinement.js",
         "profile-app.js",
-        "social-connections-v2.js",
         "src/adapters/avatar/avatar-case-profile-runtime-v1.js",
         "src/adapters/avatar/avatar-collection-profile-runtime-v1.js",
         "src/adapters/badges/badge-catalogue-runtime-v1.js",
         "src/adapters/badges/coin-shop-badge-runtime-v1.js",
+        "src/adapters/sharing/social-connections-runtime-v1.js",
         "src/features/avatar/avatar-artwork-registry-v554.js",
         "src/features/avatar/avatar-collection-summary-v1.js",
         "src/features/avatar/level-avatar-rewards-v1.js",
@@ -6600,13 +6637,13 @@
       "store": "localStorage",
       "key": "salitaQuestSocialApiBase",
       "readers": [
-        "social-connections-v2.js"
+        "src/adapters/sharing/social-connections-runtime-v1.js"
       ],
       "writers": [
-        "social-connections-v2.js"
+        "src/adapters/sharing/social-connections-runtime-v1.js"
       ],
       "removers": [
-        "social-connections-v2.js"
+        "src/adapters/sharing/social-connections-runtime-v1.js"
       ]
     },
     {
@@ -6668,11 +6705,11 @@
         "desktop-navigation-refinement.js",
         "level-progression-v2.js",
         "profile-app.js",
-        "social-connections-v2.js",
         "src/adapters/avatar/avatar-case-profile-runtime-v1.js",
         "src/adapters/avatar/avatar-collection-profile-runtime-v1.js",
         "src/adapters/badges/badge-catalogue-runtime-v1.js",
         "src/adapters/badges/coin-shop-badge-runtime-v1.js",
+        "src/adapters/sharing/social-connections-runtime-v1.js",
         "src/features/avatar/avatar-artwork-registry-v554.js",
         "src/features/avatar/avatar-collection-summary-v1.js",
         "src/features/avatar/level-avatar-rewards-v1.js",
@@ -6753,13 +6790,13 @@
         "profile-app.js",
         "profile-emblem-control.js",
         "progression-v54.js",
-        "social-connections-v2.js",
         "src/adapters/navigation/avatar-collections-navigation-v551.js",
         "src/features/audio/pronunciation-release-control.js",
         "src/features/avatar/avatar-case-v1.js",
         "src/features/avatar/avatar-collection-screen-v1.js",
         "src/features/avatar/avatar-collection-tabs-phase6-1-v1.js",
         "src/features/sharing/achievement-sharing-router-v3.js",
+        "src/features/sharing/social-connections-v2.js",
         "weekly-avatar-chest.js",
         "weekly-avatar-shard-rewards-v1.js"
       ],
@@ -6848,7 +6885,7 @@
     {
       "name": "message",
       "listeners": [
-        "social-connections-v2.js"
+        "src/features/sharing/social-connections-v2.js"
       ],
       "dispatchers": []
     },
@@ -7522,15 +7559,21 @@
       ]
     },
     {
+      "symbol": "__salitaQuestSocialConnectionsRuntimeV1Installed",
+      "providers": [
+        "src/adapters/sharing/social-connections-runtime-v1.js"
+      ]
+    },
+    {
       "symbol": "__salitaQuestSocialConnectionsV2Installed",
       "providers": [
-        "social-connections-v2.js"
+        "src/features/sharing/social-connections-v2.js"
       ]
     },
     {
       "symbol": "__salitaQuestSocialConnectionsV3Installed",
       "providers": [
-        "social-connections-v2.js"
+        "src/features/sharing/social-connections-v2.js"
       ]
     },
     {
@@ -7786,7 +7829,13 @@
     {
       "symbol": "SalitaQuestSocialConnections",
       "providers": [
-        "social-connections-v2.js"
+        "src/features/sharing/social-connections-v2.js"
+      ]
+    },
+    {
+      "symbol": "SalitaQuestSocialConnectionsRuntimeV1",
+      "providers": [
+        "src/adapters/sharing/social-connections-runtime-v1.js"
       ]
     },
     {

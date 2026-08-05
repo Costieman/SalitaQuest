@@ -1,5 +1,5 @@
-const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-22-avatar-sharing-bridge-extraction-r75";
-const CACHE_NAME = "salita-quest-v5-6-23-badge-catalogue-extraction-r76";
+const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-23-badge-catalogue-extraction-r76";
+const CACHE_NAME = "salita-quest-v5-6-24-social-connections-extraction-r77";
 const AVATAR_CASE_DISPLAY_HOTFIX = "2026-08-01-compact-display-share-stack-1";
 const TOPBAR_WORLD_PROGRESS_HOTFIX = "2026-08-01-separated-heading-rail-1";
 const SHARE_IMAGE_TRANSPORT_DELIVERY = "2026-08-02-direct-loader-1";
@@ -39,6 +39,7 @@ const APP_ENHANCEMENTS = [
   "./src/adapters/badges/badge-catalogue-runtime-v1.js", "./src/features/badges/badge-catalogue-v2.js",
   "./badge-catalogue-v2.css", "./badge-layout-v3.css", "./badge-chest-v2.js", "./badge-chest-v2.css",
   "./placement-onboarding-v1.js", "./placement-onboarding-v1.css", "./social-connections-v2.js",
+  "./src/adapters/sharing/social-connections-runtime-v1.js", "./src/features/sharing/social-connections-v2.js",
   "./social-connections-v2.css", "./achievement-sharing-v4.js", "./achievement-sharing-v4.css",
   "./achievement-sharing-router-v2.js", "./achievement-sharing-router-v2.css", "./achievement-sharing-router-v3.js", "./src/features/sharing/achievement-sharing-router-v3.js",
   "./facebook-share-link-v1.js", "./src/features/sharing/facebook-share-link-v1.js",

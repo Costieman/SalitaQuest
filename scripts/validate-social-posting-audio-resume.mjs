@@ -13,7 +13,7 @@ const requirePatterns = (source, patterns, label) => patterns.forEach(([pattern,
   if (!pattern.test(source)) fail(`${label} is missing: ${description}`);
 });
 
-for (const file of ["social-connections-v2.js", "achievement-sharing-v4.js", "src/config/course-manifest.js", "service-worker.js"]) {
+for (const file of ["social-connections-v2.js", "src/adapters/sharing/social-connections-runtime-v1.js", "src/features/sharing/social-connections-v2.js", "achievement-sharing-v4.js", "src/config/course-manifest.js", "service-worker.js"]) {
   new vm.Script(read(file), {filename: file});
 }
 
@@ -30,10 +30,16 @@ if (!layout.includes(".badge-visual-shell") || !layout.includes(".badge-catalogu
   fail("Badge art and copy are not independently positioned");
 }
 
-const connections = read("social-connections-v2.js");
-requireMarkers(connections, [
+const connections = read("src/features/sharing/social-connections-v2.js");
+const connectionsRuntime = read("src/adapters/sharing/social-connections-runtime-v1.js");
+requireMarkers(connectionsRuntime, [
   "salitaQuestSocialApiBase",
   "SALITA_SOCIAL_API_BASE",
+  "salitaQuestLocalProfilesV1",
+  "salitaQuestActiveProfileId",
+  "SalitaQuestSocialConnectionsRuntimeV1"
+], "Social connections runtime boundary");
+requireMarkers(connections, [
   "DEFAULT_API_BASE",
   'fetch(`${base}/health`',
   "No account setup required.",
@@ -133,13 +139,15 @@ for (const [htmlFile, courseId] of [["app.html", "tagalog"], ["bisaya.html", "ce
   ]) if (!course.styles.includes(asset)) fail(`${htmlFile} does not load ${asset}`);
   for (const asset of [
     "badge-chest-v2.js?v=5.4.29",
-    "social-connections-v2.js?v=5.4.27",
+    "src/adapters/sharing/social-connections-runtime-v1.js?v=5.6.0",
+    "src/features/sharing/social-connections-v2.js?v=5.4.27",
     "achievement-sharing-v4.js?v=5.4.29"
   ]) if (!course.scripts.includes(asset)) fail(`${htmlFile} does not load ${asset}`);
   const chestIndex = course.scripts.indexOf("badge-chest-v2.js?v=5.4.29");
-  const connectionsIndex = course.scripts.indexOf("social-connections-v2.js?v=5.4.27");
+  const connectionsRuntimeIndex = course.scripts.indexOf("src/adapters/sharing/social-connections-runtime-v1.js?v=5.6.0");
+  const connectionsIndex = course.scripts.indexOf("src/features/sharing/social-connections-v2.js?v=5.4.27");
   const sharingIndex = course.scripts.indexOf("achievement-sharing-v4.js?v=5.4.29");
-  if (!(chestIndex >= 0 && connectionsIndex > chestIndex && sharingIndex > connectionsIndex)) {
+  if (!(chestIndex >= 0 && connectionsRuntimeIndex > chestIndex && connectionsIndex > connectionsRuntimeIndex && sharingIndex > connectionsIndex)) {
     fail(`${htmlFile} must load chest state, sharing service and final achievement sharing in that order`);
   }
   for (const obsolete of ["badge-sharing-v1", "social-posting-v2", "achievement-sharing-v3", "social-links-v1"]) {
@@ -149,12 +157,14 @@ for (const [htmlFile, courseId] of [["app.html", "tagalog"], ["bisaya.html", "ce
 
 const worker = read("service-worker.js");
 requireMarkers(worker, [
-  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-22-avatar-sharing-bridge-extraction-r75"',
-  'const CACHE_NAME = "salita-quest-v5-6-23-badge-catalogue-extraction-r76"',
+  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-23-badge-catalogue-extraction-r76"',
+  'const CACHE_NAME = "salita-quest-v5-6-24-social-connections-extraction-r77"',
   '"./badge-layout-v3.css"',
   '"./badge-chest-v2.js"',
   '"./badge-chest-v2.css"',
   '"./social-connections-v2.js"',
+  '"./src/adapters/sharing/social-connections-runtime-v1.js"',
+  '"./src/features/sharing/social-connections-v2.js"',
   '"./social-connections-v2.css"',
   '"./achievement-sharing-v4.js"',
   '"./achievement-sharing-v4.css"',

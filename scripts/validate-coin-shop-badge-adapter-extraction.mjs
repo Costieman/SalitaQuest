@@ -59,8 +59,8 @@ if (!(shardIndex >= 0 && shardIndex < adapterIndex && adapterIndex < featureInde
   fail("Shard shop → badge adapter → badge feature → coordinator → topbar order changed");
 
 for (const marker of [
-  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-22-avatar-sharing-bridge-extraction-r75"',
-  'const CACHE_NAME = "salita-quest-v5-6-23-badge-catalogue-extraction-r76"',
+  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-23-badge-catalogue-extraction-r76"',
+  'const CACHE_NAME = "salita-quest-v5-6-24-social-connections-extraction-r77"',
   '"./coin-avatar-shop-badges-v1.js"',
   '"./src/adapters/badges/coin-shop-badge-runtime-v1.js"',
   '"./src/features/economy/coin-avatar-shop-badges-v1.js"'

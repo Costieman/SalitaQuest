@@ -13,7 +13,7 @@ const requirePatterns = (source, patterns, label) => patterns.forEach(([pattern,
   if (!pattern.test(source)) fail(`${label} is missing: ${description}`);
 });
 
-for (const file of ["achievement-sharing-v4.js", "social-connections-v2.js", "src/config/course-manifest.js"]) {
+for (const file of ["achievement-sharing-v4.js", "social-connections-v2.js", "src/adapters/sharing/social-connections-runtime-v1.js", "src/features/sharing/social-connections-v2.js", "src/config/course-manifest.js"]) {
   new vm.Script(read(file), {filename: file});
 }
 
@@ -53,7 +53,7 @@ requirePatterns(sharing, [
   [/credentials\s*:\s*"omit"/, "credential-free public card upload"]
 ], "Stable hosted-sharing client");
 
-const connections = read("social-connections-v2.js");
+const connections = read("src/features/sharing/social-connections-v2.js");
 requireMarkers(connections, [
   'const DEFAULT_API_BASE = "https://salita-quest-social-share-zvxenj6xcq-as.a.run.app"',
   'fetch(`${base}/health`',
@@ -127,7 +127,7 @@ requirePatterns(service, [
 if (service.includes('app.get("/healthz"')) fail("The service must avoid Cloud Run's reserved health path");
 if (/noindex|nofollow/.test(service)) fail("The hosted service must not block social crawlers");
 
-for (const file of ["services/social-share/index.js", "social-connections-v2.js", "achievement-sharing-v4.js"]) {
+for (const file of ["services/social-share/index.js", "social-connections-v2.js", "src/adapters/sharing/social-connections-runtime-v1.js", "src/features/sharing/social-connections-v2.js", "achievement-sharing-v4.js"]) {
   const check = spawnSync("node", ["--check", file], {encoding: "utf8"});
   if (check.status !== 0) fail(`${file} failed syntax check: ${check.stderr}`);
 }
@@ -181,16 +181,19 @@ for (const [htmlFile, courseId] of [["app.html", "tagalog"], ["bisaya.html", "ce
   ]) if (!course.styles.includes(asset)) fail(`${htmlFile} does not load ${asset}`);
   for (const asset of [
     "badge-chest-v2.js?v=5.4.29",
-    "social-connections-v2.js?v=5.4.27",
+    "src/adapters/sharing/social-connections-runtime-v1.js?v=5.6.0",
+    "src/features/sharing/social-connections-v2.js?v=5.4.27",
     "achievement-sharing-v4.js?v=5.4.29"
   ]) if (!course.scripts.includes(asset)) fail(`${htmlFile} does not load ${asset}`);
 }
 
 const worker = read("service-worker.js");
 requireMarkers(worker, [
-  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-22-avatar-sharing-bridge-extraction-r75"',
-  'const CACHE_NAME = "salita-quest-v5-6-23-badge-catalogue-extraction-r76"',
+  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-23-badge-catalogue-extraction-r76"',
+  'const CACHE_NAME = "salita-quest-v5-6-24-social-connections-extraction-r77"',
   '"./social-connections-v2.js"',
+  '"./src/adapters/sharing/social-connections-runtime-v1.js"',
+  '"./src/features/sharing/social-connections-v2.js"',
   '"./badge-chest-v2.js"',
   '"./achievement-sharing-v4.js"',
   '"./achievement-sharing-v4.css"',
