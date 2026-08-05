@@ -7,7 +7,7 @@ on:
     paths:
       - "*.js"
       - "src/**/*.js"
-      - "scripts/generate-module-contract-inventory.mjs"
+      - "scripts/generate-module-contract-inventory-v2.mjs"
       - ".github/workflows/generate-module-contract-inventory.yml"
 
 permissions:
@@ -27,10 +27,10 @@ jobs:
         with:
           node-version: "20"
       - name: Generate inventory
-        run: node scripts/generate-module-contract-inventory.mjs --write
+        run: node scripts/generate-module-contract-inventory-v2.mjs --write
       - name: Validate generated files
         run: |
-          node scripts/generate-module-contract-inventory.mjs --check
+          node scripts/generate-module-contract-inventory-v2.mjs --check
           git diff --check
       - name: Commit generated inventory
         run: |
@@ -41,5 +41,5 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add docs/MODULE_CONTRACT_INVENTORY.md src/config/module-contracts.generated.json
-          git commit -m "Generate module contract inventory"
+          git commit -m "Regenerate precise module contract inventory"
           git push origin HEAD:agent/module-contract-inventory
