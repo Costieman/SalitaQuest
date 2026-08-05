@@ -84,7 +84,7 @@
 ### Phase A — move low-coupling feature files first
 
 - `src/features/avatar/avatar-catalogue-v1.js` — risk 3; 1 engine globals; 0 storage operations.
-- `facebook-share-link-v1.js` — risk 4; 0 engine globals; 0 storage operations.
+- `src/features/sharing/facebook-share-link-v1.js` — risk 4; 0 engine globals; 0 storage operations.
 - `src/features/avatar/avatar-progression-migration-v1.js` — risk 7; 1 engine globals; 0 storage operations.
 - `src/features/interface/level-up-mobile-safety-v552.js` — risk 8; 0 engine globals; 0 storage operations.
 - `src/features/sharing/achievement-sharing-router-v3.js` — risk 8; 0 engine globals; 0 storage operations.
@@ -234,7 +234,7 @@
 | `__salitaCoinTestingGrant100kV1Installed` | coin-testing-grant-100k-v1.js |
 | `__salitaCoinTestingGrant50kPhase5V1Installed` | coin-testing-grant-50k-phase5-v1.js |
 | `__salitaEconomyTrackingPhase6V2Installed` | economy-tracking-phase6-v1.js |
-| `__salitaFacebookShareLinkV1Installed` | facebook-share-link-v1.js |
+| `__salitaFacebookShareLinkV1Installed` | src/features/sharing/facebook-share-link-v1.js |
 | `__salitaQuestAchievementSharingAvatarCompatibilityV558Installed` | achievement-sharing-avatar-bridge-v1.js |
 | `__salitaQuestAchievementSharingRouterV3Installed` | src/features/sharing/achievement-sharing-router-v3.js |
 | `__salitaQuestAchievementSharingV4Installed` | achievement-sharing-v4.js |
@@ -285,7 +285,7 @@
 | `SalitaAvatarUnlockCelebration` | avatar-unlock-celebration-v1.js |
 | `SalitaCoinAvatarShop` | coin-avatar-shard-shop-v1.js |
 | `SalitaEconomyTrackingPhase6` | economy-tracking-phase6-v1.js |
-| `SalitaFacebookShareLink` | facebook-share-link-v1.js |
+| `SalitaFacebookShareLink` | src/features/sharing/facebook-share-link-v1.js |
 | `SalitaLevelAvatarRewards` | level-avatar-rewards-v1.js |
 | `SalitaLevelProgression` | level-progression-v2.js |
 | `SalitaLevelUpMobileSafety` | src/features/interface/level-up-mobile-safety-v552.js |

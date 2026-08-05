@@ -62,3 +62,5 @@ Before extracting these files, introduce an explicit engine adapter that owns ac
 - Keep the original repository backup and the modular-bootstrap rollback point available throughout the migration.
 
 7. `home-reward-coordinator.js` — completed as `src/features/progression/home-reward-coordinator.js`, with the root compatibility URL retained through r61.
+
+8. `facebook-share-link-v1.js` — completed as `src/features/sharing/facebook-share-link-v1.js`, with the root compatibility URL retained through r62.

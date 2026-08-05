@@ -1,0 +1,42 @@
+name: Validate Facebook share link module extraction
+on:
+  pull_request:
+    paths:
+      - "facebook-share-link-v1.js"
+      - "src/features/sharing/facebook-share-link-v1.js"
+      - "achievement-sharing-avatar-bridge-v1.js"
+      - "service-worker.js"
+      - "scripts/**"
+      - "src/config/module-contracts.generated.json"
+      - "docs/MODULE_CONTRACT_INVENTORY.md"
+      - "docs/MODULE_EXTRACTION_PLAN.md"
+      - ".github/workflows/validate-facebook-share-link-module-extraction.yml"
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Validate share-link extraction
+        run: node scripts/validate-facebook-share-link-module-extraction.mjs
+      - name: Validate sharing transport and router
+        run: |
+          node scripts/validate-achievement-image-transport.mjs
+          node scripts/validate-achievement-sharing-router-module-extraction.mjs
+          node scripts/validate-hosted-achievement-sharing.mjs
+          node scripts/validate-placement-sharing.mjs
+          node scripts/validate-social-posting-audio-resume.mjs
+      - name: Validate Avatar Progression integration
+        run: node scripts/validate-avatar-progression-v550.mjs
+      - name: Validate Bisaya and modular bootstrap
+        run: |
+          node scripts/validate-bisaya-audio-library.mjs
+          python3 scripts/validate_modular_bootstrap.py
+      - name: Validate deterministic contract inventory
+        run: node scripts/generate-module-contract-inventory-v2.mjs --check
+      - name: Check whitespace
+        run: git diff --check

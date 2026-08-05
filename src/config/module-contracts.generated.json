@@ -79,7 +79,7 @@
   "modules": [
     {
       "file": "achievement-sharing-avatar-bridge-v1.js",
-      "bytes": 4432,
+      "bytes": 4453,
       "contexts": [
         "cebuano",
         "tagalog"
@@ -89,10 +89,10 @@
         "tagalog"
       ],
       "references": [
-        "facebook-share-link-v1.js"
+        "src/features/sharing/facebook-share-link-v1.js"
       ],
       "loads": [
-        "facebook-share-link-v1.js"
+        "src/features/sharing/facebook-share-link-v1.js"
       ],
       "fetches": [],
       "workers": [],
@@ -2102,43 +2102,6 @@
       "risk": 57
     },
     {
-      "file": "facebook-share-link-v1.js",
-      "bytes": 1393,
-      "contexts": [
-        "cebuano",
-        "tagalog"
-      ],
-      "courses": [
-        "cebuano",
-        "tagalog"
-      ],
-      "references": [],
-      "loads": [],
-      "fetches": [],
-      "workers": [],
-      "coreGlobals": [],
-      "window": {
-        "provides": [
-          "__salitaFacebookShareLinkV1Installed",
-          "SalitaFacebookShareLink"
-        ],
-        "consumes": []
-      },
-      "storage": [],
-      "dom": {
-        "ids": [],
-        "selectors": [],
-        "datasets": []
-      },
-      "events": {
-        "listens": [],
-        "dispatches": []
-      },
-      "role": "feature-extension",
-      "readiness": "extraction-candidate",
-      "risk": 4
-    },
-    {
       "file": "incorrect-order-feedback.js",
       "bytes": 5881,
       "contexts": [
@@ -3138,7 +3101,7 @@
     },
     {
       "file": "service-worker.js",
-      "bytes": 11949,
+      "bytes": 12027,
       "contexts": [
         "worker"
       ],
@@ -3167,6 +3130,7 @@
         "desktop-navigation-refinement.js",
         "even-progress-rail.js",
         "exercise-fixes-v545.js",
+        "facebook-share-link-v1.js",
         "home-reward-coordinator.js",
         "incorrect-order-feedback.js",
         "key-run-refinement.js",
@@ -3196,6 +3160,7 @@
         "src/features/progression/even-progress-rail.js",
         "src/features/progression/home-reward-coordinator.js",
         "src/features/sharing/achievement-sharing-router-v3.js",
+        "src/features/sharing/facebook-share-link-v1.js",
         "ui-quality-fixes.js",
         "weekly-avatar-chest.js",
         "weekly-avatar-polish.js",
@@ -3993,6 +3958,43 @@
       "risk": 8
     },
     {
+      "file": "src/features/sharing/facebook-share-link-v1.js",
+      "bytes": 1393,
+      "contexts": [
+        "cebuano",
+        "tagalog"
+      ],
+      "courses": [
+        "cebuano",
+        "tagalog"
+      ],
+      "references": [],
+      "loads": [],
+      "fetches": [],
+      "workers": [],
+      "coreGlobals": [],
+      "window": {
+        "provides": [
+          "__salitaFacebookShareLinkV1Installed",
+          "SalitaFacebookShareLink"
+        ],
+        "consumes": []
+      },
+      "storage": [],
+      "dom": {
+        "ids": [],
+        "selectors": [],
+        "datasets": []
+      },
+      "events": {
+        "listens": [],
+        "dispatches": []
+      },
+      "role": "feature-extension",
+      "readiness": "extraction-candidate",
+      "risk": 4
+    },
+    {
       "file": "ui-quality-fixes.js",
       "bytes": 7690,
       "contexts": [
@@ -4280,7 +4282,7 @@
   "edges": [
     {
       "from": "achievement-sharing-avatar-bridge-v1.js",
-      "to": "facebook-share-link-v1.js",
+      "to": "src/features/sharing/facebook-share-link-v1.js",
       "type": "loads"
     },
     {
@@ -6434,7 +6436,7 @@
     {
       "symbol": "__salitaFacebookShareLinkV1Installed",
       "providers": [
-        "facebook-share-link-v1.js"
+        "src/features/sharing/facebook-share-link-v1.js"
       ]
     },
     {
@@ -6750,7 +6752,7 @@
     {
       "symbol": "SalitaFacebookShareLink",
       "providers": [
-        "facebook-share-link-v1.js"
+        "src/features/sharing/facebook-share-link-v1.js"
       ]
     },
     {

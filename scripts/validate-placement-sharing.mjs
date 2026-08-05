@@ -117,10 +117,10 @@ for (const asset of [
   '"./src/config/course-manifest.js"',
   '"./src/app/course-bootstrap.js"'
 ]) if (!worker.includes(asset)) fail(`Offline cache is missing ${asset}`);
-if (!worker.includes('const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-7-achievement-sharing-router-extraction-r60"')) {
+if (!worker.includes('const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-8-home-reward-coordinator-extraction-r61"')) {
   fail("Previous service-worker cache boundary is missing");
 }
-if (!worker.includes('const CACHE_NAME = "salita-quest-v5-6-8-home-reward-coordinator-extraction-r61"')) {
+if (!worker.includes('const CACHE_NAME = "salita-quest-v5-6-9-facebook-share-link-extraction-r62"')) {
   fail("Current modular-bootstrap service-worker cache is missing");
 }
 
