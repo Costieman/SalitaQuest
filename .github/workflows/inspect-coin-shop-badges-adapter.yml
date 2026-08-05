@@ -4,9 +4,10 @@ on:
     branches:
       - agent/audit-coin-shop-badges-adapter
 permissions:
-  contents: read
+  contents: write
 jobs:
   inspect:
+    if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -17,24 +18,44 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y ripgrep
-      - name: Inspect ownership and consumers
+      - name: Persist ownership and consumer audit
         shell: bash
         run: |
           set -euo pipefail
-          echo '=== target metadata ==='
-          wc -l -c coin-avatar-shop-badges-v1.js
-          sha256sum coin-avatar-shop-badges-v1.js
-          node --check coin-avatar-shop-badges-v1.js
-          echo '=== exact target, install flag and ready event references ==='
-          rg -n --hidden --glob '!node_modules/**' --glob '!.git/**' 'coin-avatar-shop-badges-v1\.js|__salitaCoinAvatarShopBadgesV1Installed|salita:coin-shop-badges-ready' . || true
-          echo '=== badge catalogue owners and consumers ==='
-          rg -n --hidden --glob '!node_modules/**' --glob '!.git/**' '(^|[^A-Za-z0-9_])(BADGES|syncEarned|renderCatalogue)([^A-Za-z0-9_]|$)' . || true
-          echo '=== coin economy and profile ownership ==='
-          rg -n --hidden --glob '!node_modules/**' --glob '!.git/**' 'coinEconomy|salitaQuestLocalProfilesV1|salitaQuestActiveProfileId|SalitaAvatarModel' coin-avatar-shop-badges-v1.js app.js badge-catalogue-v2.js long-term-badges-v1.js profile-app.js scripts src || true
-          echo '=== service worker and loader references ==='
-          rg -n 'PREVIOUS_CACHE_NAME|CACHE_NAME|coin-avatar-shop-badges-v1' service-worker.js profile-emblem-control.js mobile-refresh.html scripts .github/workflows || true
-          echo '=== generated inventory entries ==='
-          node - <<'NODE'
+          report=docs/COIN_SHOP_BADGES_ADAPTER_AUDIT.tmp.md
+          {
+            echo '# Temporary coin shop badges adapter audit'
+            echo
+            echo '## Target metadata'
+            echo '```text'
+            wc -l -c coin-avatar-shop-badges-v1.js
+            sha256sum coin-avatar-shop-badges-v1.js
+            node --check coin-avatar-shop-badges-v1.js
+            echo '```'
+            echo
+            echo '## Exact target, install flag and ready event references'
+            echo '```text'
+            rg -n --hidden --glob '!node_modules/**' --glob '!.git/**' --glob '!docs/COIN_SHOP_BADGES_ADAPTER_AUDIT.tmp.md' 'coin-avatar-shop-badges-v1\.js|__salitaCoinAvatarShopBadgesV1Installed|salita:coin-shop-badges-ready' . || true
+            echo '```'
+            echo
+            echo '## Badge catalogue owners and consumers'
+            echo '```text'
+            rg -n --hidden --glob '!node_modules/**' --glob '!.git/**' --glob '!docs/COIN_SHOP_BADGES_ADAPTER_AUDIT.tmp.md' '(^|[^A-Za-z0-9_])(BADGES|syncEarned|renderCatalogue)([^A-Za-z0-9_]|$)' . || true
+            echo '```'
+            echo
+            echo '## Coin economy and profile ownership'
+            echo '```text'
+            rg -n --hidden --glob '!node_modules/**' --glob '!.git/**' --glob '!docs/COIN_SHOP_BADGES_ADAPTER_AUDIT.tmp.md' 'coinEconomy|salitaQuestLocalProfilesV1|salitaQuestActiveProfileId|SalitaAvatarModel' coin-avatar-shop-badges-v1.js app.js badge-catalogue-v2.js long-term-badges-v1.js profile-app.js scripts src || true
+            echo '```'
+            echo
+            echo '## Service worker and loader references'
+            echo '```text'
+            rg -n 'PREVIOUS_CACHE_NAME|CACHE_NAME|coin-avatar-shop-badges-v1' service-worker.js profile-emblem-control.js mobile-refresh.html scripts .github/workflows || true
+            echo '```'
+            echo
+            echo '## Generated inventory entries'
+            echo '```json'
+            node - <<'NODE'
           const fs=require('fs');
           const data=JSON.parse(fs.readFileSync('src/config/module-contracts.generated.json','utf8'));
           const needles=['coin-avatar-shop-badges-v1.js','BADGES','syncEarned','renderCatalogue','salita:coin-shop-badges-ready'];
@@ -50,3 +71,10 @@ jobs:
           walk(data);
           console.log(JSON.stringify(matches,null,2));
           NODE
+            echo '```'
+          } > "$report"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$report"
+          git commit -m "Persist coin shop badges adapter audit"
+          git push origin HEAD:agent/audit-coin-shop-badges-adapter
