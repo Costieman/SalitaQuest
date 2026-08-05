@@ -87,6 +87,16 @@
         "Coin avatar shard shop could not be loaded."
       );
       await loadScript(
+        "coin-avatar-shop-badge-runtime",
+        `./src/adapters/badges/coin-shop-badge-runtime-v1.js?v=${COIN_SHOP_VERSION}`,
+        "Coin shop badge runtime adapter could not be loaded."
+      );
+      await loadScript(
+        "coin-avatar-shop-badge-family",
+        `./src/features/economy/coin-avatar-shop-badges-v1.js?v=${COIN_SHOP_VERSION}`,
+        "Coin shop badge family could not be loaded."
+      );
+      await loadScript(
         "coin-avatar-shop-badges",
         `./coin-avatar-shop-badges-v1.js?v=${COIN_SHOP_VERSION}`,
         "Coin shop badge catalogue could not be loaded."

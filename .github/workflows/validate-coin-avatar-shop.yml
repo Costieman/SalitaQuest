@@ -6,9 +6,12 @@ on:
       - "coin-avatar-shard-shop-v1.js"
       - "coin-avatar-shard-shop-v1.css"
       - "coin-avatar-shop-badges-v1.js"
+      - "src/adapters/badges/coin-shop-badge-runtime-v1.js"
+      - "src/features/economy/coin-avatar-shop-badges-v1.js"
       - "profile-emblem-control.js"
       - "weekly-avatar-shard-rewards-v1.js"
       - "scripts/validate-coin-avatar-shop.mjs"
+      - "scripts/validate-coin-shop-badge-adapter-extraction.mjs"
       - ".github/workflows/validate-coin-avatar-shop.yml"
   workflow_dispatch:
 
@@ -22,5 +25,5 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 20
       - run: node scripts/validate-coin-avatar-shop.mjs

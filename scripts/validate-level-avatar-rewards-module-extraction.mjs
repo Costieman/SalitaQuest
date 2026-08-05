@@ -33,8 +33,10 @@ if (loader.includes('`./level-avatar-rewards-v1.js?v=${RELEASE_VERSION}`')) fail
 if (!refresh.includes('`./src/features/avatar/level-avatar-rewards-v1.js?v=${RELEASE}`') || refresh.includes('`./level-avatar-rewards-v1.js?v=${RELEASE}`')) fail("Mobile refresh delivery changed");
 const previousCache = worker.match(/const PREVIOUS_CACHE_NAME = "([^"]+)"/)?.[1] || "";
 const currentCache = worker.match(/const CACHE_NAME = "([^"]+)"/)?.[1] || "";
-if (![previousCache,currentCache].some(name => name.endsWith("level-avatar-rewards-extraction-r68"))) {
-  fail(`Level reward extraction cache boundary is no longer retained: ${previousCache} → ${currentCache}`);
+const previousRevision = Number(previousCache.match(/-r(\d+)$/)?.[1] || 0);
+const currentRevision = Number(currentCache.match(/-r(\d+)$/)?.[1] || 0);
+if (previousRevision < 68 || currentRevision <= previousRevision) {
+  fail(`Service-worker revisions no longer advance beyond the level reward extraction: ${previousCache} → ${currentCache}`);
 }
 for (const marker of ['"./level-avatar-rewards-v1.js"','"./src/features/avatar/level-avatar-rewards-v1.js"'])
   if (!worker.includes(marker)) fail(`Offline delivery missing ${marker}`);

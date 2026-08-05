@@ -78,3 +78,5 @@ Before extracting these files, introduce an explicit engine adapter that owns ac
 14. `level-avatar-rewards-v1.js` — completed as `src/features/avatar/level-avatar-rewards-v1.js`, with the root compatibility URL retained through r68.
 
 15. `avatar-progression-hotfix-v551.js` — split into `src/features/avatar/avatar-progression-model-v551.js` and `src/adapters/navigation/avatar-collections-navigation-v551.js`; the root file remains an ordered readiness coordinator through r69.
+
+16. `coin-avatar-shop-badges-v1.js` — adapter-led split into `src/adapters/badges/coin-shop-badge-runtime-v1.js` and `src/features/economy/coin-avatar-shop-badges-v1.js`; the historical root remains the ordered compatibility coordinator through r70.
