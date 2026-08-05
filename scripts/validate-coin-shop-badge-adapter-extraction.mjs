@@ -44,8 +44,8 @@ if (/localStorage\.(?:setItem|removeItem|clear)\(/.test(adapter) || /sessionStor
 for (const prohibited of ["lt_coins_500000","chain(","completion(","localStorage","sessionStorage","globalValue","BADGES","coinEconomy"])
   if (root.includes(prohibited)) fail(`Root coordinator still owns ${prohibited}`);
 for (const marker of [
-  'const ADAPTER_URL = "./src/adapters/badges/coin-shop-badge-runtime-v1.js?v=5.6.4"',
-  'const FEATURE_URL = "./src/features/economy/coin-avatar-shop-badges-v1.js?v=5.6.4"',
+  'const ADAPTER_URL = "./src/adapters/badges/coin-shop-badge-runtime-v1.js?v=sandbox-deletion-pass-1"',
+  'const FEATURE_URL = "./src/features/economy/coin-avatar-shop-badges-v1.js?v=sandbox-deletion-pass-1"',
   'window.__salitaCoinAvatarShopBadgesV1Installed = true',
   'feature.install(runtime)', 'window.setTimeout(install, 120)'
 ]) if (!root.includes(marker)) fail(`Root coordinator is missing ${marker}`);

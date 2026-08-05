@@ -23,7 +23,7 @@
     if (document.querySelector('link[data-avatar-case-page-tab-style]')) return;
     const link = document.createElement("link");
     link.rel = "stylesheet";
-    link.href = "./avatar-case-page-tab-v1.css?v=1";
+    link.href = "./avatar-case-page-tab.css?v=sandbox-deletion-pass-1";
     link.dataset.avatarCasePageTabStyle = "true";
     document.head.appendChild(link);
   }

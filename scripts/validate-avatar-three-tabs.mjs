@@ -21,6 +21,6 @@ if (!css.includes('grid-template-columns:repeat(3,minmax(0,1fr))')) fail('Tab ba
 if (!css.includes('.sq-avatar-case-pane[hidden]')) fail('Avatar Case pane must be independently hideable.');
 if (!css.includes('.sq-avatar-collection-pane[hidden]')) fail('Collection pane must be independently hideable.');
 if (!css.includes('.sq-avatar-statistics-pane[hidden]')) fail('Statistics pane must be independently hideable.');
-if (!loader.includes('avatar-collection-tabs-phase6-1-v1.css?v=5.7.4')) fail('Three-tab CSS is not loaded.');
-if (!loader.includes('avatar-collection-tabs-phase6-1-v1.js?v=5.7.4')) fail('Three-tab runtime is not loaded.');
+if (!loader.includes('avatar-collection-tabs-phase6-1-v1.css?v=sandbox-deletion-pass-1')) fail('Three-tab CSS is not loaded.');
+if (!loader.includes('avatar-collection-tabs-phase6-1-v1.js?v=sandbox-deletion-pass-1')) fail('Three-tab runtime is not loaded.');
 console.log('Validated separate Avatar Case, Collection and Statistics tabs.');

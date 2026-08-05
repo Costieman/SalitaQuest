@@ -5,8 +5,8 @@ import vm from "node:vm";
 const root = process.cwd();
 const read = file => fs.readFileSync(path.join(root,file),"utf8");
 const fail = message => { throw new Error(message); };
-const rootFile = "popup-governor-v1.js";
-const moduleFile = "src/features/interface/popup-governor-v1.js";
+const rootFile = "popup-governor.js";
+const moduleFile = "src/features/interface/popup-governor.js";
 const compatibility = read(rootFile);
 const feature = read(moduleFile);
 const manifestSource = read("src/config/course-manifest.js");
@@ -17,7 +17,7 @@ new vm.Script(compatibility,{filename:rootFile});
 new vm.Script(feature,{filename:moduleFile});
 
 for (const marker of [
-  'const TARGET = "./src/features/interface/popup-governor-v1.js?v=5.5.3"',
+  'const TARGET = "./src/features/interface/popup-governor.js?v=sandbox-deletion-pass-1"',
   "document.currentScript",
   "document.write",
   "script.async = false",
@@ -70,18 +70,18 @@ if (!courses) fail("Course manifest was not installed");
 for (const courseId of ["tagalog","cebuano"]) {
   const scripts = courses[courseId]?.scripts;
   if (!Array.isArray(scripts)) fail(`${courseId} scripts are missing`);
-  const mobile = scripts.indexOf("mobile-session-refinement.js?v=5.4.21");
-  const governor = scripts.indexOf("src/features/interface/popup-governor-v1.js?v=5.5.3");
-  const levels = scripts.indexOf("level-progression-v2.js?v=5.5.3");
+  const mobile = scripts.indexOf("mobile-session-refinement.js?v=sandbox-deletion-pass-1");
+  const governor = scripts.indexOf("src/features/interface/popup-governor.js?v=sandbox-deletion-pass-1");
+  const levels = scripts.indexOf("level-progression.js?v=sandbox-deletion-pass-1");
   if (!(mobile >= 0 && governor > mobile && levels > governor)) fail(`${courseId} popup governor ordering changed`);
-  if (scripts.includes("popup-governor-v1.js?v=5.5.3")) fail(`${courseId} still targets the root compatibility URL`);
+  if (scripts.includes("popup-governor.js?v=sandbox-deletion-pass-1")) fail(`${courseId} still targets the root compatibility URL`);
 }
-if (!refresh.includes('`./src/features/interface/popup-governor-v1.js?v=${RELEASE}`') || refresh.includes('`./popup-governor-v1.js?v=${RELEASE}`')) fail("Mobile refresh delivery changed");
+if (!refresh.includes('`./src/features/interface/popup-governor.js?v=${RELEASE}`') || refresh.includes('`./popup-governor.js?v=${RELEASE}`')) fail("Mobile refresh delivery changed");
 for (const marker of [
   'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-19-long-term-badge-adapter-extraction-r72"',
   'const CACHE_NAME = "salita-quest-v5-6-20-avatar-case-profile-adapter-extraction-r73"',
-  '"./popup-governor-v1.js"',
-  '"./src/features/interface/popup-governor-v1.js"'
+  '"./popup-governor.js"',
+  '"./src/features/interface/popup-governor.js"'
 ]) if (!worker.includes(marker)) fail(`Offline delivery is missing ${marker}`);
 
 const documentListeners = [];

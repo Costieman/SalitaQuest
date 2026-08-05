@@ -11,11 +11,11 @@ const requireMarkers = (source, markers, label) => markers.forEach(marker => {
 });
 
 const files = [
-  "popup-governor-v1.js",
-  "src/features/interface/popup-governor-v1.js",
-  "level-progression-v2.js",
-  "level-up-mobile-safety-v552.js",
-  "src/features/interface/level-up-mobile-safety-v552.js",
+  "popup-governor.js",
+  "src/features/interface/popup-governor.js",
+  "level-progression.js",
+  "level-up-mobile-safety.js",
+  "src/features/interface/level-up-mobile-safety.js",
   "level-avatar-rewards-v1.js",
   "src/features/avatar/level-avatar-rewards-v1.js",
   "avatar-unlock-celebration-v1.js",
@@ -25,9 +25,9 @@ const files = [
 ];
 for (const file of files) new vm.Script(read(file), {filename:file});
 
-const compatibility = read("popup-governor-v1.js");
-const governor = read("src/features/interface/popup-governor-v1.js");
-if (!compatibility.includes('const TARGET = "./src/features/interface/popup-governor-v1.js?v=5.5.3"') ||
+const compatibility = read("popup-governor.js");
+const governor = read("src/features/interface/popup-governor.js");
+if (!compatibility.includes('const TARGET = "./src/features/interface/popup-governor.js?v=sandbox-deletion-pass-1"') ||
     !compatibility.includes("document.write") || !compatibility.includes("script.async = false")) {
   fail("Historical popup governor URL is not a compatibility-only ordered loader");
 }
@@ -47,7 +47,7 @@ if (governor.indexOf("await request.acknowledge()") > governor.indexOf("await re
   fail("Popup governor must acknowledge durably before rendering");
 }
 
-const levels = read("level-progression-v2.js");
+const levels = read("level-progression.js");
 requireMarkers(levels, [
   'const RELEASE = "5.5.3"',
   "levelUpsSeen",
@@ -99,22 +99,22 @@ if (!courseManifest?.courses) fail("The modular course manifest was not installe
 for (const [loaderFile, courseId] of [["app.html", "tagalog"], ["bisaya.html", "cebuano"]]) {
   const loader = read(loaderFile);
   requireMarkers(loader, [
-    "src/config/course-manifest.js?v=5.6.0",
-    "src/app/course-bootstrap.js?v=5.6.0",
+    "src/config/course-manifest.js?v=sandbox-deletion-pass-1",
+    "src/app/course-bootstrap.js?v=sandbox-deletion-pass-1",
     `courseId: "${courseId}"`
   ], `${loaderFile} modular entry point`);
   const scripts = courseManifest.courses[courseId]?.scripts;
   if (!Array.isArray(scripts)) fail(`${courseId} has no script manifest`);
-  const governorIndex = scripts.indexOf("src/features/interface/popup-governor-v1.js?v=5.5.3");
-  const levelIndex = scripts.indexOf("level-progression-v2.js?v=5.5.3");
+  const governorIndex = scripts.indexOf("src/features/interface/popup-governor.js?v=sandbox-deletion-pass-1");
+  const levelIndex = scripts.indexOf("level-progression.js?v=sandbox-deletion-pass-1");
   if (governorIndex < 0 || levelIndex < 0 || governorIndex > levelIndex) {
     fail(`${loaderFile} must load popup governance before level progression`);
   }
-  if (!scripts.some(path => /^profile-emblem-control\.js\?v=5\.5\.[34]$/.test(path))) {
+  if (!scripts.some(path => /^profile-emblem-control\.js\?v=sandbox-deletion-pass-1\.5\.[34]$/.test(path))) {
     fail(`${loaderFile} must load the governed profile emblem runtime`);
   }
-  if (!scripts.includes("src/features/interface/level-up-mobile-safety-v552.js?v=5.5.3")) {
-    fail(`${loaderFile} is missing src/features/interface/level-up-mobile-safety-v552.js?v=5.5.3`);
+  if (!scripts.includes("src/features/interface/level-up-mobile-safety.js?v=sandbox-deletion-pass-1")) {
+    fail(`${loaderFile} is missing src/features/interface/level-up-mobile-safety.js?v=sandbox-deletion-pass-1`);
   }
 }
 
@@ -122,8 +122,8 @@ const worker = read("service-worker.js");
 requireMarkers(worker, [
   'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-19-long-term-badge-adapter-extraction-r72"',
   'const CACHE_NAME = "salita-quest-v5-6-20-avatar-case-profile-adapter-extraction-r73"',
-  '"./popup-governor-v1.js"',
-  '"./src/features/interface/popup-governor-v1.js"',
+  '"./popup-governor.js"',
+  '"./src/features/interface/popup-governor.js"',
   '"./level-avatar-rewards-v1.js"',
   '"./src/features/avatar/level-avatar-rewards-v1.js"',
   '"./avatar-unlock-celebration-v1.js"',
@@ -136,7 +136,7 @@ if (!refresh.includes('const RELEASE = "5.5.6"')) {
   fail("Mobile refresh page is missing the canonical governed release");
 }
 requireMarkers(refresh, [
-  "src/features/interface/popup-governor-v1.js",
+  "src/features/interface/popup-governor.js",
   "level-avatar-rewards-v1.js",
   "avatar-unlock-celebration-v1.js"
 ], "Mobile refresh page");

@@ -4,8 +4,8 @@ const read = path => fs.readFileSync(path, "utf8");
 const manifest = JSON.parse(read("manifest.webmanifest"));
 const start = read("start.html");
 const courseManifest = read("src/config/course-manifest.js");
-const rootLoader = read("collection-key-translation-hotfix.js");
-const hotfix = read("src/features/interface/collection-key-translation-hotfix.js");
+const rootLoader = read("collection-key-translation.js");
+const hotfix = read("src/features/interface/collection-key-translation.js");
 
 const failures = [];
 const requireCheck = (condition, message) => {
@@ -18,8 +18,8 @@ requireCheck(start.includes("Restore a backup"), "Onboarding must offer backup r
 requireCheck(start.includes("Continue to your learners"), "Onboarding must offer existing local profiles");
 requireCheck(start.includes("salitaQuestLocalProfilesV1"), "Restore must recognise the local profile store");
 requireCheck(!start.includes("localStorage.clear("), "Onboarding must never clear unrelated browser storage");
-requireCheck(courseManifest.includes("src/features/interface/collection-key-translation-hotfix.js?v=5.5.11"), "Tagalog manifest must load the extracted targeted hotfix");
-requireCheck(rootLoader.includes("src/features/interface/collection-key-translation-hotfix.js?v=5.5.11"), "Historical targeted hotfix URL must forward to the feature module");
+requireCheck(courseManifest.includes("src/features/interface/collection-key-translation.js?v=sandbox-deletion-pass-1"), "Tagalog manifest must load the extracted targeted hotfix");
+requireCheck(rootLoader.includes("src/features/interface/collection-key-translation.js?v=sandbox-deletion-pass-1"), "Historical targeted hotfix URL must forward to the feature module");
 requireCheck(hotfix.includes("__salitaQuestCollectionKeyTranslationHotfixV2"), "Hotfix must be install-once guarded");
 requireCheck(hotfix.includes("consecutive Daily Keys"), "Key display must use consecutive-run semantics");
 requireCheck(!hotfix.includes("window.setInterval"), "Hotfix must not add a permanent polling loop");

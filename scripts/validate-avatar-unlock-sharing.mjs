@@ -5,7 +5,7 @@ const root = new URL("../", import.meta.url);
 const read = path => fs.readFileSync(new URL(path, root), "utf8");
 const fail = message => { throw new Error(message); };
 
-const catalogueSource = read("src/features/avatar/avatar-catalogue-v1.js");
+const catalogueSource = read("src/features/avatar/avatar-catalogue.js");
 const unlockSource = read("avatar-unlock-celebration-v1.js");
 const unlockCss = read("avatar-unlock-celebration-v1.css");
 const bridgeSource = read("achievement-sharing-avatar-bridge-v1.js");
@@ -17,7 +17,7 @@ new vm.Script(loaderSource, {filename:"profile-emblem-control.js"});
 
 const sandbox = {};
 vm.createContext(sandbox);
-vm.runInContext(catalogueSource, sandbox, {filename:"avatar-catalogue-v1.js"});
+vm.runInContext(catalogueSource, sandbox, {filename:"avatar-catalogue.js"});
 vm.runInContext(unlockSource, sandbox, {filename:"avatar-unlock-celebration-v1.js"});
 
 const model = sandbox.SalitaAvatarModel;
@@ -121,7 +121,7 @@ for (const required of [
   "openLevel(...args)",
   "new MutationObserver",
   'document.addEventListener("salita:avatar-collection-changed"',
-  'script.src = "./src/features/sharing/facebook-share-link-v1.js?v=1.0.0"',
+  'script.src = "./src/features/sharing/facebook-share-link-v1.js?v=sandbox-deletion-pass-1"',
   'new CustomEvent("salita:avatar-sharing-bridge-ready"',
   "compatibilityOnly:true",
   "transportOwner:false"

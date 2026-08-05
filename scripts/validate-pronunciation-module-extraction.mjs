@@ -18,7 +18,7 @@ new vm.Script(moduleSource, {filename:modulePath});
 new vm.Script(worker, {filename:"service-worker.js"});
 
 for (const marker of [
-  'const TARGET = "./src/features/audio/pronunciation-release-control.js?v=5.4.22"',
+  'const TARGET = "./src/features/audio/pronunciation-release-control.js?v=sandbox-deletion-pass-1"',
   "document.currentScript",
   "document.write",
   "script.async = false",
@@ -47,17 +47,17 @@ const context = {window:{}};
 vm.createContext(context);
 vm.runInContext(manifestSource, context, {filename:"src/config/course-manifest.js"});
 const courses = context.window.SalitaQuestCourseManifest?.courses;
-const expected = "src/features/audio/pronunciation-release-control.js?v=5.4.22";
+const expected = "src/features/audio/pronunciation-release-control.js?v=sandbox-deletion-pass-1";
 if (!courses) fail("Course manifest was not installed");
 for (const courseId of ["tagalog", "cebuano"]) {
   const scripts = courses[courseId]?.scripts || [];
-  const navigation = scripts.indexOf("desktop-navigation-refinement.js?v=5.5.3");
+  const navigation = scripts.indexOf("desktop-navigation-refinement.js?v=sandbox-deletion-pass-1");
   const pronunciation = scripts.indexOf(expected);
-  const reward = scripts.indexOf("src/features/progression/home-reward-coordinator.js?v=5.4.22");
+  const reward = scripts.indexOf("src/features/progression/home-reward-coordinator.js?v=sandbox-deletion-pass-1");
   if (!(navigation >= 0 && pronunciation > navigation && reward > pronunciation)) {
     fail(`${courseId} does not preserve pronunciation runtime order`);
   }
-  if (scripts.includes("pronunciation-release-control.js?v=5.4.22")) {
+  if (scripts.includes("pronunciation-release-control.js?v=sandbox-deletion-pass-1")) {
     fail(`${courseId} still loads the root compatibility URL directly`);
   }
 }

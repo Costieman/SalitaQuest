@@ -12,11 +12,11 @@ const requirePatterns = (source, patterns, label) => patterns.forEach(([pattern,
   if (!pattern.test(source)) fail(`${label} is missing: ${description}`);
 });
 
-const chestRuntime = read("badge-chest-v2.js");
-const shareRuntime = read("achievement-sharing-v4.js");
+const chestRuntime = read("badge-chest.js");
+const shareRuntime = read("achievement-sharing.js");
 const manifestSource = read("src/config/course-manifest.js");
-new vm.Script(chestRuntime, {filename: "badge-chest-v2.js"});
-new vm.Script(shareRuntime, {filename: "achievement-sharing-v4.js"});
+new vm.Script(chestRuntime, {filename: "badge-chest.js"});
+new vm.Script(shareRuntime, {filename: "achievement-sharing.js"});
 new vm.Script(manifestSource, {filename: "src/config/course-manifest.js"});
 
 requireMarkers(chestRuntime, [
@@ -159,19 +159,19 @@ for (const [htmlFile, courseId] of [["app.html", "tagalog"], ["bisaya.html", "ce
     .filter(Boolean);
   inline.forEach((source, index) => new vm.Script(source, {filename: `${htmlFile}#inline-${index + 1}`}));
   requireMarkers(html, [
-    "src/config/course-manifest.js?v=5.6.0",
-    "src/app/course-bootstrap.js?v=5.6.0",
+    "src/config/course-manifest.js?v=sandbox-deletion-pass-1",
+    "src/app/course-bootstrap.js?v=sandbox-deletion-pass-1",
     `courseId: "${courseId}"`
   ], `${htmlFile} modular badge loader`);
   const course = courseManifest.courses[courseId];
   if (!course) fail(`${courseId} is missing from the course manifest.`);
   for (const asset of [
-    "badge-chest-v2.css?v=5.4.29",
-    "achievement-sharing-v4.css?v=5.4.29"
+    "badge-chest.css?v=sandbox-deletion-pass-1",
+    "achievement-sharing.css?v=sandbox-deletion-pass-1"
   ]) if (!course.styles.includes(asset)) fail(`${htmlFile} is missing stable badge style ${asset}`);
   for (const asset of [
-    "badge-chest-v2.js?v=5.4.29",
-    "achievement-sharing-v4.js?v=5.4.29"
+    "badge-chest.js?v=sandbox-deletion-pass-1",
+    "achievement-sharing.js?v=sandbox-deletion-pass-1"
   ]) if (!course.scripts.includes(asset)) fail(`${htmlFile} is missing stable badge runtime ${asset}`);
   for (const obsolete of [
     "badge-sharing-v1.js",
@@ -179,16 +179,16 @@ for (const [htmlFile, courseId] of [["app.html", "tagalog"], ["bisaya.html", "ce
     "social-posting-v2.js",
     "achievement-sharing-v3.js"
   ]) if ([...course.styles, ...course.scripts].some(asset => asset.includes(obsolete))) fail(`${htmlFile} still loads obsolete runtime ${obsolete}`);
-  const catalogue = course.scripts.indexOf("badge-catalogue-v2.js?v=5.4.23");
-  const chest = course.scripts.indexOf("badge-chest-v2.js?v=5.4.29");
-  const connections = course.scripts.indexOf("social-connections-v2.js?v=5.4.27");
-  const sharing = course.scripts.indexOf("achievement-sharing-v4.js?v=5.4.29");
+  const catalogue = course.scripts.indexOf("badge-catalogue.js?v=sandbox-deletion-pass-1");
+  const chest = course.scripts.indexOf("badge-chest.js?v=sandbox-deletion-pass-1");
+  const connections = course.scripts.indexOf("social-connections.js?v=sandbox-deletion-pass-1");
+  const sharing = course.scripts.indexOf("achievement-sharing.js?v=sandbox-deletion-pass-1");
   if (!(catalogue >= 0 && chest > catalogue && connections > chest && sharing > connections)) {
     fail(`${htmlFile} does not preserve catalogue → chest → service → sharing ownership order.`);
   }
 }
 
-const catalogue = read("badge-catalogue-v2.js");
+const catalogue = read("badge-catalogue.js");
 requireMarkers(catalogue, [
   'new CustomEvent("salita:badges-rendered"',
   "renderCatalogue()"
@@ -198,10 +198,10 @@ const worker = read("service-worker.js");
 requireMarkers(worker, [
   'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-19-long-term-badge-adapter-extraction-r72"',
   'const CACHE_NAME = "salita-quest-v5-6-20-avatar-case-profile-adapter-extraction-r73"',
-  '"./badge-chest-v2.js"',
-  '"./badge-chest-v2.css"',
-  '"./achievement-sharing-v4.js"',
-  '"./achievement-sharing-v4.css"',
+  '"./badge-chest.js"',
+  '"./badge-chest.css"',
+  '"./achievement-sharing.js"',
+  '"./achievement-sharing.css"',
   '"./avatar-case-v1.js"',
   '"./avatar-case-v1.css"',
   '"./desktop-navigation-refinement.js"',
@@ -217,6 +217,6 @@ for (const obsolete of [
 ]) if (worker.includes(obsolete)) fail(`Offline cache still carries obsolete asset ${obsolete}`);
 
 const index = read("index.html");
-if (!index.includes('service-worker.js?v=5.4.29')) fail("Profile gate does not request the stable service worker.");
+if (!index.includes('service-worker.js?v=sandbox-deletion-pass-1')) fail("Profile gate does not request the stable service worker.");
 
 console.log("Validated preserved six-slot Badge Chest state, deterministic selection rules, one badge/avatar/Avatar Case/level sharing owner, production level events, modular loader order and r53 offline delivery.");

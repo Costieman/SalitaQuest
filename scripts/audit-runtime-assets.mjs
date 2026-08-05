@@ -3,7 +3,7 @@ import path from "node:path";
 
 const ROOT = process.cwd();
 const ENTRY_POINTS = ["index.html", "app.html", "bisaya.html"];
-const COURSE_SHELL_ASSETS = ["app.js", "style.css"];
+const COURSE_SHELL_ASSETS = ["app.js", "style.css", "mobile-refresh.html", "profile-install-prompt.js", "profile-install-prompt.css"];
 const REPORT_DIR = path.join(ROOT, "audit");
 const ASSET_EXTENSIONS = new Set([
   ".js", ".css", ".html", ".json", ".webmanifest", ".png", ".jpg", ".jpeg",

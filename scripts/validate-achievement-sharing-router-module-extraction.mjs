@@ -16,7 +16,7 @@ new vm.Script(v2, {filename:"achievement-sharing-router-v2.js"});
 new vm.Script(rootLoader, {filename:"achievement-sharing-router-v3.js"});
 new vm.Script(moduleSource, {filename:"src/features/sharing/achievement-sharing-router-v3.js"});
 
-const moduleUrl = "./src/features/sharing/achievement-sharing-router-v3.js?v=5.5.21";
+const moduleUrl = "./src/features/sharing/achievement-sharing-router-v3.js?v=sandbox-deletion-pass-1";
 for (const required of [
   "__salitaQuestAchievementSharingRouterV3Installed",
   moduleUrl,

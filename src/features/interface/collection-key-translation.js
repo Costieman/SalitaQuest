@@ -18,7 +18,7 @@
     if (document.querySelector('link[data-sq-avatar-case-desktop-safety]')) return;
     const link = document.createElement("link");
     link.rel = "stylesheet";
-    link.href = "./avatar-case-desktop-safety.css?v=5.5.11";
+    link.href = "./avatar-case-desktop-safety.css?v=sandbox-deletion-pass-1";
     link.dataset.sqAvatarCaseDesktopSafety = "true";
     document.head.appendChild(link);
   }
@@ -36,7 +36,7 @@
     ensureScript({
       flag:"__salitaMysteryRarityRollV1Installed",
       selector:'script[data-sq-mystery-rarity-roll]',
-      src:"./mystery-rarity-roll-v1.js?v=5.5.11",
+      src:"./mystery-rarity-roll.js?v=sandbox-deletion-pass-1",
       datasetKey:"sqMysteryRarityRoll",
       message:"Enhanced Mystery Pack rarity roll could not be loaded."
     });
@@ -46,14 +46,14 @@
     if (!document.querySelector('link[data-sq-avatar-collection-page]')) {
       const link = document.createElement("link");
       link.rel = "stylesheet";
-      link.href = "./avatar-collection-page-v2.css?v=5.5.12";
+      link.href = "./avatar-collection-page.css?v=sandbox-deletion-pass-1";
       link.dataset.sqAvatarCollectionPage = "true";
       document.head.appendChild(link);
     }
     ensureScript({
       flag:"__salitaQuestAvatarCollectionPageV2Installed",
       selector:'script[data-sq-avatar-collection-page]',
-      src:"./avatar-collection-page-v2.js?v=5.5.12",
+      src:"./avatar-collection-page.js?v=sandbox-deletion-pass-1",
       datasetKey:"sqAvatarCollectionPage",
       message:"Avatar Collection page could not be loaded."
     });
@@ -63,14 +63,14 @@
     ensureScript({
       flag:"__salitaAvatarCasePageTabV1Installed",
       selector:'script[data-sq-avatar-case-page-tab]',
-      src:"./avatar-case-page-tab-v1.js?v=1.1",
+      src:"./avatar-case-page-tab.js?v=sandbox-deletion-pass-1",
       datasetKey:"sqAvatarCasePageTab",
       message:"Avatar Display Case tab could not be loaded."
     });
     ensureScript({
       flag:"__salitaAvatarCardActionsV1Installed",
       selector:'script[data-sq-avatar-card-actions]',
-      src:"./avatar-card-actions-v1.js?v=1.1",
+      src:"./avatar-card-actions.js?v=sandbox-deletion-pass-1",
       datasetKey:"sqAvatarCardActions",
       message:"Avatar card actions could not be loaded."
     });

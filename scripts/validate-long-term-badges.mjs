@@ -36,8 +36,8 @@ for (const marker of [
 for (const marker of [
   'const INSTALL_FLAG = "__salitaQuestLongTermBadgesV1Installed"',
   'const RETRY_MS = 120',
-  'src/adapters/badges/badge-catalogue-runtime-v1.js?v=5.6.0',
-  'src/features/badges/long-term-badges-v1.js?v=5.6.0',
+  'src/adapters/badges/badge-catalogue-runtime-v1.js?v=sandbox-deletion-pass-1',
+  'src/features/badges/long-term-badges-v1.js?v=sandbox-deletion-pass-1',
   'document.write', 'script.async = false'
 ]) if (!coordinator.includes(marker)) fail(`Historical long-term badge coordinator is missing: ${marker}`);
 for (const forbidden of ["answers:[","avatars:[","lt_avatars_all","localStorage","sessionStorage","globalValue","BADGES","badgeProgress"])

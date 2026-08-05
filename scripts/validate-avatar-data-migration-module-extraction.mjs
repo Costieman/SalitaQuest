@@ -8,8 +8,8 @@ const requireMarkers = (source, markers, label) => markers.forEach(marker => {
   if (!source.includes(marker)) fail(`${label} is missing ${marker}`);
 });
 
-const catalogueLoaderPath = "avatar-catalogue-v1.js";
-const catalogueModulePath = "src/features/avatar/avatar-catalogue-v1.js";
+const catalogueLoaderPath = "avatar-catalogue.js";
+const catalogueModulePath = "src/features/avatar/avatar-catalogue.js";
 const migrationLoaderPath = "avatar-progression-migration-v1.js";
 const migrationModulePath = "src/features/avatar/avatar-progression-migration-v1.js";
 const catalogueLoader = read(catalogueLoaderPath);
@@ -31,7 +31,7 @@ for (const [path, source] of [
 ]) new vm.Script(source, {filename:path});
 
 requireMarkers(catalogueLoader, [
-  'const TARGET = "./src/features/avatar/avatar-catalogue-v1.js?v=5.5.6"',
+  'const TARGET = "./src/features/avatar/avatar-catalogue.js?v=sandbox-deletion-pass-1"',
   "document.currentScript",
   "document.write",
   "script.async = false",
@@ -42,7 +42,7 @@ if (catalogueLoader.includes("const records =") || catalogueLoader.includes("roo
 }
 
 requireMarkers(migrationLoader, [
-  'const TARGET = "./src/features/avatar/avatar-progression-migration-v1.js?v=5.5.6"',
+  'const TARGET = "./src/features/avatar/avatar-progression-migration-v1.js?v=sandbox-deletion-pass-1"',
   "document.currentScript",
   "document.write",
   "script.async = false",
@@ -104,17 +104,17 @@ if (!first.changed || second.changed) fail("Avatar migration must remain additiv
 const migratedStore = JSON.parse(values.get("salitaQuestLocalProfilesV1"));
 if (!migratedStore.profiles[0].avatarCollection.ownedAvatarIds.includes("eagle")) fail("Legacy avatar ownership was not preserved");
 
-requireMarkers(index, ['src="src/features/avatar/avatar-catalogue-v1.js?v=5.5.0"'], "Profile gate catalogue loading");
-requireMarkers(profileApp, ['./src/features/avatar/avatar-catalogue-v1.js?v=5.5.4'], "Profile runtime fallback");
+requireMarkers(index, ['src="src/features/avatar/avatar-catalogue.js?v=sandbox-deletion-pass-1"'], "Profile gate catalogue loading");
+requireMarkers(profileApp, ['./src/features/avatar/avatar-catalogue.js?v=sandbox-deletion-pass-1'], "Profile runtime fallback");
 requireMarkers(emblem, [
-  './src/features/avatar/avatar-catalogue-v1.js?v=${RELEASE_VERSION}',
+  './src/features/avatar/avatar-catalogue.js?v=${RELEASE_VERSION}',
   './src/features/avatar/avatar-progression-migration-v1.js?v=${RELEASE_VERSION}'
 ], "Avatar progression asset loader");
 const catalogueIndex = emblem.indexOf('await loadScript("catalogue"');
 const migrationIndex = emblem.indexOf('await loadScript("migration"');
 if (!(catalogueIndex >= 0 && migrationIndex > catalogueIndex)) fail("Avatar migration must remain downstream of catalogue loading");
 for (const source of [index, profileApp, emblem, refresh]) {
-  if (source.includes('src="avatar-catalogue-v1.js') || source.includes('./avatar-catalogue-v1.js?v=')) {
+  if (source.includes('src="avatar-catalogue.js') || source.includes('./avatar-catalogue.js?v=')) {
     fail("A current loader still requests the root avatar catalogue compatibility URL");
   }
   if (source.includes('./avatar-progression-migration-v1.js?v=')) {
@@ -128,8 +128,8 @@ for (const path of [catalogueModulePath, migrationModulePath]) {
 requireMarkers(worker, [
   'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-19-long-term-badge-adapter-extraction-r72"',
   'const CACHE_NAME = "salita-quest-v5-6-20-avatar-case-profile-adapter-extraction-r73"',
-  '"./avatar-catalogue-v1.js"',
-  '"./src/features/avatar/avatar-catalogue-v1.js"',
+  '"./avatar-catalogue.js"',
+  '"./src/features/avatar/avatar-catalogue.js"',
   '"./avatar-progression-migration-v1.js"',
   '"./src/features/avatar/avatar-progression-migration-v1.js"'
 ], "Avatar data and migration offline contract");

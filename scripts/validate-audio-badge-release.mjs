@@ -12,7 +12,7 @@ for (const file of [
   "src/features/audio/pronunciation-release-control.js",
   "home-reward-coordinator.js",
   "src/features/progression/home-reward-coordinator.js",
-  "badge-catalogue-v2.js",
+  "badge-catalogue.js",
   "src/config/course-manifest.js",
   "service-worker.js"
 ]) new vm.Script(read(file),{filename:file});
@@ -32,7 +32,7 @@ for (const marker of [
 ]) if (!pronunciation.includes(marker)) fail(`Missing release-audio marker: ${marker}`);
 
 for (const marker of [
-  'const TARGET = "./src/features/audio/pronunciation-release-control.js?v=5.4.22"',
+  'const TARGET = "./src/features/audio/pronunciation-release-control.js?v=sandbox-deletion-pass-1"',
   "document.currentScript",
   "document.write",
   "script.async = false",
@@ -55,7 +55,7 @@ for (const marker of [
   'switchViewWithGuaranteedHomeRewards'
 ]) if (!reward.includes(marker)) fail(`Missing Home reward marker: ${marker}`);
 
-const badges = read("badge-catalogue-v2.js");
+const badges = read("badge-catalogue.js");
 for (const marker of [
   'const ADDITIONAL_BADGES = [',
   'image:`badges/${badge.id}.png`',
@@ -78,7 +78,7 @@ for (const marker of [
 const badgeCount = (badges.match(/\{id:"/g) || []).length;
 if (badgeCount < 20) fail(`Expected at least 20 additional badge definitions; found ${badgeCount}`);
 
-const badgeCss = read("badge-catalogue-v2.css");
+const badgeCss = read("badge-catalogue.css");
 for (const marker of [
   '.badge-catalogue-grid',
   '.badge-catalogue-card.earned',
@@ -104,23 +104,23 @@ for (const [htmlFile,courseId] of [["app.html","tagalog"],["bisaya.html","cebuan
   const inline = [...html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/gi)].map(match=>match[1].trim()).filter(Boolean);
   inline.forEach((source,index)=>new vm.Script(source,{filename:`${htmlFile}#${index+1}`}));
   for (const marker of [
-    "src/config/course-manifest.js?v=5.6.0",
-    "src/app/course-bootstrap.js?v=5.6.0",
+    "src/config/course-manifest.js?v=sandbox-deletion-pass-1",
+    "src/app/course-bootstrap.js?v=sandbox-deletion-pass-1",
     `courseId: "${courseId}"`
   ]) if (!html.includes(marker)) fail(`${htmlFile} does not load ${marker}`);
 
   const course = courseManifest.courses[courseId];
   if (!course) fail(`${courseId} is missing from the course manifest.`);
-  if (!course.styles.includes('badge-catalogue-v2.css?v=5.4.23')) fail(`${htmlFile} does not load badge-catalogue-v2.css?v=5.4.23`);
+  if (!course.styles.includes('badge-catalogue.css?v=sandbox-deletion-pass-1')) fail(`${htmlFile} does not load badge-catalogue.css?v=sandbox-deletion-pass-1`);
   for (const asset of [
-    'src/features/audio/pronunciation-release-control.js?v=5.4.22',
-    'src/features/progression/home-reward-coordinator.js?v=5.4.22',
-    'badge-catalogue-v2.js?v=5.4.23'
+    'src/features/audio/pronunciation-release-control.js?v=sandbox-deletion-pass-1',
+    'src/features/progression/home-reward-coordinator.js?v=sandbox-deletion-pass-1',
+    'badge-catalogue.js?v=sandbox-deletion-pass-1'
   ]) if (!course.scripts.includes(asset)) fail(`${htmlFile} does not load ${asset}`);
   const nav = course.scripts.findIndex(asset => /^desktop-navigation-refinement\.js\?v=(?:5\.4\.21|5\.5\.2|5\.5\.3)$/.test(asset));
-  const audio = course.scripts.indexOf('src/features/audio/pronunciation-release-control.js?v=5.4.22');
-  const rewardIndex = course.scripts.indexOf('src/features/progression/home-reward-coordinator.js?v=5.4.22');
-  const catalogue = course.scripts.indexOf('badge-catalogue-v2.js?v=5.4.23');
+  const audio = course.scripts.indexOf('src/features/audio/pronunciation-release-control.js?v=sandbox-deletion-pass-1');
+  const rewardIndex = course.scripts.indexOf('src/features/progression/home-reward-coordinator.js?v=sandbox-deletion-pass-1');
+  const catalogue = course.scripts.indexOf('badge-catalogue.js?v=sandbox-deletion-pass-1');
   if (!(nav >= 0 && audio > nav && rewardIndex > audio && catalogue > rewardIndex)) fail(`${htmlFile} has incorrect final runtime order`);
 }
 
@@ -131,8 +131,8 @@ for (const asset of [
   '"./src/features/audio/pronunciation-release-control.js"',
   '"./home-reward-coordinator.js"',
   '"./src/features/progression/home-reward-coordinator.js"',
-  '"./badge-catalogue-v2.js"',
-  '"./badge-catalogue-v2.css"'
+  '"./badge-catalogue.js"',
+  '"./badge-catalogue.css"'
 ]) if (!serviceWorker.includes(asset)) fail(`Offline cache missing ${asset}`);
 
 const generator = read("scripts/generate_cebuano_google_audio.py");

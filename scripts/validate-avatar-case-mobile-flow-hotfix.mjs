@@ -23,7 +23,7 @@ const fail = message => { throw new Error(message); };
 if (css.includes("overflow-y:auto") || css.includes("overflow-y:scroll")) {
   fail("Avatar Case hotfix must not introduce an internal vertical scrollbar.");
 }
-if (!loader.includes("avatar-case-mobile-flow-hotfix-v1.css?v=5.7.2")) {
+if (!loader.includes("avatar-case-mobile-flow-hotfix-v1.css?v=sandbox-deletion-pass-1")) {
   fail("Mobile Avatar Case flow hotfix is not loaded.");
 }
 

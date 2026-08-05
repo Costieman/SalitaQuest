@@ -4,8 +4,8 @@
   const INSTALL_FLAG = "__salitaQuestIncorrectOrderFeedbackInstalled";
   const LOADING_FLAG = "__salitaQuestIncorrectOrderFeedbackCompatibilityLoading";
   const RETRY_MS = 60;
-  const ADAPTER_URL = "./src/adapters/exercise/incorrect-order-feedback-runtime-v1.js?v=5.4.21";
-  const FEATURE_URL = "./src/features/exercise/incorrect-order-feedback.js?v=5.4.21";
+  const ADAPTER_URL = "./src/adapters/exercise/incorrect-order-feedback-runtime.js?v=sandbox-deletion-pass-1";
+  const FEATURE_URL = "./src/features/exercise/incorrect-order-feedback.js?v=sandbox-deletion-pass-1";
   if (window[INSTALL_FLAG]) return;
   window[INSTALL_FLAG] = true;
 

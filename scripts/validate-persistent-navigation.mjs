@@ -91,16 +91,16 @@ if(!courseManifest?.courses)fail("The modular course manifest was not installed"
 for(const [htmlFile,courseId] of [["app.html","tagalog"],["bisaya.html","cebuano"]]){
   const html=read(htmlFile);
   requireMarkers(html,[
-    "src/config/course-manifest.js?v=5.6.0",
-    "src/app/course-bootstrap.js?v=5.6.0",
+    "src/config/course-manifest.js?v=sandbox-deletion-pass-1",
+    "src/app/course-bootstrap.js?v=sandbox-deletion-pass-1",
     `courseId: "${courseId}"`
   ],`${htmlFile} modular navigation loader`);
   const course=courseManifest.courses[courseId];
-  if(!course?.styles.includes("desktop-navigation-refinement.css?v=5.5.3")){
-    fail(`${htmlFile} navigation loader is missing desktop-navigation-refinement.css?v=5.5.3`);
+  if(!course?.styles.includes("desktop-navigation-refinement.css?v=sandbox-deletion-pass-1")){
+    fail(`${htmlFile} navigation loader is missing desktop-navigation-refinement.css?v=sandbox-deletion-pass-1`);
   }
-  if(!course?.scripts.includes("desktop-navigation-refinement.js?v=5.5.3")){
-    fail(`${htmlFile} navigation loader is missing desktop-navigation-refinement.js?v=5.5.3`);
+  if(!course?.scripts.includes("desktop-navigation-refinement.js?v=sandbox-deletion-pass-1")){
+    fail(`${htmlFile} navigation loader is missing desktop-navigation-refinement.js?v=sandbox-deletion-pass-1`);
   }
 }
 

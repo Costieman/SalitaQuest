@@ -68,7 +68,7 @@ The navigation release does not alter learner progress, rewards, ownership, mast
 
 ## Hosted achievement sharing
 
-`achievement-sharing-v4.js` is the single card and platform hand-off controller for:
+`achievement-sharing.js` is the single card and platform hand-off controller for:
 
 - individual badges;
 - the Badge Chest;
@@ -147,14 +147,14 @@ The recovery page refreshes app caches and service-worker registrations without 
 - `profile-emblem-control.js` — shared avatar runtime loader
 - `desktop-navigation-refinement.js` — persistent desktop/mobile route completion and active state
 - `desktop-navigation-refinement.css` — fixed sidebar, mobile navigation and small-desktop safety
-- `placement-onboarding-v1.js` — placement and beginner access
-- `level-progression-v2.js` — learner level system
-- `popup-governor-v1.js` — queued reward and level popups
+- `placement-onboarding.js` — placement and beginner access
+- `level-progression.js` — learner level system
+- `popup-governor.js` — queued reward and level popups
 
 ### Avatars
 
 - `avatars/canonical/manifest.json` — canonical identity and asset manifest
-- `src/features/avatar/avatar-catalogue-v1.js` — stable catalogue, aliases and rewards (`avatar-catalogue-v1.js` remains a compatibility loader)
+- `src/features/avatar/avatar-catalogue.js` — stable catalogue, aliases and rewards (`avatar-catalogue.js` remains a compatibility loader)
 - `avatar-collection-screen-v1.js` — collection and equip controls
 - `avatar-case-v1.js` — four-slot favourite-avatar persistence, picker and ordering
 - `weekly-avatar-shard-rewards-v1.js` — weekly shard rewards
@@ -165,10 +165,10 @@ The recovery page refreshes app caches and service-worker registrations without 
 
 ### Badges and sharing
 
-- `badge-catalogue-v2.js` — badge definitions and catalogue
-- `badge-chest-v2.js` — Badge Chest selection and ordering
-- `achievement-sharing-v4.js` — unified badge, avatar, Avatar Case and level card rendering
-- `social-connections-v2.js` — sharing-service status and OAuth-ready contract
+- `badge-catalogue.js` — badge definitions and catalogue
+- `badge-chest.js` — Badge Chest selection and ordering
+- `achievement-sharing.js` — unified badge, avatar, Avatar Case and level card rendering
+- `social-connections.js` — sharing-service status and OAuth-ready contract
 - `services/social-share/` — hosted Open Graph service
 
 ## Validation

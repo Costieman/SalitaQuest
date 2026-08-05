@@ -5,7 +5,7 @@ const root = new URL("../", import.meta.url);
 const read = path => fs.readFileSync(new URL(path, root), "utf8");
 const fail = message => { throw new Error(message); };
 
-const catalogueSource = read("src/features/avatar/avatar-catalogue-v1.js");
+const catalogueSource = read("src/features/avatar/avatar-catalogue.js");
 const screenSource = read("avatar-collection-screen-v1.js");
 const screenCss = read("avatar-collection-screen-v1.css");
 const hotfixCss = read("avatar-progression-hotfix-v551.css");
@@ -16,7 +16,7 @@ new vm.Script(emblemSource, {filename:"profile-emblem-control.js"});
 
 const sandbox = {};
 vm.createContext(sandbox);
-vm.runInContext(catalogueSource, sandbox, {filename:"avatar-catalogue-v1.js"});
+vm.runInContext(catalogueSource, sandbox, {filename:"avatar-catalogue.js"});
 const model = sandbox.SalitaAvatarModel;
 if (!model || model.catalogue.length !== 48) fail("The collection screen requires the complete 48-avatar catalogue");
 

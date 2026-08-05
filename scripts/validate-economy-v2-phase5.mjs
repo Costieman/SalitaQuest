@@ -30,9 +30,9 @@ if (grant.indexOf('payload.testingGrants[GRANT_ID] =') > grant.indexOf('payload.
 if (!grant.includes('key.startsWith(PROGRESS_PREFIX)')) fail("Grant must apply to all existing progress records.");
 
 [
-  'avatar-collection-summary-v1.css?v=5.6.9',
-  'src/features/avatar/avatar-collection-summary-v1.js?v=5.6.9',
-  'coin-testing-grant-50k-phase5-v1.js?v=5.6.9'
+  'avatar-collection-summary-v1.css?v=sandbox-deletion-pass-1',
+  'src/features/avatar/avatar-collection-summary-v1.js?v=sandbox-deletion-pass-1',
+  'coin-testing-grant-50k-phase5-v1.js?v=sandbox-deletion-pass-1'
 ].forEach(marker => { if (!loader.includes(marker)) fail(`Loader missing Phase 5 asset: ${marker}`); });
 
 console.log("Validated Phase 5 collection totals, rarity breakdown, overall completion, and one-time 50,000-coin testing grant.");

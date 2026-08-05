@@ -52,7 +52,7 @@
 
     assetPromise = (async () => {
       if (!window.SalitaAvatarModel) {
-        await loadScript("catalogue", `./src/features/avatar/avatar-catalogue-v1.js?v=${RELEASE_VERSION}`, "Avatar catalogue could not be loaded.");
+        await loadScript("catalogue", `./src/features/avatar/avatar-catalogue.js?v=${RELEASE_VERSION}`, "Avatar catalogue could not be loaded.");
       }
       await loadScript("artwork-runtime", `./src/features/avatar/avatar-artwork-registry-v554.js?v=${RELEASE_VERSION}`, "Avatar artwork resolver could not be loaded.");
       await loadScript("hotfix-model", `./src/features/avatar/avatar-progression-model-v551.js?v=${RELEASE_VERSION}`, "Avatar progression model compatibility could not be loaded.");

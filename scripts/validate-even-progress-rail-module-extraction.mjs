@@ -21,7 +21,7 @@ new vm.Script(moduleSource, {filename:modulePath});
 new vm.Script(worker, {filename:"service-worker.js"});
 
 requireMarkers(loader, [
-  'const TARGET = "./src/features/progression/even-progress-rail.js?v=5.4.21"',
+  'const TARGET = "./src/features/progression/even-progress-rail.js?v=sandbox-deletion-pass-1"',
   "document.currentScript",
   "document.write",
   "script.async = false",
@@ -58,17 +58,17 @@ const context = {window:{}};
 vm.createContext(context);
 vm.runInContext(manifestSource, context, {filename:"src/config/course-manifest.js"});
 const courses = context.window.SalitaQuestCourseManifest?.courses;
-const expected = "src/features/progression/even-progress-rail.js?v=5.4.21";
+const expected = "src/features/progression/even-progress-rail.js?v=sandbox-deletion-pass-1";
 if (!courses) fail("Course manifest was not installed");
 for (const courseId of ["tagalog", "cebuano"]) {
   const scripts = courses[courseId]?.scripts || [];
-  const topbar = scripts.indexOf("src/features/interface/clean-topbar.js?v=5.4.21");
+  const topbar = scripts.indexOf("src/features/interface/clean-topbar.js?v=sandbox-deletion-pass-1");
   const rail = scripts.indexOf(expected);
-  const mastery = scripts.indexOf("mastery-feedback.js?v=5.4.21");
+  const mastery = scripts.indexOf("mastery-feedback.js?v=sandbox-deletion-pass-1");
   if (!(topbar >= 0 && rail > topbar && mastery > rail)) {
     fail(`${courseId} does not preserve topbar → progress rail → mastery order`);
   }
-  if (scripts.includes("even-progress-rail.js?v=5.4.21")) {
+  if (scripts.includes("even-progress-rail.js?v=sandbox-deletion-pass-1")) {
     fail(`${courseId} still loads the root progress-rail compatibility URL directly`);
   }
 }

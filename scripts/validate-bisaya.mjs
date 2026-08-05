@@ -9,7 +9,7 @@ const fail = message => {
   throw new Error(message);
 };
 
-for (const file of ["bisaya-app-loader.js", "bisaya-review-regions.js", "profile-app.js", "exercise-fixes-v545.js", "service-worker.js"]) {
+for (const file of ["bisaya-app-loader.js", "bisaya-review-regions.js", "profile-app.js", "exercise-fixes.js", "service-worker.js"]) {
   new vm.Script(read(file), {filename:file});
 }
 
@@ -119,7 +119,7 @@ for (const marker of [
   if (!engine.includes(marker)) fail(`Shared engine marker missing: ${marker}`);
 }
 
-const exerciseFixes = read("exercise-fixes-v545.js");
+const exerciseFixes = read("exercise-fixes.js");
 for (const marker of [
   "__salitaQuestSentenceBuilderInteractionRecoveryInstalled",
   "updateSentenceBuilderUIWithReliableTouchTargets",
@@ -137,7 +137,7 @@ if (!exerciseFixes.includes('document.addEventListener("click", event =>')) {
 const loader = read("bisaya-app-loader.js");
 if (loader.includes('/api/speech')) fail("Bisaya loader must not call the Tagalog speech endpoint");
 if (!loader.includes('"ceb-PH"')) fail("Bisaya loader must specify the Cebuano language tag");
-if (!loader.includes('loadScript("./exercise-fixes-v545.js')) fail("Bisaya loader must load the sentence-builder interaction fixes");
+if (!loader.includes('loadScript("./exercise-fixes.js')) fail("Bisaya loader must load the sentence-builder interaction fixes");
 
 const reviewRuntime = read("bisaya-review-regions.js");
 for (const marker of [
@@ -185,6 +185,6 @@ for (const packName of manifest.packs) {
   if (!serviceWorker.includes(expectedPath)) fail(`Offline cache is missing module pack: ${expectedPath}`);
 }
 if (!serviceWorker.includes("./bisaya-review-regions.js")) fail("Offline cache is missing the Bisaya review-region runtime");
-if (!serviceWorker.includes("./exercise-fixes-v545.js")) fail("Offline cache is missing the sentence-builder interaction fixes");
+if (!serviceWorker.includes("./exercise-fixes.js")) fail("Offline cache is missing the sentence-builder interaction fixes");
 
 console.log(`Validated ${course.map.length} locations, ${course.modules.length} modules, ${items.length} items, ${exercises.length} starter exercises, removable Bisaya sentence words, pre-placement language choice, and ${reviewMap.length} review regions.`);

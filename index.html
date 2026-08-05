@@ -9,8 +9,8 @@
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png" />
   <link rel="apple-touch-icon" href="icons/icon-192.png" />
-  <link rel="stylesheet" href="profile-shell.css?v=5.4.25" />
-  <script src="src/features/avatar/avatar-catalogue-v1.js?v=5.5.0"></script>
+  <link rel="stylesheet" href="profile-shell.css?v=sandbox-deletion-pass-1" />
+  <script src="src/features/avatar/avatar-catalogue.js?v=sandbox-deletion-pass-1"></script>
   <style>
     .course-choice-shell{display:grid;gap:22px;text-align:center}
     .course-choice-identity{display:grid;justify-items:center;gap:8px}
@@ -514,7 +514,7 @@
     }
 
     if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
-      navigator.serviceWorker.register("./service-worker.js?v=5.4.29").catch(() => {});
+      navigator.serviceWorker.register("./service-worker.js?v=sandbox-deletion-pass-1").catch(() => {});
     }
   })();
   </script>

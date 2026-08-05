@@ -12,7 +12,7 @@ The review was a static architecture and behavior-boundary audit of the reposito
 
 The original `badge-sharing-v1.js` watched the complete badge shelf with a `MutationObserver`. Its callback rewrote every `.badge-card-share-actions` element with `innerHTML`, which created another shelf mutation and scheduled the callback again. This could keep the shelf in a render loop and made add, remove and share controls unreliable.
 
-**Correction:** `badge-chest-v2.js` has no shelf observer. The catalogue emits one explicit `salita:badges-rendered` event after a completed render, and the chest controller decorates the finished cards idempotently.
+**Correction:** `badge-chest.js` has no shelf observer. The catalogue emits one explicit `salita:badges-rendered` event after a completed render, and the chest controller decorates the finished cards idempotently.
 
 ### 2. Three modules competing for the same sharing controls
 
@@ -24,7 +24,7 @@ The active build loaded all of the following:
 
 All three could react to `[data-share-badge]`, two created or reused the same social modal, and each kept separate internal share state. Correctness depended on capture phase, load order and `stopImmediatePropagation()` rather than a clear owner.
 
-**Correction:** `achievement-sharing-v4.js` is the sole owner of individual badge, Badge Chest and level-up sharing. It uses one uniquely named modal and one state object. The obsolete handlers are no longer loaded or cached.
+**Correction:** `achievement-sharing.js` is the sole owner of individual badge, Badge Chest and level-up sharing. It uses one uniquely named modal and one state object. The obsolete handlers are no longer loaded or cached.
 
 ### 3. Badge Chest was silently filled and then appeared locked
 
@@ -42,7 +42,7 @@ Small arrow and remove buttons were the only practical way to alter the chest. E
 
 `social-links-v1.js` stored optional Facebook, Instagram, TikTok, X, YouTube and LinkedIn profile URLs. It did not connect accounts or publish posts, and its wording overlapped with the actual sharing-service screen.
 
-**Correction:** the module is removed from the active loaders and offline cache. `social-connections-v2.js` remains the service-status and future OAuth boundary.
+**Correction:** the module is removed from the active loaders and offline cache. `social-connections.js` remains the service-status and future OAuth boundary.
 
 ### 6. Offline cache retained superseded runtimes
 
@@ -54,10 +54,10 @@ The service worker cached all old badge and sharing modules even after newer com
 
 | Area | Owner | Responsibility |
 |---|---|---|
-| Badge definitions and earned status | `badge-catalogue-v2.js` | Badge catalogue, metrics, earned timestamps and one render-complete event |
-| Badge Chest | `badge-chest-v2.js` | Selected IDs, six-slot limit, picker, add/remove/reorder and persistence |
-| Achievement cards and destinations | `achievement-sharing-v4.js` | Badge, chest and level card rendering; hosted preview; platform hand-off |
-| Sharing-service status and future OAuth | `social-connections-v2.js` | Built-in API URL, health status and provider-connection boundary |
+| Badge definitions and earned status | `badge-catalogue.js` | Badge catalogue, metrics, earned timestamps and one render-complete event |
+| Badge Chest | `badge-chest.js` | Selected IDs, six-slot limit, picker, add/remove/reorder and persistence |
+| Achievement cards and destinations | `achievement-sharing.js` | Badge, chest and level card rendering; hosted preview; platform hand-off |
+| Sharing-service status and future OAuth | `social-connections.js` | Built-in API URL, health status and provider-connection boundary |
 | Hosted Open Graph pages | `services/social-share/` | Store square/OG images and expose public crawler-readable share pages |
 
 No active module should intercept another module's learner control. Communication now uses explicit APIs and events.

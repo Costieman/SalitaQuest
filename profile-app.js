@@ -25,7 +25,7 @@
         return;
       }
       const script = document.createElement("script");
-      script.src = "./src/features/avatar/avatar-catalogue-v1.js?v=5.5.4";
+      script.src = "./src/features/avatar/avatar-catalogue.js?v=sandbox-deletion-pass-1";
       script.dataset.avatarCatalogue = "true";
       script.onload = () => resolve(window.SalitaAvatarModel);
       script.onerror = () => reject(new Error("Avatar catalogue could not be loaded."));
@@ -307,7 +307,7 @@
   function loadCourseEnhancements() {
     if (COURSE !== "cebuano" || document.querySelector("script[data-bisaya-review-regions]")) return;
     const script = document.createElement("script");
-    script.src = "./bisaya-review-regions.js?v=0.3.0";
+    script.src = "./bisaya-review-regions.js?v=sandbox-deletion-pass-1";
     script.dataset.bisayaReviewRegions = "true";
     script.onerror = () => console.warn("Bisaya review regions could not be loaded.");
     document.body.appendChild(script);

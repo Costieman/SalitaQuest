@@ -15,7 +15,7 @@ const serviceWorker = read("service-worker.js");
 new vm.Script(rootSource, {filename:"avatar-artwork-registry-v554.js"});
 new vm.Script(moduleSource, {filename:"src/features/avatar/avatar-artwork-registry-v554.js"});
 
-const moduleUrl = "./src/features/avatar/avatar-artwork-registry-v554.js?v=5.5.6";
+const moduleUrl = "./src/features/avatar/avatar-artwork-registry-v554.js?v=sandbox-deletion-pass-1";
 if (!rootSource.includes(moduleUrl)) fail("Compatibility loader does not target the extracted registry");
 for (const required of [
   "__salitaAvatarArtworkRegistryV556Installed",
@@ -68,7 +68,7 @@ if (/sessionStorage\.(?:setItem|removeItem|clear)\(/.test(moduleSource)) fail("A
 const directModule = "./src/features/avatar/avatar-artwork-registry-v554.js?v=${RELEASE_VERSION}";
 if (!profileSource.includes(directModule)) fail("Profile shell does not load the extracted registry directly");
 if (profileSource.includes("`./avatar-artwork-registry-v554.js?v=${RELEASE_VERSION}`")) fail("Profile shell still directly loads the root registry URL");
-const catalogueIndex = profileSource.indexOf("src/features/avatar/avatar-catalogue-v1.js");
+const catalogueIndex = profileSource.indexOf("src/features/avatar/avatar-catalogue.js");
 const artworkIndex = profileSource.indexOf("src/features/avatar/avatar-artwork-registry-v554.js");
 const modelHotfixIndex = profileSource.indexOf("src/features/avatar/avatar-progression-model-v551.js");
 const navigationAdapterIndex = profileSource.indexOf("src/adapters/navigation/avatar-collections-navigation-v551.js");
@@ -81,7 +81,7 @@ if (!(catalogueIndex >= 0 && catalogueIndex < artworkIndex && artworkIndex < mod
 const mobileModule = "./src/features/avatar/avatar-artwork-registry-v554.js?v=${RELEASE}";
 if (!mobileRefresh.includes(mobileModule)) fail("Mobile refresh does not load the extracted registry directly");
 if (mobileRefresh.includes("`./avatar-artwork-registry-v554.js?v=${RELEASE}`")) fail("Mobile refresh still directly loads the root registry URL");
-const mobileCatalogue = mobileRefresh.indexOf("src/features/avatar/avatar-catalogue-v1.js");
+const mobileCatalogue = mobileRefresh.indexOf("src/features/avatar/avatar-catalogue.js");
 const mobileMigration = mobileRefresh.indexOf("src/features/avatar/avatar-progression-migration-v1.js");
 const mobileArtwork = mobileRefresh.indexOf("src/features/avatar/avatar-artwork-registry-v554.js");
 if (!(mobileCatalogue >= 0 && mobileCatalogue < mobileMigration && mobileMigration < mobileArtwork)) {

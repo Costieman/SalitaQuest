@@ -231,8 +231,8 @@ function fallbackSpeech(text) {
       script.textContent = transformed;
       document.body.appendChild(script);
 
-      await loadScript("./exercise-fixes-v545.js?v=5.4.15-bisaya");
-      await loadScript("./profile-app.js?v=5.4.15-bisaya");
+      await loadScript("./exercise-fixes.js?v=sandbox-deletion-pass-1");
+      await loadScript("./profile-app.js?v=sandbox-deletion-pass-1");
     } catch (error) {
       showError(error);
     }

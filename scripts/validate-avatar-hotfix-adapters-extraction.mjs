@@ -9,7 +9,7 @@ const navigationFile = "src/adapters/navigation/avatar-collections-navigation-v5
 const rootSource = read(rootFile);
 const modelSource = read(modelFile);
 const navigationSource = read(navigationFile);
-const catalogueSource = read("src/features/avatar/avatar-catalogue-v1.js");
+const catalogueSource = read("src/features/avatar/avatar-catalogue.js");
 const loader = read("profile-emblem-control.js");
 const refresh = read("mobile-refresh.html");
 const worker = read("service-worker.js");
@@ -20,8 +20,8 @@ for (const [file, source] of [[rootFile, rootSource], [modelFile, modelSource], 
 }
 
 for (const marker of [
-  'const MODEL_URL = "./src/features/avatar/avatar-progression-model-v551.js?v=5.5.6"',
-  'const NAVIGATION_URL = "./src/adapters/navigation/avatar-collections-navigation-v551.js?v=5.5.6"',
+  'const MODEL_URL = "./src/features/avatar/avatar-progression-model-v551.js?v=sandbox-deletion-pass-1"',
+  'const NAVIGATION_URL = "./src/adapters/navigation/avatar-collections-navigation-v551.js?v=sandbox-deletion-pass-1"',
   "window.SalitaAvatarHotfixReady = Promise.resolve()",
   "loadDependency",
   "SalitaAvatarProgressionModelV551",
@@ -184,7 +184,7 @@ const context = {
 context.window = context;
 context.globalThis = context;
 vm.createContext(context);
-vm.runInContext(catalogueSource, context, {filename:"src/features/avatar/avatar-catalogue-v1.js"});
+vm.runInContext(catalogueSource, context, {filename:"src/features/avatar/avatar-catalogue.js"});
 vm.runInContext(modelSource, context, {filename:modelFile});
 vm.runInContext(navigationSource, context, {filename:navigationFile});
 vm.runInContext(rootSource, context, {filename:rootFile});
@@ -230,7 +230,7 @@ const historical = {
 historical.window = historical;
 historical.globalThis = historical;
 vm.createContext(historical);
-vm.runInContext(catalogueSource, historical, {filename:"src/features/avatar/avatar-catalogue-v1.js"});
+vm.runInContext(catalogueSource, historical, {filename:"src/features/avatar/avatar-catalogue.js"});
 historicalDom.document.querySelector = selector => {
   if (selector === '.sidebar .nav-item[data-view="badges"]') return historicalDom.nav;
   if (selector === ".main-area") return runtimeDom().document.querySelector(".main-area");

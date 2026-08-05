@@ -4,7 +4,7 @@ import vm from "node:vm";
 const read = file => fs.readFileSync(file,"utf8");
 const fail = message => { throw new Error(message); };
 const root = read("incorrect-order-feedback.js");
-const adapter = read("src/adapters/exercise/incorrect-order-feedback-runtime-v1.js");
+const adapter = read("src/adapters/exercise/incorrect-order-feedback-runtime.js");
 const feature = read("src/features/exercise/incorrect-order-feedback.js");
 const manifest = read("src/config/course-manifest.js");
 const worker = read("service-worker.js");
@@ -13,8 +13,8 @@ for (const [name,source] of [["root",root],["adapter",adapter],["feature",featur
 for (const marker of [
   'const INSTALL_FLAG = "__salitaQuestIncorrectOrderFeedbackInstalled"',
   'const RETRY_MS = 60',
-  'src/adapters/exercise/incorrect-order-feedback-runtime-v1.js?v=5.4.21',
-  'src/features/exercise/incorrect-order-feedback.js?v=5.4.21',
+  'src/adapters/exercise/incorrect-order-feedback-runtime.js?v=sandbox-deletion-pass-1',
+  'src/features/exercise/incorrect-order-feedback.js?v=sandbox-deletion-pass-1',
   "document.write", "script.async = false", "loadMissingDependencies"
 ]) if (!root.includes(marker)) fail(`Root coordinator missing ${marker}`);
 for (const forbidden of ["currentExercise?.","sentenceBuilderState.","renderFeedback =","renderSentenceBuilder =","selected-word-tile","correct-order-revealed","normaliseToken","localStorage","sessionStorage"])
@@ -110,17 +110,17 @@ if (window.SalitaIncorrectOrderFeedbackV1!==beforeApi || context.__read().render
 const manifestContext={window:{}}; vm.createContext(manifestContext); vm.runInContext(manifest,manifestContext);
 for (const courseId of ["tagalog","cebuano"]) {
   const scripts=manifestContext.window.SalitaQuestCourseManifest.courses[courseId].scripts;
-  const adapterIndex=scripts.indexOf("src/adapters/exercise/incorrect-order-feedback-runtime-v1.js?v=5.4.21");
-  const featureIndex=scripts.indexOf("src/features/exercise/incorrect-order-feedback.js?v=5.4.21");
-  const rootIndex=scripts.indexOf("incorrect-order-feedback.js?v=5.4.21");
-  const compactIndex=scripts.indexOf("src/features/interface/compact-desktop-layout.js?v=5.4.21");
+  const adapterIndex=scripts.indexOf("src/adapters/exercise/incorrect-order-feedback-runtime.js?v=sandbox-deletion-pass-1");
+  const featureIndex=scripts.indexOf("src/features/exercise/incorrect-order-feedback.js?v=sandbox-deletion-pass-1");
+  const rootIndex=scripts.indexOf("incorrect-order-feedback.js?v=sandbox-deletion-pass-1");
+  const compactIndex=scripts.indexOf("src/features/interface/compact-desktop-layout.js?v=sandbox-deletion-pass-1");
   if (!(adapterIndex>=0 && featureIndex===adapterIndex+1 && rootIndex===featureIndex+1 && compactIndex>rootIndex)) fail(`${courseId} load order changed`);
 }
 for (const marker of [
   'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-19-long-term-badge-adapter-extraction-r72"',
   'const CACHE_NAME = "salita-quest-v5-6-20-avatar-case-profile-adapter-extraction-r73"',
   '"./incorrect-order-feedback.js"', '"./incorrect-order-feedback.css"',
-  '"./src/adapters/exercise/incorrect-order-feedback-runtime-v1.js"',
+  '"./src/adapters/exercise/incorrect-order-feedback-runtime.js"',
   '"./src/features/exercise/incorrect-order-feedback.js"'
 ]) if (!worker.includes(marker)) fail(`Offline delivery missing ${marker}`);
 for (const source of [root,adapter,feature]) if (/\b(?:localStorage|sessionStorage)\b/.test(source)) fail("Incorrect-order extraction must not access storage");

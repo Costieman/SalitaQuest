@@ -7,14 +7,14 @@ const read = file => fs.readFileSync(path.join(root, file), "utf8");
 const fail = message => { throw new Error(message); };
 
 for (const file of [
-  "placement-onboarding-v1.js",
-  "badge-catalogue-v2.js",
-  "badge-chest-v2.js",
+  "placement-onboarding.js",
+  "badge-catalogue.js",
+  "badge-chest.js",
   "src/config/course-manifest.js",
   "service-worker.js"
 ]) new vm.Script(read(file), {filename: file});
 
-const placement = read("placement-onboarding-v1.js");
+const placement = read("placement-onboarding.js");
 for (const marker of [
   "const TEST_LENGTH = 20",
   '"A1","A2","A3","B1","B2","B3"',
@@ -32,12 +32,12 @@ for (const marker of [
 if (/state\.xp\s*[+\-]?=/.test(placement)) fail("Placement runtime must not award or rewrite XP");
 if (/mastery\s*:/.test(placement) || /itemState\[[^\]]+\]\s*=/.test(placement)) fail("Placement runtime must not manufacture item mastery");
 
-const placementCss = read("placement-onboarding-v1.css");
+const placementCss = read("placement-onboarding.css");
 for (const marker of [".placement-modal", ".placement-level-grid", ".placement-answer-grid", ".placement-settings-card", "@media (max-width:700px)"]) {
   if (!placementCss.includes(marker)) fail(`Missing placement style: ${marker}`);
 }
 
-const catalogue = read("badge-catalogue-v2.js");
+const catalogue = read("badge-catalogue.js");
 for (const marker of [
   "ADDITIONAL_BADGES",
   "badgeProgress",
@@ -46,12 +46,12 @@ for (const marker of [
   'new CustomEvent("salita:badges-rendered"'
 ]) if (!catalogue.includes(marker)) fail(`Missing badge catalogue marker: ${marker}`);
 
-const badgeCss = read("badge-catalogue-v2.css");
+const badgeCss = read("badge-catalogue.css");
 for (const marker of ["#badgesView {", "overflow-x:hidden", "badge-catalogue-grid", "badge-catalogue-card"]) {
   if (!badgeCss.includes(marker)) fail(`Missing badge catalogue style: ${marker}`);
 }
 
-const chest = read("badge-chest-v2.js");
+const chest = read("badge-chest.js");
 for (const marker of [
   "const MAX_CHEST_BADGES = 6",
   "data.chestIds",
@@ -75,26 +75,26 @@ for (const [htmlFile, courseId] of [["app.html", "tagalog"], ["bisaya.html", "ce
   const scripts = [...html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/gi)].map(match => match[1].trim()).filter(Boolean);
   scripts.forEach((source, index) => new vm.Script(source, {filename: `${htmlFile}#inline-${index + 1}`}));
   for (const marker of [
-    "src/config/course-manifest.js?v=5.6.0",
-    "src/app/course-bootstrap.js?v=5.6.0",
+    "src/config/course-manifest.js?v=sandbox-deletion-pass-1",
+    "src/app/course-bootstrap.js?v=sandbox-deletion-pass-1",
     `courseId: "${courseId}"`
   ]) if (!html.includes(marker)) fail(`${htmlFile} does not load ${marker}`);
 
   const course = courseManifest.courses[courseId];
   if (!course) fail(`${courseId} is missing from the course manifest.`);
   for (const asset of [
-    "badge-catalogue-v2.css?v=5.4.23",
-    "badge-chest-v2.css?v=5.4.29",
-    "placement-onboarding-v1.css?v=5.4.23"
+    "badge-catalogue.css?v=sandbox-deletion-pass-1",
+    "badge-chest.css?v=sandbox-deletion-pass-1",
+    "placement-onboarding.css?v=sandbox-deletion-pass-1"
   ]) if (!course.styles.includes(asset)) fail(`${htmlFile} does not load ${asset}`);
   for (const asset of [
-    "badge-catalogue-v2.js?v=5.4.23",
-    "badge-chest-v2.js?v=5.4.29",
-    "placement-onboarding-v1.js?v=5.4.23"
+    "badge-catalogue.js?v=sandbox-deletion-pass-1",
+    "badge-chest.js?v=sandbox-deletion-pass-1",
+    "placement-onboarding.js?v=sandbox-deletion-pass-1"
   ]) if (!course.scripts.includes(asset)) fail(`${htmlFile} does not load ${asset}`);
-  const catalogueIndex = course.scripts.indexOf("badge-catalogue-v2.js?v=5.4.23");
-  const chestIndex = course.scripts.indexOf("badge-chest-v2.js?v=5.4.29");
-  const placementIndex = course.scripts.indexOf("placement-onboarding-v1.js?v=5.4.23");
+  const catalogueIndex = course.scripts.indexOf("badge-catalogue.js?v=sandbox-deletion-pass-1");
+  const chestIndex = course.scripts.indexOf("badge-chest.js?v=sandbox-deletion-pass-1");
+  const placementIndex = course.scripts.indexOf("placement-onboarding.js?v=sandbox-deletion-pass-1");
   if (!(catalogueIndex >= 0 && chestIndex > catalogueIndex && placementIndex > chestIndex)) {
     fail(`${htmlFile} must load catalogue, stable Badge Chest, then placement.`);
   }
@@ -105,15 +105,15 @@ for (const [htmlFile, courseId] of [["app.html", "tagalog"], ["bisaya.html", "ce
 
 const worker = read("service-worker.js");
 for (const asset of [
-  '"./badge-chest-v2.js"',
-  '"./badge-chest-v2.css"',
-  '"./placement-onboarding-v1.js"',
-  '"./placement-onboarding-v1.css"',
+  '"./badge-chest.js"',
+  '"./badge-chest.css"',
+  '"./placement-onboarding.js"',
+  '"./placement-onboarding.css"',
   '"./avatar-case-v1.js"',
   '"./avatar-case-v1.css"',
   '"./desktop-navigation-refinement.js"',
   '"./desktop-navigation-refinement.css"',
-  '"./exercise-fixes-v545.js"',
+  '"./exercise-fixes.js"',
   '"./src/config/course-manifest.js"',
   '"./src/app/course-bootstrap.js"'
 ]) if (!worker.includes(asset)) fail(`Offline cache is missing ${asset}`);
@@ -129,7 +129,7 @@ const indexScripts = [...index.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script
   .map(match => match[1].trim())
   .filter(Boolean);
 indexScripts.forEach((source, scriptIndex) => new vm.Script(source, {filename:`index.html#inline-${scriptIndex + 1}`}));
-if (!index.includes("profile-shell.css?v=5.4.25") || !index.includes("service-worker.js?v=5.4.29")) {
+if (!index.includes("profile-shell.css?v=sandbox-deletion-pass-1") || !index.includes("service-worker.js?v=sandbox-deletion-pass-1")) {
   fail("Profile gate was not advanced to the stable profile release");
 }
 for (const marker of [

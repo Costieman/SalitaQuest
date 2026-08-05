@@ -15,6 +15,6 @@ const required = [
   '.sq-avatar-card-art{background:#d1d6d5!important}'
 ];
 for (const token of required) if (!css.includes(token)) throw new Error(`Missing collection fill token: ${token}`);
-if (!loader.includes('avatar-collection-rarity-fill-v1.css?v=5.6.7')) throw new Error("Collection rarity stylesheet is not loaded");
+if (!loader.includes('avatar-collection-rarity-fill-v1.css?v=sandbox-deletion-pass-1')) throw new Error("Collection rarity stylesheet is not loaded");
 if (loader.includes("MutationObserver")) throw new Error("Topbar observer must remain disabled");
 console.log("Avatar collection rarity fill validation passed.");

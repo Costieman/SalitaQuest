@@ -16,7 +16,7 @@ new vm.Script(compatibility,{filename:rootFile});
 new vm.Script(feature,{filename:moduleFile});
 
 for (const marker of [
-  'const TARGET = "./src/features/avatar/avatar-collection-summary-v1.js?v=5.6.9"',
+  'const TARGET = "./src/features/avatar/avatar-collection-summary-v1.js?v=sandbox-deletion-pass-1"',
   "document.currentScript",
   "document.write",
   "script.async = false",
@@ -48,11 +48,11 @@ if ((feature.match(/document\.addEventListener/g)||[]).length !== 4) fail("Featu
 if ((feature.match(/window\.setInterval/g)||[]).length !== 1 || !feature.includes("}, 1000)")) fail("Feature must own the one-second refresh interval");
 if (/MutationObserver/.test(feature)) fail("Collection summary must not own a mutation observer");
 
-const summaryIndex = loader.indexOf('src/features/avatar/avatar-collection-summary-v1.js?v=5.6.9');
-const economyIndex = loader.indexOf('src/features/economy/economy-tracking-phase6-v1.js?v=5.7.3');
-const tabsIndex = loader.indexOf('src/features/avatar/avatar-collection-tabs-phase6-1-v1.js?v=5.7.4');
+const summaryIndex = loader.indexOf('src/features/avatar/avatar-collection-summary-v1.js?v=sandbox-deletion-pass-1');
+const economyIndex = loader.indexOf('src/features/economy/economy-tracking-phase6-v1.js?v=sandbox-deletion-pass-1');
+const tabsIndex = loader.indexOf('src/features/avatar/avatar-collection-tabs-phase6-1-v1.js?v=sandbox-deletion-pass-1');
 if (!(summaryIndex >= 0 && economyIndex > summaryIndex && tabsIndex > economyIndex)) fail("Collection summary, economy tracker and tabs load order changed");
-if (loader.includes('"./avatar-collection-summary-v1.js?v=5.6.9"')) fail("Current loader still targets the root compatibility URL");
+if (loader.includes('"./avatar-collection-summary-v1.js?v=sandbox-deletion-pass-1"')) fail("Current loader still targets the root compatibility URL");
 
 for (const marker of [
   'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-19-long-term-badge-adapter-extraction-r72"',

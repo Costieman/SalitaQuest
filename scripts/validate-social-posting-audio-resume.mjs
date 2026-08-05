@@ -13,11 +13,11 @@ const requirePatterns = (source, patterns, label) => patterns.forEach(([pattern,
   if (!pattern.test(source)) fail(`${label} is missing: ${description}`);
 });
 
-for (const file of ["social-connections-v2.js", "achievement-sharing-v4.js", "src/config/course-manifest.js", "service-worker.js"]) {
+for (const file of ["social-connections.js", "achievement-sharing.js", "src/config/course-manifest.js", "service-worker.js"]) {
   new vm.Script(read(file), {filename: file});
 }
 
-const layout = read("badge-layout-v3.css");
+const layout = read("badge-layout.css");
 requireMarkers(layout, [
   "#badgesView #badgeShelf > .badge.badge-catalogue-card",
   "grid-template-columns:92px minmax(0,1fr) !important",
@@ -30,7 +30,7 @@ if (!layout.includes(".badge-visual-shell") || !layout.includes(".badge-catalogu
   fail("Badge art and copy are not independently positioned");
 }
 
-const connections = read("social-connections-v2.js");
+const connections = read("social-connections.js");
 requireMarkers(connections, [
   "salitaQuestSocialApiBase",
   "SALITA_SOCIAL_API_BASE",
@@ -58,7 +58,7 @@ if (connections.includes("/healthz")) fail("Connected-account runtime must avoid
 if (connections.includes("Share service not configured")) fail("Normal learners must not see service setup errors");
 if (connections.includes("Deploy the Salita Quest share service")) fail("Normal learners must not receive infrastructure instructions");
 
-const sharing = read("achievement-sharing-v4.js");
+const sharing = read("achievement-sharing.js");
 requireMarkers(sharing, [
   "avatarPath()",
   "drawBadgeVisual",
@@ -119,26 +119,26 @@ for (const [htmlFile, courseId] of [["app.html", "tagalog"], ["bisaya.html", "ce
   const inline = [...html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/gi)].map(match => match[1].trim()).filter(Boolean);
   inline.forEach((source, index) => new vm.Script(source, {filename: `${htmlFile}#inline-${index + 1}`}));
   for (const marker of [
-    "src/config/course-manifest.js?v=5.6.0",
-    "src/app/course-bootstrap.js?v=5.6.0",
+    "src/config/course-manifest.js?v=sandbox-deletion-pass-1",
+    "src/app/course-bootstrap.js?v=sandbox-deletion-pass-1",
     `courseId: "${courseId}"`
   ]) if (!html.includes(marker)) fail(`${htmlFile} does not load ${marker}`);
   const course = courseManifest.courses[courseId];
   if (!course) fail(`${courseId} is missing from the course manifest.`);
   for (const asset of [
-    "badge-layout-v3.css?v=5.4.25",
-    "badge-chest-v2.css?v=5.4.29",
-    "social-connections-v2.css?v=5.4.27",
-    "achievement-sharing-v4.css?v=5.4.29"
+    "badge-layout.css?v=sandbox-deletion-pass-1",
+    "badge-chest.css?v=sandbox-deletion-pass-1",
+    "social-connections.css?v=sandbox-deletion-pass-1",
+    "achievement-sharing.css?v=sandbox-deletion-pass-1"
   ]) if (!course.styles.includes(asset)) fail(`${htmlFile} does not load ${asset}`);
   for (const asset of [
-    "badge-chest-v2.js?v=5.4.29",
-    "social-connections-v2.js?v=5.4.27",
-    "achievement-sharing-v4.js?v=5.4.29"
+    "badge-chest.js?v=sandbox-deletion-pass-1",
+    "social-connections.js?v=sandbox-deletion-pass-1",
+    "achievement-sharing.js?v=sandbox-deletion-pass-1"
   ]) if (!course.scripts.includes(asset)) fail(`${htmlFile} does not load ${asset}`);
-  const chestIndex = course.scripts.indexOf("badge-chest-v2.js?v=5.4.29");
-  const connectionsIndex = course.scripts.indexOf("social-connections-v2.js?v=5.4.27");
-  const sharingIndex = course.scripts.indexOf("achievement-sharing-v4.js?v=5.4.29");
+  const chestIndex = course.scripts.indexOf("badge-chest.js?v=sandbox-deletion-pass-1");
+  const connectionsIndex = course.scripts.indexOf("social-connections.js?v=sandbox-deletion-pass-1");
+  const sharingIndex = course.scripts.indexOf("achievement-sharing.js?v=sandbox-deletion-pass-1");
   if (!(chestIndex >= 0 && connectionsIndex > chestIndex && sharingIndex > connectionsIndex)) {
     fail(`${htmlFile} must load chest state, sharing service and final achievement sharing in that order`);
   }
@@ -151,13 +151,13 @@ const worker = read("service-worker.js");
 requireMarkers(worker, [
   'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-19-long-term-badge-adapter-extraction-r72"',
   'const CACHE_NAME = "salita-quest-v5-6-20-avatar-case-profile-adapter-extraction-r73"',
-  '"./badge-layout-v3.css"',
-  '"./badge-chest-v2.js"',
-  '"./badge-chest-v2.css"',
-  '"./social-connections-v2.js"',
-  '"./social-connections-v2.css"',
-  '"./achievement-sharing-v4.js"',
-  '"./achievement-sharing-v4.css"',
+  '"./badge-layout.css"',
+  '"./badge-chest.js"',
+  '"./badge-chest.css"',
+  '"./social-connections.js"',
+  '"./social-connections.css"',
+  '"./achievement-sharing.js"',
+  '"./achievement-sharing.css"',
   '"./avatar-case-v1.js"',
   '"./avatar-case-v1.css"',
   '"./desktop-navigation-refinement.js"',

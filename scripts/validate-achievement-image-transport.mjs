@@ -28,7 +28,7 @@ for (const [file,source] of [
 
 requireMarkers(routerShim,[
   "__salitaQuestAchievementSharingRouterV3Installed",
-  'script.src = "./src/features/sharing/achievement-sharing-router-v3.js?v=5.5.21"',
+  'script.src = "./src/features/sharing/achievement-sharing-router-v3.js?v=sandbox-deletion-pass-1"',
   'script.dataset.sqSharingRouterV3 = "true"',
   'script.async = false'
 ],"Sharing-router v2 entry loader");
@@ -36,7 +36,7 @@ requireMarkers(routerShim,[
 requireMarkers(routerRoot,[
   "__salitaQuestAchievementSharingRouterV3Installed",
   "__salitaQuestAchievementSharingRouterV3CompatibilityLoading",
-  'const source = "./src/features/sharing/achievement-sharing-router-v3.js?v=5.5.21"',
+  'const source = "./src/features/sharing/achievement-sharing-router-v3.js?v=sandbox-deletion-pass-1"',
   "document.write",
   "script.async = false"
 ],"Sharing-router root compatibility loader");

@@ -20,7 +20,7 @@ for (const [file, source] of [
 ]) new vm.Script(source, {filename:file});
 
 for (const marker of [
-  'const TARGET = "./src/features/progression/home-reward-coordinator.js?v=5.4.22"',
+  'const TARGET = "./src/features/progression/home-reward-coordinator.js?v=sandbox-deletion-pass-1"',
   'const LOADING_FLAG = "__salitaQuestHomeRewardCoordinatorCompatibilityLoading"',
   'document.currentScript',
   'document.write',
@@ -69,12 +69,12 @@ const courses = context.window.SalitaQuestCourseManifest?.courses;
 if (!courses) fail("Course manifest did not install");
 for (const courseId of ["tagalog", "cebuano"]) {
   const scripts = courses[courseId]?.scripts || [];
-  const direct = 'src/features/progression/home-reward-coordinator.js?v=5.4.22';
+  const direct = 'src/features/progression/home-reward-coordinator.js?v=sandbox-deletion-pass-1';
   if (scripts.filter(item => item === direct).length !== 1) fail(`${courseId} must load the extracted coordinator exactly once`);
-  if (scripts.includes('home-reward-coordinator.js?v=5.4.22')) fail(`${courseId} still loads the compatibility URL directly`);
-  const audio = scripts.indexOf('src/features/audio/pronunciation-release-control.js?v=5.4.22');
+  if (scripts.includes('home-reward-coordinator.js?v=sandbox-deletion-pass-1')) fail(`${courseId} still loads the compatibility URL directly`);
+  const audio = scripts.indexOf('src/features/audio/pronunciation-release-control.js?v=sandbox-deletion-pass-1');
   const reward = scripts.indexOf(direct);
-  const badges = scripts.indexOf('badge-catalogue-v2.js?v=5.4.23');
+  const badges = scripts.indexOf('badge-catalogue.js?v=sandbox-deletion-pass-1');
   if (!(audio >= 0 && reward > audio && badges > reward)) fail(`${courseId} coordinator load order changed`);
 }
 

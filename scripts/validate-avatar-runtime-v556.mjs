@@ -15,7 +15,7 @@ const check = (condition, message) => {
 };
 
 const sources = {
-  catalogue:read("src/features/avatar/avatar-catalogue-v1.js"),
+  catalogue:read("src/features/avatar/avatar-catalogue.js"),
   artwork:read("src/features/avatar/avatar-artwork-registry-v554.js"),
   modelHotfix:read("src/features/avatar/avatar-progression-model-v551.js"),
       navigationAdapter:read("src/adapters/navigation/avatar-collections-navigation-v551.js"),

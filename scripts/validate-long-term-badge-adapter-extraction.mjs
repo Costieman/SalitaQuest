@@ -51,7 +51,7 @@ const parserContext = {
 parserContext.window=parserContext;
 vm.createContext(parserContext);
 new vm.Script(root,{filename:"long-term-badges-v1.js"}).runInContext(parserContext);
-if (writes.length !== 2 || !writes[0].includes("badge-catalogue-runtime-v1.js?v=5.6.0") || !writes[1].includes("src/features/badges/long-term-badges-v1.js?v=5.6.0")) fail("Parser-time root compatibility order changed");
+if (writes.length !== 2 || !writes[0].includes("badge-catalogue-runtime-v1.js?v=sandbox-deletion-pass-1") || !writes[1].includes("src/features/badges/long-term-badges-v1.js?v=sandbox-deletion-pass-1")) fail("Parser-time root compatibility order changed");
 if (!parserContext.__salitaQuestLongTermBadgesV1Installed) fail("Historical install flag is not preserved");
 
 console.log("Long-term badge adapter extraction validation passed.");

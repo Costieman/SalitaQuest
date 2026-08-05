@@ -29,14 +29,14 @@ for (const [path, source] of [
 ]) new vm.Script(source, {filename:path});
 
 requireMarkers(compactLoader, [
-  'const TARGET = "./src/features/interface/compact-desktop-layout.js?v=5.4.21"',
+  'const TARGET = "./src/features/interface/compact-desktop-layout.js?v=sandbox-deletion-pass-1"',
   "document.currentScript",
   "document.write",
   "script.async = false",
   'salitaCompatibilityLoader = "compact-desktop-layout"'
 ], "Compact desktop compatibility loader");
 requireMarkers(topbarLoader, [
-  'const TARGET = "./src/features/interface/clean-topbar.js?v=5.4.21"',
+  'const TARGET = "./src/features/interface/clean-topbar.js?v=sandbox-deletion-pass-1"',
   "document.currentScript",
   "document.write",
   "script.async = false",
@@ -65,8 +65,8 @@ requireMarkers(compactModule, [
 requireMarkers(topbarModule, [
   'const INSTALL_FLAG = "__salitaQuestCleanTopbarInstalled"',
   'const STYLESHEETS = [',
-  'topbar-world-progress-hotfix.css?v=5.5.10.1',
-  'mobile-world-progress-flow.css?v=5.5.10.2',
+  'topbar-world-progress.css?v=sandbox-deletion-pass-1',
+  'mobile-world-progress-flow.css?v=sandbox-deletion-pass-1',
   'function structureMasteryShell()',
   'shell.dataset.compactMastery = "true"',
   'typeof totalLearningPoints === "function"',
@@ -87,21 +87,21 @@ const context = {window:{}};
 vm.createContext(context);
 vm.runInContext(manifestSource, context, {filename:"src/config/course-manifest.js"});
 const courses = context.window.SalitaQuestCourseManifest?.courses;
-const compactExpected = "src/features/interface/compact-desktop-layout.js?v=5.4.21";
-const topbarExpected = "src/features/interface/clean-topbar.js?v=5.4.21";
+const compactExpected = "src/features/interface/compact-desktop-layout.js?v=sandbox-deletion-pass-1";
+const topbarExpected = "src/features/interface/clean-topbar.js?v=sandbox-deletion-pass-1";
 if (!courses) fail("Course manifest was not installed");
 for (const courseId of ["tagalog", "cebuano"]) {
   const scripts = courses[courseId]?.scripts || [];
-  const feedbackAdapter = scripts.indexOf("src/adapters/exercise/incorrect-order-feedback-runtime-v1.js?v=5.4.21");
-  const feedbackFeature = scripts.indexOf("src/features/exercise/incorrect-order-feedback.js?v=5.4.21");
-  const feedback = scripts.indexOf("incorrect-order-feedback.js?v=5.4.21");
+  const feedbackAdapter = scripts.indexOf("src/adapters/exercise/incorrect-order-feedback-runtime.js?v=sandbox-deletion-pass-1");
+  const feedbackFeature = scripts.indexOf("src/features/exercise/incorrect-order-feedback.js?v=sandbox-deletion-pass-1");
+  const feedback = scripts.indexOf("incorrect-order-feedback.js?v=sandbox-deletion-pass-1");
   const compact = scripts.indexOf(compactExpected);
   const topbar = scripts.indexOf(topbarExpected);
-  const rail = scripts.indexOf("src/features/progression/even-progress-rail.js?v=5.4.21");
+  const rail = scripts.indexOf("src/features/progression/even-progress-rail.js?v=sandbox-deletion-pass-1");
   if (!(feedback >= 0 && compact > feedback && topbar > compact && rail > topbar)) {
     fail(`${courseId} does not preserve feedback → compact layout → topbar → progress rail order`);
   }
-  if (scripts.includes("compact-desktop-layout.js?v=5.4.21") || scripts.includes("clean-topbar.js?v=5.4.21")) {
+  if (scripts.includes("compact-desktop-layout.js?v=sandbox-deletion-pass-1") || scripts.includes("clean-topbar.js?v=sandbox-deletion-pass-1")) {
     fail(`${courseId} still loads a root desktop-shell compatibility URL directly`);
   }
 }

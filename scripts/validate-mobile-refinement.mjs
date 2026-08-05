@@ -57,29 +57,29 @@ if (!courseManifest?.courses) fail("The modular course manifest was not installe
 for (const [htmlFile, courseId] of [["app.html", "tagalog"], ["bisaya.html", "cebuano"]]) {
   const html = read(htmlFile);
   requireMarkers(html, [
-    "src/config/course-manifest.js?v=5.6.0",
-    "src/app/course-bootstrap.js?v=5.6.0",
+    "src/config/course-manifest.js?v=sandbox-deletion-pass-1",
+    "src/app/course-bootstrap.js?v=sandbox-deletion-pass-1",
     `courseId: "${courseId}"`
   ], `${htmlFile} modular entry point`);
 
   const course = courseManifest.courses[courseId];
   if (!course) fail(`${courseId} is missing from the course manifest.`);
-  if (!course.styles.includes('mobile-session-refinement.css?v=5.4.21')) {
-    fail(`${htmlFile} mobile assets is missing mobile-session-refinement.css?v=5.4.21`);
+  if (!course.styles.includes('mobile-session-refinement.css?v=sandbox-deletion-pass-1')) {
+    fail(`${htmlFile} mobile assets is missing mobile-session-refinement.css?v=sandbox-deletion-pass-1`);
   }
-  if (!course.scripts.includes('mobile-session-refinement.js?v=5.4.21')) {
-    fail(`${htmlFile} mobile assets is missing mobile-session-refinement.js?v=5.4.21`);
+  if (!course.scripts.includes('mobile-session-refinement.js?v=sandbox-deletion-pass-1')) {
+    fail(`${htmlFile} mobile assets is missing mobile-session-refinement.js?v=sandbox-deletion-pass-1`);
   }
   if (!course.scripts.some(path => /^desktop-navigation-refinement\.js\?v=(?:5\.4\.21|5\.5\.2|5\.5\.3)$/.test(path))) {
     fail(`${htmlFile} mobile assets is missing the desktop navigation refinement runtime.`);
   }
-  const launcher = course.scripts.indexOf('lesson-side-launcher.js?v=5.4.21');
-  const mobile = course.scripts.indexOf('mobile-session-refinement.js?v=5.4.21');
+  const launcher = course.scripts.indexOf('lesson-side-launcher.js?v=sandbox-deletion-pass-1');
+  const mobile = course.scripts.indexOf('mobile-session-refinement.js?v=sandbox-deletion-pass-1');
   if (!(launcher >= 0 && mobile > launcher)) fail(`${htmlFile} must load mobile refinement after the lesson launcher.`);
 }
 const tagalogScripts = courseManifest.courses.tagalog.scripts;
 const appProfile = tagalogScripts.findIndex(path => /^profile-app\.js\?v=(?:5\.4\.21|5\.5\.2|5\.5\.3|5\.5\.4)$/.test(path));
-const appMobile = tagalogScripts.indexOf('mobile-session-refinement.js?v=5.4.21');
+const appMobile = tagalogScripts.indexOf('mobile-session-refinement.js?v=sandbox-deletion-pass-1');
 if (!(appProfile > appMobile)) fail("Tagalog must load profile controls after mobile refinement.");
 if (!read("bisaya-app-loader.js").includes('loadScript("./profile-app.js')) fail("Bisaya must load profile controls through its course loader.");
 
@@ -92,6 +92,6 @@ requireMarkers(serviceWorker, [
 ], "Mobile offline release");
 
 const index = read("index.html");
-if (!index.includes('service-worker.js?v=5.4.29')) fail("The profile gate does not request the current service worker.");
+if (!index.includes('service-worker.js?v=sandbox-deletion-pass-1')) fail("The profile gate does not request the current service worker.");
 
 console.log("Validated numbered-only mobile World Progress, rail-free review screens, fixed lesson actions, compact mastery, More navigation including Badges, profile controls in both modular course architectures, and offline delivery.");

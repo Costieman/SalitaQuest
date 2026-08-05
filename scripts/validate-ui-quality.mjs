@@ -12,7 +12,7 @@ const requireMarkers = (source, markers, label) => markers.forEach(marker => {
 for (const file of [
   "ui-quality-fixes.js",
   "incorrect-order-feedback.js",
-  "src/adapters/exercise/incorrect-order-feedback-runtime-v1.js",
+  "src/adapters/exercise/incorrect-order-feedback-runtime.js",
   "src/features/exercise/incorrect-order-feedback.js",
   "compact-desktop-layout.js",
   "src/features/interface/compact-desktop-layout.js",
@@ -82,8 +82,8 @@ if (!courseManifest?.courses) fail("The modular course manifest was not installe
 for (const [htmlFile, courseId] of [["app.html", "tagalog"], ["bisaya.html", "cebuano"]]) {
   const html = read(htmlFile);
   requireMarkers(html, [
-    "src/config/course-manifest.js?v=5.6.0",
-    "src/app/course-bootstrap.js?v=5.6.0",
+    "src/config/course-manifest.js?v=sandbox-deletion-pass-1",
+    "src/app/course-bootstrap.js?v=sandbox-deletion-pass-1",
     `courseId: "${courseId}"`
   ], `${htmlFile} modular entry point`);
 
@@ -91,15 +91,15 @@ for (const [htmlFile, courseId] of [["app.html", "tagalog"], ["bisaya.html", "ce
   if (!Array.isArray(scripts)) fail(`${courseId} has no script manifest.`);
   const scriptSource = scripts.join("\n");
   requireMarkers(scriptSource, [
-    "ui-quality-fixes.js?v=5.4.21",
-    "incorrect-order-feedback.js?v=5.4.21",
-    "mastery-feedback.js?v=5.4.21",
-    "lesson-side-launcher.js?v=5.4.21",
-    "mobile-session-refinement.js?v=5.4.21"
+    "ui-quality-fixes.js?v=sandbox-deletion-pass-1",
+    "incorrect-order-feedback.js?v=sandbox-deletion-pass-1",
+    "mastery-feedback.js?v=sandbox-deletion-pass-1",
+    "lesson-side-launcher.js?v=sandbox-deletion-pass-1",
+    "mobile-session-refinement.js?v=sandbox-deletion-pass-1"
   ], `${htmlFile} shared assets`);
-  const masteryIndex = scripts.indexOf("mastery-feedback.js?v=5.4.21");
-  const launcherIndex = scripts.indexOf("lesson-side-launcher.js?v=5.4.21");
-  const mobileIndex = scripts.indexOf("mobile-session-refinement.js?v=5.4.21");
+  const masteryIndex = scripts.indexOf("mastery-feedback.js?v=sandbox-deletion-pass-1");
+  const launcherIndex = scripts.indexOf("lesson-side-launcher.js?v=sandbox-deletion-pass-1");
+  const mobileIndex = scripts.indexOf("mobile-session-refinement.js?v=sandbox-deletion-pass-1");
   if (!(masteryIndex >= 0 && launcherIndex > masteryIndex && mobileIndex > launcherIndex)) {
     fail(`${htmlFile} has an invalid mastery → launcher → mobile load order.`);
   }
@@ -110,7 +110,7 @@ requireMarkers(serviceWorker, [
   'const CACHE_NAME = "salita-quest-',
   '"./ui-quality-fixes.js"',
   '"./incorrect-order-feedback.js"',
-  '"./src/adapters/exercise/incorrect-order-feedback-runtime-v1.js"',
+  '"./src/adapters/exercise/incorrect-order-feedback-runtime.js"',
   '"./src/features/exercise/incorrect-order-feedback.js"',
   '"./mastery-feedback.js"',
   '"./lesson-side-launcher.js"',

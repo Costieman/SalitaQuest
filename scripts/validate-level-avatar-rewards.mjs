@@ -5,7 +5,7 @@ const root = new URL("../", import.meta.url);
 const read = path => fs.readFileSync(new URL(path, root), "utf8");
 const fail = message => { throw new Error(message); };
 
-const catalogueSource = read("src/features/avatar/avatar-catalogue-v1.js");
+const catalogueSource = read("src/features/avatar/avatar-catalogue.js");
 const compatibilitySource = read("level-avatar-rewards-v1.js");
 const rewardSource = read("src/features/avatar/level-avatar-rewards-v1.js");
 const loaderSource = read("profile-emblem-control.js");
@@ -14,11 +14,11 @@ new vm.Script(compatibilitySource, {filename:"level-avatar-rewards-v1.js"});
 new vm.Script(rewardSource, {filename:"src/features/avatar/level-avatar-rewards-v1.js"});
 new vm.Script(loaderSource, {filename:"profile-emblem-control.js"});
 
-if (!compatibilitySource.includes('const TARGET = "./src/features/avatar/level-avatar-rewards-v1.js?v=5.5.6"') || !compatibilitySource.includes("document.write") || !compatibilitySource.includes("script.async = false")) fail("Historical level reward URL is not compatibility-only");
+if (!compatibilitySource.includes('const TARGET = "./src/features/avatar/level-avatar-rewards-v1.js?v=sandbox-deletion-pass-1"') || !compatibilitySource.includes("document.write") || !compatibilitySource.includes("script.async = false")) fail("Historical level reward URL is not compatibility-only");
 
 const sandbox = {};
 vm.createContext(sandbox);
-vm.runInContext(catalogueSource, sandbox, {filename:"avatar-catalogue-v1.js"});
+vm.runInContext(catalogueSource, sandbox, {filename:"avatar-catalogue.js"});
 vm.runInContext(rewardSource, sandbox, {filename:"src/features/avatar/level-avatar-rewards-v1.js"});
 
 const model = sandbox.SalitaAvatarModel;

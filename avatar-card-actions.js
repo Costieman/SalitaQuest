@@ -16,7 +16,7 @@
   function ensureDailyKeyReconciliation() {
     if (window.__salitaDailyKeyWeekdayReconciliationV3Installed || document.querySelector('script[data-sq-daily-key-reconciliation]')) return;
     const script = document.createElement("script");
-    script.src = "./daily-key-weekday-reconciliation-v1.js?v=3.0";
+    script.src = "./daily-key-weekday-reconciliation.js?v=sandbox-deletion-pass-1";
     script.dataset.sqDailyKeyReconciliation = "true";
     script.onerror = () => console.warn("Daily Key reconciliation could not be loaded.");
     document.body.appendChild(script);
@@ -25,7 +25,7 @@
   function ensureProjectedWeeklyUnlockFix() {
     if (window.__salitaWeeklyAvatarProjectedUnlockFixV1Installed || document.querySelector('script[data-sq-weekly-projected-unlock-fix]')) return;
     const script = document.createElement("script");
-    script.src = "./weekly-avatar-projected-unlock-fix-v1.js?v=1.0";
+    script.src = "./weekly-avatar-projected-unlock.js?v=sandbox-deletion-pass-1";
     script.dataset.sqWeeklyProjectedUnlockFix = "true";
     script.onerror = () => console.warn("Weekly avatar projected unlock fix could not be loaded.");
     document.body.appendChild(script);
@@ -35,13 +35,13 @@
     if (!document.querySelector('link[data-sq-universal-share]')) {
       const link = document.createElement("link");
       link.rel = "stylesheet";
-      link.href = "./universal-share-simplifier-v1.css?v=1.0";
+      link.href = "./universal-share-simplifier.css?v=sandbox-deletion-pass-1";
       link.dataset.sqUniversalShare = "true";
       document.head.appendChild(link);
     }
     if (window.__salitaUniversalShareSimplifierV1Installed || document.querySelector('script[data-sq-universal-share]')) return;
     const script = document.createElement("script");
-    script.src = "./universal-share-simplifier-v1.js?v=1.0";
+    script.src = "./universal-share-simplifier.js?v=sandbox-deletion-pass-1";
     script.dataset.sqUniversalShare = "true";
     script.onerror = () => console.warn("Universal sharing controls could not be loaded.");
     document.body.appendChild(script);

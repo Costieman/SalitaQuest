@@ -5,8 +5,8 @@ import vm from "node:vm";
 const root = process.cwd();
 const read = file => fs.readFileSync(path.join(root,file),"utf8");
 const fail = message => { throw new Error(message); };
-const rootFile = "collection-key-translation-hotfix.js";
-const moduleFile = "src/features/interface/collection-key-translation-hotfix.js";
+const rootFile = "collection-key-translation.js";
+const moduleFile = "src/features/interface/collection-key-translation.js";
 const compatibility = read(rootFile);
 const feature = read(moduleFile);
 const manifest = read("src/config/course-manifest.js");
@@ -16,7 +16,7 @@ new vm.Script(compatibility,{filename:rootFile});
 new vm.Script(feature,{filename:moduleFile});
 
 for (const marker of [
-  'const TARGET = "./src/features/interface/collection-key-translation-hotfix.js?v=5.5.11"',
+  'const TARGET = "./src/features/interface/collection-key-translation.js?v=sandbox-deletion-pass-1"',
   "document.currentScript",
   "document.write",
   "script.async = false",
@@ -34,21 +34,21 @@ for (const marker of [
   'typeof state === "undefined"',
   'consecutive Daily Keys collected',
   'sq-translation-review-needed',
-  './avatar-case-desktop-safety.css?v=5.5.11',
-  './mystery-rarity-roll-v1.js?v=5.5.11',
-  './avatar-collection-page-v2.css?v=5.5.12',
-  './avatar-collection-page-v2.js?v=5.5.12',
-  './avatar-case-page-tab-v1.js?v=1.1',
-  './avatar-card-actions-v1.js?v=1.1'
+  './avatar-case-desktop-safety.css?v=sandbox-deletion-pass-1',
+  './mystery-rarity-roll.js?v=sandbox-deletion-pass-1',
+  './avatar-collection-page.css?v=sandbox-deletion-pass-1',
+  './avatar-collection-page.js?v=sandbox-deletion-pass-1',
+  './avatar-case-page-tab.js?v=sandbox-deletion-pass-1',
+  './avatar-card-actions.js?v=sandbox-deletion-pass-1'
 ]) if (!feature.includes(marker)) fail(`Feature implementation is missing ${marker}`);
 if ((feature.match(/new MutationObserver/g)||[]).length !== 1) fail("Feature must own exactly one mutation observer");
 if ((feature.match(/document\.addEventListener/g)||[]).length !== 3) fail("Feature must own exactly three document listeners");
 if (/localStorage|sessionStorage|window\.setInterval/.test(feature)) fail("Targeted hotfix storage or polling contract changed");
 
-const featureEntry = '"src/features/interface/collection-key-translation-hotfix.js?v=5.5.11"';
-if ((manifest.match(/collection-key-translation-hotfix\.js\?v=5\.5\.11/g)||[]).length !== 1 || !manifest.includes(featureEntry)) fail("Tagalog manifest delivery changed");
-if (manifest.includes('"collection-key-translation-hotfix.js?v=5.5.11"')) fail("Current manifest still targets the root compatibility URL");
-const sharingIndex = manifest.indexOf('"achievement-sharing-v4.js?v=5.4.29"');
+const featureEntry = '"src/features/interface/collection-key-translation.js?v=sandbox-deletion-pass-1"';
+if ((manifest.match(/collection-key-translation-hotfix\.js\?v=sandbox-deletion-pass-1\.5\.11/g)||[]).length !== 1 || !manifest.includes(featureEntry)) fail("Tagalog manifest delivery changed");
+if (manifest.includes('"collection-key-translation.js?v=sandbox-deletion-pass-1"')) fail("Current manifest still targets the root compatibility URL");
+const sharingIndex = manifest.indexOf('"achievement-sharing.js?v=sandbox-deletion-pass-1"');
 const hotfixIndex = manifest.indexOf(featureEntry);
 const cebuanoIndex = manifest.indexOf('const cebuanoScripts');
 if (!(sharingIndex >= 0 && hotfixIndex > sharingIndex && cebuanoIndex > hotfixIndex)) fail("Tagalog final hotfix ordering changed");
@@ -56,8 +56,8 @@ if (!(sharingIndex >= 0 && hotfixIndex > sharingIndex && cebuanoIndex > hotfixIn
 for (const marker of [
   'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-19-long-term-badge-adapter-extraction-r72"',
   'const CACHE_NAME = "salita-quest-v5-6-20-avatar-case-profile-adapter-extraction-r73"',
-  '"./collection-key-translation-hotfix.js"',
-  '"./src/features/interface/collection-key-translation-hotfix.js"'
+  '"./collection-key-translation.js"',
+  '"./src/features/interface/collection-key-translation.js"'
 ]) if (!worker.includes(marker)) fail(`Offline delivery is missing ${marker}`);
 
 const listeners = [];
@@ -114,12 +114,12 @@ if (listeners[0][2]?.once !== true) fail("DOMContentLoaded listener must remain 
 if (observerCount !== 1) fail("Mutation observer ownership changed");
 if (rafCallbacks.length !== 1) fail("Initial patch scheduling changed");
 const expectedAssets = [
-  './avatar-case-desktop-safety.css?v=5.5.11',
-  './mystery-rarity-roll-v1.js?v=5.5.11',
-  './avatar-collection-page-v2.css?v=5.5.12',
-  './avatar-collection-page-v2.js?v=5.5.12',
-  './avatar-case-page-tab-v1.js?v=1.1',
-  './avatar-card-actions-v1.js?v=1.1'
+  './avatar-case-desktop-safety.css?v=sandbox-deletion-pass-1',
+  './mystery-rarity-roll.js?v=sandbox-deletion-pass-1',
+  './avatar-collection-page.css?v=sandbox-deletion-pass-1',
+  './avatar-collection-page.js?v=sandbox-deletion-pass-1',
+  './avatar-case-page-tab.js?v=sandbox-deletion-pass-1',
+  './avatar-card-actions.js?v=sandbox-deletion-pass-1'
 ];
 const delivered = appended.map(node => node.href || node.src).filter(Boolean);
 if (delivered.join("|") !== expectedAssets.join("|")) fail(`Dependent asset order changed: ${delivered.join("|")}`);

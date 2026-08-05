@@ -13,7 +13,7 @@ for (const file of [
   "daily-goal-refinement.js",
   "even-progress-rail.js",
   "src/features/progression/even-progress-rail.js",
-  "level-progression-v2.js",
+  "level-progression.js",
   "adaptive-scenarios.js",
   "desktop-navigation-refinement.js",
   "src/config/course-manifest.js",
@@ -83,7 +83,7 @@ requireMarkers(railCss, [
   "#7f1d1d"
 ], "World Progress state styling");
 
-const level = read("level-progression-v2.js");
+const level = read("level-progression.js");
 requireMarkers(level, [
   "const MAX_LEVEL = 99",
   "const requirementFor = level =>",
@@ -105,7 +105,7 @@ const totalXpTo99 = Array.from({length:98}, (_, index) => {
 }).reduce((sum, value) => sum + value, 0);
 if (totalXpTo99 < 80000) fail(`Level 99 is too quick to reach: ${totalXpTo99} total XP.`);
 
-const levelCss = read("level-progression-v2.css");
+const levelCss = read("level-progression.css");
 requireMarkers(levelCss, [
   ".player-level-badge",
   "place-items: center",
@@ -191,32 +191,32 @@ if (!courseManifest?.courses) fail("The modular course manifest was not installe
 for (const [htmlFile, courseId] of [["app.html", "tagalog"], ["bisaya.html", "cebuano"]]) {
   const html = read(htmlFile);
   requireMarkers(html, [
-    "src/config/course-manifest.js?v=5.6.0",
-    "src/app/course-bootstrap.js?v=5.6.0",
+    "src/config/course-manifest.js?v=sandbox-deletion-pass-1",
+    "src/app/course-bootstrap.js?v=sandbox-deletion-pass-1",
     `courseId: "${courseId}"`
   ], `${htmlFile} modular progression loader`);
   const course = courseManifest.courses[courseId];
   if (!course) fail(`${courseId} is missing from the course manifest.`);
   requireMarkers(course.styles.join("\n"), [
-    "world-progress-status.css?v=5.4.21",
-    "fluid-desktop-app.css?v=5.4.21",
-    "adaptive-scenarios.css?v=5.4.21"
+    "world-progress-status.css?v=sandbox-deletion-pass-1",
+    "fluid-desktop-app.css?v=sandbox-deletion-pass-1",
+    "adaptive-scenarios.css?v=sandbox-deletion-pass-1"
   ], `${htmlFile} progression release styles`);
   requireMarkers(course.scripts.join("\n"), [
-    "src/features/progression/even-progress-rail.js?v=5.4.21",
-    "adaptive-scenarios.js?v=5.4.21"
+    "src/features/progression/even-progress-rail.js?v=sandbox-deletion-pass-1",
+    "adaptive-scenarios.js?v=sandbox-deletion-pass-1"
   ], `${htmlFile} progression release scripts`);
   for (const [asset, kind, collection] of [
-    ["level-progression-v2.css", "Level Progression styles", course.styles],
+    ["level-progression.css", "Level Progression styles", course.styles],
     ["desktop-navigation-refinement.css", "navigation styles", course.styles],
-    ["level-progression-v2.js", "Level Progression runtime", course.scripts],
+    ["level-progression.js", "Level Progression runtime", course.scripts],
     ["desktop-navigation-refinement.js", "navigation runtime", course.scripts]
   ]) {
     const pattern = new RegExp(`^${asset.replaceAll(".", "\\.")}\\?v=(?:5\\.4\\.21|5\\.5\\.2|5\\.5\\.3)$`);
     if (!collection.some(path => pattern.test(path))) fail(`${htmlFile} progression release is missing ${kind}.`);
   }
-  const mobileIndex = course.scripts.indexOf("mobile-session-refinement.js?v=5.4.21");
-  const adaptiveIndex = course.scripts.indexOf("adaptive-scenarios.js?v=5.4.21");
+  const mobileIndex = course.scripts.indexOf("mobile-session-refinement.js?v=sandbox-deletion-pass-1");
+  const adaptiveIndex = course.scripts.indexOf("adaptive-scenarios.js?v=sandbox-deletion-pass-1");
   const levelIndex = course.scripts.findIndex(path => /^level-progression-v2\.js\?v=(?:5\.4\.21|5\.5\.2|5\.5\.3)$/.test(path));
   const navigationIndex = course.scripts.findIndex(path => /^desktop-navigation-refinement\.js\?v=(?:5\.4\.21|5\.5\.2|5\.5\.3)$/.test(path));
   if (!(mobileIndex >= 0 && adaptiveIndex > mobileIndex && levelIndex > adaptiveIndex && navigationIndex > levelIndex)) {
@@ -231,8 +231,8 @@ requireMarkers(serviceWorker, [
   '"./even-progress-rail.js"',
   '"./src/features/progression/even-progress-rail.js"',
   '"./world-progress-status.css"',
-  '"./level-progression-v2.js"',
-  '"./level-progression-v2.css"',
+  '"./level-progression.js"',
+  '"./level-progression.css"',
   '"./fluid-desktop-app.css"',
   '"./adaptive-scenarios.js"',
   '"./adaptive-scenarios.css"',

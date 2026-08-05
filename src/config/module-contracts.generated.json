@@ -6,14 +6,14 @@
   "courseSeeds": {
     "tagalog": [
       "app.js",
-      "progression-v54.js",
-      "exercise-fixes-v545.js",
+      "progression.js",
+      "exercise-fixes.js",
       "ui-quality-fixes.js",
       "daily-goal-refinement.js",
       "weekly-avatar-chest.js",
       "key-run-refinement.js",
       "weekly-avatar-polish.js",
-      "src/adapters/exercise/incorrect-order-feedback-runtime-v1.js",
+      "src/adapters/exercise/incorrect-order-feedback-runtime.js",
       "src/features/exercise/incorrect-order-feedback.js",
       "incorrect-order-feedback.js",
       "src/features/interface/compact-desktop-layout.js",
@@ -22,21 +22,21 @@
       "mastery-feedback.js",
       "lesson-side-launcher.js",
       "mobile-session-refinement.js",
-      "src/features/interface/popup-governor-v1.js",
+      "src/features/interface/popup-governor.js",
       "profile-app.js",
       "profile-emblem-control.js",
       "adaptive-scenarios.js",
-      "level-progression-v2.js",
-      "src/features/interface/level-up-mobile-safety-v552.js",
+      "level-progression.js",
+      "src/features/interface/level-up-mobile-safety.js",
       "desktop-navigation-refinement.js",
       "src/features/audio/pronunciation-release-control.js",
       "src/features/progression/home-reward-coordinator.js",
-      "badge-catalogue-v2.js",
-      "badge-chest-v2.js",
-      "placement-onboarding-v1.js",
-      "social-connections-v2.js",
-      "achievement-sharing-v4.js",
-      "src/features/interface/collection-key-translation-hotfix.js"
+      "badge-catalogue.js",
+      "badge-chest.js",
+      "placement-onboarding.js",
+      "social-connections.js",
+      "achievement-sharing.js",
+      "src/features/interface/collection-key-translation.js"
     ],
     "cebuano": [
       "app.js",
@@ -46,7 +46,7 @@
       "weekly-avatar-chest.js",
       "key-run-refinement.js",
       "weekly-avatar-polish.js",
-      "src/adapters/exercise/incorrect-order-feedback-runtime-v1.js",
+      "src/adapters/exercise/incorrect-order-feedback-runtime.js",
       "src/features/exercise/incorrect-order-feedback.js",
       "incorrect-order-feedback.js",
       "src/features/interface/compact-desktop-layout.js",
@@ -55,19 +55,19 @@
       "mastery-feedback.js",
       "lesson-side-launcher.js",
       "mobile-session-refinement.js",
-      "src/features/interface/popup-governor-v1.js",
+      "src/features/interface/popup-governor.js",
       "profile-emblem-control.js",
       "adaptive-scenarios.js",
-      "level-progression-v2.js",
-      "src/features/interface/level-up-mobile-safety-v552.js",
+      "level-progression.js",
+      "src/features/interface/level-up-mobile-safety.js",
       "desktop-navigation-refinement.js",
       "src/features/audio/pronunciation-release-control.js",
       "src/features/progression/home-reward-coordinator.js",
-      "badge-catalogue-v2.js",
-      "badge-chest-v2.js",
-      "placement-onboarding-v1.js",
-      "social-connections-v2.js",
-      "achievement-sharing-v4.js"
+      "badge-catalogue.js",
+      "badge-chest.js",
+      "placement-onboarding.js",
+      "social-connections.js",
+      "achievement-sharing.js"
     ]
   },
   "summary": {
@@ -197,7 +197,7 @@
       "risk": 8
     },
     {
-      "file": "achievement-sharing-v4.js",
+      "file": "achievement-sharing.js",
       "bytes": 41132,
       "contexts": [
         "cebuano",
@@ -897,7 +897,7 @@
       "risk": 39
     },
     {
-      "file": "badge-catalogue-v2.js",
+      "file": "badge-catalogue.js",
       "bytes": 17068,
       "contexts": [
         "cebuano",
@@ -966,7 +966,7 @@
       "risk": 50
     },
     {
-      "file": "badge-chest-v2.js",
+      "file": "badge-chest.js",
       "bytes": 15360,
       "contexts": [
         "cebuano",
@@ -1048,11 +1048,11 @@
       ],
       "references": [
         "app.js",
-        "exercise-fixes-v545.js",
+        "exercise-fixes.js",
         "profile-app.js"
       ],
       "loads": [
-        "exercise-fixes-v545.js",
+        "exercise-fixes.js",
         "profile-app.js"
       ],
       "fetches": [
@@ -1754,7 +1754,7 @@
       "risk": 52
     },
     {
-      "file": "exercise-fixes-v545.js",
+      "file": "exercise-fixes.js",
       "bytes": 10731,
       "contexts": [
         "cebuano",
@@ -1835,7 +1835,7 @@
         "tagalog"
       ],
       "references": [
-        "src/adapters/exercise/incorrect-order-feedback-runtime-v1.js",
+        "src/adapters/exercise/incorrect-order-feedback-runtime.js",
         "src/features/exercise/incorrect-order-feedback.js"
       ],
       "loads": [],
@@ -2016,7 +2016,7 @@
       "risk": 41
     },
     {
-      "file": "level-progression-v2.js",
+      "file": "level-progression.js",
       "bytes": 11375,
       "contexts": [
         "cebuano",
@@ -2269,7 +2269,7 @@
       "risk": 40
     },
     {
-      "file": "placement-onboarding-v1.js",
+      "file": "placement-onboarding.js",
       "bytes": 16245,
       "contexts": [
         "cebuano",
@@ -2352,11 +2352,11 @@
       ],
       "references": [
         "bisaya-review-regions.js",
-        "src/features/avatar/avatar-catalogue-v1.js"
+        "src/features/avatar/avatar-catalogue.js"
       ],
       "loads": [
         "bisaya-review-regions.js",
-        "src/features/avatar/avatar-catalogue-v1.js"
+        "src/features/avatar/avatar-catalogue.js"
       ],
       "fetches": [],
       "workers": [],
@@ -2557,7 +2557,7 @@
         "src/adapters/navigation/avatar-collections-navigation-v551.js",
         "src/features/avatar/avatar-artwork-registry-v554.js",
         "src/features/avatar/avatar-case-v1.js",
-        "src/features/avatar/avatar-catalogue-v1.js",
+        "src/features/avatar/avatar-catalogue.js",
         "src/features/avatar/avatar-progression-migration-v1.js",
         "src/features/avatar/avatar-progression-model-v551.js",
         "src/features/avatar/level-avatar-rewards-v1.js",
@@ -2582,7 +2582,7 @@
         "src/adapters/navigation/avatar-collections-navigation-v551.js",
         "src/features/avatar/avatar-artwork-registry-v554.js",
         "src/features/avatar/avatar-case-v1.js",
-        "src/features/avatar/avatar-catalogue-v1.js",
+        "src/features/avatar/avatar-catalogue.js",
         "src/features/avatar/avatar-progression-migration-v1.js",
         "src/features/avatar/avatar-progression-model-v551.js",
         "src/features/avatar/level-avatar-rewards-v1.js",
@@ -2644,7 +2644,7 @@
       "risk": 131
     },
     {
-      "file": "progression-v54.js",
+      "file": "progression.js",
       "bytes": 5735,
       "contexts": [
         "tagalog"
@@ -2710,61 +2710,61 @@
         "achievement-sharing-avatar-bridge-v1.js",
         "achievement-sharing-router-v2.js",
         "achievement-sharing-router-v3.js",
-        "achievement-sharing-v4.js",
+        "achievement-sharing.js",
         "adaptive-scenarios.js",
         "app.js",
         "avatar-artwork-registry-v554.js",
         "avatar-case-v1.js",
-        "avatar-catalogue-v1.js",
+        "avatar-catalogue.js",
         "avatar-collection-screen-v1.js",
         "avatar-collection-summary-v1.js",
         "avatar-collection-tabs-phase6-1-v1.js",
         "avatar-progression-hotfix-v551.js",
         "avatar-progression-migration-v1.js",
         "avatar-unlock-celebration-v1.js",
-        "badge-catalogue-v2.js",
-        "badge-chest-v2.js",
+        "badge-catalogue.js",
+        "badge-chest.js",
         "bisaya-app-loader.js",
         "bisaya-review-regions.js",
         "clean-topbar.js",
         "coin-avatar-shop-badges-v1.js",
-        "collection-key-translation-hotfix.js",
+        "collection-key-translation.js",
         "compact-desktop-layout.js",
         "daily-goal-refinement.js",
         "desktop-navigation-refinement.js",
         "economy-tracking-phase6-v1.js",
         "even-progress-rail.js",
-        "exercise-fixes-v545.js",
+        "exercise-fixes.js",
         "facebook-share-link-v1.js",
         "home-reward-coordinator.js",
         "incorrect-order-feedback.js",
         "key-run-refinement.js",
         "lesson-side-launcher.js",
         "level-avatar-rewards-v1.js",
-        "level-progression-v2.js",
-        "level-up-mobile-safety-v552.js",
+        "level-progression.js",
+        "level-up-mobile-safety.js",
         "long-term-badges-v1.js",
         "mastery-feedback.js",
         "mobile-session-refinement.js",
-        "placement-onboarding-v1.js",
-        "popup-governor-v1.js",
+        "placement-onboarding.js",
+        "popup-governor.js",
         "profile-app.js",
         "profile-emblem-control.js",
-        "profile-install-prompt-v1.js",
-        "progression-v54.js",
+        "profile-install-prompt.js",
+        "progression.js",
         "pronunciation-release-control.js",
-        "social-connections-v2.js",
+        "social-connections.js",
         "src/adapters/avatar/avatar-case-profile-runtime-v1.js",
         "src/adapters/badges/badge-catalogue-runtime-v1.js",
         "src/adapters/badges/coin-shop-badge-runtime-v1.js",
-        "src/adapters/exercise/incorrect-order-feedback-runtime-v1.js",
+        "src/adapters/exercise/incorrect-order-feedback-runtime.js",
         "src/adapters/navigation/avatar-collections-navigation-v551.js",
         "src/app/course-bootstrap.js",
         "src/config/course-manifest.js",
         "src/features/audio/pronunciation-release-control.js",
         "src/features/avatar/avatar-artwork-registry-v554.js",
         "src/features/avatar/avatar-case-v1.js",
-        "src/features/avatar/avatar-catalogue-v1.js",
+        "src/features/avatar/avatar-catalogue.js",
         "src/features/avatar/avatar-collection-summary-v1.js",
         "src/features/avatar/avatar-collection-tabs-phase6-1-v1.js",
         "src/features/avatar/avatar-progression-migration-v1.js",
@@ -2775,10 +2775,10 @@
         "src/features/economy/economy-tracking-phase6-v1.js",
         "src/features/exercise/incorrect-order-feedback.js",
         "src/features/interface/clean-topbar.js",
-        "src/features/interface/collection-key-translation-hotfix.js",
+        "src/features/interface/collection-key-translation.js",
         "src/features/interface/compact-desktop-layout.js",
-        "src/features/interface/level-up-mobile-safety-v552.js",
-        "src/features/interface/popup-governor-v1.js",
+        "src/features/interface/level-up-mobile-safety.js",
+        "src/features/interface/popup-governor.js",
         "src/features/progression/even-progress-rail.js",
         "src/features/progression/home-reward-coordinator.js",
         "src/features/sharing/achievement-sharing-router-v3.js",
@@ -2817,7 +2817,7 @@
       "risk": 3
     },
     {
-      "file": "social-connections-v2.js",
+      "file": "social-connections.js",
       "bytes": 12738,
       "contexts": [
         "cebuano",
@@ -3072,7 +3072,7 @@
       "risk": 19
     },
     {
-      "file": "src/adapters/exercise/incorrect-order-feedback-runtime-v1.js",
+      "file": "src/adapters/exercise/incorrect-order-feedback-runtime.js",
       "bytes": 2797,
       "contexts": [
         "cebuano",
@@ -3300,33 +3300,33 @@
       ],
       "courses": [],
       "references": [
-        "achievement-sharing-v4.js",
+        "achievement-sharing.js",
         "adaptive-scenarios.js",
-        "badge-catalogue-v2.js",
-        "badge-chest-v2.js",
+        "badge-catalogue.js",
+        "badge-chest.js",
         "bisaya-app-loader.js",
         "daily-goal-refinement.js",
         "desktop-navigation-refinement.js",
-        "exercise-fixes-v545.js",
+        "exercise-fixes.js",
         "incorrect-order-feedback.js",
         "key-run-refinement.js",
         "lesson-side-launcher.js",
-        "level-progression-v2.js",
+        "level-progression.js",
         "mastery-feedback.js",
         "mobile-session-refinement.js",
-        "placement-onboarding-v1.js",
+        "placement-onboarding.js",
         "profile-app.js",
         "profile-emblem-control.js",
-        "progression-v54.js",
-        "social-connections-v2.js",
-        "src/adapters/exercise/incorrect-order-feedback-runtime-v1.js",
+        "progression.js",
+        "social-connections.js",
+        "src/adapters/exercise/incorrect-order-feedback-runtime.js",
         "src/features/audio/pronunciation-release-control.js",
         "src/features/exercise/incorrect-order-feedback.js",
         "src/features/interface/clean-topbar.js",
-        "src/features/interface/collection-key-translation-hotfix.js",
+        "src/features/interface/collection-key-translation.js",
         "src/features/interface/compact-desktop-layout.js",
-        "src/features/interface/level-up-mobile-safety-v552.js",
-        "src/features/interface/popup-governor-v1.js",
+        "src/features/interface/level-up-mobile-safety.js",
+        "src/features/interface/popup-governor.js",
         "src/features/progression/even-progress-rail.js",
         "src/features/progression/home-reward-coordinator.js",
         "ui-quality-fixes.js",
@@ -3541,7 +3541,7 @@
       "risk": 20
     },
     {
-      "file": "src/features/avatar/avatar-catalogue-v1.js",
+      "file": "src/features/avatar/avatar-catalogue.js",
       "bytes": 14246,
       "contexts": [
         "cebuano",
@@ -4074,7 +4074,7 @@
       "risk": 14
     },
     {
-      "file": "src/features/interface/collection-key-translation-hotfix.js",
+      "file": "src/features/interface/collection-key-translation.js",
       "bytes": 8247,
       "contexts": [
         "tagalog"
@@ -4083,10 +4083,10 @@
         "tagalog"
       ],
       "references": [
-        "avatar-card-actions-v1.js",
-        "avatar-case-page-tab-v1.js",
-        "avatar-collection-page-v2.js",
-        "mystery-rarity-roll-v1.js"
+        "avatar-card-actions.js",
+        "avatar-case-page-tab.js",
+        "avatar-collection-page.js",
+        "mystery-rarity-roll.js"
       ],
       "loads": [],
       "fetches": [],
@@ -4183,7 +4183,7 @@
       "risk": 11
     },
     {
-      "file": "src/features/interface/level-up-mobile-safety-v552.js",
+      "file": "src/features/interface/level-up-mobile-safety.js",
       "bytes": 1058,
       "contexts": [
         "cebuano",
@@ -4228,7 +4228,7 @@
       "risk": 8
     },
     {
-      "file": "src/features/interface/popup-governor-v1.js",
+      "file": "src/features/interface/popup-governor.js",
       "bytes": 6239,
       "contexts": [
         "cebuano",
@@ -4776,7 +4776,7 @@
     },
     {
       "from": "achievement-sharing-avatar-bridge-v1.js",
-      "to": "src/features/interface/popup-governor-v1.js",
+      "to": "src/features/interface/popup-governor.js",
       "type": "window-api",
       "symbols": [
         "getAvatarImagePath"
@@ -4808,7 +4808,7 @@
     },
     {
       "from": "achievement-sharing-avatar-bridge-v1.js",
-      "to": "achievement-sharing-v4.js",
+      "to": "achievement-sharing.js",
       "type": "window-api",
       "symbols": [
         "SalitaQuestAchievementSharing"
@@ -4828,7 +4828,7 @@
       ]
     },
     {
-      "from": "achievement-sharing-v4.js",
+      "from": "achievement-sharing.js",
       "to": "app.js",
       "type": "core-globals",
       "symbols": [
@@ -4839,7 +4839,7 @@
       ]
     },
     {
-      "from": "achievement-sharing-v4.js",
+      "from": "achievement-sharing.js",
       "to": "src/features/avatar/avatar-artwork-registry-v554.js",
       "type": "window-api",
       "symbols": [
@@ -4847,15 +4847,15 @@
       ]
     },
     {
-      "from": "achievement-sharing-v4.js",
-      "to": "src/features/interface/popup-governor-v1.js",
+      "from": "achievement-sharing.js",
+      "to": "src/features/interface/popup-governor.js",
       "type": "window-api",
       "symbols": [
         "getAvatarImagePath"
       ]
     },
     {
-      "from": "achievement-sharing-v4.js",
+      "from": "achievement-sharing.js",
       "to": "src/features/avatar/avatar-artwork-registry-v554.js",
       "type": "window-api",
       "symbols": [
@@ -4863,15 +4863,15 @@
       ]
     },
     {
-      "from": "achievement-sharing-v4.js",
-      "to": "src/features/interface/popup-governor-v1.js",
+      "from": "achievement-sharing.js",
+      "to": "src/features/interface/popup-governor.js",
       "type": "window-api",
       "symbols": [
         "SalitaAvatarAssets"
       ]
     },
     {
-      "from": "achievement-sharing-v4.js",
+      "from": "achievement-sharing.js",
       "to": "coin-avatar-shop-reveal-v1.js",
       "type": "window-api",
       "symbols": [
@@ -4879,7 +4879,7 @@
       ]
     },
     {
-      "from": "achievement-sharing-v4.js",
+      "from": "achievement-sharing.js",
       "to": "src/features/avatar/avatar-progression-model-v551.js",
       "type": "window-api",
       "symbols": [
@@ -4887,15 +4887,15 @@
       ]
     },
     {
-      "from": "achievement-sharing-v4.js",
-      "to": "level-progression-v2.js",
+      "from": "achievement-sharing.js",
+      "to": "level-progression.js",
       "type": "window-api",
       "symbols": [
         "SalitaLevelProgression"
       ]
     },
     {
-      "from": "achievement-sharing-v4.js",
+      "from": "achievement-sharing.js",
       "to": "src/features/avatar/avatar-case-v1.js",
       "type": "window-api",
       "symbols": [
@@ -4903,16 +4903,16 @@
       ]
     },
     {
-      "from": "achievement-sharing-v4.js",
-      "to": "badge-chest-v2.js",
+      "from": "achievement-sharing.js",
+      "to": "badge-chest.js",
       "type": "window-api",
       "symbols": [
         "SalitaQuestBadgeChest"
       ]
     },
     {
-      "from": "achievement-sharing-v4.js",
-      "to": "social-connections-v2.js",
+      "from": "achievement-sharing.js",
+      "to": "social-connections.js",
       "type": "window-api",
       "symbols": [
         "SalitaQuestSocialConnections"
@@ -5034,7 +5034,7 @@
     },
     {
       "from": "avatar-unlock-celebration-v1.js",
-      "to": "src/features/interface/popup-governor-v1.js",
+      "to": "src/features/interface/popup-governor.js",
       "type": "window-api",
       "symbols": [
         "getAvatarImagePath"
@@ -5050,7 +5050,7 @@
     },
     {
       "from": "avatar-unlock-celebration-v1.js",
-      "to": "src/features/interface/popup-governor-v1.js",
+      "to": "src/features/interface/popup-governor.js",
       "type": "window-api",
       "symbols": [
         "SalitaAvatarAssets"
@@ -5090,14 +5090,14 @@
     },
     {
       "from": "avatar-unlock-celebration-v1.js",
-      "to": "src/features/interface/popup-governor-v1.js",
+      "to": "src/features/interface/popup-governor.js",
       "type": "window-api",
       "symbols": [
         "SalitaPopupGovernor"
       ]
     },
     {
-      "from": "badge-catalogue-v2.js",
+      "from": "badge-catalogue.js",
       "to": "app.js",
       "type": "core-globals",
       "symbols": [
@@ -5117,7 +5117,7 @@
       ]
     },
     {
-      "from": "badge-chest-v2.js",
+      "from": "badge-chest.js",
       "to": "app.js",
       "type": "core-globals",
       "symbols": [
@@ -5130,7 +5130,7 @@
     },
     {
       "from": "bisaya-app-loader.js",
-      "to": "exercise-fixes-v545.js",
+      "to": "exercise-fixes.js",
       "type": "loads"
     },
     {
@@ -5343,7 +5343,7 @@
     },
     {
       "from": "desktop-navigation-refinement.js",
-      "to": "src/features/interface/popup-governor-v1.js",
+      "to": "src/features/interface/popup-governor.js",
       "type": "window-api",
       "symbols": [
         "getAvatarImagePath"
@@ -5382,7 +5382,7 @@
       ]
     },
     {
-      "from": "exercise-fixes-v545.js",
+      "from": "exercise-fixes.js",
       "to": "app.js",
       "type": "core-globals",
       "symbols": [
@@ -5405,7 +5405,7 @@
     },
     {
       "from": "incorrect-order-feedback.js",
-      "to": "src/adapters/exercise/incorrect-order-feedback-runtime-v1.js",
+      "to": "src/adapters/exercise/incorrect-order-feedback-runtime.js",
       "type": "window-api",
       "symbols": [
         "SalitaIncorrectOrderFeedbackRuntimeV1"
@@ -5454,7 +5454,7 @@
       ]
     },
     {
-      "from": "level-progression-v2.js",
+      "from": "level-progression.js",
       "to": "app.js",
       "type": "core-globals",
       "symbols": [
@@ -5467,8 +5467,8 @@
       ]
     },
     {
-      "from": "level-progression-v2.js",
-      "to": "src/features/interface/popup-governor-v1.js",
+      "from": "level-progression.js",
+      "to": "src/features/interface/popup-governor.js",
       "type": "window-api",
       "symbols": [
         "SalitaPopupGovernor"
@@ -5523,7 +5523,7 @@
       ]
     },
     {
-      "from": "placement-onboarding-v1.js",
+      "from": "placement-onboarding.js",
       "to": "app.js",
       "type": "core-globals",
       "symbols": [
@@ -5546,7 +5546,7 @@
     },
     {
       "from": "profile-app.js",
-      "to": "src/features/avatar/avatar-catalogue-v1.js",
+      "to": "src/features/avatar/avatar-catalogue.js",
       "type": "loads"
     },
     {
@@ -5680,7 +5680,7 @@
     },
     {
       "from": "profile-emblem-control.js",
-      "to": "src/features/avatar/avatar-catalogue-v1.js",
+      "to": "src/features/avatar/avatar-catalogue.js",
       "type": "loads"
     },
     {
@@ -5754,7 +5754,7 @@
       ]
     },
     {
-      "from": "progression-v54.js",
+      "from": "progression.js",
       "to": "app.js",
       "type": "core-globals",
       "symbols": [
@@ -5779,7 +5779,7 @@
       ]
     },
     {
-      "from": "social-connections-v2.js",
+      "from": "social-connections.js",
       "to": "app.js",
       "type": "core-globals",
       "symbols": [
@@ -5854,7 +5854,7 @@
       ]
     },
     {
-      "from": "src/adapters/exercise/incorrect-order-feedback-runtime-v1.js",
+      "from": "src/adapters/exercise/incorrect-order-feedback-runtime.js",
       "to": "app.js",
       "type": "core-globals",
       "symbols": [
@@ -5928,7 +5928,7 @@
     },
     {
       "from": "src/features/avatar/avatar-case-v1.js",
-      "to": "src/features/interface/popup-governor-v1.js",
+      "to": "src/features/interface/popup-governor.js",
       "type": "window-api",
       "symbols": [
         "getAvatarImagePath"
@@ -5943,7 +5943,7 @@
       ]
     },
     {
-      "from": "src/features/avatar/avatar-catalogue-v1.js",
+      "from": "src/features/avatar/avatar-catalogue.js",
       "to": "app.js",
       "type": "core-globals",
       "symbols": [
@@ -6016,7 +6016,7 @@
     },
     {
       "from": "src/features/avatar/level-avatar-rewards-v1.js",
-      "to": "level-progression-v2.js",
+      "to": "level-progression.js",
       "type": "window-api",
       "symbols": [
         "__salitaQuestLevelProgressionV2Installed"
@@ -6072,7 +6072,7 @@
     },
     {
       "from": "src/features/exercise/incorrect-order-feedback.js",
-      "to": "src/adapters/exercise/incorrect-order-feedback-runtime-v1.js",
+      "to": "src/adapters/exercise/incorrect-order-feedback-runtime.js",
       "type": "window-api",
       "symbols": [
         "SalitaIncorrectOrderFeedbackRuntimeV1"
@@ -6088,7 +6088,7 @@
       ]
     },
     {
-      "from": "src/features/interface/collection-key-translation-hotfix.js",
+      "from": "src/features/interface/collection-key-translation.js",
       "to": "app.js",
       "type": "core-globals",
       "symbols": [
@@ -6105,23 +6105,23 @@
       ]
     },
     {
-      "from": "src/features/interface/level-up-mobile-safety-v552.js",
-      "to": "level-progression-v2.js",
+      "from": "src/features/interface/level-up-mobile-safety.js",
+      "to": "level-progression.js",
       "type": "window-api",
       "symbols": [
         "SalitaLevelProgression"
       ]
     },
     {
-      "from": "src/features/interface/level-up-mobile-safety-v552.js",
-      "to": "src/features/interface/popup-governor-v1.js",
+      "from": "src/features/interface/level-up-mobile-safety.js",
+      "to": "src/features/interface/popup-governor.js",
       "type": "window-api",
       "symbols": [
         "SalitaPopupGovernor"
       ]
     },
     {
-      "from": "src/features/interface/popup-governor-v1.js",
+      "from": "src/features/interface/popup-governor.js",
       "to": "app.js",
       "type": "core-globals",
       "symbols": [
@@ -6130,7 +6130,7 @@
       ]
     },
     {
-      "from": "src/features/interface/popup-governor-v1.js",
+      "from": "src/features/interface/popup-governor.js",
       "to": "coin-avatar-shop-reveal-v1.js",
       "type": "window-api",
       "symbols": [
@@ -6138,7 +6138,7 @@
       ]
     },
     {
-      "from": "src/features/interface/popup-governor-v1.js",
+      "from": "src/features/interface/popup-governor.js",
       "to": "src/features/avatar/avatar-progression-model-v551.js",
       "type": "window-api",
       "symbols": [
@@ -6376,14 +6376,14 @@
       "key": "salitaQuestLocalProfilesV1",
       "readers": [
         "achievement-sharing-avatar-bridge-v1.js",
-        "achievement-sharing-v4.js",
+        "achievement-sharing.js",
         "avatar-collection-screen-v1.js",
         "avatar-unlock-celebration-v1.js",
         "coin-avatar-shard-shop-v1.js",
         "coin-avatar-shop-reveal-v1.js",
         "desktop-navigation-refinement.js",
         "profile-app.js",
-        "social-connections-v2.js",
+        "social-connections.js",
         "src/adapters/avatar/avatar-case-profile-runtime-v1.js",
         "src/adapters/badges/badge-catalogue-runtime-v1.js",
         "src/adapters/badges/coin-shop-badge-runtime-v1.js",
@@ -6426,13 +6426,13 @@
       "store": "localStorage",
       "key": "salitaQuestSocialApiBase",
       "readers": [
-        "social-connections-v2.js"
+        "social-connections.js"
       ],
       "writers": [
-        "social-connections-v2.js"
+        "social-connections.js"
       ],
       "removers": [
-        "social-connections-v2.js"
+        "social-connections.js"
       ]
     },
     {
@@ -6472,7 +6472,7 @@
       "store": "sessionStorage",
       "key": "salitaQuestActiveCourse",
       "readers": [
-        "level-progression-v2.js",
+        "level-progression.js",
         "profile-app.js",
         "src/features/avatar/level-avatar-rewards-v1.js"
       ],
@@ -6488,15 +6488,15 @@
       "key": "salitaQuestActiveProfileId",
       "readers": [
         "achievement-sharing-avatar-bridge-v1.js",
-        "achievement-sharing-v4.js",
+        "achievement-sharing.js",
         "avatar-collection-screen-v1.js",
         "avatar-unlock-celebration-v1.js",
         "coin-avatar-shard-shop-v1.js",
         "coin-avatar-shop-reveal-v1.js",
         "desktop-navigation-refinement.js",
-        "level-progression-v2.js",
+        "level-progression.js",
         "profile-app.js",
-        "social-connections-v2.js",
+        "social-connections.js",
         "src/adapters/avatar/avatar-case-profile-runtime-v1.js",
         "src/adapters/badges/badge-catalogue-runtime-v1.js",
         "src/adapters/badges/coin-shop-badge-runtime-v1.js",
@@ -6555,33 +6555,33 @@
       "name": "change",
       "listeners": [
         "app.js",
-        "badge-chest-v2.js",
-        "placement-onboarding-v1.js"
+        "badge-chest.js",
+        "placement-onboarding.js"
       ],
       "dispatchers": []
     },
     {
       "name": "click",
       "listeners": [
-        "achievement-sharing-v4.js",
+        "achievement-sharing.js",
         "adaptive-scenarios.js",
         "app.js",
         "avatar-collection-screen-v1.js",
         "avatar-unlock-celebration-v1.js",
-        "badge-chest-v2.js",
+        "badge-chest.js",
         "bisaya-review-regions.js",
         "coin-avatar-shard-shop-v1.js",
         "coin-avatar-shop-reveal-v1.js",
         "desktop-navigation-refinement.js",
-        "exercise-fixes-v545.js",
+        "exercise-fixes.js",
         "key-run-refinement.js",
         "lesson-side-launcher.js",
         "mobile-session-refinement.js",
-        "placement-onboarding-v1.js",
+        "placement-onboarding.js",
         "profile-app.js",
         "profile-emblem-control.js",
-        "progression-v54.js",
-        "social-connections-v2.js",
+        "progression.js",
+        "social-connections.js",
         "src/adapters/navigation/avatar-collections-navigation-v551.js",
         "src/features/audio/pronunciation-release-control.js",
         "src/features/avatar/avatar-case-v1.js",
@@ -6596,7 +6596,7 @@
       "name": "DOMContentLoaded",
       "listeners": [
         "profile-app.js",
-        "src/features/interface/collection-key-translation-hotfix.js"
+        "src/features/interface/collection-key-translation.js"
       ],
       "dispatchers": []
     },
@@ -6606,11 +6606,11 @@
         "avatar-case-v1.js",
         "avatar-progression-hotfix-v551.js",
         "avatar-unlock-celebration-v1.js",
-        "badge-catalogue-v2.js",
-        "badge-chest-v2.js",
+        "badge-catalogue.js",
+        "badge-chest.js",
         "coin-avatar-shop-badges-v1.js",
         "incorrect-order-feedback.js",
-        "level-progression-v2.js",
+        "level-progression.js",
         "long-term-badges-v1.js",
         "profile-app.js",
         "profile-emblem-control.js"
@@ -6641,11 +6641,11 @@
     {
       "name": "keydown",
       "listeners": [
-        "achievement-sharing-v4.js",
+        "achievement-sharing.js",
         "app.js",
         "avatar-collection-screen-v1.js",
         "avatar-unlock-celebration-v1.js",
-        "badge-chest-v2.js",
+        "badge-chest.js",
         "profile-app.js",
         "profile-emblem-control.js",
         "src/features/avatar/avatar-case-v1.js",
@@ -6660,8 +6660,8 @@
         "avatar-case-v1.js",
         "avatar-progression-hotfix-v551.js",
         "avatar-unlock-celebration-v1.js",
-        "badge-catalogue-v2.js",
-        "badge-chest-v2.js",
+        "badge-catalogue.js",
+        "badge-chest.js",
         "coin-avatar-shop-badges-v1.js",
         "incorrect-order-feedback.js",
         "long-term-badges-v1.js",
@@ -6673,7 +6673,7 @@
     {
       "name": "message",
       "listeners": [
-        "social-connections-v2.js"
+        "social-connections.js"
       ],
       "dispatchers": []
     },
@@ -6687,8 +6687,8 @@
     {
       "name": "pageshow",
       "listeners": [
-        "src/features/interface/level-up-mobile-safety-v552.js",
-        "src/features/interface/popup-governor-v1.js",
+        "src/features/interface/level-up-mobile-safety.js",
+        "src/features/interface/popup-governor.js",
         "src/features/progression/home-reward-coordinator.js"
       ],
       "dispatchers": []
@@ -6731,7 +6731,7 @@
         "src/features/sharing/achievement-sharing-router-v3.js"
       ],
       "dispatchers": [
-        "achievement-sharing-v4.js"
+        "achievement-sharing.js"
       ]
     },
     {
@@ -6752,7 +6752,7 @@
       "name": "salita:avatar-collection-changed",
       "listeners": [
         "achievement-sharing-avatar-bridge-v1.js",
-        "achievement-sharing-v4.js",
+        "achievement-sharing.js",
         "avatar-collection-screen-v1.js",
         "avatar-unlock-celebration-v1.js",
         "src/features/avatar/avatar-artwork-registry-v554.js",
@@ -6861,7 +6861,7 @@
     {
       "name": "salita:avatar-unlock-animation-started",
       "listeners": [
-        "achievement-sharing-v4.js"
+        "achievement-sharing.js"
       ],
       "dispatchers": [
         "avatar-unlock-celebration-v1.js"
@@ -6871,7 +6871,7 @@
       "name": "salita:badges-rendered",
       "listeners": [],
       "dispatchers": [
-        "badge-catalogue-v2.js"
+        "badge-catalogue.js"
       ]
     },
     {
@@ -6919,7 +6919,7 @@
     {
       "name": "salita:daily-quests-rendered",
       "listeners": [
-        "src/features/interface/collection-key-translation-hotfix.js"
+        "src/features/interface/collection-key-translation.js"
       ],
       "dispatchers": []
     },
@@ -6941,17 +6941,17 @@
       "name": "salita:level-progression-saved",
       "listeners": [],
       "dispatchers": [
-        "level-progression-v2.js"
+        "level-progression.js"
       ]
     },
     {
       "name": "salita:level-updated",
       "listeners": [
-        "achievement-sharing-v4.js",
+        "achievement-sharing.js",
         "src/features/avatar/level-avatar-rewards-v1.js"
       ],
       "dispatchers": [
-        "level-progression-v2.js"
+        "level-progression.js"
       ]
     },
     {
@@ -6985,7 +6985,7 @@
     {
       "name": "salita:popup-finished",
       "listeners": [
-        "achievement-sharing-v4.js",
+        "achievement-sharing.js",
         "avatar-unlock-celebration-v1.js"
       ],
       "dispatchers": []
@@ -7000,18 +7000,18 @@
     {
       "name": "salita:state-changed",
       "listeners": [
-        "src/features/interface/collection-key-translation-hotfix.js"
+        "src/features/interface/collection-key-translation.js"
       ],
       "dispatchers": []
     },
     {
       "name": "salita:view-changed",
       "listeners": [
-        "achievement-sharing-v4.js"
+        "achievement-sharing.js"
       ],
       "dispatchers": [
         "desktop-navigation-refinement.js",
-        "level-progression-v2.js"
+        "level-progression.js"
       ]
     },
     {
@@ -7033,7 +7033,7 @@
       "listeners": [
         "avatar-unlock-celebration-v1.js",
         "profile-app.js",
-        "src/features/interface/level-up-mobile-safety-v552.js",
+        "src/features/interface/level-up-mobile-safety.js",
         "src/features/progression/home-reward-coordinator.js"
       ],
       "dispatchers": []
@@ -7127,13 +7127,13 @@
     {
       "symbol": "__salitaQuestAchievementSharingV4Installed",
       "providers": [
-        "achievement-sharing-v4.js"
+        "achievement-sharing.js"
       ]
     },
     {
       "symbol": "__salitaQuestAchievementSharingV6Installed",
       "providers": [
-        "achievement-sharing-v4.js"
+        "achievement-sharing.js"
       ]
     },
     {
@@ -7169,13 +7169,13 @@
     {
       "symbol": "__salitaQuestBadgeCatalogueV2Installed",
       "providers": [
-        "badge-catalogue-v2.js"
+        "badge-catalogue.js"
       ]
     },
     {
       "symbol": "__salitaQuestBadgeChestV2Installed",
       "providers": [
-        "badge-chest-v2.js"
+        "badge-chest.js"
       ]
     },
     {
@@ -7187,7 +7187,7 @@
     {
       "symbol": "__salitaQuestCollectionKeyTranslationHotfixV2",
       "providers": [
-        "src/features/interface/collection-key-translation-hotfix.js"
+        "src/features/interface/collection-key-translation.js"
       ]
     },
     {
@@ -7253,13 +7253,13 @@
     {
       "symbol": "__salitaQuestLevelProgressionV2Installed",
       "providers": [
-        "level-progression-v2.js"
+        "level-progression.js"
       ]
     },
     {
       "symbol": "__salitaQuestLevelUpMobileSafetyV552Installed",
       "providers": [
-        "src/features/interface/level-up-mobile-safety-v552.js"
+        "src/features/interface/level-up-mobile-safety.js"
       ]
     },
     {
@@ -7295,13 +7295,13 @@
     {
       "symbol": "__salitaQuestPlacementOnboardingV1Installed",
       "providers": [
-        "placement-onboarding-v1.js"
+        "placement-onboarding.js"
       ]
     },
     {
       "symbol": "__salitaQuestPopupGovernorV1Installed",
       "providers": [
-        "src/features/interface/popup-governor-v1.js"
+        "src/features/interface/popup-governor.js"
       ]
     },
     {
@@ -7325,19 +7325,19 @@
     {
       "symbol": "__salitaQuestSentenceBuilderInteractionRecoveryInstalled",
       "providers": [
-        "exercise-fixes-v545.js"
+        "exercise-fixes.js"
       ]
     },
     {
       "symbol": "__salitaQuestSocialConnectionsV2Installed",
       "providers": [
-        "social-connections-v2.js"
+        "social-connections.js"
       ]
     },
     {
       "symbol": "__salitaQuestSocialConnectionsV3Installed",
       "providers": [
-        "social-connections-v2.js"
+        "social-connections.js"
       ]
     },
     {
@@ -7363,7 +7363,7 @@
       "symbol": "getAvatarImagePath",
       "providers": [
         "src/features/avatar/avatar-artwork-registry-v554.js",
-        "src/features/interface/popup-governor-v1.js"
+        "src/features/interface/popup-governor.js"
       ]
     },
     {
@@ -7387,7 +7387,7 @@
     {
       "symbol": "SalitaAvatarAssets",
       "providers": [
-        "src/features/interface/popup-governor-v1.js"
+        "src/features/interface/popup-governor.js"
       ]
     },
     {
@@ -7497,7 +7497,7 @@
     {
       "symbol": "SalitaIncorrectOrderFeedbackRuntimeV1",
       "providers": [
-        "src/adapters/exercise/incorrect-order-feedback-runtime-v1.js"
+        "src/adapters/exercise/incorrect-order-feedback-runtime.js"
       ]
     },
     {
@@ -7515,13 +7515,13 @@
     {
       "symbol": "SalitaLevelProgression",
       "providers": [
-        "level-progression-v2.js"
+        "level-progression.js"
       ]
     },
     {
       "symbol": "SalitaLevelUpMobileSafety",
       "providers": [
-        "src/features/interface/level-up-mobile-safety-v552.js"
+        "src/features/interface/level-up-mobile-safety.js"
       ]
     },
     {
@@ -7533,13 +7533,13 @@
     {
       "symbol": "SalitaPopupGovernor",
       "providers": [
-        "src/features/interface/popup-governor-v1.js"
+        "src/features/interface/popup-governor.js"
       ]
     },
     {
       "symbol": "SalitaQuestAchievementSharing",
       "providers": [
-        "achievement-sharing-v4.js"
+        "achievement-sharing.js"
       ]
     },
     {
@@ -7551,7 +7551,7 @@
     {
       "symbol": "SalitaQuestBadgeChest",
       "providers": [
-        "badge-chest-v2.js"
+        "badge-chest.js"
       ]
     },
     {
@@ -7581,13 +7581,13 @@
     {
       "symbol": "SalitaQuestSocialConnections",
       "providers": [
-        "social-connections-v2.js"
+        "social-connections.js"
       ]
     },
     {
       "symbol": "salitaUnlockProgress",
       "providers": [
-        "progression-v54.js"
+        "progression.js"
       ]
     },
     {

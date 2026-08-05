@@ -31,23 +31,23 @@ for (const validator of validators) {
 }
 
 const runtimeFiles = [
-  "avatar-catalogue-v1.js",
-  "src/features/avatar/avatar-catalogue-v1.js",
+  "avatar-catalogue.js",
+  "src/features/avatar/avatar-catalogue.js",
   "src/features/avatar/avatar-artwork-registry-v554.js",
   "src/features/avatar/avatar-progression-model-v551.js",
   "src/adapters/navigation/avatar-collections-navigation-v551.js",
   "avatar-progression-hotfix-v551.js",
   "profile-app.js",
-  "popup-governor-v1.js",
-  "src/features/interface/popup-governor-v1.js",
+  "popup-governor.js",
+  "src/features/interface/popup-governor.js",
   "profile-emblem-control.js",
   "avatar-collection-screen-v1.js",
   "avatar-case-v1.js",
   "weekly-avatar-shard-rewards-v1.js",
   "level-avatar-rewards-v1.js",
-  "level-progression-v2.js",
-  "level-up-mobile-safety-v552.js",
-  "src/features/interface/level-up-mobile-safety-v552.js",
+  "level-progression.js",
+  "level-up-mobile-safety.js",
+  "src/features/interface/level-up-mobile-safety.js",
   "avatar-unlock-celebration-v1.js",
   "achievement-sharing-router-v2.js",
   "achievement-sharing-router-v3.js",
@@ -64,7 +64,7 @@ for (const file of runtimeFiles) new vm.Script(read(file), {filename:file});
 
 const sandbox = {};
 vm.createContext(sandbox);
-vm.runInContext(read("src/features/avatar/avatar-catalogue-v1.js"), sandbox, {filename:"avatar-catalogue-v1.js"});
+vm.runInContext(read("src/features/avatar/avatar-catalogue.js"), sandbox, {filename:"avatar-catalogue.js"});
 const model = sandbox.SalitaAvatarModel;
 if (!model || model.catalogue.length !== 48) fail("The integrated catalogue must contain exactly 48 avatars");
 if (model.manifestPath !== "avatars/canonical/manifest.json") fail("The integrated catalogue must declare the canonical manifest");
@@ -120,7 +120,7 @@ if (artwork.includes("MutationObserver") || compatibility.includes("MutationObse
 }
 
 const sharingShim = read("achievement-sharing-router-v2.js");
-if (!sharingShim.includes('src/features/sharing/achievement-sharing-router-v3.js?v=5.5.21')) fail("Sharing compatibility shim does not load the current v3 router");
+if (!sharingShim.includes('src/features/sharing/achievement-sharing-router-v3.js?v=sandbox-deletion-pass-1')) fail("Sharing compatibility shim does not load the current v3 router");
 const sharingRouter = read("src/features/sharing/achievement-sharing-router-v3.js");
 if (!sharingRouter.includes('const RELEASE = "5.5.21-mobile-share-desktop-save-only"')) fail("Current achievement sharing release marker is missing");
 if (!sharingRouter.includes('modes:Object.freeze(["mobile_native_image_share","desktop_save_only"])')) fail("Current achievement sharing modes are missing");

@@ -3,8 +3,8 @@
 
   const INSTALL_FLAG = "__salitaQuestCleanTopbarInstalled";
   const STYLESHEETS = [
-    {id:"salita-topbar-world-progress-hotfix",href:"topbar-world-progress-hotfix.css?v=5.5.10.1"},
-    {id:"salita-mobile-world-progress-flow",href:"mobile-world-progress-flow.css?v=5.5.10.2"}
+    {id:"salita-topbar-world-progress-hotfix",href:"topbar-world-progress.css?v=sandbox-deletion-pass-1"},
+    {id:"salita-mobile-world-progress-flow",href:"mobile-world-progress-flow.css?v=sandbox-deletion-pass-1"}
   ];
 
   function ensureStylesheet() {

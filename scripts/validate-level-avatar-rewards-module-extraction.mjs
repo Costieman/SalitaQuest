@@ -10,11 +10,11 @@ const feature = read(moduleFile);
 const loader = read("profile-emblem-control.js");
 const refresh = read("mobile-refresh.html");
 const worker = read("service-worker.js");
-const catalogue = read("src/features/avatar/avatar-catalogue-v1.js");
+const catalogue = read("src/features/avatar/avatar-catalogue.js");
 new vm.Script(compatibility,{filename:rootFile});
 new vm.Script(feature,{filename:moduleFile});
 
-for (const marker of ['const TARGET = "./src/features/avatar/level-avatar-rewards-v1.js?v=5.5.6"',"document.write","script.async = false",'salitaCompatibilityLoader = "level-avatar-rewards-v1"'])
+for (const marker of ['const TARGET = "./src/features/avatar/level-avatar-rewards-v1.js?v=sandbox-deletion-pass-1"',"document.write","script.async = false",'salitaCompatibilityLoader = "level-avatar-rewards-v1"'])
   if (!compatibility.includes(marker)) fail(`Compatibility loader missing ${marker}`);
 for (const forbidden of ["PROFILE_STORE","MILESTONE_LEVELS","applyMilestoneRewards","repairFutureMilestones","localStorage","sessionStorage","salita:avatar-milestones-awarded","SalitaLevelAvatarRewardLogic =","SalitaLevelAvatarRewards ="])
   if (compatibility.includes(forbidden)) fail(`Root compatibility file still owns ${forbidden}`);
@@ -53,7 +53,7 @@ const document={body,documentElement,addEventListener:(name,handler)=>listeners.
 const window={__salitaQuestLevelProgressionV2Installed:true,setTimeout(handler,delay){const id=++timerId;timers.set(id,{handler,delay});return id;},clearTimeout:id=>timers.delete(id)};
 const context={window,document,localStorage,sessionStorage,CustomEvent,levelInfo:()=>({level:currentLevel}),Date,Set,Map,Math,Number,String,Array,Object,JSON,Promise,console,globalThis:null}; context.globalThis=context;
 vm.createContext(context);
-vm.runInContext(catalogue,context,{filename:"src/features/avatar/avatar-catalogue-v1.js"});
+vm.runInContext(catalogue,context,{filename:"src/features/avatar/avatar-catalogue.js"});
 vm.runInContext(feature,context,{filename:moduleFile});
 const logic=window.SalitaLevelAvatarRewardLogic; const api=window.SalitaLevelAvatarRewards;
 if (logic?.version!==2 || api?.version!==3 || api?.release!=="5.5.3") fail("Public reward APIs changed");

@@ -42,7 +42,7 @@ requireMarkers(topbarCss, [
   'display: none !important'
 ], "Top bar and focused Home styling");
 
-const finalLayoutCss = read("topbar-world-progress-hotfix.css");
+const finalLayoutCss = read("topbar-world-progress.css");
 requireMarkers(finalLayoutCss, [
   'grid-template-columns:minmax(0,1fr) auto !important',
   '.mastery-rail-shell[data-compact-mastery="true"]',
@@ -80,7 +80,7 @@ if (/body\[data-current-view="home"\][^{]*\.mastery-rail-shell\s*\{[^}]*position
 const topbarLoader = read("clean-topbar.js");
 const topbar = read("src/features/interface/clean-topbar.js");
 requireMarkers(topbarLoader, [
-  'const TARGET = "./src/features/interface/clean-topbar.js?v=5.4.21"',
+  'const TARGET = "./src/features/interface/clean-topbar.js?v=sandbox-deletion-pass-1"',
   'document.currentScript',
   'document.write',
   'script.async = false',
@@ -89,8 +89,8 @@ requireMarkers(topbarLoader, [
 
 requireMarkers(topbar, [
   'const STYLESHEETS = [',
-  'topbar-world-progress-hotfix.css?v=5.5.10.1',
-  'mobile-world-progress-flow.css?v=5.5.10.2',
+  'topbar-world-progress.css?v=sandbox-deletion-pass-1',
+  'mobile-world-progress-flow.css?v=sandbox-deletion-pass-1',
   'function ensureStylesheet()',
   'function directChild(parent, selector)',
   'function structureMasteryShell()',
@@ -138,8 +138,8 @@ if (!courseManifest?.courses) fail("The modular course manifest was not installe
 for (const [htmlFile, courseId] of [["app.html", "tagalog"], ["bisaya.html", "cebuano"]]) {
   const html = read(htmlFile);
   requireMarkers(html, [
-    "src/config/course-manifest.js?v=5.6.0",
-    "src/app/course-bootstrap.js?v=5.6.0",
+    "src/config/course-manifest.js?v=sandbox-deletion-pass-1",
+    "src/app/course-bootstrap.js?v=sandbox-deletion-pass-1",
     `courseId: "${courseId}"`
   ], `${htmlFile} modular entry point`);
   const course = courseManifest.courses[courseId];
@@ -147,13 +147,13 @@ for (const [htmlFile, courseId] of [["app.html", "tagalog"], ["bisaya.html", "ce
   const styleSource = course.styles.join("\n");
   const scriptSource = course.scripts.join("\n");
   requireMarkers(styleSource, [
-    'compact-home-dashboard.css?v=5.4.21',
-    'weekly-avatar-chest.css?v=5.4.21',
-    'clean-topbar.css?v=5.4.21'
+    'compact-home-dashboard.css?v=sandbox-deletion-pass-1',
+    'weekly-avatar-chest.css?v=sandbox-deletion-pass-1',
+    'clean-topbar.css?v=sandbox-deletion-pass-1'
   ], `${htmlFile} Home release styles`);
   requireMarkers(scriptSource, [
-    'src/features/interface/clean-topbar.js?v=5.4.21',
-    'weekly-avatar-polish.js?v=5.4.21'
+    'src/features/interface/clean-topbar.js?v=sandbox-deletion-pass-1',
+    'weekly-avatar-polish.js?v=sandbox-deletion-pass-1'
   ], `${htmlFile} Home release scripts`);
 }
 if (!courseManifest.courses.tagalog.scripts.some(path => /^profile-app\.js\?v=(?:5\.4\.21|5\.5\.2|5\.5\.3|5\.5\.4)$/.test(path))) {
@@ -163,8 +163,8 @@ if (!read("bisaya-app-loader.js").includes('loadScript("./profile-app.js')) fail
 
 const index = read("index.html");
 requireMarkers(index, [
-  'profile-shell.css?v=5.4.25',
-  'service-worker.js?v=5.4.29'
+  'profile-shell.css?v=sandbox-deletion-pass-1',
+  'service-worker.js?v=sandbox-deletion-pass-1'
 ], "Profile gate release");
 
 const serviceWorker = read("service-worker.js");
@@ -175,7 +175,7 @@ requireMarkers(serviceWorker, [
   '"./weekly-avatar-chest.css"',
   '"./clean-topbar.js"',
   '"./src/features/interface/clean-topbar.js"',
-  '"./topbar-world-progress-hotfix.css"',
+  '"./topbar-world-progress.css"',
   '"./profile-app.js"'
 ], "Home offline release");
 

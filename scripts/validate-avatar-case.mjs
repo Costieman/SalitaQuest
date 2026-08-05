@@ -13,8 +13,8 @@ const requireMarkers = (source, markers, label) => markers.forEach(marker => {
 const rootRuntime = read("avatar-case-v1.js");
 const profileRuntime = read("src/adapters/avatar/avatar-case-profile-runtime-v1.js");
 const runtime = read("src/features/avatar/avatar-case-v1.js");
-const sharing = read("achievement-sharing-v4.js");
-const sharingCss = read("achievement-sharing-v4.css");
+const sharing = read("achievement-sharing.js");
+const sharingCss = read("achievement-sharing.css");
 const loader = read("profile-emblem-control.js");
 const worker = read("service-worker.js");
 const css = read("avatar-case-v1.css");
@@ -25,7 +25,7 @@ const courseManifestSource = read("src/config/course-manifest.js");
 new vm.Script(rootRuntime,{filename:"avatar-case-v1.js"});
 new vm.Script(profileRuntime,{filename:"src/adapters/avatar/avatar-case-profile-runtime-v1.js"});
 new vm.Script(runtime,{filename:"src/features/avatar/avatar-case-v1.js"});
-new vm.Script(sharing,{filename:"achievement-sharing-v4.js"});
+new vm.Script(sharing,{filename:"achievement-sharing.js"});
 new vm.Script(courseManifestSource,{filename:"src/config/course-manifest.js"});
 
 requireMarkers(rootRuntime,[
@@ -107,7 +107,7 @@ requireMarkers(worker,[
   '"./avatar-case-v1.js"',
   '"./avatar-case-v1.css"',
   '"./avatar-collection-screen-v1.css"',
-  '"./achievement-sharing-v4.css"'
+  '"./achievement-sharing.css"'
 ],"Compact Avatar Case offline delivery");
 
 requireMarkers(css,[
@@ -182,12 +182,12 @@ if(!courseManifest?.courses)fail("The modular course manifest was not installed"
 for (const [htmlFile,courseId] of [["app.html","tagalog"],["bisaya.html","cebuano"]]) {
   const html = read(htmlFile);
   requireMarkers(html,[
-    "src/config/course-manifest.js?v=5.6.0",
-    "src/app/course-bootstrap.js?v=5.6.0",
+    "src/config/course-manifest.js?v=sandbox-deletion-pass-1",
+    "src/app/course-bootstrap.js?v=sandbox-deletion-pass-1",
     `courseId: "${courseId}"`
   ],`${htmlFile} modular entry point`);
   const scripts=courseManifest.courses[courseId]?.scripts;
-  if(!Array.isArray(scripts)||!scripts.includes("profile-emblem-control.js?v=5.5.4")) {
+  if(!Array.isArray(scripts)||!scripts.includes("profile-emblem-control.js?v=sandbox-deletion-pass-1")) {
     fail(`${htmlFile} does not load the shared avatar progression entry point through its course manifest`);
   }
 }
