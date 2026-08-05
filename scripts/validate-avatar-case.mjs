@@ -81,8 +81,8 @@ requireMarkers(loader,[
 ],"Shared avatar loader");
 
 requireMarkers(worker,[
-  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-10-economy-tracking-extraction-r63"',
-  'const CACHE_NAME = "salita-quest-v5-6-11-avatar-collection-tabs-extraction-r64"',
+  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-11-avatar-collection-tabs-extraction-r64"',
+  'const CACHE_NAME = "salita-quest-v5-6-12-avatar-collection-summary-extraction-r65"',
   'const AVATAR_CASE_DISPLAY_HOTFIX = "2026-08-01-compact-display-share-stack-1"',
   '"./avatar-case-v1.js"',
   '"./avatar-case-v1.css"',
