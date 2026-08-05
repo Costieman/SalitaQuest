@@ -1,12 +1,19 @@
 const CACHE_PREFIX = "salita-quest-sandbox-";
-const CACHE_NAME = `${CACHE_PREFIX}runtime-deletion-pass-1`;
+const CACHE_NAME = `${CACHE_PREFIX}runtime-deletion-pass-2`;
 const CORE_FILES = [
   "./", "./index.html", "./app.html", "./bisaya.html", "./mobile-refresh.html",
   "./style.css", "./app.js", "./profile-shell.css",
   "./profile-install-prompt.css", "./profile-install-prompt.js",
   "./src/config/course-manifest.js", "./src/app/course-bootstrap.js",
   "./manifest.webmanifest", "./icons/icon-192.png", "./icons/icon-512.png",
-  "./audio/audio_manifest.json"
+  "./audio/audio_manifest.json",
+  "./languages/cebuano/course.json", "./languages/cebuano/modules/manifest.json",
+  "./languages/cebuano/modules/introductions.json", "./languages/cebuano/modules/origin.json",
+  "./languages/cebuano/modules/wellbeing.json", "./languages/cebuano/modules/questions.json",
+  "./languages/cebuano/modules/food.json", "./languages/cebuano/modules/grammar.json",
+  "./languages/cebuano/modules/verbs.json", "./languages/cebuano/modules/spanish.json",
+  "./languages/cebuano/modules/code-switching.json",
+  "./bisaya-review-regions.js", "./exercise-fixes.js"
 ];
 
 function isAudio(url) {
