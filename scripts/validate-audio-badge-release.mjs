@@ -13,6 +13,8 @@ for (const file of [
   "home-reward-coordinator.js",
   "src/features/progression/home-reward-coordinator.js",
   "badge-catalogue-v2.js",
+  "src/adapters/badges/badge-catalogue-runtime-v1.js",
+  "src/features/badges/badge-catalogue-v2.js",
   "src/config/course-manifest.js",
   "service-worker.js"
 ]) new vm.Script(read(file),{filename:file});
@@ -55,7 +57,7 @@ for (const marker of [
   'switchViewWithGuaranteedHomeRewards'
 ]) if (!reward.includes(marker)) fail(`Missing Home reward marker: ${marker}`);
 
-const badges = read("badge-catalogue-v2.js");
+const badges = read("src/features/badges/badge-catalogue-v2.js");
 for (const marker of [
   'const ADDITIONAL_BADGES = [',
   'image:`badges/${badge.id}.png`',
@@ -115,12 +117,12 @@ for (const [htmlFile,courseId] of [["app.html","tagalog"],["bisaya.html","cebuan
   for (const asset of [
     'src/features/audio/pronunciation-release-control.js?v=5.4.22',
     'src/features/progression/home-reward-coordinator.js?v=5.4.22',
-    'badge-catalogue-v2.js?v=5.4.23'
+    'src/features/badges/badge-catalogue-v2.js?v=5.4.23'
   ]) if (!course.scripts.includes(asset)) fail(`${htmlFile} does not load ${asset}`);
   const nav = course.scripts.findIndex(asset => /^desktop-navigation-refinement\.js\?v=(?:5\.4\.21|5\.5\.2|5\.5\.3)$/.test(asset));
   const audio = course.scripts.indexOf('src/features/audio/pronunciation-release-control.js?v=5.4.22');
   const rewardIndex = course.scripts.indexOf('src/features/progression/home-reward-coordinator.js?v=5.4.22');
-  const catalogue = course.scripts.indexOf('badge-catalogue-v2.js?v=5.4.23');
+  const catalogue = course.scripts.indexOf('src/features/badges/badge-catalogue-v2.js?v=5.4.23');
   if (!(nav >= 0 && audio > nav && rewardIndex > audio && catalogue > rewardIndex)) fail(`${htmlFile} has incorrect final runtime order`);
 }
 

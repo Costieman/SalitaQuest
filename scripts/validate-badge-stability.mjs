@@ -179,7 +179,7 @@ for (const [htmlFile, courseId] of [["app.html", "tagalog"], ["bisaya.html", "ce
     "social-posting-v2.js",
     "achievement-sharing-v3.js"
   ]) if ([...course.styles, ...course.scripts].some(asset => asset.includes(obsolete))) fail(`${htmlFile} still loads obsolete runtime ${obsolete}`);
-  const catalogue = course.scripts.indexOf("badge-catalogue-v2.js?v=5.4.23");
+  const catalogue = course.scripts.indexOf("src/features/badges/badge-catalogue-v2.js?v=5.4.23");
   const chest = course.scripts.indexOf("badge-chest-v2.js?v=5.4.29");
   const connections = course.scripts.indexOf("social-connections-v2.js?v=5.4.27");
   const sharing = course.scripts.indexOf("achievement-sharing-v4.js?v=5.4.29");
@@ -188,7 +188,7 @@ for (const [htmlFile, courseId] of [["app.html", "tagalog"], ["bisaya.html", "ce
   }
 }
 
-const catalogue = read("badge-catalogue-v2.js");
+const catalogue = read("src/features/badges/badge-catalogue-v2.js");
 requireMarkers(catalogue, [
   'new CustomEvent("salita:badges-rendered"',
   "renderCatalogue()"
@@ -196,8 +196,8 @@ requireMarkers(catalogue, [
 
 const worker = read("service-worker.js");
 requireMarkers(worker, [
-  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-21-avatar-collection-profile-adapter-extraction-r74"',
-  'const CACHE_NAME = "salita-quest-v5-6-22-avatar-sharing-bridge-extraction-r75"',
+  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-22-avatar-sharing-bridge-extraction-r75"',
+  'const CACHE_NAME = "salita-quest-v5-6-23-badge-catalogue-extraction-r76"',
   '"./badge-chest-v2.js"',
   '"./badge-chest-v2.css"',
   '"./achievement-sharing-v4.js"',

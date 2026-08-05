@@ -1,0 +1,43 @@
+name: Validate badge catalogue module extraction
+
+on:
+  pull_request:
+    paths:
+      - "badge-catalogue-v2.js"
+      - "src/adapters/badges/badge-catalogue-runtime-v1.js"
+      - "src/features/badges/badge-catalogue-v2.js"
+      - "src/config/course-manifest.js"
+      - "profile-emblem-control.js"
+      - "mobile-refresh.html"
+      - "service-worker.js"
+      - "scripts/validate-badge-catalogue-module-extraction.mjs"
+      - "src/config/module-contracts.generated.json"
+      - "docs/MODULE_CONTRACT_INVENTORY.md"
+      - ".github/workflows/validate-badge-catalogue-module-extraction.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Validate badge catalogue boundary
+        run: node scripts/validate-badge-catalogue-module-extraction.mjs
+      - name: Validate badge stability
+        run: node scripts/validate-badge-stability.mjs
+      - name: Validate audio and badge release
+        run: node scripts/validate-audio-badge-release.mjs
+      - name: Validate long-term badge adapter
+        run: node scripts/validate-long-term-badge-adapter-extraction.mjs
+      - name: Validate placement sharing
+        run: node scripts/validate-placement-sharing.mjs
+      - name: Validate deterministic inventory
+        run: node scripts/generate-module-contract-inventory-v2.mjs --check
+      - name: Check whitespace
+        run: git diff --check

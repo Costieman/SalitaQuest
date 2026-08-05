@@ -61,8 +61,8 @@ if (/localStorage\.(?:clear|removeItem)\(/.test(refresh)) {
 }
 
 for (const required of [
-  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-21-avatar-collection-profile-adapter-extraction-r74"',
-  'const CACHE_NAME = "salita-quest-v5-6-22-avatar-sharing-bridge-extraction-r75"',
+  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-22-avatar-sharing-bridge-extraction-r75"',
+  'const CACHE_NAME = "salita-quest-v5-6-23-badge-catalogue-extraction-r76"',
   '"./level-up-mobile-safety-v552.js"',
   '"./src/features/interface/level-up-mobile-safety-v552.js"'
 ]) {

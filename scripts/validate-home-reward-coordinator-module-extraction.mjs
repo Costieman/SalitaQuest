@@ -74,13 +74,13 @@ for (const courseId of ["tagalog", "cebuano"]) {
   if (scripts.includes('home-reward-coordinator.js?v=5.4.22')) fail(`${courseId} still loads the compatibility URL directly`);
   const audio = scripts.indexOf('src/features/audio/pronunciation-release-control.js?v=5.4.22');
   const reward = scripts.indexOf(direct);
-  const badges = scripts.indexOf('badge-catalogue-v2.js?v=5.4.23');
+  const badges = scripts.indexOf('src/features/badges/badge-catalogue-v2.js?v=5.4.23');
   if (!(audio >= 0 && reward > audio && badges > reward)) fail(`${courseId} coordinator load order changed`);
 }
 
 for (const marker of [
-  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-21-avatar-collection-profile-adapter-extraction-r74"',
-  'const CACHE_NAME = "salita-quest-v5-6-22-avatar-sharing-bridge-extraction-r75"',
+  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-22-avatar-sharing-bridge-extraction-r75"',
+  'const CACHE_NAME = "salita-quest-v5-6-23-badge-catalogue-extraction-r76"',
   '"./home-reward-coordinator.js"',
   '"./src/features/progression/home-reward-coordinator.js"'
 ]) if (!worker.includes(marker)) fail(`Offline delivery is missing ${marker}`);
