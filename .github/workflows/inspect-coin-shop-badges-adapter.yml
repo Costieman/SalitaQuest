@@ -1,0 +1,52 @@
+name: Inspect coin shop badges adapter
+on:
+  push:
+    branches:
+      - agent/audit-coin-shop-badges-adapter
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install audit tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ripgrep
+      - name: Inspect ownership and consumers
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo '=== target metadata ==='
+          wc -l -c coin-avatar-shop-badges-v1.js
+          sha256sum coin-avatar-shop-badges-v1.js
+          node --check coin-avatar-shop-badges-v1.js
+          echo '=== exact target, install flag and ready event references ==='
+          rg -n --hidden --glob '!node_modules/**' --glob '!.git/**' 'coin-avatar-shop-badges-v1\.js|__salitaCoinAvatarShopBadgesV1Installed|salita:coin-shop-badges-ready' . || true
+          echo '=== badge catalogue owners and consumers ==='
+          rg -n --hidden --glob '!node_modules/**' --glob '!.git/**' '(^|[^A-Za-z0-9_])(BADGES|syncEarned|renderCatalogue)([^A-Za-z0-9_]|$)' . || true
+          echo '=== coin economy and profile ownership ==='
+          rg -n --hidden --glob '!node_modules/**' --glob '!.git/**' 'coinEconomy|salitaQuestLocalProfilesV1|salitaQuestActiveProfileId|SalitaAvatarModel' coin-avatar-shop-badges-v1.js app.js badge-catalogue-v2.js long-term-badges-v1.js profile-app.js scripts src || true
+          echo '=== service worker and loader references ==='
+          rg -n 'PREVIOUS_CACHE_NAME|CACHE_NAME|coin-avatar-shop-badges-v1' service-worker.js profile-emblem-control.js mobile-refresh.html scripts .github/workflows || true
+          echo '=== generated inventory entries ==='
+          node - <<'NODE'
+          const fs=require('fs');
+          const data=JSON.parse(fs.readFileSync('src/config/module-contracts.generated.json','utf8'));
+          const needles=['coin-avatar-shop-badges-v1.js','BADGES','syncEarned','renderCatalogue','salita:coin-shop-badges-ready'];
+          const matches=[];
+          const walk=(value,path=[])=>{
+            if(Array.isArray(value)) value.forEach((item,index)=>walk(item,[...path,index]));
+            else if(value&&typeof value==='object') {
+              const serial=JSON.stringify(value);
+              if(needles.some(needle=>serial.includes(needle))) matches.push({path,value});
+              else Object.entries(value).forEach(([key,item])=>walk(item,[...path,key]));
+            }
+          };
+          walk(data);
+          console.log(JSON.stringify(matches,null,2));
+          NODE
