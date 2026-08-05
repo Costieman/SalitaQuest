@@ -75,8 +75,8 @@ for (const courseId of ["tagalog", "cebuano"]) {
 
 if (!refresh.includes(modulePath)) fail("Mobile refresh does not fetch the extracted progress rail");
 requireMarkers(worker, [
-  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-4-progress-rail-extraction-r57"',
-  'const CACHE_NAME = "salita-quest-v5-6-5-avatar-data-migration-extraction-r58"',
+  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-5-avatar-data-migration-extraction-r58"',
+  'const CACHE_NAME = "salita-quest-v5-6-6-avatar-artwork-registry-extraction-r59"',
   '"./even-progress-rail.js"',
   '"./src/features/progression/even-progress-rail.js"'
 ], "Progress-rail offline contract");

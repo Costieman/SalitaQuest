@@ -33,7 +33,7 @@ for (const validator of validators) {
 const runtimeFiles = [
   "avatar-catalogue-v1.js",
   "src/features/avatar/avatar-catalogue-v1.js",
-  "avatar-artwork-registry-v554.js",
+  "src/features/avatar/avatar-artwork-registry-v554.js",
   "avatar-progression-hotfix-v551.js",
   "profile-app.js",
   "popup-governor-v1.js",
@@ -95,7 +95,7 @@ if (!loader.includes('const AVATAR_CASE_VERSION = "5.5.9"')) fail("Shared avatar
 if (!loader.includes('const SHARING_VERSION = "5.5.20.1"')) fail("Shared avatar loader does not version the current social sharing runtime");
 if (loader.includes("repair(document)")) fail("Shared loader must not run a document-wide avatar repair pass");
 
-const artwork = read("avatar-artwork-registry-v554.js");
+const artwork = read("src/features/avatar/avatar-artwork-registry-v554.js");
 const compatibility = read("avatar-progression-hotfix-v551.js");
 const combinedArtworkRuntime = artwork + compatibility;
 for (const prohibited of [
@@ -135,8 +135,8 @@ if (!navigation.includes('action:"avatar-collection"')) fail("Persistent navigat
 if (navigation.includes("salitaQuestDesktopNavigationCollapsed")) fail("Persistent navigation retains the obsolete collapsed-sidebar preference");
 
 const serviceWorker = read("service-worker.js");
-if (!serviceWorker.includes('const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-4-progress-rail-extraction-r57"')) fail("Service worker does not retain the pre-modular release boundary");
-if (!serviceWorker.includes('const CACHE_NAME = "salita-quest-v5-6-5-avatar-data-migration-extraction-r58"')) fail("Service worker cache version is not the modular-bootstrap release");
+if (!serviceWorker.includes('const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-5-avatar-data-migration-extraction-r58"')) fail("Service worker does not retain the pre-modular release boundary");
+if (!serviceWorker.includes('const CACHE_NAME = "salita-quest-v5-6-6-avatar-artwork-registry-extraction-r59"')) fail("Service worker cache version is not the modular-bootstrap release");
 if (!serviceWorker.includes('const EXPLICIT_SHARING_ROUTER_DELIVERY = "2026-08-02-feed-private-image-router-1"')) fail("Service worker does not advertise the explicit sharing-router update");
 if (!serviceWorker.includes('"./achievement-sharing-router-v2.js"') || !serviceWorker.includes('"./achievement-sharing-router-v2.css"')) fail("Service worker does not precache the sharing compatibility router");
 if (!serviceWorker.includes('"./avatar-case-v1.js"') || !serviceWorker.includes('"./avatar-case-v1.css"')) fail("Service worker does not precache the Avatar Case runtime");
