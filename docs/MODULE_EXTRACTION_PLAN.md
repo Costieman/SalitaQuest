@@ -84,3 +84,5 @@ Before extracting these files, introduce an explicit engine adapter that owns ac
 17. `incorrect-order-feedback.js` — adapter-led split into `src/adapters/exercise/incorrect-order-feedback-runtime-v1.js` and `src/features/exercise/incorrect-order-feedback.js`; the historical root remains the ordered compatibility coordinator through r71.
 
 18. `long-term-badges-v1.js` — adapter-led split into `src/adapters/badges/badge-catalogue-runtime-v1.js` and `src/features/badges/long-term-badges-v1.js`; the historical root remains the ordered compatibility coordinator through r72.
+
+19. `avatar-case-v1.js` — adapter-led split into `src/adapters/avatar/avatar-case-profile-runtime-v1.js` and `src/features/avatar/avatar-case-v1.js`; the historical root remains the ordered compatibility coordinator through r73.

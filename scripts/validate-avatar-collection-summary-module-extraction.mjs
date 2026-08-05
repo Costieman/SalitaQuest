@@ -55,8 +55,8 @@ if (!(summaryIndex >= 0 && economyIndex > summaryIndex && tabsIndex > economyInd
 if (loader.includes('"./avatar-collection-summary-v1.js?v=5.6.9"')) fail("Current loader still targets the root compatibility URL");
 
 for (const marker of [
-  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-18-incorrect-order-feedback-adapter-extraction-r71"',
-  'const CACHE_NAME = "salita-quest-v5-6-19-long-term-badge-adapter-extraction-r72"',
+  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-19-long-term-badge-adapter-extraction-r72"',
+  'const CACHE_NAME = "salita-quest-v5-6-20-avatar-case-profile-adapter-extraction-r73"',
   '"./avatar-collection-summary-v1.js"',
   '"./src/features/avatar/avatar-collection-summary-v1.js"',
   '"./avatar-collection-summary-v1.css"'

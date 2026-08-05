@@ -23,7 +23,9 @@ const sources = {
   profileLoader:read("profile-emblem-control.js"),
   profile:read("profile-app.js"),
   collection:read("avatar-collection-screen-v1.js"),
-  avatarCase:read("avatar-case-v1.js"),
+  avatarCaseRoot:read("avatar-case-v1.js"),
+  avatarCaseProfile:read("src/adapters/avatar/avatar-case-profile-runtime-v1.js"),
+  avatarCase:read("src/features/avatar/avatar-case-v1.js"),
   weekly:read("weekly-avatar-shard-rewards-v1.js"),
   level:read("src/features/avatar/level-avatar-rewards-v1.js"),
   unlock:read("avatar-unlock-celebration-v1.js"),
@@ -97,8 +99,8 @@ check(sources.css.includes("image-rendering:auto!important"), "Avatar scaling us
 check(sources.profile.includes("data-sq-avatar-id"), "Profile images carry stable avatar IDs");
 check(sources.collection.includes("data-sq-avatar-id"), "Collection images carry stable avatar IDs");
 check(sources.avatarCase.includes("const MAX_CASE_AVATARS = 4"), "Avatar Case uses four slots");
-check(sources.avatarCase.includes("profile.avatarCaseIds = cleaned"), "Avatar Case persists separately on the profile");
-check(!/profile\.avatarId\s*=|equippedAvatarId\s*=/.test(sources.avatarCase), "Avatar Case does not change the equipped avatar");
+check(sources.avatarCaseProfile.includes("profile.avatarCaseIds = cleaned"), "Avatar Case persists separately on the profile");
+check(!/profile\.avatarId\s*=|equippedAvatarId\s*=/.test(sources.avatarCase + sources.avatarCaseProfile), "Avatar Case does not change the equipped avatar");
 check(sources.weekly.includes("item.image") || sources.weekly.includes("SalitaAvatarArtwork"), "Weekly rewards resolve canonical artwork");
 check(sources.level.includes("avatar:item") && sources.level.includes("avatarId:item.id"), "Level rewards hand the canonical avatar record to the unlock renderer");
 check(sources.unlock.includes("item.image") || sources.unlock.includes("getAvatarImagePath") || sources.unlock.includes("SalitaAvatarArtwork"), "Unlock celebrations resolve canonical artwork");
@@ -117,8 +119,8 @@ check(cached.length === 48, "Service worker lists exactly 48 canonical PNGs");
 check(new Set(cached).size === 48, "Service-worker canonical paths are unique");
 check(manifestPaths.every(file => cached.includes(file)), "Service worker precaches every manifest image");
 check(!/"\.\/avatars\/(?!canonical\/)/.test(sources.worker), "Service worker does not cache legacy avatar artwork");
-check(sources.worker.includes('PREVIOUS_CACHE_NAME = "salita-quest-v5-6-18-incorrect-order-feedback-adapter-extraction-r71"'), "Service worker records the pre-modular cache boundary");
-check(sources.worker.includes('CACHE_NAME = "salita-quest-v5-6-19-long-term-badge-adapter-extraction-r72"'), "Service-worker cache revision is the modular-bootstrap release");
+check(sources.worker.includes('PREVIOUS_CACHE_NAME = "salita-quest-v5-6-19-long-term-badge-adapter-extraction-r72"'), "Service worker records the pre-modular cache boundary");
+check(sources.worker.includes('CACHE_NAME = "salita-quest-v5-6-20-avatar-case-profile-adapter-extraction-r73"'), "Service-worker cache revision is the modular-bootstrap release");
 check(sources.worker.includes('"./avatar-case-v1.js"') && sources.worker.includes('"./avatar-case-v1.css"'), "Service worker precaches Avatar Case assets");
 check(sources.worker.includes('"./desktop-navigation-refinement.js"') && sources.worker.includes('"./desktop-navigation-refinement.css"'), "Service worker precaches persistent-navigation assets");
 

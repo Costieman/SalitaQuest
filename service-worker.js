@@ -1,5 +1,5 @@
-const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-18-incorrect-order-feedback-adapter-extraction-r71";
-const CACHE_NAME = "salita-quest-v5-6-19-long-term-badge-adapter-extraction-r72";
+const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-19-long-term-badge-adapter-extraction-r72";
+const CACHE_NAME = "salita-quest-v5-6-20-avatar-case-profile-adapter-extraction-r73";
 const AVATAR_CASE_DISPLAY_HOTFIX = "2026-08-01-compact-display-share-stack-1";
 const TOPBAR_WORLD_PROGRESS_HOTFIX = "2026-08-01-separated-heading-rail-1";
 const SHARE_IMAGE_TRANSPORT_DELIVERY = "2026-08-02-direct-loader-1";
@@ -53,7 +53,7 @@ const AVATAR_PROGRESSION_FILES = [
   "./avatar-progression-hotfix-v551.js", "./src/features/avatar/avatar-progression-model-v551.js",
       "./src/adapters/navigation/avatar-collections-navigation-v551.js", "./avatar-progression-hotfix-v551.css",
   "./avatar-progression-migration-v1.js", "./src/features/avatar/avatar-progression-migration-v1.js", "./avatar-collection-screen-v1.js", "./avatar-collection-screen-v1.css",
-  "./avatar-case-v1.js", "./avatar-case-v1.css",
+  "./avatar-case-v1.js", "./src/adapters/avatar/avatar-case-profile-runtime-v1.js", "./src/features/avatar/avatar-case-v1.js", "./avatar-case-v1.css",
   "./avatar-collection-summary-v1.js", "./src/features/avatar/avatar-collection-summary-v1.js", "./avatar-collection-summary-v1.css",
   "./economy-tracking-phase6-v1.js", "./src/features/economy/economy-tracking-phase6-v1.js", "./economy-tracking-phase6-v1.css",
   "./avatar-collection-tabs-phase6-1-v1.js", "./src/features/avatar/avatar-collection-tabs-phase6-1-v1.js", "./avatar-collection-tabs-phase6-1-v1.css",

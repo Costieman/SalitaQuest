@@ -126,8 +126,8 @@ for (const path of [catalogueModulePath, migrationModulePath]) {
 }
 
 requireMarkers(worker, [
-  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-18-incorrect-order-feedback-adapter-extraction-r71"',
-  'const CACHE_NAME = "salita-quest-v5-6-19-long-term-badge-adapter-extraction-r72"',
+  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-19-long-term-badge-adapter-extraction-r72"',
+  'const CACHE_NAME = "salita-quest-v5-6-20-avatar-case-profile-adapter-extraction-r73"',
   '"./avatar-catalogue-v1.js"',
   '"./src/features/avatar/avatar-catalogue-v1.js"',
   '"./avatar-progression-migration-v1.js"',

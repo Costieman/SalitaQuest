@@ -132,10 +132,13 @@ if (!sharingBridge.includes("controller()?.openAvatarCase")) fail("Avatar bridge
 if (sharingBridge.includes("window.SalitaQuestAchievementSharing =")) fail("Avatar bridge must not replace the shared achievement controller");
 if (sharingBridge.includes('document.addEventListener("click"')) fail("Avatar bridge must not intercept share clicks");
 
-const avatarCase = read("avatar-case-v1.js");
+const avatarCaseRoot = read("avatar-case-v1.js");
+const avatarCaseProfile = read("src/adapters/avatar/avatar-case-profile-runtime-v1.js");
+const avatarCase = read("src/features/avatar/avatar-case-v1.js");
 if (!avatarCase.includes("const MAX_CASE_AVATARS = 4")) fail("Avatar Case does not enforce four slots");
-if (!avatarCase.includes("profile.avatarCaseIds = cleaned")) fail("Avatar Case state is not persisted account-wide on the profile");
-if (/profile\.avatarId\s*=|equippedAvatarId\s*=/.test(avatarCase)) fail("Avatar Case must not change the equipped avatar");
+if (!avatarCaseProfile.includes("profile.avatarCaseIds = cleaned")) fail("Avatar Case state is not persisted account-wide on the profile");
+if (/profile\.avatarId\s*=|equippedAvatarId\s*=/.test(avatarCase + avatarCaseProfile)) fail("Avatar Case must not change the equipped avatar");
+if (!avatarCaseRoot.includes("SalitaAvatarCaseProfileRuntimeV1") || !avatarCaseRoot.includes("SalitaAvatarCaseFeatureV1")) fail("Avatar Case compatibility coordinator does not load both extracted owners");
 
 const navigation = read("desktop-navigation-refinement.js");
 if (!navigation.includes('const RELEASE = "5.5.10-persistent-navigation"')) fail("Persistent navigation release marker is missing");
@@ -143,8 +146,8 @@ if (!navigation.includes('action:"avatar-collection"')) fail("Persistent navigat
 if (navigation.includes("salitaQuestDesktopNavigationCollapsed")) fail("Persistent navigation retains the obsolete collapsed-sidebar preference");
 
 const serviceWorker = read("service-worker.js");
-if (!serviceWorker.includes('const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-18-incorrect-order-feedback-adapter-extraction-r71"')) fail("Service worker does not retain the pre-modular release boundary");
-if (!serviceWorker.includes('const CACHE_NAME = "salita-quest-v5-6-19-long-term-badge-adapter-extraction-r72"')) fail("Service worker cache version is not the modular-bootstrap release");
+if (!serviceWorker.includes('const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-19-long-term-badge-adapter-extraction-r72"')) fail("Service worker does not retain the pre-modular release boundary");
+if (!serviceWorker.includes('const CACHE_NAME = "salita-quest-v5-6-20-avatar-case-profile-adapter-extraction-r73"')) fail("Service worker cache version is not the modular-bootstrap release");
 if (!serviceWorker.includes('const EXPLICIT_SHARING_ROUTER_DELIVERY = "2026-08-02-feed-private-image-router-1"')) fail("Service worker does not advertise the explicit sharing-router update");
 if (!serviceWorker.includes('"./achievement-sharing-router-v2.js"') || !serviceWorker.includes('"./achievement-sharing-router-v2.css"')) fail("Service worker does not precache the sharing compatibility router");
 if (!serviceWorker.includes('"./avatar-case-v1.js"') || !serviceWorker.includes('"./avatar-case-v1.css"')) fail("Service worker does not precache the Avatar Case runtime");
