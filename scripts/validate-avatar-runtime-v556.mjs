@@ -17,7 +17,9 @@ const check = (condition, message) => {
 const sources = {
   catalogue:read("src/features/avatar/avatar-catalogue-v1.js"),
   artwork:read("src/features/avatar/avatar-artwork-registry-v554.js"),
-  compatibility:read("avatar-progression-hotfix-v551.js"),
+  modelHotfix:read("src/features/avatar/avatar-progression-model-v551.js"),
+      navigationAdapter:read("src/adapters/navigation/avatar-collections-navigation-v551.js"),
+      compatibility:read("avatar-progression-hotfix-v551.js"),
   profileLoader:read("profile-emblem-control.js"),
   profile:read("profile-app.js"),
   collection:read("avatar-collection-screen-v1.js"),
@@ -47,6 +49,8 @@ sandbox.window = sandbox;
 sandbox.globalThis = sandbox;
 vm.createContext(sandbox);
 new vm.Script(sources.catalogue).runInContext(sandbox);
+new vm.Script(sources.modelHotfix).runInContext(sandbox);
+new vm.Script(sources.navigationAdapter).runInContext(sandbox);
 new vm.Script(sources.compatibility).runInContext(sandbox);
 await sandbox.SalitaAvatarHotfixReady;
 const model = sandbox.SalitaAvatarModel;
@@ -75,7 +79,7 @@ check(representative.shards.dugong === 44, "Partial shard totals are preserved")
 check(representative.pendingUnlocks[0]?.avatarId === "dugong", "Pending unlocks are preserved");
 check(representative.levelRewardsClaimed.join(",") === "10,20", "Level reward claims are preserved and deduplicated");
 
-const artworkRuntime = sources.artwork + sources.compatibility;
+const artworkRuntime = sources.artwork + sources.modelHotfix + sources.navigationAdapter + sources.compatibility;
 for (const [needle, message] of [
   ["MutationObserver", "No avatar-source observer remains"],
   ['createElement("canvas")', "No avatar canvas extraction remains"],
@@ -113,8 +117,8 @@ check(cached.length === 48, "Service worker lists exactly 48 canonical PNGs");
 check(new Set(cached).size === 48, "Service-worker canonical paths are unique");
 check(manifestPaths.every(file => cached.includes(file)), "Service worker precaches every manifest image");
 check(!/"\.\/avatars\/(?!canonical\/)/.test(sources.worker), "Service worker does not cache legacy avatar artwork");
-check(sources.worker.includes('PREVIOUS_CACHE_NAME = "salita-quest-v5-6-14-popup-governor-extraction-r67"'), "Service worker records the pre-modular cache boundary");
-check(sources.worker.includes('CACHE_NAME = "salita-quest-v5-6-15-level-avatar-rewards-extraction-r68"'), "Service-worker cache revision is the modular-bootstrap release");
+check(sources.worker.includes('PREVIOUS_CACHE_NAME = "salita-quest-v5-6-15-level-avatar-rewards-extraction-r68"'), "Service worker records the pre-modular cache boundary");
+check(sources.worker.includes('CACHE_NAME = "salita-quest-v5-6-16-avatar-hotfix-adapters-extraction-r69"'), "Service-worker cache revision is the modular-bootstrap release");
 check(sources.worker.includes('"./avatar-case-v1.js"') && sources.worker.includes('"./avatar-case-v1.css"'), "Service worker precaches Avatar Case assets");
 check(sources.worker.includes('"./desktop-navigation-refinement.js"') && sources.worker.includes('"./desktop-navigation-refinement.css"'), "Service worker precaches persistent-navigation assets");
 

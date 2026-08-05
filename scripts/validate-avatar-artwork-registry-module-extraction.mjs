@@ -70,10 +70,12 @@ if (!profileSource.includes(directModule)) fail("Profile shell does not load the
 if (profileSource.includes("`./avatar-artwork-registry-v554.js?v=${RELEASE_VERSION}`")) fail("Profile shell still directly loads the root registry URL");
 const catalogueIndex = profileSource.indexOf("src/features/avatar/avatar-catalogue-v1.js");
 const artworkIndex = profileSource.indexOf("src/features/avatar/avatar-artwork-registry-v554.js");
+const modelHotfixIndex = profileSource.indexOf("src/features/avatar/avatar-progression-model-v551.js");
+const navigationAdapterIndex = profileSource.indexOf("src/adapters/navigation/avatar-collections-navigation-v551.js");
 const hotfixIndex = profileSource.indexOf("avatar-progression-hotfix-v551.js");
 const migrationIndex = profileSource.indexOf("src/features/avatar/avatar-progression-migration-v1.js");
-if (!(catalogueIndex >= 0 && catalogueIndex < artworkIndex && artworkIndex < hotfixIndex && hotfixIndex < migrationIndex)) {
-  fail("Profile catalogue → artwork → hotfix → migration order changed");
+if (!(catalogueIndex >= 0 && catalogueIndex < artworkIndex && artworkIndex < modelHotfixIndex && modelHotfixIndex < navigationAdapterIndex && navigationAdapterIndex < hotfixIndex && hotfixIndex < migrationIndex)) {
+  fail("Profile catalogue → artwork → model hotfix → navigation adapter → coordinator → migration order changed");
 }
 
 const mobileModule = "./src/features/avatar/avatar-artwork-registry-v554.js?v=${RELEASE}";
@@ -87,8 +89,8 @@ if (!(mobileCatalogue >= 0 && mobileCatalogue < mobileMigration && mobileMigrati
 }
 
 for (const required of [
-  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-14-popup-governor-extraction-r67"',
-  'const CACHE_NAME = "salita-quest-v5-6-15-level-avatar-rewards-extraction-r68"',
+  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-15-level-avatar-rewards-extraction-r68"',
+  'const CACHE_NAME = "salita-quest-v5-6-16-avatar-hotfix-adapters-extraction-r69"',
   '"./avatar-artwork-registry-v554.js"',
   '"./src/features/avatar/avatar-artwork-registry-v554.js"'
 ]) {

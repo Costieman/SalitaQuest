@@ -50,8 +50,8 @@ const tabsIndex = loader.indexOf('avatar-collection-tabs-phase6-1-v1.js?v=5.7.4'
 if (!(summaryIndex >= 0 && economyIndex > summaryIndex && tabsIndex > economyIndex)) fail("Collection summary, economy tracker and tabs load order changed");
 if (loader.includes('"./economy-tracking-phase6-v1.js?v=5.7.3"')) fail("Current loader still targets the root compatibility URL");
 for (const marker of [
-  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-14-popup-governor-extraction-r67"',
-  'const CACHE_NAME = "salita-quest-v5-6-15-level-avatar-rewards-extraction-r68"',
+  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-15-level-avatar-rewards-extraction-r68"',
+  'const CACHE_NAME = "salita-quest-v5-6-16-avatar-hotfix-adapters-extraction-r69"',
   '"./economy-tracking-phase6-v1.js"',
   '"./src/features/economy/economy-tracking-phase6-v1.js"',
   '"./economy-tracking-phase6-v1.css"'
