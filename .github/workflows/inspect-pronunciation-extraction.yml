@@ -1,0 +1,25 @@
+name: Inspect pronunciation extraction references
+
+on:
+  push:
+    branches:
+      - agent/extract-pronunciation-release-control
+    paths:
+      - ".github/workflows/inspect-pronunciation-extraction.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Inspect path and cache references
+        run: |
+          grep -R -n -E 'pronunciation-release-control|first-module-extraction-r54' . \
+            --exclude-dir=.git \
+            --exclude='module-contracts.generated.json' \
+            --exclude='MODULE_CONTRACT_INVENTORY.md' || true
+          echo '--- source markers ---'
+          grep -n -E 'INSTALL_FLAG|BUTTON_SELECTOR|speakFilipino|loadStaticAudioManifest|addEventListener' pronunciation-release-control.js
