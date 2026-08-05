@@ -1,0 +1,359 @@
+name: Apply desktop shell module extraction
+
+on:
+  push:
+    branches:
+      - agent/extract-desktop-shell-pair
+    paths:
+      - ".github/workflows/apply-desktop-shell-extraction.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/extract-desktop-shell-pair
+
+      - name: Extract desktop shell implementations
+        run: |
+          mkdir -p src/features/interface
+          cp compact-desktop-layout.js src/features/interface/compact-desktop-layout.js
+          cp clean-topbar.js src/features/interface/clean-topbar.js
+
+          cat > compact-desktop-layout.js <<'EOF'
+          (() => {
+            "use strict";
+
+            const TARGET = "./src/features/interface/compact-desktop-layout.js?v=5.4.21";
+            const LOADING_FLAG = "__salitaQuestCompactDesktopCompatibilityLoading";
+
+            if (window.__salitaQuestCompactDesktopInstalled || window[LOADING_FLAG]) return;
+            window[LOADING_FLAG] = true;
+
+            const current = document.currentScript;
+            const targetUrl = new URL(TARGET, current?.src || document.baseURI).href;
+            if (document.readyState === "loading" && current) {
+              document.write(`<script src="${targetUrl}"><\/script>`);
+              window[LOADING_FLAG] = false;
+              return;
+            }
+
+            const script = document.createElement("script");
+            script.src = targetUrl;
+            script.async = false;
+            script.dataset.salitaCompatibilityLoader = "compact-desktop-layout";
+            script.addEventListener("load", () => { window[LOADING_FLAG] = false; }, {once:true});
+            script.addEventListener("error", () => {
+              window[LOADING_FLAG] = false;
+              console.error("Salita Quest could not load the extracted compact desktop-layout module.");
+            }, {once:true});
+            (document.head || document.documentElement).appendChild(script);
+          })();
+          EOF
+          sed -i 's/^          //' compact-desktop-layout.js
+
+          cat > clean-topbar.js <<'EOF'
+          (() => {
+            "use strict";
+
+            const TARGET = "./src/features/interface/clean-topbar.js?v=5.4.21";
+            const LOADING_FLAG = "__salitaQuestCleanTopbarCompatibilityLoading";
+
+            if (window.__salitaQuestCleanTopbarInstalled || window[LOADING_FLAG]) return;
+            window[LOADING_FLAG] = true;
+
+            const current = document.currentScript;
+            const targetUrl = new URL(TARGET, current?.src || document.baseURI).href;
+            if (document.readyState === "loading" && current) {
+              document.write(`<script src="${targetUrl}"><\/script>`);
+              window[LOADING_FLAG] = false;
+              return;
+            }
+
+            const script = document.createElement("script");
+            script.src = targetUrl;
+            script.async = false;
+            script.dataset.salitaCompatibilityLoader = "clean-topbar";
+            script.addEventListener("load", () => { window[LOADING_FLAG] = false; }, {once:true});
+            script.addEventListener("error", () => {
+              window[LOADING_FLAG] = false;
+              console.error("Salita Quest could not load the extracted clean-topbar module.");
+            }, {once:true});
+            (document.head || document.documentElement).appendChild(script);
+          })();
+          EOF
+          sed -i 's/^          //' clean-topbar.js
+
+      - name: Update manifests cache validators and documentation
+        shell: python
+        run: |
+          from pathlib import Path
+
+          old_current = 'salita-quest-v5-6-2-pronunciation-module-extraction-r55'
+          old_previous = 'salita-quest-v5-6-1-first-module-extraction-r54'
+          new_current = 'salita-quest-v5-6-3-desktop-shell-extraction-r56'
+          placeholder = '__SQ_NEW_CACHE_R56__'
+
+          for path in [*Path('scripts').glob('*.mjs'), *Path('scripts').glob('*.py')]:
+              text = path.read_text(encoding='utf-8')
+              text = text.replace(old_current, placeholder)
+              text = text.replace(old_previous, old_current)
+              text = text.replace(placeholder, new_current)
+              path.write_text(text, encoding='utf-8')
+
+          manifest = Path('src/config/course-manifest.js')
+          text = manifest.read_text(encoding='utf-8')
+          replacements = {
+              '"compact-desktop-layout.js?v=5.4.21"': '"src/features/interface/compact-desktop-layout.js?v=5.4.21"',
+              '"clean-topbar.js?v=5.4.21"': '"src/features/interface/clean-topbar.js?v=5.4.21"',
+          }
+          for old, new in replacements.items():
+              if text.count(old) != 2:
+                  raise SystemExit(f'Expected exactly two manifest references for {old}')
+              text = text.replace(old, new)
+          manifest.write_text(text, encoding='utf-8')
+
+          worker = Path('service-worker.js')
+          text = worker.read_text(encoding='utf-8')
+          old_header = f'const PREVIOUS_CACHE_NAME = "{old_previous}";\nconst CACHE_NAME = "{old_current}";'
+          new_header = f'const PREVIOUS_CACHE_NAME = "{old_current}";\nconst CACHE_NAME = "{new_current}";'
+          if old_header not in text:
+              raise SystemExit('Service-worker cache header was not found')
+          text = text.replace(old_header, new_header)
+          compact_token = '  "./incorrect-order-feedback.js", "./incorrect-order-feedback.css", "./compact-desktop-layout.js",'
+          compact_replacement = (
+              '  "./incorrect-order-feedback.js", "./incorrect-order-feedback.css", "./compact-desktop-layout.js",\n'
+              '  "./src/features/interface/compact-desktop-layout.js",'
+          )
+          if compact_token not in text:
+              raise SystemExit('Compact desktop cache token was not found')
+          text = text.replace(compact_token, compact_replacement)
+          topbar_token = '  "./clean-topbar.js", "./clean-topbar.css", "./topbar-world-progress-hotfix.css",'
+          topbar_replacement = (
+              '  "./clean-topbar.js", "./src/features/interface/clean-topbar.js",\n'
+              '  "./clean-topbar.css", "./topbar-world-progress-hotfix.css",'
+          )
+          if topbar_token not in text:
+              raise SystemExit('Clean topbar cache token was not found')
+          worker.write_text(text.replace(topbar_token, topbar_replacement), encoding='utf-8')
+
+          refresh = Path('mobile-refresh.html')
+          text = refresh.read_text(encoding='utf-8')
+          anchor = '      `./src/features/audio/pronunciation-release-control.js?v=${RELEASE}`,'
+          additions = [
+              '      `./src/features/interface/compact-desktop-layout.js?v=${RELEASE}`,',
+              '      `./src/features/interface/clean-topbar.js?v=${RELEASE}`,',
+          ]
+          if anchor not in text:
+              raise SystemExit('Mobile refresh insertion anchor was not found')
+          for addition in reversed(additions):
+              if addition not in text:
+                  text = text.replace(anchor, addition + '\n' + anchor)
+          refresh.write_text(text, encoding='utf-8')
+
+          ui = Path('scripts/validate-ui-quality.mjs')
+          text = ui.read_text(encoding='utf-8')
+          text = text.replace(
+              '  "compact-desktop-layout.js",\n  "mastery-feedback.js",',
+              '  "compact-desktop-layout.js",\n  "src/features/interface/compact-desktop-layout.js",\n  "mastery-feedback.js",'
+          )
+          ui.write_text(text, encoding='utf-8')
+
+          home = Path('scripts/validate-home-dashboard.mjs')
+          text = home.read_text(encoding='utf-8')
+          text = text.replace(
+              '  "clean-topbar.js",\n  "profile-app.js",',
+              '  "clean-topbar.js",\n  "src/features/interface/clean-topbar.js",\n  "profile-app.js",'
+          )
+          text = text.replace(
+              'const topbar = read("clean-topbar.js");',
+              'const topbarLoader = read("clean-topbar.js");\nconst topbar = read("src/features/interface/clean-topbar.js");'
+          )
+          loader_check = '''requireMarkers(topbarLoader, [
+            'const TARGET = "./src/features/interface/clean-topbar.js?v=5.4.21"',
+            'document.currentScript',
+            'document.write',
+            'script.async = false',
+            'salitaCompatibilityLoader'
+          ], "Clean topbar compatibility loader");
+
+          '''
+          topbar_anchor = 'requireMarkers(topbar, ['
+          if loader_check.strip() not in text:
+              text = text.replace(topbar_anchor, loader_check + topbar_anchor, 1)
+          text = text.replace(
+              "    'clean-topbar.js?v=5.4.21',",
+              "    'src/features/interface/clean-topbar.js?v=5.4.21',"
+          )
+          text = text.replace(
+              "  '\"./clean-topbar.js\"',\n  '\"./topbar-world-progress-hotfix.css\"',",
+              "  '\"./clean-topbar.js\"',\n  '\"./src/features/interface/clean-topbar.js\"',\n  '\"./topbar-world-progress-hotfix.css\"',"
+          )
+          home.write_text(text, encoding='utf-8')
+
+          plan = Path('docs/MODULE_EXTRACTION_PLAN.md')
+          text = plan.read_text(encoding='utf-8')
+          text = text.replace(
+              '2. `clean-topbar.js` and `compact-desktop-layout.js` — desktop shell refinements.',
+              '2. `clean-topbar.js` and `compact-desktop-layout.js` — completed as separate modules under `src/features/interface/`, with both root compatibility URLs retained through r56.'
+          )
+          plan.write_text(text, encoding='utf-8')
+
+      - name: Add extraction-specific validator
+        run: |
+          cat > scripts/validate-desktop-shell-module-extraction.mjs <<'EOF'
+          import fs from "node:fs";
+          import vm from "node:vm";
+
+          const root = new URL("../", import.meta.url);
+          const read = path => fs.readFileSync(new URL(path, root), "utf8");
+          const fail = message => { throw new Error(message); };
+          const requireMarkers = (source, markers, label) => markers.forEach(marker => {
+            if (!source.includes(marker)) fail(`${label} is missing ${marker}`);
+          });
+
+          const compactLoaderPath = "compact-desktop-layout.js";
+          const compactModulePath = "src/features/interface/compact-desktop-layout.js";
+          const topbarLoaderPath = "clean-topbar.js";
+          const topbarModulePath = "src/features/interface/clean-topbar.js";
+          const compactLoader = read(compactLoaderPath);
+          const compactModule = read(compactModulePath);
+          const topbarLoader = read(topbarLoaderPath);
+          const topbarModule = read(topbarModulePath);
+          const manifestSource = read("src/config/course-manifest.js");
+          const refresh = read("mobile-refresh.html");
+          const worker = read("service-worker.js");
+
+          for (const [path, source] of [
+            [compactLoaderPath, compactLoader],
+            [compactModulePath, compactModule],
+            [topbarLoaderPath, topbarLoader],
+            [topbarModulePath, topbarModule],
+            ["service-worker.js", worker]
+          ]) new vm.Script(source, {filename:path});
+
+          requireMarkers(compactLoader, [
+            'const TARGET = "./src/features/interface/compact-desktop-layout.js?v=5.4.21"',
+            "document.currentScript",
+            "document.write",
+            "script.async = false",
+            'salitaCompatibilityLoader = "compact-desktop-layout"'
+          ], "Compact desktop compatibility loader");
+          requireMarkers(topbarLoader, [
+            'const TARGET = "./src/features/interface/clean-topbar.js?v=5.4.21"',
+            "document.currentScript",
+            "document.write",
+            "script.async = false",
+            'salitaCompatibilityLoader = "clean-topbar"'
+          ], "Clean topbar compatibility loader");
+          if (compactLoader.includes("window.addEventListener") || compactLoader.includes("window.matchMedia")) {
+            fail("The compact desktop compatibility loader must not own layout listeners");
+          }
+          if (topbarLoader.includes("renderMasteryRail =") || topbarLoader.includes("mastery-rail-shell")) {
+            fail("The clean topbar compatibility loader must not own World Progress behavior");
+          }
+
+          requireMarkers(compactModule, [
+            'const INSTALL_FLAG = "__salitaQuestCompactDesktopInstalled"',
+            'const DESKTOP_QUERY = "(min-width: 1001px)"',
+            'document.querySelector("#learnView .learn-layout")',
+            'document.getElementById("lessonCard")',
+            'document.getElementById("audioBtn")',
+            'document.createComment("lesson-topline-home")',
+            'document.createComment("lesson-audio-home")',
+            'document.createComment("session-panel-home")',
+            'document.body.classList.toggle("desktop-lesson-layout", desktop)',
+            'media.addEventListener?.("change", applyLayout)',
+            'window.addEventListener("resize", applyLayout, {passive:true})'
+          ], "Extracted compact desktop module");
+          requireMarkers(topbarModule, [
+            'const INSTALL_FLAG = "__salitaQuestCleanTopbarInstalled"',
+            'const STYLESHEETS = [',
+            'topbar-world-progress-hotfix.css?v=5.5.10.1',
+            'mobile-world-progress-flow.css?v=5.5.10.2',
+            'function structureMasteryShell()',
+            'shell.dataset.compactMastery = "true"',
+            'typeof totalLearningPoints === "function"',
+            'const baseRenderMasteryRail = renderMasteryRail',
+            'renderMasteryRail = function renderMasteryRailWithCompactCopy()'
+          ], "Extracted clean topbar module");
+          if ((compactModule.match(/window\.addEventListener/g) || []).length !== 1) {
+            fail("The compact desktop module must remain the sole owner of one window resize listener");
+          }
+          if ((topbarModule.match(/renderMasteryRail = function/g) || []).length !== 1) {
+            fail("The clean topbar module must install exactly one renderMasteryRail wrapper");
+          }
+          for (const source of [compactModule, topbarModule]) {
+            if (/\b(?:localStorage|sessionStorage)\b/.test(source)) fail("Desktop shell modules must not access learner storage");
+          }
+
+          const context = {window:{}};
+          vm.createContext(context);
+          vm.runInContext(manifestSource, context, {filename:"src/config/course-manifest.js"});
+          const courses = context.window.SalitaQuestCourseManifest?.courses;
+          const compactExpected = "src/features/interface/compact-desktop-layout.js?v=5.4.21";
+          const topbarExpected = "src/features/interface/clean-topbar.js?v=5.4.21";
+          if (!courses) fail("Course manifest was not installed");
+          for (const courseId of ["tagalog", "cebuano"]) {
+            const scripts = courses[courseId]?.scripts || [];
+            const feedback = scripts.indexOf("incorrect-order-feedback.js?v=5.4.21");
+            const compact = scripts.indexOf(compactExpected);
+            const topbar = scripts.indexOf(topbarExpected);
+            const rail = scripts.indexOf("even-progress-rail.js?v=5.4.21");
+            if (!(feedback >= 0 && compact > feedback && topbar > compact && rail > topbar)) {
+              fail(`${courseId} does not preserve feedback → compact layout → topbar → progress rail order`);
+            }
+            if (scripts.includes("compact-desktop-layout.js?v=5.4.21") || scripts.includes("clean-topbar.js?v=5.4.21")) {
+              fail(`${courseId} still loads a root desktop-shell compatibility URL directly`);
+            }
+          }
+
+          for (const path of [compactModulePath, topbarModulePath]) {
+            if (!refresh.includes(path)) fail(`Mobile refresh does not fetch ${path}`);
+          }
+          requireMarkers(worker, [
+            'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-2-pronunciation-module-extraction-r55"',
+            'const CACHE_NAME = "salita-quest-v5-6-3-desktop-shell-extraction-r56"',
+            '"./compact-desktop-layout.js"',
+            '"./src/features/interface/compact-desktop-layout.js"',
+            '"./clean-topbar.js"',
+            '"./src/features/interface/clean-topbar.js"'
+          ], "Desktop shell offline contract");
+
+          console.log("Desktop shell extraction validation passed: two direct interface modules, two root compatibility loaders, preserved order and r56 offline delivery.");
+          EOF
+          sed -i 's/^          //' scripts/validate-desktop-shell-module-extraction.mjs
+
+      - name: Regenerate module contract inventory
+        run: node scripts/generate-module-contract-inventory-v2.mjs --write
+
+      - name: Validate extraction and integrations
+        run: |
+          node --check compact-desktop-layout.js
+          node --check src/features/interface/compact-desktop-layout.js
+          node --check clean-topbar.js
+          node --check src/features/interface/clean-topbar.js
+          node --check scripts/validate-desktop-shell-module-extraction.mjs
+          node scripts/validate-desktop-shell-module-extraction.mjs
+          node scripts/validate-ui-quality.mjs
+          node scripts/validate-home-dashboard.mjs
+          node scripts/validate-pronunciation-module-extraction.mjs
+          node scripts/generate-module-contract-inventory-v2.mjs --check
+          python scripts/validate_modular_bootstrap.py
+          node scripts/validate-bisaya-audio-library.mjs
+          node scripts/validate-avatar-progression-v550.mjs
+          git diff --check
+
+      - name: Commit desktop shell extraction
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm .github/workflows/apply-desktop-shell-extraction.yml
+          git rm .github/workflows/inspect-desktop-shell-extraction.yml
+          git add -A
+          git commit -m "Extract desktop shell interface modules"
+          git push origin HEAD:agent/extract-desktop-shell-pair
