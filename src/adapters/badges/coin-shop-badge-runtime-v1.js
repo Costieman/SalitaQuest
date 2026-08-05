@@ -2,8 +2,6 @@
   "use strict";
 
   const API = "SalitaCoinShopBadgeRuntimeV1";
-  const PROFILE_STORE = "salitaQuestLocalProfilesV1";
-  const ACTIVE_PROFILE = "salitaQuestActiveProfileId";
   if (window[API]) return;
 
   const globalValue = name => {
@@ -16,11 +14,7 @@
   const n = value => Math.max(0, Math.floor(Number(value || 0)));
 
   function activeProfile() {
-    try {
-      const id = sessionStorage.getItem(ACTIVE_PROFILE);
-      const store = JSON.parse(localStorage.getItem(PROFILE_STORE) || "null");
-      return store?.profiles?.find(item => item.id === id) || null;
-    } catch { return null; }
+    return window.SalitaQuestLearnerProfileRuntimeV1?.activeProfile() || null;
   }
 
   function economyMetric(key) {

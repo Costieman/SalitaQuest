@@ -9,9 +9,10 @@ const fail = message => { throw new Error(message); };
 const requireMarkers = (source,markers,label) => markers.forEach(marker => { if(!source.includes(marker)) fail(`${label} is missing: ${marker}`); });
 
 const coordinatorPath = "social-connections-v2.js";
+const profilePath = "src/core/learner-profile-runtime-v1.js";
 const adapterPath = "src/adapters/sharing/social-connections-runtime-v1.js";
 const featurePath = "src/features/sharing/social-connections-v2.js";
-for (const file of [coordinatorPath,adapterPath,featurePath,"src/config/course-manifest.js","service-worker.js"]) {
+for (const file of [coordinatorPath,profilePath,adapterPath,featurePath,"src/config/course-manifest.js","service-worker.js"]) {
   new vm.Script(read(file),{filename:file});
 }
 
@@ -19,6 +20,7 @@ const coordinator = read(coordinatorPath);
 requireMarkers(coordinator,[
   "__salitaQuestSocialConnectionsV2CoordinatorInstalled",
   "__salitaQuestSocialConnectionsV2CompatibilityLoading",
+  "./src/core/learner-profile-runtime-v1.js?v=5.6.1",
   "./src/adapters/sharing/social-connections-runtime-v1.js?v=5.6.0",
   "./src/features/sharing/social-connections-v2.js?v=5.4.27",
   "document.write",
@@ -31,11 +33,12 @@ for (const forbidden of ["localStorage.","sessionStorage.","fetch(","document.ad
 }
 if (coordinator.indexOf("social-connections-runtime-v1.js") > coordinator.indexOf("src/features/sharing/social-connections-v2.js")) fail("Compatibility dependency order changed");
 
+const profileRuntime = read(profilePath);
+requireMarkers(profileRuntime,["salitaQuestLocalProfilesV1","salitaQuestActiveProfileId","readStore","writeStore","activeProfile","SalitaQuestLearnerProfileRuntimeV1"],"Shared learner profile runtime");
 const adapter = read(adapterPath);
 requireMarkers(adapter,[
   "__salitaQuestSocialConnectionsRuntimeV1Installed",
-  'const PROFILE_STORE = "salitaQuestLocalProfilesV1"',
-  'const ACTIVE_PROFILE = "salitaQuestActiveProfileId"',
+  'SalitaQuestLearnerProfileRuntimeV1?.activeProfile()',
   'const API_STORAGE = "salitaQuestSocialApiBase"',
   "function activeProfile()",
   "function explicitApiBase()",
@@ -87,16 +90,18 @@ vm.createContext(manifestContext);
 vm.runInContext(read("src/config/course-manifest.js"),manifestContext,{filename:"src/config/course-manifest.js"});
 for (const courseId of ["tagalog","cebuano"]) {
   const scripts=manifestContext.window.SalitaQuestCourseManifest?.courses?.[courseId]?.scripts || [];
+  const profiles=scripts.indexOf("src/core/learner-profile-runtime-v1.js?v=5.6.1");
   const placement=scripts.indexOf("placement-onboarding-v1.js?v=5.4.23");
   const runtime=scripts.indexOf("src/adapters/sharing/social-connections-runtime-v1.js?v=5.6.0");
   const featureIndex=scripts.indexOf("src/features/sharing/social-connections-v2.js?v=5.4.27");
   const sharing=scripts.indexOf("achievement-sharing-v4.js?v=5.4.29");
-  if (!(placement >= 0 && runtime > placement && featureIndex > runtime && sharing > featureIndex)) fail(`${courseId} social connections order changed`);
+  if (!(profiles >= 0 && placement > profiles && runtime > placement && featureIndex > runtime && sharing > featureIndex)) fail(`${courseId} social connections order changed`);
   if (scripts.some(asset => asset.includes("social-connections-v2.js?v=5.4.27") && !asset.startsWith("src/features/"))) fail(`${courseId} still loads the historical root URL`);
 }
 
 const refresh=read("mobile-refresh.html");
 requireMarkers(refresh,[
+  "./src/core/learner-profile-runtime-v1.js?v=${RELEASE}",
   "./social-connections-v2.js?v=${RELEASE}",
   "./src/adapters/sharing/social-connections-runtime-v1.js?v=${RELEASE}",
   "./src/features/sharing/social-connections-v2.js?v=${RELEASE}"
@@ -106,6 +111,7 @@ const worker=read("service-worker.js");
 requireMarkers(worker,[
   'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-23-badge-catalogue-extraction-r76"',
   'const CACHE_NAME = "salita-quest-v5-6-24-social-connections-extraction-r77"',
+  '"./src/core/learner-profile-runtime-v1.js"',
   '"./social-connections-v2.js"',
   '"./src/adapters/sharing/social-connections-runtime-v1.js"',
   '"./src/features/sharing/social-connections-v2.js"'
@@ -129,6 +135,7 @@ const runtimeContext={
 };
 runtimeContext.window=runtimeContext;
 vm.createContext(runtimeContext);
+vm.runInContext(profileRuntime,runtimeContext,{filename:profilePath});
 vm.runInContext(adapter,runtimeContext,{filename:adapterPath});
 const runtimeApi=runtimeContext.SalitaQuestSocialConnectionsRuntimeV1;
 if (!runtimeApi || runtimeApi.version!==1 || runtimeApi.release!=="5.6.0") fail("Runtime API version changed");
@@ -242,11 +249,11 @@ const writes=[];
 const coordinatorContext={console,URL,Promise,window:{},document:{readyState:"loading",currentScript:{src:"https://app.example.com/social-connections-v2.js?v=5.4.27"},baseURI:"https://app.example.com/",write:value=>writes.push(value),querySelector:()=>null}};
 vm.createContext(coordinatorContext);
 vm.runInContext(coordinator,coordinatorContext,{filename:coordinatorPath});
-if (writes.length!==2 || !writes[0].includes("social-connections-runtime-v1.js") || !writes[1].includes("src/features/sharing/social-connections-v2.js")) fail("Parser-time compatibility order changed");
+if (writes.length!==3 || !writes[0].includes("learner-profile-runtime-v1.js") || !writes[1].includes("social-connections-runtime-v1.js") || !writes[2].includes("src/features/sharing/social-connections-v2.js")) fail("Parser-time compatibility order changed");
 vm.runInContext(coordinator,coordinatorContext,{filename:`${coordinatorPath}#duplicate`});
-if (writes.length!==2) fail("Compatibility coordinator duplicate installation changed");
+if (writes.length!==3) fail("Compatibility coordinator duplicate installation changed");
 
-for (const file of [coordinatorPath,adapterPath,featurePath,"src/config/course-manifest.js","service-worker.js"]) {
+for (const file of [coordinatorPath,profilePath,adapterPath,featurePath,"src/config/course-manifest.js","service-worker.js"]) {
   const check=spawnSync("node",["--check",file],{encoding:"utf8"});
   if(check.status!==0) fail(`${file} failed syntax check: ${check.stderr}`);
 }

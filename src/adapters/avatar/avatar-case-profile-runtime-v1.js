@@ -2,28 +2,18 @@
   "use strict";
 
   const API_NAME = "SalitaAvatarCaseProfileRuntimeV1";
-  const PROFILE_STORE = "salitaQuestLocalProfilesV1";
-  const ACTIVE_PROFILE = "salitaQuestActiveProfileId";
   if (window[API_NAME]) return;
+
+  function profiles() {
+    return window.SalitaQuestLearnerProfileRuntimeV1 || null;
+  }
 
   function model() {
     return window.SalitaAvatarModel || null;
   }
 
-  function readStore() {
-    try {
-      const value = JSON.parse(localStorage.getItem(PROFILE_STORE) || "null");
-      return value && Array.isArray(value.profiles) ? value : {schemaVersion:1, profiles:[]};
-    } catch {
-      return {schemaVersion:1, profiles:[]};
-    }
-  }
-
   function activeRecord() {
-    const store = readStore();
-    const profileId = sessionStorage.getItem(ACTIVE_PROFILE);
-    const profile = store.profiles.find(item => item.id === profileId) || null;
-    return {store, profile};
+    return profiles()?.activeRecord() || {store:{schemaVersion:1, profiles:[]}, profile:null};
   }
 
   function ownedIds(profile = activeRecord().profile) {
@@ -56,23 +46,23 @@
   }
 
   function persist(ids, options = {}) {
+    const runtime = profiles();
     const {store, profile} = activeRecord();
-    if (!profile) return [];
+    if (!runtime || !profile) return [];
     const max = Math.max(1, Math.floor(Number(options.max) || 4));
     const cleaned = cleanIds(ids, max, profile);
     profile.avatarCaseIds = cleaned;
     if (profile.avatarCollection && Object.hasOwn(profile.avatarCollection,"caseAvatarIds")) {
       delete profile.avatarCollection.caseAvatarIds;
     }
-    store.schemaVersion = Math.max(1, Number(store.schemaVersion || 1));
-    store.updatedAt = new Date().toISOString();
-    localStorage.setItem(PROFILE_STORE, JSON.stringify(store));
+    runtime.writeStore(store);
     return cleaned;
   }
 
+  const runtime = profiles();
   window[API_NAME] = Object.freeze({
-    profileStoreKey:PROFILE_STORE,
-    activeProfileKey:ACTIVE_PROFILE,
+    profileStoreKey:runtime?.profileStoreKey || "",
+    activeProfileKey:runtime?.activeProfileKey || "",
     model,
     activeRecord,
     ownedIds,

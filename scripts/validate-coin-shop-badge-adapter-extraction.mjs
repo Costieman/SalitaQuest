@@ -8,13 +8,14 @@ const read = file => fs.readFileSync(path.join(ROOT, file), "utf8");
 const fail = message => { throw new Error(message); };
 const count = (source, token) => source.split(token).length - 1;
 
+const profiles = read("src/core/learner-profile-runtime-v1.js");
 const adapter = read("src/adapters/badges/coin-shop-badge-runtime-v1.js");
 const feature = read("src/features/economy/coin-avatar-shop-badges-v1.js");
 const root = read("coin-avatar-shop-badges-v1.js");
 const loader = read("profile-emblem-control.js");
 const worker = read("service-worker.js");
 
-for (const [name, source] of [["adapter",adapter],["feature",feature],["root",root],["loader",loader],["worker",worker]]) {
+for (const [name, source] of [["profiles",profiles],["adapter",adapter],["feature",feature],["root",root],["loader",loader],["worker",worker]]) {
   new vm.Script(source, {filename:name});
 }
 
@@ -29,13 +30,13 @@ for (const marker of [
 for (const prohibited of ["eval(","localStorage","sessionStorage","BADGES","SalitaAvatarModel","syncEarned","renderCatalogue","document.","coinEconomy"])
   if (feature.includes(prohibited)) fail(`Feature still owns runtime dependency ${prohibited}`);
 
+for (const marker of ['salitaQuestLocalProfilesV1','salitaQuestActiveProfileId','readStore','activeProfile','SalitaQuestLearnerProfileRuntimeV1']) if (!profiles.includes(marker)) fail(`Shared profile runtime is missing ${marker}`);
 for (const marker of [
   'const API = "SalitaCoinShopBadgeRuntimeV1"',
-  'const PROFILE_STORE = "salitaQuestLocalProfilesV1"',
-  'const ACTIVE_PROFILE = "salitaQuestActiveProfileId"',
+  'SalitaQuestLearnerProfileRuntimeV1?.activeProfile()',
   'const state = () => globalValue("state") || window.state || {}',
   'globalValue("BADGES")', 'globalValue("syncEarned")', 'globalValue("renderCatalogue")',
-  'window.SalitaAvatarModel', 'localStorage.getItem(PROFILE_STORE)', 'sessionStorage.getItem(ACTIVE_PROFILE)',
+  'window.SalitaAvatarModel',
   'new CustomEvent("salita:coin-shop-badges-ready"'
 ]) if (!adapter.includes(marker)) fail(`Adapter is missing ${marker}`);
 if (/localStorage\.(?:setItem|removeItem|clear)\(/.test(adapter) || /sessionStorage\.(?:setItem|removeItem|clear)\(/.test(adapter))
@@ -44,6 +45,7 @@ if (/localStorage\.(?:setItem|removeItem|clear)\(/.test(adapter) || /sessionStor
 for (const prohibited of ["lt_coins_500000","chain(","completion(","localStorage","sessionStorage","globalValue","BADGES","coinEconomy"])
   if (root.includes(prohibited)) fail(`Root coordinator still owns ${prohibited}`);
 for (const marker of [
+  'const PROFILE_URL = "./src/core/learner-profile-runtime-v1.js?v=5.6.1"',
   'const ADAPTER_URL = "./src/adapters/badges/coin-shop-badge-runtime-v1.js?v=5.6.4"',
   'const FEATURE_URL = "./src/features/economy/coin-avatar-shop-badges-v1.js?v=5.6.4"',
   'window.__salitaCoinAvatarShopBadgesV1Installed = true',
@@ -117,6 +119,7 @@ const adapterContext = {
 adapterContext.window = adapterContext;
 adapterContext.globalThis = adapterContext;
 vm.createContext(adapterContext);
+new vm.Script(profiles).runInContext(adapterContext);
 new vm.Script(adapter).runInContext(adapterContext);
 const runtimeApi = adapterContext.SalitaCoinShopBadgeRuntimeV1;
 if (!runtimeApi?.ready()) fail("Adapter did not resolve catalogue and avatar-model readiness");
@@ -152,7 +155,8 @@ legacyContext.document = {
   },
   head:{appendChild(script){
     loaded.push(script.src);
-    if (script.src.includes("coin-shop-badge-runtime-v1.js")) new vm.Script(adapter).runInContext(legacyContext);
+    if (script.src.includes("learner-profile-runtime-v1.js")) new vm.Script(profiles).runInContext(legacyContext);
+    else if (script.src.includes("coin-shop-badge-runtime-v1.js")) new vm.Script(adapter).runInContext(legacyContext);
     else if (script.src.includes("src/features/economy/coin-avatar-shop-badges-v1.js")) new vm.Script(feature).runInContext(legacyContext);
     script._listeners.load?.();
   }},
@@ -162,9 +166,9 @@ vm.createContext(legacyContext);
 new vm.Script(root).runInContext(legacyContext);
 for (let index=0; index<8; index+=1) await Promise.resolve();
 if (!legacyContext.__salitaCoinAvatarShopBadgesV1Installed || !legacyContext.SalitaCoinShopBadgeRuntimeV1 || !legacyContext.SalitaCoinShopBadgeFamilyV1) fail("Historical root-only loading failed");
-if (loaded.length !== 2 || !loaded[0].includes("coin-shop-badge-runtime-v1.js") || !loaded[1].includes("src/features/economy/coin-avatar-shop-badges-v1.js")) fail("Historical dependency order changed");
+if (loaded.length !== 3 || !loaded[0].includes("learner-profile-runtime-v1.js") || !loaded[1].includes("coin-shop-badge-runtime-v1.js") || !loaded[2].includes("src/features/economy/coin-avatar-shop-badges-v1.js")) fail("Historical dependency order changed");
 new vm.Script(root).runInContext(legacyContext);
 for (let index=0; index<2; index+=1) await Promise.resolve();
-if (loaded.length !== 2) fail("Historical coordinator is not duplicate-load safe");
+if (loaded.length !== 3) fail("Historical coordinator is not duplicate-load safe");
 
 console.log("Coin shop badge adapter extraction validation passed.");

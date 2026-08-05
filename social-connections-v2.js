@@ -4,6 +4,7 @@
   const COORDINATOR_FLAG = "__salitaQuestSocialConnectionsV2CoordinatorInstalled";
   const LOADING_FLAG = "__salitaQuestSocialConnectionsV2CompatibilityLoading";
   const FEATURE_FLAG = "__salitaQuestSocialConnectionsV3Installed";
+  const PROFILE_URL = "./src/core/learner-profile-runtime-v1.js?v=5.6.1";
   const ADAPTER_URL = "./src/adapters/sharing/social-connections-runtime-v1.js?v=5.6.0";
   const FEATURE_URL = "./src/features/sharing/social-connections-v2.js?v=5.4.27";
   if (window[COORDINATOR_FLAG]) return;
@@ -34,12 +35,14 @@
     const current = document.currentScript;
     if (document.readyState === "loading" && current) {
       const base = current.src || document.baseURI;
+      if (!window.SalitaQuestLearnerProfileRuntimeV1) document.write(`<script src="${new URL(PROFILE_URL,base).href}"><\/script>`);
       if (!window.SalitaQuestSocialConnectionsRuntimeV1) document.write(`<script src="${new URL(ADAPTER_URL,base).href}"><\/script>`);
       if (!window[FEATURE_FLAG]) document.write(`<script src="${new URL(FEATURE_URL,base).href}"><\/script>`);
       window[LOADING_FLAG] = false;
       return;
     }
-    loadDependency(() => Boolean(window.SalitaQuestSocialConnectionsRuntimeV1),ADAPTER_URL,"runtime-v1")
+    loadDependency(() => Boolean(window.SalitaQuestLearnerProfileRuntimeV1),PROFILE_URL,"learner-profile-runtime-v1")
+      .then(() => loadDependency(() => Boolean(window.SalitaQuestSocialConnectionsRuntimeV1),ADAPTER_URL,"runtime-v1"))
       .then(() => loadDependency(() => Boolean(window[FEATURE_FLAG]),FEATURE_URL,"feature-v2"))
       .catch(error => console.warn("Social connections compatibility could not load",error))
       .finally(() => { window[LOADING_FLAG] = false; });

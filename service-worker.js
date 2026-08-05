@@ -7,7 +7,7 @@ const EXPLICIT_SHARING_ROUTER_DELIVERY = "2026-08-02-feed-private-image-router-1
 
 const CORE_FILES = [
   "./", "./index.html", "./app.html", "./bisaya.html", "./mobile-refresh.html",
-  "./style.css", "./app.js", "./src/config/course-manifest.js", "./src/app/course-bootstrap.js",
+  "./style.css", "./app.js", "./src/config/course-manifest.js", "./src/core/learner-profile-runtime-v1.js", "./src/app/course-bootstrap.js",
   "./manifest.webmanifest", "./icons/icon-192.png", "./icons/icon-512.png",
   "./profile-shell.css", "./profile-app.js", "./profile-emblem-control.js", "./profile-emblem-control.css",
   "./profile-install-prompt-v1.js", "./profile-install-prompt-v1.css",

@@ -3,6 +3,7 @@
 
   const COORDINATOR_FLAG = "__salitaQuestAvatarCollectionScreenCoordinatorInstalled";
   const LOADING_FLAG = "__salitaQuestAvatarCollectionScreenCompatibilityLoading";
+  const PROFILE_URL = "./src/core/learner-profile-runtime-v1.js?v=5.6.1";
   const ADAPTER_URL = "./src/adapters/avatar/avatar-collection-profile-runtime-v1.js?v=5.5.6";
   const FEATURE_URL = "./src/features/avatar/avatar-collection-screen-v1.js?v=5.5.6";
   if (window[COORDINATOR_FLAG]) return;
@@ -34,12 +35,14 @@
     const current = document.currentScript;
     if (document.readyState === "loading" && current) {
       const base = current.src || document.baseURI;
+      if (!window.SalitaQuestLearnerProfileRuntimeV1) document.write(`<script src="${new URL(PROFILE_URL, base).href}"><\/script>`);
       if (!window.SalitaAvatarCollectionProfileRuntimeV1) document.write(`<script src="${new URL(ADAPTER_URL, base).href}"><\/script>`);
       if (!window.__salitaAvatarCollectionScreenInstalled) document.write(`<script src="${new URL(FEATURE_URL, base).href}"><\/script>`);
       window[LOADING_FLAG] = false;
       return;
     }
     Promise.resolve()
+      .then(() => loadDependency("SalitaQuestLearnerProfileRuntimeV1", PROFILE_URL, "learner-profile-runtime-v1"))
       .then(() => loadDependency("SalitaAvatarCollectionProfileRuntimeV1", ADAPTER_URL, "profile-runtime-v1"))
       .then(() => window.__salitaAvatarCollectionScreenInstalled || loadDependency("__salitaAvatarCollectionScreenInstalled", FEATURE_URL, "feature-v1"))
       .then(() => { window[LOADING_FLAG] = false; })

@@ -110,6 +110,10 @@ function categoryFor(file, content, bytes) {
   return 'other-runtime';
 }
 
+function isRuntimeBoundaryCategory(category) {
+  return category === 'adapter' || category === 'core';
+}
+
 function isCompatibilityCoordinator(content, bytes) {
   if (bytes > 9000) return false;
   const referencesModulePath = /src\/(?:features|adapters|core)\/[A-Za-z0-9_./-]+\.js/.test(content);
@@ -278,10 +282,10 @@ function analyzeRef(ref) {
 
     if (storageMatches.length > 0) {
       storageFiles += 1;
-      if (category !== 'adapter') storageFilesOutsideAdapters += 1;
+      if (!isRuntimeBoundaryCategory(category)) storageFilesOutsideAdapters += 1;
       if (category === 'root-runtime') rootStorageFiles += 1;
     }
-    if (switchCalls > 0 && category !== 'adapter') switchViewFilesOutsideAdapters += 1;
+    if (switchCalls > 0 && !isRuntimeBoundaryCategory(category)) switchViewFilesOutsideAdapters += 1;
 
     for (const match of storageKeyMatches) {
       const key = `${match[1]}:${match[4]}`;
@@ -465,11 +469,11 @@ function buildMarkdown(baseline, current, decision) {
     tableRow('Compatibility coordinators', baseline.runtime.compatibilityCoordinators, current.runtime.compatibilityCoordinators),
     tableRow('Direct storage call sites', baseline.boundaries.storageCallSites, current.boundaries.storageCallSites),
     tableRow('Files with direct storage', baseline.boundaries.storageFiles, current.boundaries.storageFiles),
-    tableRow('Direct-storage files outside adapters', baseline.boundaries.storageFilesOutsideAdapters, current.boundaries.storageFilesOutsideAdapters),
+    tableRow('Direct-storage files outside adapters/core', baseline.boundaries.storageFilesOutsideAdapters, current.boundaries.storageFilesOutsideAdapters),
     tableRow('Root files with direct storage', baseline.boundaries.rootStorageFiles, current.boundaries.rootStorageFiles),
     tableRow('Files implementing active-profile lookup', baseline.boundaries.activeProfileReaderCount, current.boundaries.activeProfileReaderCount),
     tableRow('Direct switchView call sites', baseline.boundaries.switchViewCallSites, current.boundaries.switchViewCallSites),
-    tableRow('Non-adapter files calling switchView', baseline.boundaries.switchViewFilesOutsideAdapters, current.boundaries.switchViewFilesOutsideAdapters),
+    tableRow('Files outside adapters/core calling switchView', baseline.boundaries.switchViewFilesOutsideAdapters, current.boundaries.switchViewFilesOutsideAdapters),
     tableRow('Application window symbols', baseline.boundaries.appWindowSymbolCount, current.boundaries.appWindowSymbolCount),
     tableRow('Custom Salita events', baseline.boundaries.customEventCount, current.boundaries.customEventCount),
     tableRow('Event-listener call sites', baseline.boundaries.addEventListenerSites, current.boundaries.addEventListenerSites),
@@ -479,7 +483,7 @@ function buildMarkdown(baseline, current, decision) {
     '',
     '## What has genuinely improved',
     '',
-    `- Direct-storage ownership outside adapters changed by **${signed(delta(current.boundaries.storageFilesOutsideAdapters, baseline.boundaries.storageFilesOutsideAdapters))} files**.`,
+    `- Direct-storage ownership outside adapters/core changed by **${signed(delta(current.boundaries.storageFilesOutsideAdapters, baseline.boundaries.storageFilesOutsideAdapters))} files**.`,
     `- Root-level storage owners changed by **${signed(delta(current.boundaries.rootStorageFiles, baseline.boundaries.rootStorageFiles))} files**.`,
     `- The codebase now has **${number(current.runtime.categories.feature || 0)} explicit feature modules** and **${number(current.runtime.categories.adapter || 0)} explicit adapters**, making ownership testable.`,
     '- Existing public APIs and historical URLs remain available while implementation ownership moves behind named boundaries.',

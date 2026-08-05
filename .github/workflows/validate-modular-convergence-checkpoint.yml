@@ -48,10 +48,10 @@ jobs:
             if (value > ceiling) failures.push(`${label}: ${value} exceeds ${ceiling}`);
           };
 
-          requireCeiling('Direct-storage files outside adapters', current.boundaries.storageFilesOutsideAdapters, 19);
+          requireCeiling('Direct-storage files outside adapters/core', current.boundaries.storageFilesOutsideAdapters, 19);
           requireCeiling('Root files with direct storage', current.boundaries.rootStorageFiles, 15);
           requireCeiling('Active-profile lookup owners', current.boundaries.activeProfileReaderCount, 20);
-          requireCeiling('Non-adapter switchView owners', current.boundaries.switchViewFilesOutsideAdapters, 4);
+          requireCeiling('switchView owners outside adapters/core', current.boundaries.switchViewFilesOutsideAdapters, 4);
           requireCeiling('Compatibility coordinators', current.runtime.compatibilityCoordinators, 28);
 
           if (report.decision.verdict.startsWith('Structural complexity has increased')) {

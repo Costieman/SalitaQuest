@@ -4,6 +4,7 @@
   const COORDINATOR_FLAG = "__salitaQuestAvatarCaseV1CoordinatorInstalled";
   const LOADING_FLAG = "__salitaQuestAvatarCaseV1CompatibilityLoading";
   const RETRY_MS = 120;
+  const PROFILE_URL = "./src/core/learner-profile-runtime-v1.js?v=5.6.1";
   const ADAPTER_URL = "./src/adapters/avatar/avatar-case-profile-runtime-v1.js?v=5.5.9";
   const FEATURE_URL = "./src/features/avatar/avatar-case-v1.js?v=5.5.9";
   if (window[COORDINATOR_FLAG]) return;
@@ -40,6 +41,7 @@
     const current = document.currentScript;
     if (document.readyState === "loading" && current) {
       const base = current.src || document.baseURI;
+      if (!window.SalitaQuestLearnerProfileRuntimeV1) document.write(`<script src="${new URL(PROFILE_URL, base).href}"><\/script>`);
       if (!window.SalitaAvatarCaseProfileRuntimeV1) document.write(`<script src="${new URL(ADAPTER_URL, base).href}"><\/script>`);
       if (!window.SalitaAvatarCaseFeatureV1) document.write(`<script src="${new URL(FEATURE_URL, base).href}"><\/script>`);
       window[LOADING_FLAG] = false;
@@ -47,6 +49,7 @@
       return;
     }
     Promise.resolve()
+      .then(() => loadDependency("SalitaQuestLearnerProfileRuntimeV1", PROFILE_URL, "learner-profile-runtime-v1"))
       .then(() => loadDependency("SalitaAvatarCaseProfileRuntimeV1", ADAPTER_URL, "profile-runtime-v1"))
       .then(() => loadDependency("SalitaAvatarCaseFeatureV1", FEATURE_URL, "feature-v1"))
       .then(() => { window[LOADING_FLAG] = false; install(); })

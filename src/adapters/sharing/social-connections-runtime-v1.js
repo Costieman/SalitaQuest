@@ -2,21 +2,12 @@
   "use strict";
 
   const INSTALL_FLAG = "__salitaQuestSocialConnectionsRuntimeV1Installed";
-  const PROFILE_STORE = "salitaQuestLocalProfilesV1";
-  const ACTIVE_PROFILE = "salitaQuestActiveProfileId";
   const API_STORAGE = "salitaQuestSocialApiBase";
   const RELEASE = "5.6.0";
   if (window[INSTALL_FLAG] && window.SalitaQuestSocialConnectionsRuntimeV1) return;
 
-  function readStore() {
-    try { return JSON.parse(localStorage.getItem(PROFILE_STORE) || "null") || {profiles:[]}; }
-    catch { return {profiles:[]}; }
-  }
-
   function activeProfile() {
-    const store = readStore();
-    const id = sessionStorage.getItem(ACTIVE_PROFILE);
-    return store.profiles?.find(profile => profile.id === id) || null;
+    return window.SalitaQuestLearnerProfileRuntimeV1?.activeProfile() || null;
   }
 
   function explicitApiBase() {

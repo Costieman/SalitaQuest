@@ -6,6 +6,7 @@
   "courseSeeds": {
     "tagalog": [
       "app.js",
+      "src/core/learner-profile-runtime-v1.js",
       "progression-v54.js",
       "exercise-fixes-v545.js",
       "ui-quality-fixes.js",
@@ -42,6 +43,7 @@
     ],
     "cebuano": [
       "app.js",
+      "src/core/learner-profile-runtime-v1.js",
       "bisaya-app-loader.js",
       "ui-quality-fixes.js",
       "daily-goal-refinement.js",
@@ -75,11 +77,11 @@
     ]
   },
   "summary": {
-    "modules": 71,
-    "dependencyEdges": 183,
+    "modules": 72,
+    "dependencyEdges": 191,
     "storageContracts": 21,
     "salitaEvents": 36,
-    "extractionCandidates": 30,
+    "extractionCandidates": 31,
     "prepareAdapters": 23,
     "highCoupling": 7,
     "held": 11
@@ -560,7 +562,7 @@
     },
     {
       "file": "avatar-case-v1.js",
-      "bytes": 2870,
+      "bytes": 3192,
       "contexts": [
         "cebuano",
         "tagalog"
@@ -571,6 +573,7 @@
       ],
       "references": [
         "src/adapters/avatar/avatar-case-profile-runtime-v1.js",
+        "src/core/learner-profile-runtime-v1.js",
         "src/features/avatar/avatar-case-v1.js"
       ],
       "loads": [],
@@ -584,7 +587,8 @@
         ],
         "consumes": [
           "SalitaAvatarCaseFeatureV1",
-          "SalitaAvatarCaseProfileRuntimeV1"
+          "SalitaAvatarCaseProfileRuntimeV1",
+          "SalitaQuestLearnerProfileRuntimeV1"
         ]
       },
       "storage": [],
@@ -604,11 +608,11 @@
       },
       "role": "collection-and-rewards",
       "readiness": "extraction-candidate",
-      "risk": 8
+      "risk": 10
     },
     {
       "file": "avatar-collection-screen-v1.js",
-      "bytes": 2661,
+      "bytes": 2983,
       "contexts": [
         "cebuano",
         "tagalog"
@@ -619,6 +623,7 @@
       ],
       "references": [
         "src/adapters/avatar/avatar-collection-profile-runtime-v1.js",
+        "src/core/learner-profile-runtime-v1.js",
         "src/features/avatar/avatar-collection-screen-v1.js"
       ],
       "loads": [],
@@ -632,7 +637,8 @@
         ],
         "consumes": [
           "__salitaAvatarCollectionScreenInstalled",
-          "SalitaAvatarCollectionProfileRuntimeV1"
+          "SalitaAvatarCollectionProfileRuntimeV1",
+          "SalitaQuestLearnerProfileRuntimeV1"
         ]
       },
       "storage": [],
@@ -652,7 +658,7 @@
       },
       "role": "collection-and-rewards",
       "readiness": "extraction-candidate",
-      "risk": 8
+      "risk": 10
     },
     {
       "file": "avatar-progression-hotfix-v551.js",
@@ -1095,7 +1101,7 @@
     },
     {
       "file": "coin-avatar-shop-badges-v1.js",
-      "bytes": 1995,
+      "bytes": 2186,
       "contexts": [
         "cebuano",
         "tagalog"
@@ -1106,6 +1112,7 @@
       ],
       "references": [
         "src/adapters/badges/coin-shop-badge-runtime-v1.js",
+        "src/core/learner-profile-runtime-v1.js",
         "src/features/economy/coin-avatar-shop-badges-v1.js"
       ],
       "loads": [],
@@ -1919,7 +1926,7 @@
     },
     {
       "file": "long-term-badges-v1.js",
-      "bytes": 2846,
+      "bytes": 3168,
       "contexts": [
         "cebuano",
         "tagalog"
@@ -1930,6 +1937,7 @@
       ],
       "references": [
         "src/adapters/badges/badge-catalogue-runtime-v1.js",
+        "src/core/learner-profile-runtime-v1.js",
         "src/features/badges/long-term-badges-v1.js"
       ],
       "loads": [],
@@ -1943,7 +1951,8 @@
         ],
         "consumes": [
           "SalitaBadgeCatalogueRuntimeV1",
-          "SalitaLongTermBadgesV1"
+          "SalitaLongTermBadgesV1",
+          "SalitaQuestLearnerProfileRuntimeV1"
         ]
       },
       "storage": [],
@@ -1963,7 +1972,7 @@
       },
       "role": "collection-and-rewards",
       "readiness": "extraction-candidate",
-      "risk": 8
+      "risk": 10
     },
     {
       "file": "mastery-feedback.js",
@@ -2532,7 +2541,7 @@
     },
     {
       "file": "service-worker.js",
-      "bytes": 13760,
+      "bytes": 13804,
       "contexts": [
         "worker"
       ],
@@ -2595,6 +2604,7 @@
         "src/adapters/sharing/social-connections-runtime-v1.js",
         "src/app/course-bootstrap.js",
         "src/config/course-manifest.js",
+        "src/core/learner-profile-runtime-v1.js",
         "src/features/audio/pronunciation-release-control.js",
         "src/features/avatar/avatar-artwork-registry-v554.js",
         "src/features/avatar/avatar-case-v1.js",
@@ -2656,7 +2666,7 @@
     },
     {
       "file": "src/adapters/avatar/avatar-case-profile-runtime-v1.js",
-      "bytes": 2716,
+      "bytes": 2267,
       "contexts": [
         "cebuano",
         "tagalog"
@@ -2675,26 +2685,11 @@
           "SalitaAvatarCaseProfileRuntimeV1"
         ],
         "consumes": [
-          "SalitaAvatarModel"
+          "SalitaAvatarModel",
+          "SalitaQuestLearnerProfileRuntimeV1"
         ]
       },
-      "storage": [
-        {
-          "store": "localStorage",
-          "operation": "getItem",
-          "key": "salitaQuestLocalProfilesV1"
-        },
-        {
-          "store": "sessionStorage",
-          "operation": "getItem",
-          "key": "salitaQuestActiveProfileId"
-        },
-        {
-          "store": "localStorage",
-          "operation": "setItem",
-          "key": "salitaQuestLocalProfilesV1"
-        }
-      ],
+      "storage": [],
       "dom": {
         "ids": [],
         "selectors": [],
@@ -2706,11 +2701,11 @@
       },
       "role": "collection-and-rewards",
       "readiness": "extraction-candidate",
-      "risk": 11
+      "risk": 6
     },
     {
       "file": "src/adapters/avatar/avatar-collection-profile-runtime-v1.js",
-      "bytes": 2466,
+      "bytes": 2074,
       "contexts": [
         "cebuano",
         "tagalog"
@@ -2730,26 +2725,11 @@
           "SalitaAvatarCollectionProfileRuntimeV1"
         ],
         "consumes": [
-          "SalitaAvatarModel"
+          "SalitaAvatarModel",
+          "SalitaQuestLearnerProfileRuntimeV1"
         ]
       },
-      "storage": [
-        {
-          "store": "localStorage",
-          "operation": "getItem",
-          "key": "salitaQuestLocalProfilesV1"
-        },
-        {
-          "store": "localStorage",
-          "operation": "setItem",
-          "key": "salitaQuestLocalProfilesV1"
-        },
-        {
-          "store": "sessionStorage",
-          "operation": "getItem",
-          "key": "salitaQuestActiveProfileId"
-        }
-      ],
+      "storage": [],
       "dom": {
         "ids": [],
         "selectors": [],
@@ -2761,11 +2741,11 @@
       },
       "role": "collection-and-rewards",
       "readiness": "extraction-candidate",
-      "risk": 13
+      "risk": 8
     },
     {
       "file": "src/adapters/badges/badge-catalogue-runtime-v1.js",
-      "bytes": 3764,
+      "bytes": 3545,
       "contexts": [
         "cebuano",
         "tagalog"
@@ -2799,22 +2779,12 @@
         "consumes": [
           "BADGES",
           "SalitaAvatarModel",
+          "SalitaQuestLearnerProfileRuntimeV1",
           "session",
           "state"
         ]
       },
-      "storage": [
-        {
-          "store": "sessionStorage",
-          "operation": "getItem",
-          "key": "salitaQuestActiveProfileId"
-        },
-        {
-          "store": "localStorage",
-          "operation": "getItem",
-          "key": "salitaQuestLocalProfilesV1"
-        }
-      ],
+      "storage": [],
       "dom": {
         "ids": [],
         "selectors": [],
@@ -2830,7 +2800,7 @@
     },
     {
       "file": "src/adapters/badges/coin-shop-badge-runtime-v1.js",
-      "bytes": 2444,
+      "bytes": 2171,
       "contexts": [
         "cebuano",
         "tagalog"
@@ -2854,22 +2824,12 @@
           "BADGES",
           "renderCatalogue",
           "SalitaAvatarModel",
+          "SalitaQuestLearnerProfileRuntimeV1",
           "state",
           "syncEarned"
         ]
       },
-      "storage": [
-        {
-          "store": "sessionStorage",
-          "operation": "getItem",
-          "key": "salitaQuestActiveProfileId"
-        },
-        {
-          "store": "localStorage",
-          "operation": "getItem",
-          "key": "salitaQuestLocalProfilesV1"
-        }
-      ],
+      "storage": [],
       "dom": {
         "ids": [],
         "selectors": [],
@@ -2994,7 +2954,7 @@
     },
     {
       "file": "src/adapters/sharing/social-connections-runtime-v1.js",
-      "bytes": 2046,
+      "bytes": 1698,
       "contexts": [
         "cebuano",
         "tagalog"
@@ -3016,20 +2976,11 @@
           "SalitaQuestSocialConnectionsRuntimeV1"
         ],
         "consumes": [
-          "SALITA_SOCIAL_API_BASE"
+          "SALITA_SOCIAL_API_BASE",
+          "SalitaQuestLearnerProfileRuntimeV1"
         ]
       },
       "storage": [
-        {
-          "store": "localStorage",
-          "operation": "getItem",
-          "key": "salitaQuestLocalProfilesV1"
-        },
-        {
-          "store": "sessionStorage",
-          "operation": "getItem",
-          "key": "salitaQuestActiveProfileId"
-        },
         {
           "store": "localStorage",
           "operation": "getItem",
@@ -3175,7 +3126,7 @@
     },
     {
       "file": "src/config/course-manifest.js",
-      "bytes": 6961,
+      "bytes": 7069,
       "contexts": [
         "bootstrap"
       ],
@@ -3201,6 +3152,7 @@
         "src/adapters/badges/badge-catalogue-runtime-v1.js",
         "src/adapters/exercise/incorrect-order-feedback-runtime-v1.js",
         "src/adapters/sharing/social-connections-runtime-v1.js",
+        "src/core/learner-profile-runtime-v1.js",
         "src/features/audio/pronunciation-release-control.js",
         "src/features/badges/badge-catalogue-v2.js",
         "src/features/exercise/incorrect-order-feedback.js",
@@ -3241,6 +3193,58 @@
       "role": "course-config",
       "readiness": "hold",
       "risk": 5
+    },
+    {
+      "file": "src/core/learner-profile-runtime-v1.js",
+      "bytes": 1599,
+      "contexts": [
+        "cebuano",
+        "tagalog"
+      ],
+      "courses": [
+        "cebuano",
+        "tagalog"
+      ],
+      "references": [],
+      "loads": [],
+      "fetches": [],
+      "workers": [],
+      "coreGlobals": [],
+      "window": {
+        "provides": [
+          "SalitaQuestLearnerProfileRuntimeV1"
+        ],
+        "consumes": []
+      },
+      "storage": [
+        {
+          "store": "localStorage",
+          "operation": "getItem",
+          "key": "salitaQuestLocalProfilesV1"
+        },
+        {
+          "store": "localStorage",
+          "operation": "setItem",
+          "key": "salitaQuestLocalProfilesV1"
+        },
+        {
+          "store": "sessionStorage",
+          "operation": "getItem",
+          "key": "salitaQuestActiveProfileId"
+        }
+      ],
+      "dom": {
+        "ids": [],
+        "selectors": [],
+        "datasets": []
+      },
+      "events": {
+        "listens": [],
+        "dispatches": []
+      },
+      "role": "profile-and-onboarding",
+      "readiness": "extraction-candidate",
+      "risk": 9
     },
     {
       "file": "src/features/audio/pronunciation-release-control.js",
@@ -5043,6 +5047,14 @@
       ]
     },
     {
+      "from": "avatar-case-v1.js",
+      "to": "src/core/learner-profile-runtime-v1.js",
+      "type": "window-api",
+      "symbols": [
+        "SalitaQuestLearnerProfileRuntimeV1"
+      ]
+    },
+    {
       "from": "avatar-collection-screen-v1.js",
       "to": "src/features/avatar/avatar-collection-screen-v1.js",
       "type": "window-api",
@@ -5056,6 +5068,14 @@
       "type": "window-api",
       "symbols": [
         "SalitaAvatarCollectionProfileRuntimeV1"
+      ]
+    },
+    {
+      "from": "avatar-collection-screen-v1.js",
+      "to": "src/core/learner-profile-runtime-v1.js",
+      "type": "window-api",
+      "symbols": [
+        "SalitaQuestLearnerProfileRuntimeV1"
       ]
     },
     {
@@ -5545,6 +5565,14 @@
       ]
     },
     {
+      "from": "long-term-badges-v1.js",
+      "to": "src/core/learner-profile-runtime-v1.js",
+      "type": "window-api",
+      "symbols": [
+        "SalitaQuestLearnerProfileRuntimeV1"
+      ]
+    },
+    {
       "from": "mastery-feedback.js",
       "to": "app.js",
       "type": "core-globals",
@@ -5867,6 +5895,14 @@
       ]
     },
     {
+      "from": "src/adapters/avatar/avatar-case-profile-runtime-v1.js",
+      "to": "src/core/learner-profile-runtime-v1.js",
+      "type": "window-api",
+      "symbols": [
+        "SalitaQuestLearnerProfileRuntimeV1"
+      ]
+    },
+    {
       "from": "src/adapters/avatar/avatar-collection-profile-runtime-v1.js",
       "to": "coin-avatar-shop-reveal-v1.js",
       "type": "window-api",
@@ -5880,6 +5916,14 @@
       "type": "window-api",
       "symbols": [
         "SalitaAvatarModel"
+      ]
+    },
+    {
+      "from": "src/adapters/avatar/avatar-collection-profile-runtime-v1.js",
+      "to": "src/core/learner-profile-runtime-v1.js",
+      "type": "window-api",
+      "symbols": [
+        "SalitaQuestLearnerProfileRuntimeV1"
       ]
     },
     {
@@ -5918,6 +5962,14 @@
       ]
     },
     {
+      "from": "src/adapters/badges/badge-catalogue-runtime-v1.js",
+      "to": "src/core/learner-profile-runtime-v1.js",
+      "type": "window-api",
+      "symbols": [
+        "SalitaQuestLearnerProfileRuntimeV1"
+      ]
+    },
+    {
       "from": "src/adapters/badges/coin-shop-badge-runtime-v1.js",
       "to": "app.js",
       "type": "core-globals",
@@ -5939,6 +5991,14 @@
       "type": "window-api",
       "symbols": [
         "SalitaAvatarModel"
+      ]
+    },
+    {
+      "from": "src/adapters/badges/coin-shop-badge-runtime-v1.js",
+      "to": "src/core/learner-profile-runtime-v1.js",
+      "type": "window-api",
+      "symbols": [
+        "SalitaQuestLearnerProfileRuntimeV1"
       ]
     },
     {
@@ -5971,6 +6031,14 @@
       "type": "core-globals",
       "symbols": [
         "switchView"
+      ]
+    },
+    {
+      "from": "src/adapters/sharing/social-connections-runtime-v1.js",
+      "to": "src/core/learner-profile-runtime-v1.js",
+      "type": "window-api",
+      "symbols": [
+        "SalitaQuestLearnerProfileRuntimeV1"
       ]
     },
     {
@@ -6593,11 +6661,7 @@
         "coin-avatar-shop-reveal-v1.js",
         "desktop-navigation-refinement.js",
         "profile-app.js",
-        "src/adapters/avatar/avatar-case-profile-runtime-v1.js",
-        "src/adapters/avatar/avatar-collection-profile-runtime-v1.js",
-        "src/adapters/badges/badge-catalogue-runtime-v1.js",
-        "src/adapters/badges/coin-shop-badge-runtime-v1.js",
-        "src/adapters/sharing/social-connections-runtime-v1.js",
+        "src/core/learner-profile-runtime-v1.js",
         "src/features/avatar/avatar-artwork-registry-v554.js",
         "src/features/avatar/avatar-collection-summary-v1.js",
         "src/features/avatar/level-avatar-rewards-v1.js",
@@ -6608,8 +6672,7 @@
         "coin-avatar-shard-shop-v1.js",
         "coin-avatar-shop-reveal-v1.js",
         "profile-app.js",
-        "src/adapters/avatar/avatar-case-profile-runtime-v1.js",
-        "src/adapters/avatar/avatar-collection-profile-runtime-v1.js",
+        "src/core/learner-profile-runtime-v1.js",
         "src/features/avatar/level-avatar-rewards-v1.js",
         "weekly-avatar-shard-rewards-v1.js"
       ],
@@ -6705,11 +6768,7 @@
         "desktop-navigation-refinement.js",
         "level-progression-v2.js",
         "profile-app.js",
-        "src/adapters/avatar/avatar-case-profile-runtime-v1.js",
-        "src/adapters/avatar/avatar-collection-profile-runtime-v1.js",
-        "src/adapters/badges/badge-catalogue-runtime-v1.js",
-        "src/adapters/badges/coin-shop-badge-runtime-v1.js",
-        "src/adapters/sharing/social-connections-runtime-v1.js",
+        "src/core/learner-profile-runtime-v1.js",
         "src/features/avatar/avatar-artwork-registry-v554.js",
         "src/features/avatar/avatar-collection-summary-v1.js",
         "src/features/avatar/level-avatar-rewards-v1.js",
@@ -7812,6 +7871,12 @@
       "symbol": "SalitaQuestCourseManifest",
       "providers": [
         "src/config/course-manifest.js"
+      ]
+    },
+    {
+      "symbol": "SalitaQuestLearnerProfileRuntimeV1",
+      "providers": [
+        "src/core/learner-profile-runtime-v1.js"
       ]
     },
     {

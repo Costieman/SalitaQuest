@@ -13,7 +13,7 @@ const requirePatterns = (source, patterns, label) => patterns.forEach(([pattern,
   if (!pattern.test(source)) fail(`${label} is missing: ${description}`);
 });
 
-for (const file of ["social-connections-v2.js", "src/adapters/sharing/social-connections-runtime-v1.js", "src/features/sharing/social-connections-v2.js", "achievement-sharing-v4.js", "src/config/course-manifest.js", "service-worker.js"]) {
+for (const file of ["social-connections-v2.js", "src/core/learner-profile-runtime-v1.js", "src/adapters/sharing/social-connections-runtime-v1.js", "src/features/sharing/social-connections-v2.js", "achievement-sharing-v4.js", "src/config/course-manifest.js", "service-worker.js"]) {
   new vm.Script(read(file), {filename: file});
 }
 
@@ -31,12 +31,20 @@ if (!layout.includes(".badge-visual-shell") || !layout.includes(".badge-catalogu
 }
 
 const connections = read("src/features/sharing/social-connections-v2.js");
+const learnerProfiles = read("src/core/learner-profile-runtime-v1.js");
 const connectionsRuntime = read("src/adapters/sharing/social-connections-runtime-v1.js");
+requireMarkers(learnerProfiles, [
+  "salitaQuestLocalProfilesV1",
+  "salitaQuestActiveProfileId",
+  "readStore",
+  "writeStore",
+  "activeProfile",
+  "SalitaQuestLearnerProfileRuntimeV1"
+], "Shared learner profile runtime");
 requireMarkers(connectionsRuntime, [
   "salitaQuestSocialApiBase",
   "SALITA_SOCIAL_API_BASE",
-  "salitaQuestLocalProfilesV1",
-  "salitaQuestActiveProfileId",
+  "SalitaQuestLearnerProfileRuntimeV1",
   "SalitaQuestSocialConnectionsRuntimeV1"
 ], "Social connections runtime boundary");
 requireMarkers(connections, [
@@ -139,15 +147,17 @@ for (const [htmlFile, courseId] of [["app.html", "tagalog"], ["bisaya.html", "ce
   ]) if (!course.styles.includes(asset)) fail(`${htmlFile} does not load ${asset}`);
   for (const asset of [
     "badge-chest-v2.js?v=5.4.29",
+    "src/core/learner-profile-runtime-v1.js?v=5.6.1",
     "src/adapters/sharing/social-connections-runtime-v1.js?v=5.6.0",
     "src/features/sharing/social-connections-v2.js?v=5.4.27",
     "achievement-sharing-v4.js?v=5.4.29"
   ]) if (!course.scripts.includes(asset)) fail(`${htmlFile} does not load ${asset}`);
+  const profileIndex = course.scripts.indexOf("src/core/learner-profile-runtime-v1.js?v=5.6.1");
   const chestIndex = course.scripts.indexOf("badge-chest-v2.js?v=5.4.29");
   const connectionsRuntimeIndex = course.scripts.indexOf("src/adapters/sharing/social-connections-runtime-v1.js?v=5.6.0");
   const connectionsIndex = course.scripts.indexOf("src/features/sharing/social-connections-v2.js?v=5.4.27");
   const sharingIndex = course.scripts.indexOf("achievement-sharing-v4.js?v=5.4.29");
-  if (!(chestIndex >= 0 && connectionsRuntimeIndex > chestIndex && connectionsIndex > connectionsRuntimeIndex && sharingIndex > connectionsIndex)) {
+  if (!(profileIndex >= 0 && chestIndex > profileIndex && connectionsRuntimeIndex > chestIndex && connectionsIndex > connectionsRuntimeIndex && sharingIndex > connectionsIndex)) {
     fail(`${htmlFile} must load chest state, sharing service and final achievement sharing in that order`);
   }
   for (const obsolete of ["badge-sharing-v1", "social-posting-v2", "achievement-sharing-v3", "social-links-v1"]) {
@@ -173,6 +183,7 @@ requireMarkers(worker, [
   '"./desktop-navigation-refinement.js"',
   '"./desktop-navigation-refinement.css"',
   '"./src/config/course-manifest.js"',
+  '"./src/core/learner-profile-runtime-v1.js"',
   '"./src/app/course-bootstrap.js"'
 ], "Offline social release");
 

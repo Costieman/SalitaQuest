@@ -4,6 +4,7 @@
   if (window.__salitaCoinAvatarShopBadgesV1Installed) return;
   window.__salitaCoinAvatarShopBadgesV1Installed = true;
 
+  const PROFILE_URL = "./src/core/learner-profile-runtime-v1.js?v=5.6.1";
   const ADAPTER_URL = "./src/adapters/badges/coin-shop-badge-runtime-v1.js?v=5.6.4";
   const FEATURE_URL = "./src/features/economy/coin-avatar-shop-badges-v1.js?v=5.6.4";
 
@@ -33,6 +34,7 @@
     const feature = window.SalitaCoinShopBadgeFamilyV1;
     if (!runtime || !feature) {
       Promise.resolve()
+        .then(() => loadDependency("SalitaQuestLearnerProfileRuntimeV1", PROFILE_URL, "learner-profile-runtime-v1"))
         .then(() => loadDependency("SalitaCoinShopBadgeRuntimeV1", ADAPTER_URL, "runtime-v1"))
         .then(() => loadDependency("SalitaCoinShopBadgeFamilyV1", FEATURE_URL, "family-v1"))
         .then(install)
