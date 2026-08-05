@@ -17,6 +17,7 @@ const files = [
   "level-up-mobile-safety-v552.js",
   "src/features/interface/level-up-mobile-safety-v552.js",
   "level-avatar-rewards-v1.js",
+  "src/features/avatar/level-avatar-rewards-v1.js",
   "avatar-unlock-celebration-v1.js",
   "profile-emblem-control.js",
   "src/config/course-manifest.js",
@@ -62,7 +63,7 @@ if (levels.indexOf("acknowledge:()=>acknowledgeLevel") > levels.indexOf("show:()
   fail("Level popup request must acknowledge before render");
 }
 
-const rewards = read("level-avatar-rewards-v1.js");
+const rewards = read("src/features/avatar/level-avatar-rewards-v1.js");
 requireMarkers(rewards, [
   "actualCurrentLevel",
   "acknowledgedLevels",
@@ -119,11 +120,12 @@ for (const [loaderFile, courseId] of [["app.html", "tagalog"], ["bisaya.html", "
 
 const worker = read("service-worker.js");
 requireMarkers(worker, [
-  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-13-collection-key-translation-hotfix-extraction-r66"',
-  'const CACHE_NAME = "salita-quest-v5-6-14-popup-governor-extraction-r67"',
+  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-14-popup-governor-extraction-r67"',
+  'const CACHE_NAME = "salita-quest-v5-6-15-level-avatar-rewards-extraction-r68"',
   '"./popup-governor-v1.js"',
   '"./src/features/interface/popup-governor-v1.js"',
   '"./level-avatar-rewards-v1.js"',
+  '"./src/features/avatar/level-avatar-rewards-v1.js"',
   '"./avatar-unlock-celebration-v1.js"',
   '"./avatar-case-v1.js"',
   '"./desktop-navigation-refinement.js"',

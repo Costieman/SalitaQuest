@@ -78,8 +78,8 @@ for (const courseId of ["tagalog","cebuano"]) {
 }
 if (!refresh.includes('`./src/features/interface/popup-governor-v1.js?v=${RELEASE}`') || refresh.includes('`./popup-governor-v1.js?v=${RELEASE}`')) fail("Mobile refresh delivery changed");
 for (const marker of [
-  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-13-collection-key-translation-hotfix-extraction-r66"',
-  'const CACHE_NAME = "salita-quest-v5-6-14-popup-governor-extraction-r67"',
+  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-14-popup-governor-extraction-r67"',
+  'const CACHE_NAME = "salita-quest-v5-6-15-level-avatar-rewards-extraction-r68"',
   '"./popup-governor-v1.js"',
   '"./src/features/interface/popup-governor-v1.js"'
 ]) if (!worker.includes(marker)) fail(`Offline delivery is missing ${marker}`);

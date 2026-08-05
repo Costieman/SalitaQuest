@@ -2074,80 +2074,6 @@
       "risk": 41
     },
     {
-      "file": "level-avatar-rewards-v1.js",
-      "bytes": 12787,
-      "contexts": [
-        "cebuano",
-        "tagalog"
-      ],
-      "courses": [
-        "cebuano",
-        "tagalog"
-      ],
-      "references": [],
-      "loads": [],
-      "fetches": [],
-      "workers": [],
-      "coreGlobals": [
-        "levelInfo"
-      ],
-      "window": {
-        "provides": [
-          "__salitaQuestLevelAvatarRewardsV3Installed",
-          "SalitaLevelAvatarRewards"
-        ],
-        "consumes": [
-          "__salitaQuestLevelProgressionV2Installed",
-          "SalitaAvatarModel"
-        ]
-      },
-      "storage": [
-        {
-          "store": "localStorage",
-          "operation": "getItem",
-          "key": "salitaQuestLocalProfilesV1"
-        },
-        {
-          "store": "localStorage",
-          "operation": "setItem",
-          "key": "salitaQuestLocalProfilesV1"
-        },
-        {
-          "store": "sessionStorage",
-          "operation": "getItem",
-          "key": "salitaQuestActiveCourse"
-        },
-        {
-          "store": "sessionStorage",
-          "operation": "getItem",
-          "key": "salitaQuestActiveProfileId"
-        }
-      ],
-      "dom": {
-        "ids": [],
-        "selectors": [],
-        "datasets": [
-          "course",
-          "placementUpdating"
-        ]
-      },
-      "events": {
-        "listens": [
-          "salita:course-progress-restored",
-          "salita:level-updated",
-          "salita:placement-finished"
-        ],
-        "dispatches": [
-          "salita:avatar-collection-changed",
-          "salita:avatar-milestones-awarded",
-          "salita:avatar-milestones-repaired"
-        ]
-      },
-      "role": "collection-and-rewards",
-      "readiness": "extraction-candidate",
-      "risk": 25
-    },
-    {
       "file": "level-progression-v2.js",
       "bytes": 11375,
       "contexts": [
@@ -2675,7 +2601,7 @@
     },
     {
       "file": "profile-emblem-control.js",
-      "bytes": 9185,
+      "bytes": 9205,
       "contexts": [
         "cebuano",
         "tagalog"
@@ -2694,11 +2620,11 @@
         "coin-avatar-shard-shop-v1.js",
         "coin-avatar-shop-badges-v1.js",
         "coin-avatar-shop-topbar-v1.js",
-        "level-avatar-rewards-v1.js",
         "long-term-badges-v1.js",
         "src/features/avatar/avatar-artwork-registry-v554.js",
         "src/features/avatar/avatar-catalogue-v1.js",
         "src/features/avatar/avatar-progression-migration-v1.js",
+        "src/features/avatar/level-avatar-rewards-v1.js",
         "weekly-avatar-shard-rewards-v1.js"
       ],
       "loads": [
@@ -2711,11 +2637,11 @@
         "coin-avatar-shard-shop-v1.js",
         "coin-avatar-shop-badges-v1.js",
         "coin-avatar-shop-topbar-v1.js",
-        "level-avatar-rewards-v1.js",
         "long-term-badges-v1.js",
         "src/features/avatar/avatar-artwork-registry-v554.js",
         "src/features/avatar/avatar-catalogue-v1.js",
         "src/features/avatar/avatar-progression-migration-v1.js",
+        "src/features/avatar/level-avatar-rewards-v1.js",
         "weekly-avatar-shard-rewards-v1.js"
       ],
       "fetches": [],
@@ -2829,7 +2755,7 @@
     },
     {
       "file": "service-worker.js",
-      "bytes": 12609,
+      "bytes": 12648,
       "contexts": [
         "worker"
       ],
@@ -2888,6 +2814,7 @@
         "src/features/avatar/avatar-collection-summary-v1.js",
         "src/features/avatar/avatar-collection-tabs-phase6-1-v1.js",
         "src/features/avatar/avatar-progression-migration-v1.js",
+        "src/features/avatar/level-avatar-rewards-v1.js",
         "src/features/economy/economy-tracking-phase6-v1.js",
         "src/features/interface/clean-topbar.js",
         "src/features/interface/collection-key-translation-hotfix.js",
@@ -3501,6 +3428,80 @@
       "role": "collection-and-rewards",
       "readiness": "extraction-candidate",
       "risk": 7
+    },
+    {
+      "file": "src/features/avatar/level-avatar-rewards-v1.js",
+      "bytes": 12787,
+      "contexts": [
+        "cebuano",
+        "tagalog"
+      ],
+      "courses": [
+        "cebuano",
+        "tagalog"
+      ],
+      "references": [],
+      "loads": [],
+      "fetches": [],
+      "workers": [],
+      "coreGlobals": [
+        "levelInfo"
+      ],
+      "window": {
+        "provides": [
+          "__salitaQuestLevelAvatarRewardsV3Installed",
+          "SalitaLevelAvatarRewards"
+        ],
+        "consumes": [
+          "__salitaQuestLevelProgressionV2Installed",
+          "SalitaAvatarModel"
+        ]
+      },
+      "storage": [
+        {
+          "store": "localStorage",
+          "operation": "getItem",
+          "key": "salitaQuestLocalProfilesV1"
+        },
+        {
+          "store": "localStorage",
+          "operation": "setItem",
+          "key": "salitaQuestLocalProfilesV1"
+        },
+        {
+          "store": "sessionStorage",
+          "operation": "getItem",
+          "key": "salitaQuestActiveCourse"
+        },
+        {
+          "store": "sessionStorage",
+          "operation": "getItem",
+          "key": "salitaQuestActiveProfileId"
+        }
+      ],
+      "dom": {
+        "ids": [],
+        "selectors": [],
+        "datasets": [
+          "course",
+          "placementUpdating"
+        ]
+      },
+      "events": {
+        "listens": [
+          "salita:course-progress-restored",
+          "salita:level-updated",
+          "salita:placement-finished"
+        ],
+        "dispatches": [
+          "salita:avatar-collection-changed",
+          "salita:avatar-milestones-awarded",
+          "salita:avatar-milestones-repaired"
+        ]
+      },
+      "role": "collection-and-rewards",
+      "readiness": "extraction-candidate",
+      "risk": 25
     },
     {
       "file": "src/features/economy/economy-tracking-phase6-v1.js",
@@ -4614,7 +4615,7 @@
     },
     {
       "from": "avatar-unlock-celebration-v1.js",
-      "to": "level-avatar-rewards-v1.js",
+      "to": "src/features/avatar/level-avatar-rewards-v1.js",
       "type": "window-api",
       "symbols": [
         "SalitaLevelAvatarRewards"
@@ -4991,38 +4992,6 @@
       ]
     },
     {
-      "from": "level-avatar-rewards-v1.js",
-      "to": "app.js",
-      "type": "core-globals",
-      "symbols": [
-        "levelInfo"
-      ]
-    },
-    {
-      "from": "level-avatar-rewards-v1.js",
-      "to": "level-progression-v2.js",
-      "type": "window-api",
-      "symbols": [
-        "__salitaQuestLevelProgressionV2Installed"
-      ]
-    },
-    {
-      "from": "level-avatar-rewards-v1.js",
-      "to": "avatar-progression-hotfix-v551.js",
-      "type": "window-api",
-      "symbols": [
-        "SalitaAvatarModel"
-      ]
-    },
-    {
-      "from": "level-avatar-rewards-v1.js",
-      "to": "coin-avatar-shop-reveal-v1.js",
-      "type": "window-api",
-      "symbols": [
-        "SalitaAvatarModel"
-      ]
-    },
-    {
       "from": "level-progression-v2.js",
       "to": "app.js",
       "type": "core-globals",
@@ -5225,11 +5194,6 @@
     },
     {
       "from": "profile-emblem-control.js",
-      "to": "level-avatar-rewards-v1.js",
-      "type": "loads"
-    },
-    {
-      "from": "profile-emblem-control.js",
       "to": "long-term-badges-v1.js",
       "type": "loads"
     },
@@ -5246,6 +5210,11 @@
     {
       "from": "profile-emblem-control.js",
       "to": "src/features/avatar/avatar-progression-migration-v1.js",
+      "type": "loads"
+    },
+    {
+      "from": "profile-emblem-control.js",
+      "to": "src/features/avatar/level-avatar-rewards-v1.js",
       "type": "loads"
     },
     {
@@ -5417,6 +5386,38 @@
     },
     {
       "from": "src/features/avatar/avatar-progression-migration-v1.js",
+      "to": "coin-avatar-shop-reveal-v1.js",
+      "type": "window-api",
+      "symbols": [
+        "SalitaAvatarModel"
+      ]
+    },
+    {
+      "from": "src/features/avatar/level-avatar-rewards-v1.js",
+      "to": "app.js",
+      "type": "core-globals",
+      "symbols": [
+        "levelInfo"
+      ]
+    },
+    {
+      "from": "src/features/avatar/level-avatar-rewards-v1.js",
+      "to": "level-progression-v2.js",
+      "type": "window-api",
+      "symbols": [
+        "__salitaQuestLevelProgressionV2Installed"
+      ]
+    },
+    {
+      "from": "src/features/avatar/level-avatar-rewards-v1.js",
+      "to": "avatar-progression-hotfix-v551.js",
+      "type": "window-api",
+      "symbols": [
+        "SalitaAvatarModel"
+      ]
+    },
+    {
+      "from": "src/features/avatar/level-avatar-rewards-v1.js",
       "to": "coin-avatar-shop-reveal-v1.js",
       "type": "window-api",
       "symbols": [
@@ -5729,12 +5730,12 @@
         "coin-avatar-shop-badges-v1.js",
         "coin-avatar-shop-reveal-v1.js",
         "desktop-navigation-refinement.js",
-        "level-avatar-rewards-v1.js",
         "long-term-badges-v1.js",
         "profile-app.js",
         "social-connections-v2.js",
         "src/features/avatar/avatar-artwork-registry-v554.js",
         "src/features/avatar/avatar-collection-summary-v1.js",
+        "src/features/avatar/level-avatar-rewards-v1.js",
         "weekly-avatar-shard-rewards-v1.js"
       ],
       "writers": [
@@ -5743,8 +5744,8 @@
         "avatar-unlock-celebration-v1.js",
         "coin-avatar-shard-shop-v1.js",
         "coin-avatar-shop-reveal-v1.js",
-        "level-avatar-rewards-v1.js",
         "profile-app.js",
+        "src/features/avatar/level-avatar-rewards-v1.js",
         "weekly-avatar-shard-rewards-v1.js"
       ],
       "removers": []
@@ -5817,9 +5818,9 @@
       "store": "sessionStorage",
       "key": "salitaQuestActiveCourse",
       "readers": [
-        "level-avatar-rewards-v1.js",
         "level-progression-v2.js",
-        "profile-app.js"
+        "profile-app.js",
+        "src/features/avatar/level-avatar-rewards-v1.js"
       ],
       "writers": [
         "profile-app.js"
@@ -5841,13 +5842,13 @@
         "coin-avatar-shop-badges-v1.js",
         "coin-avatar-shop-reveal-v1.js",
         "desktop-navigation-refinement.js",
-        "level-avatar-rewards-v1.js",
         "level-progression-v2.js",
         "long-term-badges-v1.js",
         "profile-app.js",
         "social-connections-v2.js",
         "src/features/avatar/avatar-artwork-registry-v554.js",
         "src/features/avatar/avatar-collection-summary-v1.js",
+        "src/features/avatar/level-avatar-rewards-v1.js",
         "weekly-avatar-shard-rewards-v1.js"
       ],
       "writers": [],
@@ -6099,7 +6100,7 @@
         "avatar-collection-screen-v1.js",
         "coin-avatar-shard-shop-v1.js",
         "coin-avatar-shop-reveal-v1.js",
-        "level-avatar-rewards-v1.js",
+        "src/features/avatar/level-avatar-rewards-v1.js",
         "weekly-avatar-shard-rewards-v1.js"
       ]
     },
@@ -6129,14 +6130,14 @@
         "avatar-unlock-celebration-v1.js"
       ],
       "dispatchers": [
-        "level-avatar-rewards-v1.js"
+        "src/features/avatar/level-avatar-rewards-v1.js"
       ]
     },
     {
       "name": "salita:avatar-milestones-repaired",
       "listeners": [],
       "dispatchers": [
-        "level-avatar-rewards-v1.js"
+        "src/features/avatar/level-avatar-rewards-v1.js"
       ]
     },
     {
@@ -6248,7 +6249,7 @@
     {
       "name": "salita:course-progress-restored",
       "listeners": [
-        "level-avatar-rewards-v1.js"
+        "src/features/avatar/level-avatar-rewards-v1.js"
       ],
       "dispatchers": []
     },
@@ -6284,7 +6285,7 @@
       "name": "salita:level-updated",
       "listeners": [
         "achievement-sharing-v4.js",
-        "level-avatar-rewards-v1.js"
+        "src/features/avatar/level-avatar-rewards-v1.js"
       ],
       "dispatchers": [
         "level-progression-v2.js"
@@ -6314,7 +6315,7 @@
     {
       "name": "salita:placement-finished",
       "listeners": [
-        "level-avatar-rewards-v1.js"
+        "src/features/avatar/level-avatar-rewards-v1.js"
       ],
       "dispatchers": []
     },
@@ -6565,7 +6566,7 @@
     {
       "symbol": "__salitaQuestLevelAvatarRewardsV3Installed",
       "providers": [
-        "level-avatar-rewards-v1.js"
+        "src/features/avatar/level-avatar-rewards-v1.js"
       ]
     },
     {
@@ -6767,7 +6768,7 @@
     {
       "symbol": "SalitaLevelAvatarRewards",
       "providers": [
-        "level-avatar-rewards-v1.js"
+        "src/features/avatar/level-avatar-rewards-v1.js"
       ]
     },
     {

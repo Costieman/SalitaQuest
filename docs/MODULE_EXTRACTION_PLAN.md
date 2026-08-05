@@ -74,3 +74,5 @@ Before extracting these files, introduce an explicit engine adapter that owns ac
 12. `collection-key-translation-hotfix.js` — completed as `src/features/interface/collection-key-translation-hotfix.js`, with the root compatibility URL retained through r66.
 
 13. `popup-governor-v1.js` — completed as `src/features/interface/popup-governor-v1.js`, with the root compatibility URL retained through r67.
+
+14. `level-avatar-rewards-v1.js` — completed as `src/features/avatar/level-avatar-rewards-v1.js`, with the root compatibility URL retained through r68.

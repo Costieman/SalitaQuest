@@ -108,8 +108,8 @@ for (const path of [compactModulePath, topbarModulePath]) {
   if (!refresh.includes(path)) fail(`Mobile refresh does not fetch ${path}`);
 }
 requireMarkers(worker, [
-  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-13-collection-key-translation-hotfix-extraction-r66"',
-  'const CACHE_NAME = "salita-quest-v5-6-14-popup-governor-extraction-r67"',
+  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-14-popup-governor-extraction-r67"',
+  'const CACHE_NAME = "salita-quest-v5-6-15-level-avatar-rewards-extraction-r68"',
   '"./compact-desktop-layout.js"',
   '"./src/features/interface/compact-desktop-layout.js"',
   '"./clean-topbar.js"',

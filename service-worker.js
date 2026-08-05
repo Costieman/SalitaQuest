@@ -1,5 +1,5 @@
-const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-13-collection-key-translation-hotfix-extraction-r66";
-const CACHE_NAME = "salita-quest-v5-6-14-popup-governor-extraction-r67";
+const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-14-popup-governor-extraction-r67";
+const CACHE_NAME = "salita-quest-v5-6-15-level-avatar-rewards-extraction-r68";
 const AVATAR_CASE_DISPLAY_HOTFIX = "2026-08-01-compact-display-share-stack-1";
 const TOPBAR_WORLD_PROGRESS_HOTFIX = "2026-08-01-separated-heading-rail-1";
 const SHARE_IMAGE_TRANSPORT_DELIVERY = "2026-08-02-direct-loader-1";
@@ -52,7 +52,7 @@ const AVATAR_PROGRESSION_FILES = [
   "./economy-tracking-phase6-v1.js", "./src/features/economy/economy-tracking-phase6-v1.js", "./economy-tracking-phase6-v1.css",
   "./avatar-collection-tabs-phase6-1-v1.js", "./src/features/avatar/avatar-collection-tabs-phase6-1-v1.js", "./avatar-collection-tabs-phase6-1-v1.css",
   "./weekly-avatar-shard-rewards-v1.js", "./weekly-avatar-shard-rewards-v1.css",
-  "./level-avatar-rewards-v1.js", "./avatar-unlock-celebration-v1.js", "./avatar-unlock-celebration-v1.css",
+  "./level-avatar-rewards-v1.js", "./src/features/avatar/level-avatar-rewards-v1.js", "./avatar-unlock-celebration-v1.js", "./avatar-unlock-celebration-v1.css",
   "./achievement-sharing-avatar-bridge-v1.js"
 ];
 
