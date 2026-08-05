@@ -1,0 +1,73 @@
+name: Inspect Avatar Collection screen
+
+on:
+  push:
+    branches: [agent/audit-avatar-collection-screen]
+    paths:
+      - ".github/workflows/inspect-avatar-collection-screen.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Install search tool
+        run: sudo apt-get update -qq && sudo apt-get install -y ripgrep
+      - name: Build ownership report
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check avatar-collection-screen-v1.js
+          report=docs/TEMP_AVATAR_COLLECTION_AUDIT.md
+          {
+            echo '# Avatar Collection screen audit'
+            echo
+            echo '- Base commit: `2793bc413bfe655cbb695a3323140a13810c44fa`'
+            echo '- Target: `avatar-collection-screen-v1.js`'
+            echo
+            echo '## Target source facts'
+            echo '```text'
+            wc -c avatar-collection-screen-v1.js
+            rg -n 'localStorage|sessionStorage|setInterval|clearInterval|MutationObserver|addEventListener|dispatchEvent|SalitaAvatarCollectionScreen|SalitaAvatarModel|SalitaAvatarArtwork|PROFILE_STORE|ACTIVE_PROFILE|writeStore|refreshProfile|equipAvatar|openDetail|installLauncher' avatar-collection-screen-v1.js || true
+            echo '```'
+            echo
+            echo '## Direct path references'
+            echo '```text'
+            rg -n --glob '!docs/TEMP_AVATAR_COLLECTION_AUDIT.md' 'avatar-collection-screen-v1\.js' . || true
+            echo '```'
+            echo
+            echo '## Public API consumers'
+            echo '```text'
+            rg -n --glob '!avatar-collection-screen-v1.js' --glob '!docs/TEMP_AVATAR_COLLECTION_AUDIT.md' 'SalitaAvatarCollectionScreen|salita:open-avatar-collection|salita:avatar-equipped|salita:avatar-collection-changed' . || true
+            echo '```'
+            echo
+            echo '## Shared profile and avatar ownership'
+            echo '```text'
+            rg -n --glob '!docs/TEMP_AVATAR_COLLECTION_AUDIT.md' 'salitaQuestLocalProfilesV1|salitaQuestActiveProfileId|avatarCollection|equippedAvatarId|avatarId' src *.js scripts .github/workflows 2>/dev/null || true
+            echo '```'
+            echo
+            echo '## Loader order and offline delivery'
+            echo '```text'
+            rg -n 'avatar-collection-screen|avatar-case|weekly-avatar|CACHE_NAME|PREVIOUS_CACHE_NAME' profile-emblem-control.js service-worker.js mobile-refresh.html src/config/course-manifest.js scripts .github/workflows 2>/dev/null || true
+            echo '```'
+            echo
+            echo '## Related validators'
+            echo '```text'
+            rg -n 'Avatar Collection|avatar collection|avatar-collection|avatar equipped|SalitaAvatarCollectionScreen' scripts .github/workflows 2>/dev/null || true
+            echo '```'
+          } > "$report"
+      - name: Commit report to isolated audit branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/TEMP_AVATAR_COLLECTION_AUDIT.md
+          git commit -m "Record Avatar Collection ownership audit"
+          git push origin HEAD:agent/audit-avatar-collection-screen
