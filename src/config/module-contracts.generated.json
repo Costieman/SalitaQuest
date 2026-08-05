@@ -1595,7 +1595,7 @@
     },
     {
       "file": "coin-avatar-shop-topbar-v1.js",
-      "bytes": 3116,
+      "bytes": 3137,
       "contexts": [
         "cebuano",
         "tagalog"
@@ -1609,14 +1609,14 @@
         "avatar-collection-tabs-phase6-1-v1.js",
         "coin-testing-grant-100k-v1.js",
         "coin-testing-grant-50k-phase5-v1.js",
-        "economy-tracking-phase6-v1.js"
+        "src/features/economy/economy-tracking-phase6-v1.js"
       ],
       "loads": [
         "avatar-collection-summary-v1.js",
         "avatar-collection-tabs-phase6-1-v1.js",
         "coin-testing-grant-100k-v1.js",
         "coin-testing-grant-50k-phase5-v1.js",
-        "economy-tracking-phase6-v1.js"
+        "src/features/economy/economy-tracking-phase6-v1.js"
       ],
       "fetches": [],
       "workers": [],
@@ -1983,53 +1983,6 @@
       "role": "interface",
       "readiness": "prepare-adapter",
       "risk": 52
-    },
-    {
-      "file": "economy-tracking-phase6-v1.js",
-      "bytes": 3504,
-      "contexts": [
-        "cebuano",
-        "tagalog"
-      ],
-      "courses": [
-        "cebuano",
-        "tagalog"
-      ],
-      "references": [],
-      "loads": [],
-      "fetches": [],
-      "workers": [],
-      "coreGlobals": [],
-      "window": {
-        "provides": [
-          "__salitaEconomyTrackingPhase6V2Installed",
-          "SalitaEconomyTrackingPhase6"
-        ],
-        "consumes": [
-          "state"
-        ]
-      },
-      "storage": [],
-      "dom": {
-        "ids": [],
-        "selectors": [
-          ":scope > .sq-avatar-statistics-pane",
-          ".sq-avatar-collection-dialog",
-          ".sq-economy-tracking-panel"
-        ],
-        "datasets": [
-          "economyTracking"
-        ]
-      },
-      "events": {
-        "listens": [],
-        "dispatches": [
-          "salita:economy-tracking-ready"
-        ]
-      },
-      "role": "feature-extension",
-      "readiness": "extraction-candidate",
-      "risk": 10
     },
     {
       "file": "exercise-fixes-v545.js",
@@ -3101,7 +3054,7 @@
     },
     {
       "file": "service-worker.js",
-      "bytes": 12027,
+      "bytes": 12150,
       "contexts": [
         "worker"
       ],
@@ -3128,6 +3081,7 @@
         "compact-desktop-layout.js",
         "daily-goal-refinement.js",
         "desktop-navigation-refinement.js",
+        "economy-tracking-phase6-v1.js",
         "even-progress-rail.js",
         "exercise-fixes-v545.js",
         "facebook-share-link-v1.js",
@@ -3154,6 +3108,7 @@
         "src/features/avatar/avatar-artwork-registry-v554.js",
         "src/features/avatar/avatar-catalogue-v1.js",
         "src/features/avatar/avatar-progression-migration-v1.js",
+        "src/features/economy/economy-tracking-phase6-v1.js",
         "src/features/interface/clean-topbar.js",
         "src/features/interface/compact-desktop-layout.js",
         "src/features/interface/level-up-mobile-safety-v552.js",
@@ -3649,6 +3604,53 @@
       "role": "collection-and-rewards",
       "readiness": "extraction-candidate",
       "risk": 7
+    },
+    {
+      "file": "src/features/economy/economy-tracking-phase6-v1.js",
+      "bytes": 3504,
+      "contexts": [
+        "cebuano",
+        "tagalog"
+      ],
+      "courses": [
+        "cebuano",
+        "tagalog"
+      ],
+      "references": [],
+      "loads": [],
+      "fetches": [],
+      "workers": [],
+      "coreGlobals": [],
+      "window": {
+        "provides": [
+          "__salitaEconomyTrackingPhase6V2Installed",
+          "SalitaEconomyTrackingPhase6"
+        ],
+        "consumes": [
+          "state"
+        ]
+      },
+      "storage": [],
+      "dom": {
+        "ids": [],
+        "selectors": [
+          ":scope > .sq-avatar-statistics-pane",
+          ".sq-avatar-collection-dialog",
+          ".sq-economy-tracking-panel"
+        ],
+        "datasets": [
+          "economyTracking"
+        ]
+      },
+      "events": {
+        "listens": [],
+        "dispatches": [
+          "salita:economy-tracking-ready"
+        ]
+      },
+      "role": "feature-extension",
+      "readiness": "extraction-candidate",
+      "risk": 10
     },
     {
       "file": "src/features/interface/clean-topbar.js",
@@ -4545,7 +4547,7 @@
     },
     {
       "from": "avatar-collection-tabs-phase6-1-v1.js",
-      "to": "economy-tracking-phase6-v1.js",
+      "to": "src/features/economy/economy-tracking-phase6-v1.js",
       "type": "window-api",
       "symbols": [
         "SalitaEconomyTrackingPhase6"
@@ -4832,7 +4834,7 @@
     },
     {
       "from": "coin-avatar-shop-topbar-v1.js",
-      "to": "economy-tracking-phase6-v1.js",
+      "to": "src/features/economy/economy-tracking-phase6-v1.js",
       "type": "loads"
     },
     {
@@ -6254,7 +6256,7 @@
       "name": "salita:economy-tracking-ready",
       "listeners": [],
       "dispatchers": [
-        "economy-tracking-phase6-v1.js"
+        "src/features/economy/economy-tracking-phase6-v1.js"
       ]
     },
     {
@@ -6430,7 +6432,7 @@
     {
       "symbol": "__salitaEconomyTrackingPhase6V2Installed",
       "providers": [
-        "economy-tracking-phase6-v1.js"
+        "src/features/economy/economy-tracking-phase6-v1.js"
       ]
     },
     {
@@ -6746,7 +6748,7 @@
     {
       "symbol": "SalitaEconomyTrackingPhase6",
       "providers": [
-        "economy-tracking-phase6-v1.js"
+        "src/features/economy/economy-tracking-phase6-v1.js"
       ]
     },
     {

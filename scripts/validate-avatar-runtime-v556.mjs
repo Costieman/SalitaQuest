@@ -113,8 +113,8 @@ check(cached.length === 48, "Service worker lists exactly 48 canonical PNGs");
 check(new Set(cached).size === 48, "Service-worker canonical paths are unique");
 check(manifestPaths.every(file => cached.includes(file)), "Service worker precaches every manifest image");
 check(!/"\.\/avatars\/(?!canonical\/)/.test(sources.worker), "Service worker does not cache legacy avatar artwork");
-check(sources.worker.includes('PREVIOUS_CACHE_NAME = "salita-quest-v5-6-8-home-reward-coordinator-extraction-r61"'), "Service worker records the pre-modular cache boundary");
-check(sources.worker.includes('CACHE_NAME = "salita-quest-v5-6-9-facebook-share-link-extraction-r62"'), "Service-worker cache revision is the modular-bootstrap release");
+check(sources.worker.includes('PREVIOUS_CACHE_NAME = "salita-quest-v5-6-9-facebook-share-link-extraction-r62"'), "Service worker records the pre-modular cache boundary");
+check(sources.worker.includes('CACHE_NAME = "salita-quest-v5-6-10-economy-tracking-extraction-r63"'), "Service-worker cache revision is the modular-bootstrap release");
 check(sources.worker.includes('"./avatar-case-v1.js"') && sources.worker.includes('"./avatar-case-v1.css"'), "Service worker precaches Avatar Case assets");
 check(sources.worker.includes('"./desktop-navigation-refinement.js"') && sources.worker.includes('"./desktop-navigation-refinement.css"'), "Service worker precaches persistent-navigation assets");
 
