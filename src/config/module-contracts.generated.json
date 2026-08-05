@@ -34,7 +34,7 @@
       "placement-onboarding-v1.js",
       "social-connections-v2.js",
       "achievement-sharing-v4.js",
-      "collection-key-translation-hotfix.js"
+      "src/features/interface/collection-key-translation-hotfix.js"
     ],
     "cebuano": [
       "app.js",
@@ -1656,64 +1656,6 @@
       "risk": 27
     },
     {
-      "file": "collection-key-translation-hotfix.js",
-      "bytes": 8247,
-      "contexts": [
-        "tagalog"
-      ],
-      "courses": [
-        "tagalog"
-      ],
-      "references": [
-        "avatar-card-actions-v1.js",
-        "avatar-case-page-tab-v1.js",
-        "avatar-collection-page-v2.js",
-        "mystery-rarity-roll-v1.js"
-      ],
-      "loads": [],
-      "fetches": [],
-      "workers": [],
-      "coreGlobals": [
-        "ITEMS",
-        "state"
-      ],
-      "window": {
-        "provides": [
-          "__salitaQuestCollectionKeyTranslationHotfixV2"
-        ],
-        "consumes": []
-      },
-      "storage": [],
-      "dom": {
-        "ids": [
-          "questChest"
-        ],
-        "selectors": [
-          ".weekly-key-meter",
-          "[data-token], .token-row, .breakdown-row, li, tr, .analysis-token",
-          "#questChestTitle, strong",
-          "img",
-          "link[data-sq-avatar-case-desktop-safety]",
-          "link[data-sq-avatar-collection-page]"
-        ],
-        "datasets": [
-          "sqAvatarCaseDesktopSafety",
-          "sqAvatarCollectionPage"
-        ]
-      },
-      "events": {
-        "listens": [
-          "DOMContentLoaded",
-          "salita:daily-quests-rendered",
-          "salita:state-changed"
-        ],
-        "dispatches": []
-      },
-      "role": "feature-extension",
-      "readiness": "extraction-candidate",
-      "risk": 12
-    },
-    {
       "file": "daily-goal-refinement.js",
       "bytes": 8206,
       "contexts": [
@@ -2939,7 +2881,7 @@
     },
     {
       "file": "service-worker.js",
-      "bytes": 12449,
+      "bytes": 12569,
       "contexts": [
         "worker"
       ],
@@ -2965,6 +2907,7 @@
         "bisaya-app-loader.js",
         "bisaya-review-regions.js",
         "clean-topbar.js",
+        "collection-key-translation-hotfix.js",
         "compact-desktop-layout.js",
         "daily-goal-refinement.js",
         "desktop-navigation-refinement.js",
@@ -2999,6 +2942,7 @@
         "src/features/avatar/avatar-progression-migration-v1.js",
         "src/features/economy/economy-tracking-phase6-v1.js",
         "src/features/interface/clean-topbar.js",
+        "src/features/interface/collection-key-translation-hotfix.js",
         "src/features/interface/compact-desktop-layout.js",
         "src/features/interface/level-up-mobile-safety-v552.js",
         "src/features/progression/even-progress-rail.js",
@@ -3242,7 +3186,7 @@
     },
     {
       "file": "src/config/course-manifest.js",
-      "bytes": 6256,
+      "bytes": 6279,
       "contexts": [
         "bootstrap"
       ],
@@ -3253,7 +3197,6 @@
         "badge-catalogue-v2.js",
         "badge-chest-v2.js",
         "bisaya-app-loader.js",
-        "collection-key-translation-hotfix.js",
         "daily-goal-refinement.js",
         "desktop-navigation-refinement.js",
         "exercise-fixes-v545.js",
@@ -3271,6 +3214,7 @@
         "social-connections-v2.js",
         "src/features/audio/pronunciation-release-control.js",
         "src/features/interface/clean-topbar.js",
+        "src/features/interface/collection-key-translation-hotfix.js",
         "src/features/interface/compact-desktop-layout.js",
         "src/features/interface/level-up-mobile-safety-v552.js",
         "src/features/progression/even-progress-rail.js",
@@ -3707,6 +3651,64 @@
       "role": "interface",
       "readiness": "extraction-candidate",
       "risk": 14
+    },
+    {
+      "file": "src/features/interface/collection-key-translation-hotfix.js",
+      "bytes": 8247,
+      "contexts": [
+        "tagalog"
+      ],
+      "courses": [
+        "tagalog"
+      ],
+      "references": [
+        "avatar-card-actions-v1.js",
+        "avatar-case-page-tab-v1.js",
+        "avatar-collection-page-v2.js",
+        "mystery-rarity-roll-v1.js"
+      ],
+      "loads": [],
+      "fetches": [],
+      "workers": [],
+      "coreGlobals": [
+        "ITEMS",
+        "state"
+      ],
+      "window": {
+        "provides": [
+          "__salitaQuestCollectionKeyTranslationHotfixV2"
+        ],
+        "consumes": []
+      },
+      "storage": [],
+      "dom": {
+        "ids": [
+          "questChest"
+        ],
+        "selectors": [
+          ".weekly-key-meter",
+          "[data-token], .token-row, .breakdown-row, li, tr, .analysis-token",
+          "#questChestTitle, strong",
+          "img",
+          "link[data-sq-avatar-case-desktop-safety]",
+          "link[data-sq-avatar-collection-page]"
+        ],
+        "datasets": [
+          "sqAvatarCaseDesktopSafety",
+          "sqAvatarCollectionPage"
+        ]
+      },
+      "events": {
+        "listens": [
+          "DOMContentLoaded",
+          "salita:daily-quests-rendered",
+          "salita:state-changed"
+        ],
+        "dispatches": []
+      },
+      "role": "feature-extension",
+      "readiness": "extraction-candidate",
+      "risk": 12
     },
     {
       "file": "src/features/interface/compact-desktop-layout.js",
@@ -4836,15 +4838,6 @@
       ]
     },
     {
-      "from": "collection-key-translation-hotfix.js",
-      "to": "app.js",
-      "type": "core-globals",
-      "symbols": [
-        "ITEMS",
-        "state"
-      ]
-    },
-    {
       "from": "daily-goal-refinement.js",
       "to": "app.js",
       "type": "core-globals",
@@ -5464,6 +5457,15 @@
       ]
     },
     {
+      "from": "src/features/interface/collection-key-translation-hotfix.js",
+      "to": "app.js",
+      "type": "core-globals",
+      "symbols": [
+        "ITEMS",
+        "state"
+      ]
+    },
+    {
       "from": "src/features/interface/compact-desktop-layout.js",
       "to": "app.js",
       "type": "core-globals",
@@ -5937,8 +5939,8 @@
     {
       "name": "DOMContentLoaded",
       "listeners": [
-        "collection-key-translation-hotfix.js",
-        "profile-app.js"
+        "profile-app.js",
+        "src/features/interface/collection-key-translation-hotfix.js"
       ],
       "dispatchers": []
     },
@@ -6252,7 +6254,7 @@
     {
       "name": "salita:daily-quests-rendered",
       "listeners": [
-        "collection-key-translation-hotfix.js"
+        "src/features/interface/collection-key-translation-hotfix.js"
       ],
       "dispatchers": []
     },
@@ -6333,7 +6335,7 @@
     {
       "name": "salita:state-changed",
       "listeners": [
-        "collection-key-translation-hotfix.js"
+        "src/features/interface/collection-key-translation-hotfix.js"
       ],
       "dispatchers": []
     },
@@ -6508,7 +6510,7 @@
     {
       "symbol": "__salitaQuestCollectionKeyTranslationHotfixV2",
       "providers": [
-        "collection-key-translation-hotfix.js"
+        "src/features/interface/collection-key-translation-hotfix.js"
       ]
     },
     {
