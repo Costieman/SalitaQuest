@@ -5,26 +5,30 @@ const read = file => fs.readFileSync(file, "utf8");
 const fail = message => { throw new Error(message); };
 const rootFile = "achievement-sharing-avatar-bridge-v1.js";
 const featureFile = "src/features/sharing/achievement-sharing-avatar-bridge-v1.js";
+const profileFile = "src/core/learner-profile-runtime-v1.js";
 const adapterFile = "src/adapters/avatar/avatar-collection-profile-runtime-v1.js";
 const rootSource = read(rootFile);
 const featureSource = read(featureFile);
+const profileSource = read(profileFile);
 const adapterSource = read(adapterFile);
 const loader = read("profile-emblem-control.js");
 const refresh = read("mobile-refresh.html");
 const worker = read("service-worker.js");
 
-for (const [file, source] of [[rootFile,rootSource],[featureFile,featureSource],[adapterFile,adapterSource]]) {
+for (const [file, source] of [[rootFile,rootSource],[featureFile,featureSource],[profileFile,profileSource],[adapterFile,adapterSource]]) {
   new vm.Script(source, {filename:file});
 }
 
 for (const marker of [
   "__salitaQuestAchievementSharingAvatarBridgeCoordinatorInstalled",
   "__salitaQuestAchievementSharingAvatarBridgeCompatibilityLoading",
+  'const PROFILE_URL = "./src/core/learner-profile-runtime-v1.js?v=5.6.1"',
   'const ADAPTER_URL = "./src/adapters/avatar/avatar-collection-profile-runtime-v1.js?v=5.5.6"',
   'const FEATURE_URL = "./src/features/sharing/achievement-sharing-avatar-bridge-v1.js?v=5.5.20.1"',
   "document.currentScript",
   "document.write",
   "script.async = false",
+  '"learner-profile-runtime"',
   '"profile-runtime"',
   '"feature"'
 ]) if (!rootSource.includes(marker)) fail(`Compatibility coordinator missing ${marker}`);
@@ -55,7 +59,7 @@ if (/localStorage|sessionStorage/.test(featureSource)) fail("Extracted feature o
 if ((featureSource.match(/new MutationObserver/g) || []).length !== 1) fail("Feature must own exactly one observer");
 if ((featureSource.match(/document\.addEventListener\("salita:avatar-collection-changed"/g) || []).length !== 1) fail("Feature must own exactly one collection listener");
 
-for (const marker of ["function buildContext", "persistNormalisation = false", "function peekContext", "return buildContext();", "return buildContext({persistNormalisation:true});", "peekContext,"]) {
+for (const marker of ["SalitaQuestLearnerProfileRuntimeV1", "function buildContext", "persistNormalisation = false", "function peekContext", "return buildContext();", "return buildContext({persistNormalisation:true});", "peekContext,"]) {
   if (!adapterSource.includes(marker)) fail(`Profile adapter missing ${marker}`);
 }
 
@@ -67,6 +71,7 @@ const bridgeIndex = loader.indexOf('"sharing"', routerIndex + 1);
 if (routerIndex < 0 || bridgeIndex <= routerIndex) fail("Sharing router no longer loads before the avatar bridge");
 
 for (const marker of [
+  `./${profileFile}?v=\${RELEASE}`,
   `./${rootFile}?v=\${RELEASE}`,
   `./${featureFile}?v=\${RELEASE}`
 ]) if (!refresh.includes(marker)) fail(`Mobile refresh missing ${marker}`);
@@ -74,7 +79,7 @@ for (const marker of [
 for (const marker of [
   'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-23-badge-catalogue-extraction-r76"',
   'const CACHE_NAME = "salita-quest-v5-6-24-social-connections-extraction-r77"',
-  `"./${rootFile}"`, `"./${featureFile}"`, `"./${adapterFile}"`
+  `"./${profileFile}"`, `"./${rootFile}"`, `"./${featureFile}"`, `"./${adapterFile}"`
 ]) if (!worker.includes(marker)) fail(`Offline delivery missing ${marker}`);
 
 const store = {schemaVersion:1,profiles:[{id:"p1",avatarId:"anahaw",avatarCollection:{equippedAvatarId:"narra",ownedAvatarIds:["anahaw","narra"],shards:{}}}]};
@@ -92,6 +97,7 @@ const adapterContext = {console,Object,Array,Set,Map,Date,Math,Number,String,Boo
 adapterContext.window = adapterContext;
 adapterContext.globalThis = adapterContext;
 vm.createContext(adapterContext);
+vm.runInContext(profileSource, adapterContext, {filename:profileFile});
 vm.runInContext(adapterSource, adapterContext, {filename:adapterFile});
 const adapter = adapterContext.SalitaAvatarCollectionProfileRuntimeV1;
 const snapshot = adapter.peekContext();
@@ -182,6 +188,6 @@ rootContext.window = rootContext;
 rootContext.globalThis = rootContext;
 vm.createContext(rootContext);
 vm.runInContext(rootSource, rootContext, {filename:rootFile});
-if (writesFromRoot.length !== 2 || !writesFromRoot[0].includes(adapterFile) || !writesFromRoot[1].includes(featureFile)) fail("Historical parser-time load order changed");
+if (writesFromRoot.length !== 3 || !writesFromRoot[0].includes(profileFile) || !writesFromRoot[1].includes(adapterFile) || !writesFromRoot[2].includes(featureFile)) fail("Historical parser-time load order changed");
 
 console.log("Avatar sharing bridge extraction validation passed: read-only adapter snapshot, storage-free feature, stable decoration/API/events, ordered historical loading and r75 offline delivery.");

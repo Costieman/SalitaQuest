@@ -11,6 +11,7 @@ const requireMarkers = (source, markers, label) => markers.forEach(marker => {
 });
 
 const rootRuntime = read("avatar-case-v1.js");
+const learnerProfiles = read("src/core/learner-profile-runtime-v1.js");
 const profileRuntime = read("src/adapters/avatar/avatar-case-profile-runtime-v1.js");
 const runtime = read("src/features/avatar/avatar-case-v1.js");
 const sharing = read("achievement-sharing-v4.js");
@@ -23,6 +24,7 @@ const service = read("services/social-share/index.js");
 const courseManifestSource = read("src/config/course-manifest.js");
 
 new vm.Script(rootRuntime,{filename:"avatar-case-v1.js"});
+new vm.Script(learnerProfiles,{filename:"src/core/learner-profile-runtime-v1.js"});
 new vm.Script(profileRuntime,{filename:"src/adapters/avatar/avatar-case-profile-runtime-v1.js"});
 new vm.Script(runtime,{filename:"src/features/avatar/avatar-case-v1.js"});
 new vm.Script(sharing,{filename:"achievement-sharing-v4.js"});
@@ -36,14 +38,21 @@ requireMarkers(rootRuntime,[
   "script.async = false",
   "RETRY_MS = 120"
 ],"Avatar Case compatibility coordinator");
-requireMarkers(profileRuntime,[
+requireMarkers(learnerProfiles,[
   'const PROFILE_STORE = "salitaQuestLocalProfilesV1"',
   'const ACTIVE_PROFILE = "salitaQuestActiveProfileId"',
+  "readStore",
+  "writeStore",
+  "activeRecord",
+  "SalitaQuestLearnerProfileRuntimeV1"
+],"Shared learner profile runtime");
+requireMarkers(profileRuntime,[
+  "SalitaQuestLearnerProfileRuntimeV1",
   "profile.avatarCaseIds = cleaned",
   "caseAvatarIds",
   "cleanIds",
   "ownedIds",
-  "localStorage.setItem"
+  "runtime.writeStore(store)"
 ],"Avatar Case profile runtime adapter");
 requireMarkers(runtime,[
   "const MAX_CASE_AVATARS = 4",
@@ -104,6 +113,7 @@ requireMarkers(worker,[
   'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-23-badge-catalogue-extraction-r76"',
   'const CACHE_NAME = "salita-quest-v5-6-24-social-connections-extraction-r77"',
   'const AVATAR_CASE_DISPLAY_HOTFIX = "2026-08-01-compact-display-share-stack-1"',
+  '"./src/core/learner-profile-runtime-v1.js"',
   '"./avatar-case-v1.js"',
   '"./avatar-case-v1.css"',
   '"./avatar-collection-screen-v1.css"',
@@ -239,6 +249,7 @@ context.SalitaAvatarModel={
   })
 };
 vm.createContext(context);
+vm.runInContext(learnerProfiles,context,{filename:"learner-profile-runtime-v1.behavior.js"});
 vm.runInContext(profileRuntime,context,{filename:"avatar-case-profile-runtime-v1.behavior.js"});
 vm.runInContext(runtime,context,{filename:"avatar-case-feature-v1.behavior.js"});
 vm.runInContext(rootRuntime,context,{filename:"avatar-case-v1.behavior.js"});

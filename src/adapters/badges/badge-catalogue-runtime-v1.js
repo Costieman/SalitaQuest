@@ -2,8 +2,6 @@
   "use strict";
 
   const API = "SalitaBadgeCatalogueRuntimeV1";
-  const PROFILE_STORE = "salitaQuestLocalProfilesV1";
-  const ACTIVE_PROFILE = "salitaQuestActiveProfileId";
   const WRAPPABLE = new Set(["recordDailyAnswer","recordDailySession","renderBadges","switchView"]);
   if (window[API]) return;
 
@@ -16,6 +14,10 @@
   const functionValue = name => globalValue(name) || window[name];
   const positive = value => Math.max(0, Number(value || 0));
 
+  function profiles() {
+    return window.SalitaQuestLearnerProfileRuntimeV1 || null;
+  }
+
   function ready() {
     return Array.isArray(catalogueValue()) && Boolean(stateValue());
   }
@@ -25,11 +27,7 @@
   }
 
   function activeProfile() {
-    try {
-      const id = sessionStorage.getItem(ACTIVE_PROFILE);
-      const store = JSON.parse(localStorage.getItem(PROFILE_STORE) || "null");
-      return store?.profiles?.find(profile => profile.id === id) || null;
-    } catch { return null; }
+    return profiles()?.activeProfile() || null;
   }
 
   function avatarModel() {

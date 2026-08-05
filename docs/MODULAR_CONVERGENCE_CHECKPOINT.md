@@ -22,11 +22,11 @@ The refactor should now move into a convergence phase: continue only where a bou
 | Compatibility coordinators | 0 | 28 | +28 |
 | Direct storage call sites | 111 | 119 | +8 |
 | Files with direct storage | 25 | 24 | -1 |
-| Direct-storage files outside adapters | 25 | 19 | -6 |
+| Direct-storage files outside adapters/core | 25 | 19 | -6 |
 | Root files with direct storage | 25 | 15 | -10 |
 | Files implementing active-profile lookup | 21 | 20 | -1 |
 | Direct switchView call sites | 11 | 13 | +2 |
-| Non-adapter files calling switchView | 4 | 4 | 0 |
+| Files outside adapters/core calling switchView | 4 | 4 | 0 |
 | Application window symbols | 53 | 77 | +24 |
 | Custom Salita events | 48 | 48 | 0 |
 | Event-listener call sites | 173 | 243 | +70 |
@@ -36,7 +36,7 @@ The refactor should now move into a convergence phase: continue only where a bou
 
 ## What has genuinely improved
 
-- Direct-storage ownership outside adapters changed by **-6 files**.
+- Direct-storage ownership outside adapters/core changed by **-6 files**.
 - Root-level storage owners changed by **-10 files**.
 - The codebase now has **26 explicit feature modules** and **7 explicit adapters**, making ownership testable.
 - Existing public APIs and historical URLs remain available while implementation ownership moves behind named boundaries.

@@ -28,6 +28,7 @@
   ];
 
   const tagalogScripts = [
+    "src/core/learner-profile-runtime-v1.js?v=5.6.1",
     "progression-v54.js?v=5.4.21",
     "exercise-fixes-v545.js?v=5.4.21",
     "ui-quality-fixes.js?v=5.4.21",
@@ -64,6 +65,7 @@
   ];
 
   const cebuanoScripts = [
+    "src/core/learner-profile-runtime-v1.js?v=5.6.1",
     "bisaya-app-loader.js?v=0.3.2",
     "ui-quality-fixes.js?v=5.4.21",
     "daily-goal-refinement.js?v=5.4.21",

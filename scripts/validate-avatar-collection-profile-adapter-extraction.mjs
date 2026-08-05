@@ -5,6 +5,7 @@ import vm from "node:vm";
 const root = process.cwd();
 const read = file => fs.readFileSync(path.join(root,file),"utf8");
 const fail = message => { throw new Error(message); };
+const profiles = read("src/core/learner-profile-runtime-v1.js");
 const adapter = read("src/adapters/avatar/avatar-collection-profile-runtime-v1.js");
 const feature = read("src/features/avatar/avatar-collection-screen-v1.js");
 const compatibility = read("avatar-collection-screen-v1.js");
@@ -14,14 +15,15 @@ const hotfix = read("src/features/interface/collection-key-translation-hotfix.js
 const worker = read("service-worker.js");
 const refresh = read("mobile-refresh.html");
 
-for (const [name,source] of Object.entries({adapter,feature,compatibility,page,loader,hotfix})) new vm.Script(source,{filename:name});
-for (const marker of ['const PROFILE_STORE = "salitaQuestLocalProfilesV1"','const ACTIVE_PROFILE = "salitaQuestActiveProfileId"','readContext','saveContext','equip','SalitaAvatarCollectionProfileRuntimeV1']) if (!adapter.includes(marker)) fail(`Adapter missing ${marker}`);
+for (const [name,source] of Object.entries({profiles,adapter,feature,compatibility,page,loader,hotfix})) new vm.Script(source,{filename:name});
+for (const marker of ['salitaQuestLocalProfilesV1','salitaQuestActiveProfileId','readStore','writeStore','activeRecord','SalitaQuestLearnerProfileRuntimeV1']) if (!profiles.includes(marker)) fail(`Shared profile runtime missing ${marker}`);
+for (const marker of ['SalitaQuestLearnerProfileRuntimeV1','readContext','saveContext','equip','SalitaAvatarCollectionProfileRuntimeV1']) if (!adapter.includes(marker)) fail(`Adapter missing ${marker}`);
 for (const forbidden of ["document.","addEventListener","dispatchEvent","MutationObserver"]) if (adapter.includes(forbidden)) fail(`Adapter owns UI/event behavior: ${forbidden}`);
 for (const [name,source] of Object.entries({feature,page})) {
   if (/localStorage|sessionStorage|salitaQuestLocalProfilesV1|salitaQuestActiveProfileId/.test(source)) fail(`${name} still owns profile storage`);
   if (!source.includes("SalitaAvatarCollectionProfileRuntimeV1")) fail(`${name} does not consume the adapter`);
 }
-for (const marker of ['document.write','script.async = false','avatar-collection-profile-runtime-v1.js','src/features/avatar/avatar-collection-screen-v1.js']) if (!compatibility.includes(marker)) fail(`Compatibility coordinator missing ${marker}`);
+for (const marker of ['document.write','script.async = false','learner-profile-runtime-v1.js','avatar-collection-profile-runtime-v1.js','src/features/avatar/avatar-collection-screen-v1.js']) if (!compatibility.includes(marker)) fail(`Compatibility coordinator missing ${marker}`);
 for (const forbidden of ["PROFILE_STORE","ACTIVE_PROFILE","ownedAvatarIds","salita:avatar-equipped","MutationObserver","sq-avatar-card"]) if (compatibility.includes(forbidden)) fail(`Compatibility coordinator owns ${forbidden}`);
 
 const storage = new Map();
@@ -37,6 +39,7 @@ const context = {window:null,localStorage,sessionStorage,JSON,Date,Object,Array,
 context.window = context;
 context.SalitaAvatarModel = model;
 vm.createContext(context);
+vm.runInContext(profiles,context,{filename:"profiles"});
 vm.runInContext(adapter,context,{filename:"adapter"});
 if (context.SalitaAvatarCollectionProfileRuntimeV1?.version !== 1) fail("Adapter API/version missing");
 writes = 0;
@@ -61,11 +64,12 @@ if (!hotfix.includes('avatar-collection-profile-runtime-v1.js?v=5.5.12') || !hot
 for (const marker of [
   'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-23-badge-catalogue-extraction-r76"',
   'const CACHE_NAME = "salita-quest-v5-6-24-social-connections-extraction-r77"',
+  '"./src/core/learner-profile-runtime-v1.js"',
   '"./avatar-collection-screen-v1.js"',
   '"./src/adapters/avatar/avatar-collection-profile-runtime-v1.js"',
   '"./src/features/avatar/avatar-collection-screen-v1.js"',
   '"./avatar-collection-page-v2.js"'
 ]) if (!worker.includes(marker)) fail(`Offline delivery missing ${marker}`);
-for (const marker of ['src/adapters/avatar/avatar-collection-profile-runtime-v1.js','src/features/avatar/avatar-collection-screen-v1.js','avatar-collection-page-v2.js']) if (!refresh.includes(marker)) fail(`Mobile refresh missing ${marker}`);
+for (const marker of ['src/core/learner-profile-runtime-v1.js','src/adapters/avatar/avatar-collection-profile-runtime-v1.js','src/features/avatar/avatar-collection-screen-v1.js','avatar-collection-page-v2.js']) if (!refresh.includes(marker)) fail(`Mobile refresh missing ${marker}`);
 
 console.log("Avatar Collection profile adapter validation passed: one persistence owner, stable write counts, two UI consumers, compatibility loading and r74 offline delivery.");

@@ -11,12 +11,14 @@ const requireMarkers = (source, markers, label) => markers.forEach(marker => {
 });
 
 const root = read("avatar-case-v1.js");
+const profiles = read("src/core/learner-profile-runtime-v1.js");
 const adapter = read("src/adapters/avatar/avatar-case-profile-runtime-v1.js");
 const feature = read("src/features/avatar/avatar-case-v1.js");
 const loader = read("profile-emblem-control.js");
 const worker = read("service-worker.js");
 
 new vm.Script(root,{filename:"avatar-case-v1.js"});
+new vm.Script(profiles,{filename:"src/core/learner-profile-runtime-v1.js"});
 new vm.Script(adapter,{filename:"src/adapters/avatar/avatar-case-profile-runtime-v1.js"});
 new vm.Script(feature,{filename:"src/features/avatar/avatar-case-v1.js"});
 
@@ -24,7 +26,8 @@ requireMarkers(root,["SalitaAvatarCaseProfileRuntimeV1","SalitaAvatarCaseFeature
 for (const forbidden of ["salitaQuestLocalProfilesV1","salitaQuestActiveProfileId","localStorage","sessionStorage","sq-avatar-case-panel","SalitaQuestAvatarCase ="]) {
   if (root.includes(forbidden)) fail(`Coordinator owns forbidden behavior: ${forbidden}`);
 }
-requireMarkers(adapter,["salitaQuestLocalProfilesV1","salitaQuestActiveProfileId","profile.avatarCaseIds = cleaned","caseAvatarIds","normaliseCollectionState","localStorage.setItem","SalitaAvatarCaseProfileRuntimeV1"],"profile adapter");
+requireMarkers(profiles,["salitaQuestLocalProfilesV1","salitaQuestActiveProfileId","readStore","writeStore","activeRecord","SalitaQuestLearnerProfileRuntimeV1"],"shared learner profile runtime");
+requireMarkers(adapter,["SalitaQuestLearnerProfileRuntimeV1","profile.avatarCaseIds = cleaned","caseAvatarIds","normaliseCollectionState","runtime.writeStore(store)","SalitaAvatarCaseProfileRuntimeV1"],"profile adapter");
 for (const forbidden of ["document.addEventListener","MutationObserver","sq-avatar-case-panel","salita:avatar-case-changed","SalitaQuestAvatarCase ="]) {
   if (adapter.includes(forbidden)) fail(`Profile adapter owns forbidden UI behavior: ${forbidden}`);
 }
@@ -44,6 +47,7 @@ if (order.some(index => index < 0) || !order.every((value,index) => index === 0 
 requireMarkers(worker,[
   'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-23-badge-catalogue-extraction-r76"',
   'const CACHE_NAME = "salita-quest-v5-6-24-social-connections-extraction-r77"',
+  '"./src/core/learner-profile-runtime-v1.js"',
   '"./avatar-case-v1.js"',
   '"./src/adapters/avatar/avatar-case-profile-runtime-v1.js"',
   '"./src/features/avatar/avatar-case-v1.js"'
@@ -72,6 +76,7 @@ const context = {window:null,document:documentStub,
 context.window=context;
 context.SalitaAvatarModel={get:id=>byId[String(id||"").toLowerCase()]||null,normaliseCollectionState:(input,fallback)=>({equippedAvatarId:input?.equippedAvatarId||fallback||null,ownedAvatarIds:[...(input?.ownedAvatarIds||[])],shards:{...(input?.shards||{})}})};
 vm.createContext(context);
+vm.runInContext(profiles,context);
 vm.runInContext(adapter,context);
 vm.runInContext(feature,context);
 vm.runInContext(root,context);

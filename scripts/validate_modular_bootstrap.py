@@ -53,8 +53,8 @@ def validate_page(path: str, course_id: str) -> None:
 def validate_assets(manifest_source: str) -> None:
     expected = {
         "sharedStyles": (23, "ui-quality-fixes.css?v=5.4.21", "achievement-sharing-v4.css?v=5.4.29"),
-        "tagalogScripts": (33, "progression-v54.js?v=5.4.21", "src/features/interface/collection-key-translation-hotfix.js?v=5.5.11"),
-        "cebuanoScripts": (30, "bisaya-app-loader.js?v=0.3.2", "achievement-sharing-v4.js?v=5.4.29"),
+        "tagalogScripts": (34, "src/core/learner-profile-runtime-v1.js?v=5.6.1", "src/features/interface/collection-key-translation-hotfix.js?v=5.5.11"),
+        "cebuanoScripts": (31, "src/core/learner-profile-runtime-v1.js?v=5.6.1", "achievement-sharing-v4.js?v=5.4.29"),
     }
 
     all_assets: set[str] = set()
@@ -107,6 +107,7 @@ def validate_service_worker() -> None:
     required = (
         'const CACHE_NAME = "salita-quest-v5-6-24-social-connections-extraction-r77";',
         '"./src/config/course-manifest.js"',
+        '"./src/core/learner-profile-runtime-v1.js"',
         '"./src/app/course-bootstrap.js"',
     )
     for fragment in required:

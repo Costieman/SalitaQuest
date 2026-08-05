@@ -4,6 +4,7 @@
   const INSTALL_FLAG = "__salitaQuestLongTermBadgesV1Installed";
   const LOADING_FLAG = "__salitaQuestLongTermBadgesV1CompatibilityLoading";
   const RETRY_MS = 120;
+  const PROFILE_URL = "./src/core/learner-profile-runtime-v1.js?v=5.6.1";
   const ADAPTER_URL = "./src/adapters/badges/badge-catalogue-runtime-v1.js?v=5.6.0";
   const FEATURE_URL = "./src/features/badges/long-term-badges-v1.js?v=5.6.0";
   if (window[INSTALL_FLAG]) return;
@@ -40,6 +41,7 @@
     const current = document.currentScript;
     if (document.readyState === "loading" && current) {
       const base = current.src || document.baseURI;
+      if (!window.SalitaQuestLearnerProfileRuntimeV1) document.write(`<script src="${new URL(PROFILE_URL, base).href}"><\/script>`);
       if (!window.SalitaBadgeCatalogueRuntimeV1) document.write(`<script src="${new URL(ADAPTER_URL, base).href}"><\/script>`);
       if (!window.SalitaLongTermBadgesV1) document.write(`<script src="${new URL(FEATURE_URL, base).href}"><\/script>`);
       window[LOADING_FLAG] = false;
@@ -47,6 +49,7 @@
       return;
     }
     Promise.resolve()
+      .then(() => loadDependency("SalitaQuestLearnerProfileRuntimeV1", PROFILE_URL, "learner-profile-runtime-v1"))
       .then(() => loadDependency("SalitaBadgeCatalogueRuntimeV1", ADAPTER_URL, "runtime-v1"))
       .then(() => loadDependency("SalitaLongTermBadgesV1", FEATURE_URL, "feature-v1"))
       .then(() => { window[LOADING_FLAG] = false; install(); })

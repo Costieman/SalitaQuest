@@ -5,54 +5,39 @@
   if (window[INSTALL_FLAG]) return;
   window[INSTALL_FLAG] = true;
 
-  const PROFILE_STORE = "salitaQuestLocalProfilesV1";
-  const ACTIVE_PROFILE = "salitaQuestActiveProfileId";
-
-  function readStore() {
-    try {
-      const value = JSON.parse(localStorage.getItem(PROFILE_STORE) || "null");
-      return value && Array.isArray(value.profiles) ? value : {schemaVersion:1, profiles:[]};
-    } catch {
-      return {schemaVersion:1, profiles:[]};
-    }
-  }
-
-  function writeStore(store) {
-    if (!store) return false;
-    store.schemaVersion = 1;
-    store.updatedAt = new Date().toISOString();
-    localStorage.setItem(PROFILE_STORE, JSON.stringify(store));
-    return true;
+  function profiles() {
+    return window.SalitaQuestLearnerProfileRuntimeV1 || null;
   }
 
   function buildContext({persistNormalisation = false} = {}) {
-  const model = window.SalitaAvatarModel;
-  if (!model) return null;
-  const store = readStore();
-  const activeId = sessionStorage.getItem(ACTIVE_PROFILE);
-  const profile = store.profiles.find(item => item.id === activeId) || null;
-  if (!profile) return null;
-  const collection = model.normaliseCollectionState(profile.avatarCollection, profile.avatarId);
-  if (persistNormalisation) {
-    profile.avatarCollection = collection;
-    if (collection.equippedAvatarId) profile.avatarId = collection.equippedAvatarId;
-    writeStore(store);
+    const runtime = profiles();
+    const model = window.SalitaAvatarModel;
+    if (!runtime || !model) return null;
+    const {store, profile} = runtime.activeRecord();
+    if (!profile) return null;
+    const collection = model.normaliseCollectionState(profile.avatarCollection, profile.avatarId);
+    if (persistNormalisation) {
+      profile.avatarCollection = collection;
+      if (collection.equippedAvatarId) profile.avatarId = collection.equippedAvatarId;
+      runtime.writeStore(store, {schemaVersion:1});
+    }
+    return {store, profile, collection, model};
   }
-  return {store, profile, collection, model};
-}
 
-function peekContext() {
-  return buildContext();
-}
+  function peekContext() {
+    return buildContext();
+  }
 
-function readContext() {
-  return buildContext({persistNormalisation:true});
-}
+  function readContext() {
+    return buildContext({persistNormalisation:true});
+  }
+
   function saveContext(context) {
-    if (!context?.store || !context?.profile || !context?.collection) return false;
+    const runtime = profiles();
+    if (!runtime || !context?.store || !context?.profile || !context?.collection) return false;
     context.profile.avatarCollection = context.collection;
     if (context.collection.equippedAvatarId) context.profile.avatarId = context.collection.equippedAvatarId;
-    return writeStore(context.store);
+    return runtime.writeStore(context.store, {schemaVersion:1});
   }
 
   function equip(avatarId) {
@@ -65,10 +50,11 @@ function readContext() {
     return {context, item};
   }
 
+  const runtime = profiles();
   window.SalitaAvatarCollectionProfileRuntimeV1 = Object.freeze({
     version:1,
-    profileStoreKey:PROFILE_STORE,
-    activeProfileKey:ACTIVE_PROFILE,
+    profileStoreKey:runtime?.profileStoreKey || "",
+    activeProfileKey:runtime?.activeProfileKey || "",
     peekContext,
     readContext,
     saveContext,

@@ -4,6 +4,7 @@
   const COORDINATOR_FLAG = "__salitaQuestAchievementSharingAvatarBridgeCoordinatorInstalled";
   const LOADING_FLAG = "__salitaQuestAchievementSharingAvatarBridgeCompatibilityLoading";
   const FEATURE_FLAG = "__salitaQuestAchievementSharingAvatarCompatibilityV558Installed";
+  const PROFILE_URL = "./src/core/learner-profile-runtime-v1.js?v=5.6.1";
   const ADAPTER_URL = "./src/adapters/avatar/avatar-collection-profile-runtime-v1.js?v=5.5.6";
   const FEATURE_URL = "./src/features/sharing/achievement-sharing-avatar-bridge-v1.js?v=5.5.20.1";
 
@@ -35,6 +36,9 @@
     const current = document.currentScript;
     if (document.readyState === "loading" && current) {
       const base = current.src || document.baseURI;
+      if (!window.SalitaQuestLearnerProfileRuntimeV1) {
+        document.write(`<script src="${new URL(PROFILE_URL, base).href}"><\/script>`);
+      }
       if (!window.SalitaAvatarCollectionProfileRuntimeV1) {
         document.write(`<script src="${new URL(ADAPTER_URL, base).href}"><\/script>`);
       }
@@ -45,10 +49,14 @@
       return;
     }
     loadDependency(
+      () => Boolean(window.SalitaQuestLearnerProfileRuntimeV1),
+      PROFILE_URL,
+      "learner-profile-runtime"
+    ).then(() => loadDependency(
       () => Boolean(window.SalitaAvatarCollectionProfileRuntimeV1),
       ADAPTER_URL,
       "profile-runtime"
-    ).then(() => loadDependency(
+    )).then(() => loadDependency(
       () => Boolean(window[FEATURE_FLAG]),
       FEATURE_URL,
       "feature"

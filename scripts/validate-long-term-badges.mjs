@@ -7,10 +7,11 @@ const read = file => fs.readFileSync(path.join(root,file),"utf8");
 const fail = message => { throw new Error(message); };
 
 const coordinator = read("long-term-badges-v1.js");
+const profiles = read("src/core/learner-profile-runtime-v1.js");
 const adapter = read("src/adapters/badges/badge-catalogue-runtime-v1.js");
 const feature = read("src/features/badges/long-term-badges-v1.js");
 const loader = read("profile-emblem-control.js");
-for (const [name,source] of [["root",coordinator],["adapter",adapter],["feature",feature],["loader",loader]]) new vm.Script(source,{filename:name});
+for (const [name,source] of [["root",coordinator],["profiles",profiles],["adapter",adapter],["feature",feature],["loader",loader]]) new vm.Script(source,{filename:name});
 
 for (const marker of [
   'const RELEASE = "5.6.0-long-term-badges"',
@@ -27,15 +28,21 @@ for (const forbidden of ["eval(","localStorage","sessionStorage","globalValue","
   if (feature.includes(forbidden)) fail(`Long-term badge feature still owns runtime bridge: ${forbidden}`);
 
 for (const marker of [
+  'const PROFILE_STORE = "salitaQuestLocalProfilesV1"',
+  'const ACTIVE_PROFILE = "salitaQuestActiveProfileId"',
+  "readStore", "writeStore", "activeProfile", "SalitaQuestLearnerProfileRuntimeV1"
+]) if (!profiles.includes(marker)) fail(`Shared learner profile runtime is missing: ${marker}`);
+for (const marker of [
   'const API = "SalitaBadgeCatalogueRuntimeV1"',
   'globalValue("state")', 'globalValue("BADGES")', 'functionValue("levelInfo")',
   'functionValue("totalLearningPoints")', 'functionValue("syncEarned")', 'functionValue("renderCatalogue")',
-  'sessionStorage.getItem(ACTIVE_PROFILE)', 'localStorage.getItem(PROFILE_STORE)'
+  "SalitaQuestLearnerProfileRuntimeV1"
 ]) if (!adapter.includes(marker)) fail(`Badge catalogue adapter is missing: ${marker}`);
 
 for (const marker of [
   'const INSTALL_FLAG = "__salitaQuestLongTermBadgesV1Installed"',
   'const RETRY_MS = 120',
+  'src/core/learner-profile-runtime-v1.js?v=5.6.1',
   'src/adapters/badges/badge-catalogue-runtime-v1.js?v=5.6.0',
   'src/features/badges/long-term-badges-v1.js?v=5.6.0',
   'document.write', 'script.async = false'
@@ -107,6 +114,7 @@ context.totalLearningPoints = () => 6500;
 context.syncEarned = options => { if (options?.bootstrap) syncCalls += 1; };
 context.renderCatalogue = () => { renderCalls += 1; };
 vm.createContext(context);
+new vm.Script(profiles,{filename:"learner-profile-runtime-v1.js"}).runInContext(context);
 new vm.Script(adapter,{filename:"badge-catalogue-runtime-v1.js"}).runInContext(context);
 new vm.Script(feature,{filename:"long-term-badges-feature-v1.js"}).runInContext(context);
 new vm.Script(coordinator,{filename:"long-term-badges-v1.js"}).runInContext(context);
