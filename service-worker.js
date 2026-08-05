@@ -1,5 +1,5 @@
-const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-0-modular-bootstrap-r53";
-const CACHE_NAME = "salita-quest-v5-6-1-first-module-extraction-r54";
+const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-1-first-module-extraction-r54";
+const CACHE_NAME = "salita-quest-v5-6-2-pronunciation-module-extraction-r55";
 const AVATAR_CASE_DISPLAY_HOTFIX = "2026-08-01-compact-display-share-stack-1";
 const TOPBAR_WORLD_PROGRESS_HOTFIX = "2026-08-01-separated-heading-rail-1";
 const SHARE_IMAGE_TRANSPORT_DELIVERY = "2026-08-02-direct-loader-1";
@@ -28,7 +28,8 @@ const APP_ENHANCEMENTS = [
   "./src/features/interface/level-up-mobile-safety-v552.js",
   "./fluid-desktop-app.css", "./adaptive-scenarios.js", "./adaptive-scenarios.css",
   "./desktop-navigation-refinement.js", "./desktop-navigation-refinement.css",
-  "./pronunciation-release-control.js", "./home-reward-coordinator.js", "./badge-catalogue-v2.js",
+  "./pronunciation-release-control.js", "./src/features/audio/pronunciation-release-control.js",
+  "./home-reward-coordinator.js", "./badge-catalogue-v2.js",
   "./badge-catalogue-v2.css", "./badge-layout-v3.css", "./badge-chest-v2.js", "./badge-chest-v2.css",
   "./placement-onboarding-v1.js", "./placement-onboarding-v1.css", "./social-connections-v2.js",
   "./social-connections-v2.css", "./achievement-sharing-v4.js", "./achievement-sharing-v4.css",

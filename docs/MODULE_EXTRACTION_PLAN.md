@@ -36,7 +36,7 @@ The compatibility loader remains for the r54 cache release. Current manifests al
 
 After the first move is verified, the next candidates should be extracted separately or in narrowly related families:
 
-1. `pronunciation-release-control.js` — audio interaction safety.
+1. `pronunciation-release-control.js` — completed as `src/features/audio/pronunciation-release-control.js`, with the root compatibility URL retained through r55.
 2. `clean-topbar.js` and `compact-desktop-layout.js` — desktop shell refinements.
 3. `even-progress-rail.js` — progress presentation.
 4. `avatar-catalogue-v1.js` and `avatar-progression-migration-v1.js` — avatar data and migration, with stable exported APIs.
