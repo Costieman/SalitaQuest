@@ -61,8 +61,8 @@ if (/localStorage\.(?:clear|removeItem)\(/.test(refresh)) {
 }
 
 for (const required of [
-  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-1-first-module-extraction-r54"',
-  'const CACHE_NAME = "salita-quest-v5-6-2-pronunciation-module-extraction-r55"',
+  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-2-pronunciation-module-extraction-r55"',
+  'const CACHE_NAME = "salita-quest-v5-6-3-desktop-shell-extraction-r56"',
   '"./level-up-mobile-safety-v552.js"',
   '"./src/features/interface/level-up-mobile-safety-v552.js"'
 ]) {

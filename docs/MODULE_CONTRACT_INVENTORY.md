@@ -27,8 +27,8 @@
 7. `key-run-refinement.js`
 8. `weekly-avatar-polish.js`
 9. `incorrect-order-feedback.js`
-10. `compact-desktop-layout.js`
-11. `clean-topbar.js`
+10. `src/features/interface/compact-desktop-layout.js`
+11. `src/features/interface/clean-topbar.js`
 12. `even-progress-rail.js`
 13. `mastery-feedback.js`
 14. `lesson-side-launcher.js`
@@ -59,8 +59,8 @@
 6. `key-run-refinement.js`
 7. `weekly-avatar-polish.js`
 8. `incorrect-order-feedback.js`
-9. `compact-desktop-layout.js`
-10. `clean-topbar.js`
+9. `src/features/interface/compact-desktop-layout.js`
+10. `src/features/interface/clean-topbar.js`
 11. `even-progress-rail.js`
 12. `mastery-feedback.js`
 13. `lesson-side-launcher.js`
@@ -89,14 +89,14 @@
 - `achievement-sharing-router-v3.js` — risk 8; 0 engine globals; 0 storage operations.
 - `src/features/interface/level-up-mobile-safety-v552.js` — risk 8; 0 engine globals; 0 storage operations.
 - `economy-tracking-phase6-v1.js` — risk 10; 0 engine globals; 0 storage operations.
-- `compact-desktop-layout.js` — risk 11; 1 engine globals; 0 storage operations.
+- `src/features/interface/compact-desktop-layout.js` — risk 11; 1 engine globals; 0 storage operations.
 - `avatar-collection-summary-v1.js` — risk 12; 0 engine globals; 2 storage operations.
 - `avatar-collection-tabs-phase6-1-v1.js` — risk 12; 0 engine globals; 0 storage operations.
 - `collection-key-translation-hotfix.js` — risk 12; 2 engine globals; 0 storage operations.
 - `src/features/audio/pronunciation-release-control.js` — risk 12; 2 engine globals; 0 storage operations.
 - `avatar-artwork-registry-v554.js` — risk 13; 0 engine globals; 2 storage operations.
-- `clean-topbar.js` — risk 14; 2 engine globals; 0 storage operations.
 - `even-progress-rail.js` — risk 14; 3 engine globals; 0 storage operations.
+- `src/features/interface/clean-topbar.js` — risk 14; 2 engine globals; 0 storage operations.
 - `popup-governor-v1.js` — risk 17; 2 engine globals; 0 storage operations.
 - `level-avatar-rewards-v1.js` — risk 25; 1 engine globals; 4 storage operations.
 - `avatar-progression-hotfix-v551.js` — risk 34; 5 engine globals; 0 storage operations.
@@ -244,10 +244,10 @@
 | `__salitaQuestAvatarUnlockCelebrationV3Installed` | avatar-unlock-celebration-v1.js |
 | `__salitaQuestBadgeCatalogueV2Installed` | badge-catalogue-v2.js |
 | `__salitaQuestBadgeChestV2Installed` | badge-chest-v2.js |
-| `__salitaQuestCleanTopbarInstalled` | clean-topbar.js |
+| `__salitaQuestCleanTopbarInstalled` | src/features/interface/clean-topbar.js |
 | `__salitaQuestCollectionKeyTranslationHotfixV2` | collection-key-translation-hotfix.js |
 | `__salitaQuestCollectionsNavigationV551Installed` | avatar-progression-hotfix-v551.js |
-| `__salitaQuestCompactDesktopInstalled` | compact-desktop-layout.js |
+| `__salitaQuestCompactDesktopInstalled` | src/features/interface/compact-desktop-layout.js |
 | `__salitaQuestDailyGoalRefinementInstalled` | daily-goal-refinement.js |
 | `__salitaQuestEvenProgressRailInstalled` | even-progress-rail.js |
 | `__salitaQuestHomeRewardCoordinatorInstalled` | home-reward-coordinator.js |
@@ -348,7 +348,7 @@
 | `homeView` | badge-catalogue-v2.js, home-reward-coordinator.js, key-run-refinement.js, level-progression-v2.js, popup-governor-v1.js, weekly-avatar-polish.js |
 | `questChest` | app.js, collection-key-translation-hotfix.js, key-run-refinement.js, weekly-avatar-chest.js, weekly-avatar-polish.js, weekly-avatar-shard-rewards-v1.js |
 | `feedbackBox` | app.js, exercise-fixes-v545.js, lesson-side-launcher.js, mobile-session-refinement.js, ui-quality-fixes.js |
-| `audioBtn` | app.js, bisaya-app-loader.js, compact-desktop-layout.js, lesson-side-launcher.js |
+| `audioBtn` | app.js, bisaya-app-loader.js, lesson-side-launcher.js, src/features/interface/compact-desktop-layout.js |
 | `badgesView` | avatar-progression-hotfix-v551.js, badge-chest-v2.js, desktop-navigation-refinement.js, social-connections-v2.js |
 | `questChestTitle` | app.js, daily-goal-refinement.js, ui-quality-fixes.js, weekly-avatar-polish.js |
 | `sentenceBuilder` | app.js, exercise-fixes-v545.js, incorrect-order-feedback.js, ui-quality-fixes.js |
@@ -356,12 +356,12 @@
 | `answerInput` | app.js, exercise-fixes-v545.js, ui-quality-fixes.js |
 | `badgeShelf` | app.js, badge-catalogue-v2.js, badge-chest-v2.js |
 | `builtSentence` | app.js, exercise-fixes-v545.js, incorrect-order-feedback.js |
-| `lessonCard` | app.js, compact-desktop-layout.js, lesson-side-launcher.js |
+| `lessonCard` | app.js, lesson-side-launcher.js, src/features/interface/compact-desktop-layout.js |
 | `lessonModule` | adaptive-scenarios.js, app.js, bisaya-review-regions.js |
 | `masteryMilestones` | app.js, even-progress-rail.js, progression-v54.js |
-| `masteryNextRegion` | app.js, clean-topbar.js, progression-v54.js |
-| `masteryNextText` | app.js, clean-topbar.js, progression-v54.js |
-| `masteryRailTitle` | app.js, clean-topbar.js, progression-v54.js |
+| `masteryNextRegion` | app.js, progression-v54.js, src/features/interface/clean-topbar.js |
+| `masteryNextText` | app.js, progression-v54.js, src/features/interface/clean-topbar.js |
+| `masteryRailTitle` | app.js, progression-v54.js, src/features/interface/clean-topbar.js |
 | `mobileViewTitle` | app.js, avatar-progression-hotfix-v551.js, desktop-navigation-refinement.js |
 | `nextBtn` | app.js, exercise-fixes-v545.js, lesson-side-launcher.js |
 | `questChestText` | app.js, daily-goal-refinement.js, weekly-avatar-polish.js |
@@ -386,7 +386,7 @@
 | `sessionCompleteTitle` | adaptive-scenarios.js, app.js |
 | `skillTree` | app.js, bisaya-review-regions.js |
 | `startBossBtn` | app.js, bisaya-review-regions.js |
-| `structureBox` | app.js, compact-desktop-layout.js |
+| `structureBox` | app.js, src/features/interface/compact-desktop-layout.js |
 | `voiceStatus` | app.js, bisaya-app-loader.js |
 
 ## Migration rules

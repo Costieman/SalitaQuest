@@ -13,6 +13,7 @@ for (const file of [
   "ui-quality-fixes.js",
   "incorrect-order-feedback.js",
   "compact-desktop-layout.js",
+  "src/features/interface/compact-desktop-layout.js",
   "mastery-feedback.js",
   "lesson-side-launcher.js",
   "mobile-session-refinement.js",

@@ -1,0 +1,54 @@
+name: Validate desktop shell module extraction
+
+on:
+  pull_request:
+    paths:
+      - "compact-desktop-layout.js"
+      - "clean-topbar.js"
+      - "src/features/interface/compact-desktop-layout.js"
+      - "src/features/interface/clean-topbar.js"
+      - "src/config/course-manifest.js"
+      - "mobile-refresh.html"
+      - "service-worker.js"
+      - "scripts/validate-desktop-shell-module-extraction.mjs"
+      - "scripts/validate-ui-quality.mjs"
+      - "scripts/validate-home-dashboard.mjs"
+      - "scripts/generate-module-contract-inventory-v2.mjs"
+      - "src/config/module-contracts.generated.json"
+      - "docs/MODULE_CONTRACT_INVENTORY.md"
+      - ".github/workflows/validate-desktop-shell-module-extraction.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "compact-desktop-layout.js"
+      - "clean-topbar.js"
+      - "src/features/interface/compact-desktop-layout.js"
+      - "src/features/interface/clean-topbar.js"
+      - "src/config/course-manifest.js"
+      - "mobile-refresh.html"
+      - "service-worker.js"
+      - "scripts/validate-desktop-shell-module-extraction.mjs"
+      - "scripts/validate-ui-quality.mjs"
+      - "scripts/validate-home-dashboard.mjs"
+      - "scripts/generate-module-contract-inventory-v2.mjs"
+      - "src/config/module-contracts.generated.json"
+      - "docs/MODULE_CONTRACT_INVENTORY.md"
+      - ".github/workflows/validate-desktop-shell-module-extraction.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - run: node scripts/validate-desktop-shell-module-extraction.mjs
+      - run: node scripts/validate-ui-quality.mjs
+      - run: node scripts/validate-home-dashboard.mjs
+      - run: node scripts/generate-module-contract-inventory-v2.mjs --check
+      - run: git diff --check

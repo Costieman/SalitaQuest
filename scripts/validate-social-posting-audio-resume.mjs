@@ -149,8 +149,8 @@ for (const [htmlFile, courseId] of [["app.html", "tagalog"], ["bisaya.html", "ce
 
 const worker = read("service-worker.js");
 requireMarkers(worker, [
-  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-1-first-module-extraction-r54"',
-  'const CACHE_NAME = "salita-quest-v5-6-2-pronunciation-module-extraction-r55"',
+  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-2-pronunciation-module-extraction-r55"',
+  'const CACHE_NAME = "salita-quest-v5-6-3-desktop-shell-extraction-r56"',
   '"./badge-layout-v3.css"',
   '"./badge-chest-v2.js"',
   '"./badge-chest-v2.css"',
