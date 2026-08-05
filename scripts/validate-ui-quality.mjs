@@ -12,6 +12,8 @@ const requireMarkers = (source, markers, label) => markers.forEach(marker => {
 for (const file of [
   "ui-quality-fixes.js",
   "incorrect-order-feedback.js",
+  "src/adapters/exercise/incorrect-order-feedback-runtime-v1.js",
+  "src/features/exercise/incorrect-order-feedback.js",
   "compact-desktop-layout.js",
   "src/features/interface/compact-desktop-layout.js",
   "mastery-feedback.js",
@@ -38,11 +40,11 @@ requireMarkers(read("ui-quality-fixes.js"), [
   "Direct translation"
 ], "Shared UI runtime");
 
-requireMarkers(read("incorrect-order-feedback.js"), [
+requireMarkers(read("src/features/exercise/incorrect-order-feedback.js"), [
   "captureSelectedTilePositions",
   "animateCorrectSentenceOrder",
-  "sentenceBuilderState.selected = orderedIds",
-  "renderFeedbackWithCorrectSentenceOrder"
+  "runtime.applyCorrectOrder(orderedIds)",
+  "aroundRenderFeedback"
 ], "Incorrect-order feedback");
 
 const mastery = read("mastery-feedback.js");
@@ -108,6 +110,8 @@ requireMarkers(serviceWorker, [
   'const CACHE_NAME = "salita-quest-',
   '"./ui-quality-fixes.js"',
   '"./incorrect-order-feedback.js"',
+  '"./src/adapters/exercise/incorrect-order-feedback-runtime-v1.js"',
+  '"./src/features/exercise/incorrect-order-feedback.js"',
   '"./mastery-feedback.js"',
   '"./lesson-side-launcher.js"',
   '"./mobile-session-refinement.js"'

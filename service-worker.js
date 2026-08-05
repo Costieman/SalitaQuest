@@ -1,5 +1,5 @@
-const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-16-avatar-hotfix-adapters-extraction-r69";
-const CACHE_NAME = "salita-quest-v5-6-17-coin-shop-badge-adapter-extraction-r70";
+const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-17-coin-shop-badge-adapter-extraction-r70";
+const CACHE_NAME = "salita-quest-v5-6-18-incorrect-order-feedback-adapter-extraction-r71";
 const AVATAR_CASE_DISPLAY_HOTFIX = "2026-08-01-compact-display-share-stack-1";
 const TOPBAR_WORLD_PROGRESS_HOTFIX = "2026-08-01-separated-heading-rail-1";
 const SHARE_IMAGE_TRANSPORT_DELIVERY = "2026-08-02-direct-loader-1";
@@ -17,7 +17,9 @@ const CORE_FILES = [
 const APP_ENHANCEMENTS = [
   "./bisaya-app-loader.js", "./bisaya-review-regions.js", "./bisaya-review-regions.css",
   "./ui-quality-fixes.js", "./ui-quality-fixes.css", "./ui-answer-breakdown.css",
-  "./incorrect-order-feedback.js", "./incorrect-order-feedback.css", "./compact-desktop-layout.js",
+  "./incorrect-order-feedback.js", "./incorrect-order-feedback.css",
+  "./src/adapters/exercise/incorrect-order-feedback-runtime-v1.js", "./src/features/exercise/incorrect-order-feedback.js",
+  "./compact-desktop-layout.js",
   "./src/features/interface/compact-desktop-layout.js",
   "./compact-desktop-layout.css", "./compact-home-dashboard.css", "./weekly-avatar-chest.js",
   "./weekly-avatar-polish.js", "./weekly-avatar-chest.css", "./daily-goal-refinement.js",

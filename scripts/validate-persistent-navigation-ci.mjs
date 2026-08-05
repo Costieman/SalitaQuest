@@ -86,7 +86,7 @@ for(const htmlFile of ["app.html","bisaya.html"]){
 
 requireMarkers(worker,[
   'const PREVIOUS_CACHE_NAME = "salita-quest-v5-5-9-avatar-case-r51"',
-  'const CACHE_NAME = "salita-quest-v5-6-16-avatar-hotfix-adapters-extraction-r69"',
+  'const CACHE_NAME = "salita-quest-v5-6-17-coin-shop-badge-adapter-extraction-r70"',
   '"./desktop-navigation-refinement.js"',
   '"./desktop-navigation-refinement.css"'
 ],"Persistent navigation offline release");

@@ -4,11 +4,11 @@
 
 ## Scope
 
-- Runtime files: **62**
-- Dependency edges: **159**
+- Runtime files: **64**
+- Dependency edges: **163**
 - Storage contracts: **21**
 - Salita custom events: **36**
-- Extraction candidates: **21**
+- Extraction candidates: **23**
 - Adapter stage: **23**
 - High-coupling: **7**
 - Held infrastructure/loaders: **11**
@@ -26,15 +26,50 @@
 6. `weekly-avatar-chest.js`
 7. `key-run-refinement.js`
 8. `weekly-avatar-polish.js`
-9. `incorrect-order-feedback.js`
-10. `src/features/interface/compact-desktop-layout.js`
-11. `src/features/interface/clean-topbar.js`
-12. `src/features/progression/even-progress-rail.js`
-13. `mastery-feedback.js`
-14. `lesson-side-launcher.js`
-15. `mobile-session-refinement.js`
-16. `src/features/interface/popup-governor-v1.js`
-17. `profile-app.js`
+9. `src/adapters/exercise/incorrect-order-feedback-runtime-v1.js`
+10. `src/features/exercise/incorrect-order-feedback.js`
+11. `incorrect-order-feedback.js`
+12. `src/features/interface/compact-desktop-layout.js`
+13. `src/features/interface/clean-topbar.js`
+14. `src/features/progression/even-progress-rail.js`
+15. `mastery-feedback.js`
+16. `lesson-side-launcher.js`
+17. `mobile-session-refinement.js`
+18. `src/features/interface/popup-governor-v1.js`
+19. `profile-app.js`
+20. `profile-emblem-control.js`
+21. `adaptive-scenarios.js`
+22. `level-progression-v2.js`
+23. `src/features/interface/level-up-mobile-safety-v552.js`
+24. `desktop-navigation-refinement.js`
+25. `src/features/audio/pronunciation-release-control.js`
+26. `src/features/progression/home-reward-coordinator.js`
+27. `badge-catalogue-v2.js`
+28. `badge-chest-v2.js`
+29. `placement-onboarding-v1.js`
+30. `social-connections-v2.js`
+31. `achievement-sharing-v4.js`
+32. `src/features/interface/collection-key-translation-hotfix.js`
+
+### Cebuano
+
+1. `app.js`
+2. `bisaya-app-loader.js`
+3. `ui-quality-fixes.js`
+4. `daily-goal-refinement.js`
+5. `weekly-avatar-chest.js`
+6. `key-run-refinement.js`
+7. `weekly-avatar-polish.js`
+8. `src/adapters/exercise/incorrect-order-feedback-runtime-v1.js`
+9. `src/features/exercise/incorrect-order-feedback.js`
+10. `incorrect-order-feedback.js`
+11. `src/features/interface/compact-desktop-layout.js`
+12. `src/features/interface/clean-topbar.js`
+13. `src/features/progression/even-progress-rail.js`
+14. `mastery-feedback.js`
+15. `lesson-side-launcher.js`
+16. `mobile-session-refinement.js`
+17. `src/features/interface/popup-governor-v1.js`
 18. `profile-emblem-control.js`
 19. `adaptive-scenarios.js`
 20. `level-progression-v2.js`
@@ -47,37 +82,6 @@
 27. `placement-onboarding-v1.js`
 28. `social-connections-v2.js`
 29. `achievement-sharing-v4.js`
-30. `src/features/interface/collection-key-translation-hotfix.js`
-
-### Cebuano
-
-1. `app.js`
-2. `bisaya-app-loader.js`
-3. `ui-quality-fixes.js`
-4. `daily-goal-refinement.js`
-5. `weekly-avatar-chest.js`
-6. `key-run-refinement.js`
-7. `weekly-avatar-polish.js`
-8. `incorrect-order-feedback.js`
-9. `src/features/interface/compact-desktop-layout.js`
-10. `src/features/interface/clean-topbar.js`
-11. `src/features/progression/even-progress-rail.js`
-12. `mastery-feedback.js`
-13. `lesson-side-launcher.js`
-14. `mobile-session-refinement.js`
-15. `src/features/interface/popup-governor-v1.js`
-16. `profile-emblem-control.js`
-17. `adaptive-scenarios.js`
-18. `level-progression-v2.js`
-19. `src/features/interface/level-up-mobile-safety-v552.js`
-20. `desktop-navigation-refinement.js`
-21. `src/features/audio/pronunciation-release-control.js`
-22. `src/features/progression/home-reward-coordinator.js`
-23. `badge-catalogue-v2.js`
-24. `badge-chest-v2.js`
-25. `placement-onboarding-v1.js`
-26. `social-connections-v2.js`
-27. `achievement-sharing-v4.js`
 
 ## Recommended extraction sequence
 
@@ -89,9 +93,11 @@
 - `coin-avatar-shop-badges-v1.js` — risk 6; 0 engine globals; 0 storage operations.
 - `src/features/avatar/avatar-progression-migration-v1.js` — risk 7; 1 engine globals; 0 storage operations.
 - `avatar-progression-hotfix-v551.js` — risk 8; 0 engine globals; 0 storage operations.
+- `incorrect-order-feedback.js` — risk 8; 0 engine globals; 0 storage operations.
 - `src/features/interface/level-up-mobile-safety-v552.js` — risk 8; 0 engine globals; 0 storage operations.
 - `src/features/sharing/achievement-sharing-router-v3.js` — risk 8; 0 engine globals; 0 storage operations.
 - `src/features/economy/economy-tracking-phase6-v1.js` — risk 10; 0 engine globals; 0 storage operations.
+- `src/features/exercise/incorrect-order-feedback.js` — risk 10; 1 engine globals; 0 storage operations.
 - `src/features/avatar/avatar-progression-model-v551.js` — risk 11; 1 engine globals; 0 storage operations.
 - `src/features/interface/compact-desktop-layout.js` — risk 11; 1 engine globals; 0 storage operations.
 - `src/features/audio/pronunciation-release-control.js` — risk 12; 2 engine globals; 0 storage operations.
@@ -108,11 +114,11 @@
 ### Phase B — introduce an adapter before relocation
 
 - `src/adapters/badges/coin-shop-badge-runtime-v1.js` — 1 engine globals; 1 exported browser APIs; 0 DOM hooks.
-- `incorrect-order-feedback.js` — 6 engine globals; 1 exported browser APIs; 3 DOM hooks.
 - `long-term-badges-v1.js` — 4 engine globals; 1 exported browser APIs; 0 DOM hooks.
 - `avatar-case-v1.js` — 0 engine globals; 2 exported browser APIs; 12 DOM hooks.
 - `coin-testing-grant-100k-v1.js` — 2 engine globals; 1 exported browser APIs; 0 DOM hooks.
 - `coin-testing-grant-50k-phase5-v1.js` — 2 engine globals; 1 exported browser APIs; 0 DOM hooks.
+- `src/adapters/exercise/incorrect-order-feedback-runtime-v1.js` — 6 engine globals; 1 exported browser APIs; 0 DOM hooks.
 - `avatar-collection-screen-v1.js` — 0 engine globals; 2 exported browser APIs; 12 DOM hooks.
 - `badge-chest-v2.js` — 5 engine globals; 2 exported browser APIs; 12 DOM hooks.
 - `src/features/progression/home-reward-coordinator.js` — 8 engine globals; 1 exported browser APIs; 5 DOM hooks.
@@ -187,6 +193,7 @@
 | `badge-chest-v2.js` | collection-and-rewards | 2 | 29 | 5 | 1/2 | 0 | 12 | 0 |
 | `src/features/progression/home-reward-coordinator.js` | progression | 2 | 29 | 8 | 0/1 | 0 | 5 | 0 |
 | `coin-avatar-shop-topbar-v1.js` | runtime-loader | 2 | 28 | 0 | 0/1 | 0 | 2 | 5 |
+| `src/adapters/exercise/incorrect-order-feedback-runtime-v1.js` | feature-extension | 2 | 28 | 6 | 4/1 | 0 | 0 | 0 |
 | `avatar-case-v1.js` | collection-and-rewards | 2 | 27 | 0 | 3/2 | 3 | 12 | 0 |
 | `coin-testing-grant-100k-v1.js` | collection-and-rewards | 2 | 27 | 2 | 3/1 | 3 | 0 | 0 |
 | `coin-testing-grant-50k-phase5-v1.js` | collection-and-rewards | 2 | 27 | 2 | 3/1 | 3 | 0 | 0 |
@@ -194,7 +201,6 @@
 | `src/features/avatar/level-avatar-rewards-v1.js` | collection-and-rewards | 2 | 25 | 1 | 2/2 | 4 | 0 | 0 |
 | `long-term-badges-v1.js` | collection-and-rewards | 2 | 24 | 4 | 3/1 | 2 | 0 | 0 |
 | `achievement-sharing-avatar-bridge-v1.js` | runtime-loader | 2 | 23 | 0 | 4/2 | 2 | 4 | 1 |
-| `incorrect-order-feedback.js` | feature-extension | 2 | 23 | 6 | 0/1 | 0 | 3 | 0 |
 | `src/adapters/badges/coin-shop-badge-runtime-v1.js` | collection-and-rewards | 2 | 19 | 1 | 5/1 | 2 | 0 | 0 |
 
 ## Storage compatibility
@@ -255,6 +261,7 @@
 | `__salitaQuestDailyGoalRefinementInstalled` | daily-goal-refinement.js |
 | `__salitaQuestEvenProgressRailInstalled` | src/features/progression/even-progress-rail.js |
 | `__salitaQuestHomeRewardCoordinatorInstalled` | src/features/progression/home-reward-coordinator.js |
+| `__salitaQuestIncorrectOrderFeedbackCompatibilityLoading` | incorrect-order-feedback.js |
 | `__salitaQuestIncorrectOrderFeedbackInstalled` | incorrect-order-feedback.js |
 | `__salitaQuestKeyRunRefinementInstalled` | key-run-refinement.js |
 | `__salitaQuestLessonSideLauncherInstalled` | lesson-side-launcher.js |
@@ -294,6 +301,8 @@
 | `SalitaCoinShopBadgeRuntimeV1` | src/adapters/badges/coin-shop-badge-runtime-v1.js |
 | `SalitaEconomyTrackingPhase6` | src/features/economy/economy-tracking-phase6-v1.js |
 | `SalitaFacebookShareLink` | src/features/sharing/facebook-share-link-v1.js |
+| `SalitaIncorrectOrderFeedbackRuntimeV1` | src/adapters/exercise/incorrect-order-feedback-runtime-v1.js |
+| `SalitaIncorrectOrderFeedbackV1` | src/features/exercise/incorrect-order-feedback.js |
 | `SalitaLevelAvatarRewards` | src/features/avatar/level-avatar-rewards-v1.js |
 | `SalitaLevelProgression` | level-progression-v2.js |
 | `SalitaLevelUpMobileSafety` | src/features/interface/level-up-mobile-safety-v552.js |
@@ -359,11 +368,11 @@
 | `audioBtn` | app.js, bisaya-app-loader.js, lesson-side-launcher.js, src/features/interface/compact-desktop-layout.js |
 | `badgesView` | badge-chest-v2.js, desktop-navigation-refinement.js, social-connections-v2.js, src/adapters/navigation/avatar-collections-navigation-v551.js |
 | `questChestTitle` | app.js, daily-goal-refinement.js, ui-quality-fixes.js, weekly-avatar-polish.js |
-| `sentenceBuilder` | app.js, exercise-fixes-v545.js, incorrect-order-feedback.js, ui-quality-fixes.js |
+| `sentenceBuilder` | app.js, exercise-fixes-v545.js, src/features/exercise/incorrect-order-feedback.js, ui-quality-fixes.js |
 | `settingsView` | desktop-navigation-refinement.js, placement-onboarding-v1.js, social-connections-v2.js, src/adapters/navigation/avatar-collections-navigation-v551.js |
 | `answerInput` | app.js, exercise-fixes-v545.js, ui-quality-fixes.js |
 | `badgeShelf` | app.js, badge-catalogue-v2.js, badge-chest-v2.js |
-| `builtSentence` | app.js, exercise-fixes-v545.js, incorrect-order-feedback.js |
+| `builtSentence` | app.js, exercise-fixes-v545.js, src/features/exercise/incorrect-order-feedback.js |
 | `lessonCard` | app.js, lesson-side-launcher.js, src/features/interface/compact-desktop-layout.js |
 | `lessonModule` | adaptive-scenarios.js, app.js, bisaya-review-regions.js |
 | `masteryMilestones` | app.js, progression-v54.js, src/features/progression/even-progress-rail.js |
