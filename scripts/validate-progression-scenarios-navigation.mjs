@@ -226,8 +226,8 @@ for (const [htmlFile, courseId] of [["app.html", "tagalog"], ["bisaya.html", "ce
 
 const serviceWorker = read("service-worker.js");
 requireMarkers(serviceWorker, [
-  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-8-home-reward-coordinator-extraction-r61"',
-  'const CACHE_NAME = "salita-quest-v5-6-9-facebook-share-link-extraction-r62"',
+  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-9-facebook-share-link-extraction-r62"',
+  'const CACHE_NAME = "salita-quest-v5-6-10-economy-tracking-extraction-r63"',
   '"./even-progress-rail.js"',
   '"./src/features/progression/even-progress-rail.js"',
   '"./world-progress-status.css"',

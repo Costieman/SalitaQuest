@@ -88,7 +88,7 @@
 - `src/features/avatar/avatar-progression-migration-v1.js` — risk 7; 1 engine globals; 0 storage operations.
 - `src/features/interface/level-up-mobile-safety-v552.js` — risk 8; 0 engine globals; 0 storage operations.
 - `src/features/sharing/achievement-sharing-router-v3.js` — risk 8; 0 engine globals; 0 storage operations.
-- `economy-tracking-phase6-v1.js` — risk 10; 0 engine globals; 0 storage operations.
+- `src/features/economy/economy-tracking-phase6-v1.js` — risk 10; 0 engine globals; 0 storage operations.
 - `src/features/interface/compact-desktop-layout.js` — risk 11; 1 engine globals; 0 storage operations.
 - `avatar-collection-summary-v1.js` — risk 12; 0 engine globals; 2 storage operations.
 - `avatar-collection-tabs-phase6-1-v1.js` — risk 12; 0 engine globals; 0 storage operations.
@@ -233,7 +233,7 @@
 | `__salitaCoinAvatarShopTopbarV1Installed` | coin-avatar-shop-topbar-v1.js |
 | `__salitaCoinTestingGrant100kV1Installed` | coin-testing-grant-100k-v1.js |
 | `__salitaCoinTestingGrant50kPhase5V1Installed` | coin-testing-grant-50k-phase5-v1.js |
-| `__salitaEconomyTrackingPhase6V2Installed` | economy-tracking-phase6-v1.js |
+| `__salitaEconomyTrackingPhase6V2Installed` | src/features/economy/economy-tracking-phase6-v1.js |
 | `__salitaFacebookShareLinkV1Installed` | src/features/sharing/facebook-share-link-v1.js |
 | `__salitaQuestAchievementSharingAvatarCompatibilityV558Installed` | achievement-sharing-avatar-bridge-v1.js |
 | `__salitaQuestAchievementSharingRouterV3Installed` | src/features/sharing/achievement-sharing-router-v3.js |
@@ -284,7 +284,7 @@
 | `SalitaAvatarModel` | avatar-progression-hotfix-v551.js, coin-avatar-shop-reveal-v1.js |
 | `SalitaAvatarUnlockCelebration` | avatar-unlock-celebration-v1.js |
 | `SalitaCoinAvatarShop` | coin-avatar-shard-shop-v1.js |
-| `SalitaEconomyTrackingPhase6` | economy-tracking-phase6-v1.js |
+| `SalitaEconomyTrackingPhase6` | src/features/economy/economy-tracking-phase6-v1.js |
 | `SalitaFacebookShareLink` | src/features/sharing/facebook-share-link-v1.js |
 | `SalitaLevelAvatarRewards` | level-avatar-rewards-v1.js |
 | `SalitaLevelProgression` | level-progression-v2.js |
@@ -328,7 +328,7 @@
 | `salita:coin-shop-badges-ready` | coin-avatar-shop-badges-v1.js | — |
 | `salita:course-progress-restored` | — | level-avatar-rewards-v1.js |
 | `salita:daily-quests-rendered` | — | collection-key-translation-hotfix.js |
-| `salita:economy-tracking-ready` | economy-tracking-phase6-v1.js | — |
+| `salita:economy-tracking-ready` | src/features/economy/economy-tracking-phase6-v1.js | — |
 | `salita:economy-v2-phase1-ready` | daily-goal-refinement.js | — |
 | `salita:level-progression-saved` | level-progression-v2.js | — |
 | `salita:level-updated` | level-progression-v2.js | achievement-sharing-v4.js, level-avatar-rewards-v1.js |

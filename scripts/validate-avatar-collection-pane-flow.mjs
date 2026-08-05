@@ -2,7 +2,7 @@ import fs from 'node:fs';
 
 const js = fs.readFileSync('avatar-collection-tabs-phase6-1-v1.js','utf8');
 const css = fs.readFileSync('avatar-collection-tabs-phase6-1-v1.css','utf8');
-const economy = fs.readFileSync('economy-tracking-phase6-v1.js','utf8');
+const economy = fs.readFileSync('src/features/economy/economy-tracking-phase6-v1.js','utf8');
 const loader = fs.readFileSync('coin-avatar-shop-topbar-v1.js','utf8');
 
 const hotfixIndex = loader.indexOf('avatar-case-mobile-flow-hotfix-v1.css?v=5.7.2');

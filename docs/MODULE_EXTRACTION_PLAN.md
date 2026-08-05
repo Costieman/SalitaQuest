@@ -64,3 +64,5 @@ Before extracting these files, introduce an explicit engine adapter that owns ac
 7. `home-reward-coordinator.js` — completed as `src/features/progression/home-reward-coordinator.js`, with the root compatibility URL retained through r61.
 
 8. `facebook-share-link-v1.js` — completed as `src/features/sharing/facebook-share-link-v1.js`, with the root compatibility URL retained through r62.
+
+9. `economy-tracking-phase6-v1.js` — completed as `src/features/economy/economy-tracking-phase6-v1.js`, with the root compatibility URL retained through r63.
