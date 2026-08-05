@@ -154,13 +154,13 @@ The recovery page refreshes app caches and service-worker registrations without 
 ### Avatars
 
 - `avatars/canonical/manifest.json` — canonical identity and asset manifest
-- `avatar-catalogue-v1.js` — stable catalogue, aliases and rewards
+- `src/features/avatar/avatar-catalogue-v1.js` — stable catalogue, aliases and rewards (`avatar-catalogue-v1.js` remains a compatibility loader)
 - `avatar-collection-screen-v1.js` — collection and equip controls
 - `avatar-case-v1.js` — four-slot favourite-avatar persistence, picker and ordering
 - `weekly-avatar-shard-rewards-v1.js` — weekly shard rewards
 - `level-avatar-rewards-v1.js` — level milestones
 - `avatar-unlock-celebration-v1.js` — once-only unlock reveals
-- `avatar-progression-migration-v1.js` — additive legacy migration
+- `src/features/avatar/avatar-progression-migration-v1.js` — additive legacy migration (`avatar-progression-migration-v1.js` remains a compatibility loader)
 - `achievement-sharing-avatar-bridge-v1.js` — compatibility-only delegation to the shared controller
 
 ### Badges and sharing

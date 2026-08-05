@@ -52,13 +52,13 @@
 
     assetPromise = (async () => {
       if (!window.SalitaAvatarModel) {
-        await loadScript("catalogue", `./avatar-catalogue-v1.js?v=${RELEASE_VERSION}`, "Avatar catalogue could not be loaded.");
+        await loadScript("catalogue", `./src/features/avatar/avatar-catalogue-v1.js?v=${RELEASE_VERSION}`, "Avatar catalogue could not be loaded.");
       }
       await loadScript("artwork-runtime", `./avatar-artwork-registry-v554.js?v=${RELEASE_VERSION}`, "Avatar artwork resolver could not be loaded.");
       await loadScript("hotfix-runtime", `./avatar-progression-hotfix-v551.js?v=${RELEASE_VERSION}`, "Avatar progression compatibility could not be loaded.");
       await window.SalitaAvatarHotfixReady;
       await window.SalitaAvatarArtworkReady;
-      await loadScript("migration", `./avatar-progression-migration-v1.js?v=${RELEASE_VERSION}`, "Avatar progression migration could not be loaded.");
+      await loadScript("migration", `./src/features/avatar/avatar-progression-migration-v1.js?v=${RELEASE_VERSION}`, "Avatar progression migration could not be loaded.");
       await loadScript("collection", `./avatar-collection-screen-v1.js?v=${RELEASE_VERSION}`, "Avatar collection screen could not be loaded.");
       await loadScript("case", `./avatar-case-v1.js?v=${AVATAR_CASE_VERSION}`, "Avatar Case could not be loaded.");
       await loadScript("weekly", `./weekly-avatar-shard-rewards-v1.js?v=${RELEASE_VERSION}`, "Weekly avatar rewards could not be loaded.");

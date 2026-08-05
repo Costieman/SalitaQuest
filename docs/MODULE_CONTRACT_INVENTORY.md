@@ -83,9 +83,9 @@
 
 ### Phase A — move low-coupling feature files first
 
-- `avatar-catalogue-v1.js` — risk 3; 1 engine globals; 0 storage operations.
+- `src/features/avatar/avatar-catalogue-v1.js` — risk 3; 1 engine globals; 0 storage operations.
 - `facebook-share-link-v1.js` — risk 4; 0 engine globals; 0 storage operations.
-- `avatar-progression-migration-v1.js` — risk 7; 1 engine globals; 0 storage operations.
+- `src/features/avatar/avatar-progression-migration-v1.js` — risk 7; 1 engine globals; 0 storage operations.
 - `achievement-sharing-router-v3.js` — risk 8; 0 engine globals; 0 storage operations.
 - `src/features/interface/level-up-mobile-safety-v552.js` — risk 8; 0 engine globals; 0 storage operations.
 - `economy-tracking-phase6-v1.js` — risk 10; 0 engine globals; 0 storage operations.
@@ -314,7 +314,7 @@
 | `salita:avatar-milestones-awarded` | level-avatar-rewards-v1.js | avatar-unlock-celebration-v1.js |
 | `salita:avatar-milestones-repaired` | level-avatar-rewards-v1.js | — |
 | `salita:avatar-model-hotfixed` | avatar-progression-hotfix-v551.js | — |
-| `salita:avatar-progression-migrated` | avatar-progression-migration-v1.js | — |
+| `salita:avatar-progression-migrated` | src/features/avatar/avatar-progression-migration-v1.js | — |
 | `salita:avatar-progression-ready` | profile-emblem-control.js | avatar-case-v1.js, avatar-collection-summary-v1.js, desktop-navigation-refinement.js |
 | `salita:avatar-random-pools-ready` | coin-avatar-shop-reveal-v1.js | avatar-collection-summary-v1.js |
 | `salita:avatar-sharing-bridge-ready` | achievement-sharing-avatar-bridge-v1.js | — |

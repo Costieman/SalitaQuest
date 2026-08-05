@@ -32,6 +32,7 @@ for (const validator of validators) {
 
 const runtimeFiles = [
   "avatar-catalogue-v1.js",
+  "src/features/avatar/avatar-catalogue-v1.js",
   "avatar-artwork-registry-v554.js",
   "avatar-progression-hotfix-v551.js",
   "profile-app.js",
@@ -49,6 +50,7 @@ const runtimeFiles = [
   "achievement-sharing-router-v3.js",
   "achievement-sharing-avatar-bridge-v1.js",
   "avatar-progression-migration-v1.js",
+  "src/features/avatar/avatar-progression-migration-v1.js",
   "desktop-navigation-refinement.js",
   "src/config/course-manifest.js",
   "src/app/course-bootstrap.js",
@@ -58,7 +60,7 @@ for (const file of runtimeFiles) new vm.Script(read(file), {filename:file});
 
 const sandbox = {};
 vm.createContext(sandbox);
-vm.runInContext(read("avatar-catalogue-v1.js"), sandbox, {filename:"avatar-catalogue-v1.js"});
+vm.runInContext(read("src/features/avatar/avatar-catalogue-v1.js"), sandbox, {filename:"avatar-catalogue-v1.js"});
 const model = sandbox.SalitaAvatarModel;
 if (!model || model.catalogue.length !== 48) fail("The integrated catalogue must contain exactly 48 avatars");
 if (model.manifestPath !== "avatars/canonical/manifest.json") fail("The integrated catalogue must declare the canonical manifest");
@@ -133,8 +135,8 @@ if (!navigation.includes('action:"avatar-collection"')) fail("Persistent navigat
 if (navigation.includes("salitaQuestDesktopNavigationCollapsed")) fail("Persistent navigation retains the obsolete collapsed-sidebar preference");
 
 const serviceWorker = read("service-worker.js");
-if (!serviceWorker.includes('const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-3-desktop-shell-extraction-r56"')) fail("Service worker does not retain the pre-modular release boundary");
-if (!serviceWorker.includes('const CACHE_NAME = "salita-quest-v5-6-4-progress-rail-extraction-r57"')) fail("Service worker cache version is not the modular-bootstrap release");
+if (!serviceWorker.includes('const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-4-progress-rail-extraction-r57"')) fail("Service worker does not retain the pre-modular release boundary");
+if (!serviceWorker.includes('const CACHE_NAME = "salita-quest-v5-6-5-avatar-data-migration-extraction-r58"')) fail("Service worker cache version is not the modular-bootstrap release");
 if (!serviceWorker.includes('const EXPLICIT_SHARING_ROUTER_DELIVERY = "2026-08-02-feed-private-image-router-1"')) fail("Service worker does not advertise the explicit sharing-router update");
 if (!serviceWorker.includes('"./achievement-sharing-router-v2.js"') || !serviceWorker.includes('"./achievement-sharing-router-v2.css"')) fail("Service worker does not precache the sharing compatibility router");
 if (!serviceWorker.includes('"./avatar-case-v1.js"') || !serviceWorker.includes('"./avatar-case-v1.css"')) fail("Service worker does not precache the Avatar Case runtime");

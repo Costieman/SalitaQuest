@@ -821,42 +821,6 @@
       "risk": 27
     },
     {
-      "file": "avatar-catalogue-v1.js",
-      "bytes": 14246,
-      "contexts": [
-        "cebuano",
-        "tagalog"
-      ],
-      "courses": [
-        "cebuano",
-        "tagalog"
-      ],
-      "references": [],
-      "loads": [],
-      "fetches": [],
-      "workers": [],
-      "coreGlobals": [
-        "state"
-      ],
-      "window": {
-        "provides": [],
-        "consumes": []
-      },
-      "storage": [],
-      "dom": {
-        "ids": [],
-        "selectors": [],
-        "datasets": []
-      },
-      "events": {
-        "listens": [],
-        "dispatches": []
-      },
-      "role": "collection-and-rewards",
-      "readiness": "extraction-candidate",
-      "risk": 3
-    },
-    {
       "file": "avatar-collection-screen-v1.js",
       "bytes": 13858,
       "contexts": [
@@ -1119,46 +1083,6 @@
       "role": "collection-and-rewards",
       "readiness": "extraction-candidate",
       "risk": 34
-    },
-    {
-      "file": "avatar-progression-migration-v1.js",
-      "bytes": 9067,
-      "contexts": [
-        "cebuano",
-        "tagalog"
-      ],
-      "courses": [
-        "cebuano",
-        "tagalog"
-      ],
-      "references": [],
-      "loads": [],
-      "fetches": [],
-      "workers": [],
-      "coreGlobals": [
-        "state"
-      ],
-      "window": {
-        "provides": [],
-        "consumes": [
-          "SalitaAvatarModel"
-        ]
-      },
-      "storage": [],
-      "dom": {
-        "ids": [],
-        "selectors": [],
-        "datasets": []
-      },
-      "events": {
-        "listens": [],
-        "dispatches": [
-          "salita:avatar-progression-migrated"
-        ]
-      },
-      "role": "collection-and-rewards",
-      "readiness": "extraction-candidate",
-      "risk": 7
     },
     {
       "file": "avatar-unlock-celebration-v1.js",
@@ -3041,7 +2965,7 @@
     },
     {
       "file": "profile-app.js",
-      "bytes": 15910,
+      "bytes": 15930,
       "contexts": [
         "cebuano",
         "tagalog"
@@ -3051,12 +2975,12 @@
         "tagalog"
       ],
       "references": [
-        "avatar-catalogue-v1.js",
-        "bisaya-review-regions.js"
+        "bisaya-review-regions.js",
+        "src/features/avatar/avatar-catalogue-v1.js"
       ],
       "loads": [
-        "avatar-catalogue-v1.js",
-        "bisaya-review-regions.js"
+        "bisaya-review-regions.js",
+        "src/features/avatar/avatar-catalogue-v1.js"
       ],
       "fetches": [],
       "workers": [],
@@ -3231,7 +3155,7 @@
     },
     {
       "file": "profile-emblem-control.js",
-      "bytes": 9125,
+      "bytes": 9165,
       "contexts": [
         "cebuano",
         "tagalog"
@@ -3245,16 +3169,16 @@
         "achievement-sharing-router-v2.js",
         "avatar-artwork-registry-v554.js",
         "avatar-case-v1.js",
-        "avatar-catalogue-v1.js",
         "avatar-collection-screen-v1.js",
         "avatar-progression-hotfix-v551.js",
-        "avatar-progression-migration-v1.js",
         "avatar-unlock-celebration-v1.js",
         "coin-avatar-shard-shop-v1.js",
         "coin-avatar-shop-badges-v1.js",
         "coin-avatar-shop-topbar-v1.js",
         "level-avatar-rewards-v1.js",
         "long-term-badges-v1.js",
+        "src/features/avatar/avatar-catalogue-v1.js",
+        "src/features/avatar/avatar-progression-migration-v1.js",
         "weekly-avatar-shard-rewards-v1.js"
       ],
       "loads": [
@@ -3262,16 +3186,16 @@
         "achievement-sharing-router-v2.js",
         "avatar-artwork-registry-v554.js",
         "avatar-case-v1.js",
-        "avatar-catalogue-v1.js",
         "avatar-collection-screen-v1.js",
         "avatar-progression-hotfix-v551.js",
-        "avatar-progression-migration-v1.js",
         "avatar-unlock-celebration-v1.js",
         "coin-avatar-shard-shop-v1.js",
         "coin-avatar-shop-badges-v1.js",
         "coin-avatar-shop-topbar-v1.js",
         "level-avatar-rewards-v1.js",
         "long-term-badges-v1.js",
+        "src/features/avatar/avatar-catalogue-v1.js",
+        "src/features/avatar/avatar-progression-migration-v1.js",
         "weekly-avatar-shard-rewards-v1.js"
       ],
       "fetches": [],
@@ -3385,7 +3309,7 @@
     },
     {
       "file": "service-worker.js",
-      "bytes": 11607,
+      "bytes": 11723,
       "contexts": [
         "worker"
       ],
@@ -3433,6 +3357,8 @@
         "src/app/course-bootstrap.js",
         "src/config/course-manifest.js",
         "src/features/audio/pronunciation-release-control.js",
+        "src/features/avatar/avatar-catalogue-v1.js",
+        "src/features/avatar/avatar-progression-migration-v1.js",
         "src/features/interface/clean-topbar.js",
         "src/features/interface/compact-desktop-layout.js",
         "src/features/interface/level-up-mobile-safety-v552.js",
@@ -3785,6 +3711,82 @@
       "role": "audio",
       "readiness": "extraction-candidate",
       "risk": 12
+    },
+    {
+      "file": "src/features/avatar/avatar-catalogue-v1.js",
+      "bytes": 14246,
+      "contexts": [
+        "cebuano",
+        "tagalog"
+      ],
+      "courses": [
+        "cebuano",
+        "tagalog"
+      ],
+      "references": [],
+      "loads": [],
+      "fetches": [],
+      "workers": [],
+      "coreGlobals": [
+        "state"
+      ],
+      "window": {
+        "provides": [],
+        "consumes": []
+      },
+      "storage": [],
+      "dom": {
+        "ids": [],
+        "selectors": [],
+        "datasets": []
+      },
+      "events": {
+        "listens": [],
+        "dispatches": []
+      },
+      "role": "collection-and-rewards",
+      "readiness": "extraction-candidate",
+      "risk": 3
+    },
+    {
+      "file": "src/features/avatar/avatar-progression-migration-v1.js",
+      "bytes": 9067,
+      "contexts": [
+        "cebuano",
+        "tagalog"
+      ],
+      "courses": [
+        "cebuano",
+        "tagalog"
+      ],
+      "references": [],
+      "loads": [],
+      "fetches": [],
+      "workers": [],
+      "coreGlobals": [
+        "state"
+      ],
+      "window": {
+        "provides": [],
+        "consumes": [
+          "SalitaAvatarModel"
+        ]
+      },
+      "storage": [],
+      "dom": {
+        "ids": [],
+        "selectors": [],
+        "datasets": []
+      },
+      "events": {
+        "listens": [],
+        "dispatches": [
+          "salita:avatar-progression-migrated"
+        ]
+      },
+      "role": "collection-and-rewards",
+      "readiness": "extraction-candidate",
+      "risk": 7
     },
     {
       "file": "src/features/interface/clean-topbar.js",
@@ -4512,14 +4514,6 @@
       ]
     },
     {
-      "from": "avatar-catalogue-v1.js",
-      "to": "app.js",
-      "type": "core-globals",
-      "symbols": [
-        "state"
-      ]
-    },
-    {
       "from": "avatar-collection-screen-v1.js",
       "to": "avatar-artwork-registry-v554.js",
       "type": "window-api",
@@ -4577,30 +4571,6 @@
         "renderBadges",
         "state",
         "switchView"
-      ]
-    },
-    {
-      "from": "avatar-progression-migration-v1.js",
-      "to": "app.js",
-      "type": "core-globals",
-      "symbols": [
-        "state"
-      ]
-    },
-    {
-      "from": "avatar-progression-migration-v1.js",
-      "to": "avatar-progression-hotfix-v551.js",
-      "type": "window-api",
-      "symbols": [
-        "SalitaAvatarModel"
-      ]
-    },
-    {
-      "from": "avatar-progression-migration-v1.js",
-      "to": "coin-avatar-shop-reveal-v1.js",
-      "type": "window-api",
-      "symbols": [
-        "SalitaAvatarModel"
       ]
     },
     {
@@ -5225,12 +5195,12 @@
     },
     {
       "from": "profile-app.js",
-      "to": "avatar-catalogue-v1.js",
+      "to": "bisaya-review-regions.js",
       "type": "loads"
     },
     {
       "from": "profile-app.js",
-      "to": "bisaya-review-regions.js",
+      "to": "src/features/avatar/avatar-catalogue-v1.js",
       "type": "loads"
     },
     {
@@ -5304,22 +5274,12 @@
     },
     {
       "from": "profile-emblem-control.js",
-      "to": "avatar-catalogue-v1.js",
-      "type": "loads"
-    },
-    {
-      "from": "profile-emblem-control.js",
       "to": "avatar-collection-screen-v1.js",
       "type": "loads"
     },
     {
       "from": "profile-emblem-control.js",
       "to": "avatar-progression-hotfix-v551.js",
-      "type": "loads"
-    },
-    {
-      "from": "profile-emblem-control.js",
-      "to": "avatar-progression-migration-v1.js",
       "type": "loads"
     },
     {
@@ -5350,6 +5310,16 @@
     {
       "from": "profile-emblem-control.js",
       "to": "long-term-badges-v1.js",
+      "type": "loads"
+    },
+    {
+      "from": "profile-emblem-control.js",
+      "to": "src/features/avatar/avatar-catalogue-v1.js",
+      "type": "loads"
+    },
+    {
+      "from": "profile-emblem-control.js",
+      "to": "src/features/avatar/avatar-progression-migration-v1.js",
       "type": "loads"
     },
     {
@@ -5453,6 +5423,38 @@
       "symbols": [
         "state",
         "toast"
+      ]
+    },
+    {
+      "from": "src/features/avatar/avatar-catalogue-v1.js",
+      "to": "app.js",
+      "type": "core-globals",
+      "symbols": [
+        "state"
+      ]
+    },
+    {
+      "from": "src/features/avatar/avatar-progression-migration-v1.js",
+      "to": "app.js",
+      "type": "core-globals",
+      "symbols": [
+        "state"
+      ]
+    },
+    {
+      "from": "src/features/avatar/avatar-progression-migration-v1.js",
+      "to": "avatar-progression-hotfix-v551.js",
+      "type": "window-api",
+      "symbols": [
+        "SalitaAvatarModel"
+      ]
+    },
+    {
+      "from": "src/features/avatar/avatar-progression-migration-v1.js",
+      "to": "coin-avatar-shop-reveal-v1.js",
+      "type": "window-api",
+      "symbols": [
+        "SalitaAvatarModel"
       ]
     },
     {
@@ -6133,7 +6135,7 @@
       "name": "salita:avatar-progression-migrated",
       "listeners": [],
       "dispatchers": [
-        "avatar-progression-migration-v1.js"
+        "src/features/avatar/avatar-progression-migration-v1.js"
       ]
     },
     {
