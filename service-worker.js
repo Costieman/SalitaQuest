@@ -1,5 +1,5 @@
-const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-17-coin-shop-badge-adapter-extraction-r70";
-const CACHE_NAME = "salita-quest-v5-6-18-incorrect-order-feedback-adapter-extraction-r71";
+const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-18-incorrect-order-feedback-adapter-extraction-r71";
+const CACHE_NAME = "salita-quest-v5-6-19-long-term-badge-adapter-extraction-r72";
 const AVATAR_CASE_DISPLAY_HOTFIX = "2026-08-01-compact-display-share-stack-1";
 const TOPBAR_WORLD_PROGRESS_HOTFIX = "2026-08-01-separated-heading-rail-1";
 const SHARE_IMAGE_TRANSPORT_DELIVERY = "2026-08-02-direct-loader-1";
@@ -43,6 +43,7 @@ const APP_ENHANCEMENTS = [
   "./facebook-share-link-v1.js", "./src/features/sharing/facebook-share-link-v1.js",
   "./progression-v54.js", "./exercise-fixes-v545.js",
   "./collection-key-translation-hotfix.js", "./src/features/interface/collection-key-translation-hotfix.js",
+  "./long-term-badges-v1.js", "./src/adapters/badges/badge-catalogue-runtime-v1.js", "./src/features/badges/long-term-badges-v1.js",
   "./coin-avatar-shop-badges-v1.js", "./src/adapters/badges/coin-shop-badge-runtime-v1.js",
   "./src/features/economy/coin-avatar-shop-badges-v1.js"
 ];

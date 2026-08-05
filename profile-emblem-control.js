@@ -77,6 +77,16 @@
         "Avatar-aware sharing could not be loaded."
       );
       await loadScript(
+        "long-term-badge-runtime",
+        `./src/adapters/badges/badge-catalogue-runtime-v1.js?v=${BADGE_EXPANSION_VERSION}`,
+        "Badge catalogue runtime adapter could not be loaded."
+      );
+      await loadScript(
+        "long-term-badge-family",
+        `./src/features/badges/long-term-badges-v1.js?v=${BADGE_EXPANSION_VERSION}`,
+        "Long-term badge family could not be loaded."
+      );
+      await loadScript(
         "long-term-badges",
         `./long-term-badges-v1.js?v=${BADGE_EXPANSION_VERSION}`,
         "Long-term badge catalogue could not be loaded."
