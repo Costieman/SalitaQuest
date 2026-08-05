@@ -1,0 +1,45 @@
+name: Generate module contract inventory
+
+on:
+  push:
+    branches:
+      - agent/module-contract-inventory
+    paths:
+      - "*.js"
+      - "src/**/*.js"
+      - "scripts/generate-module-contract-inventory.mjs"
+      - ".github/workflows/generate-module-contract-inventory.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          ref: agent/module-contract-inventory
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Generate inventory
+        run: node scripts/generate-module-contract-inventory.mjs --write
+      - name: Validate generated files
+        run: |
+          node scripts/generate-module-contract-inventory.mjs --check
+          git diff --check
+      - name: Commit generated inventory
+        run: |
+          if git diff --quiet -- docs/MODULE_CONTRACT_INVENTORY.md src/config/module-contracts.generated.json; then
+            echo "Inventory is already current."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/MODULE_CONTRACT_INVENTORY.md src/config/module-contracts.generated.json
+          git commit -m "Generate module contract inventory"
+          git push origin HEAD:agent/module-contract-inventory
