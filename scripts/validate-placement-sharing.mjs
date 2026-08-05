@@ -117,10 +117,10 @@ for (const asset of [
   '"./src/config/course-manifest.js"',
   '"./src/app/course-bootstrap.js"'
 ]) if (!worker.includes(asset)) fail(`Offline cache is missing ${asset}`);
-if (!worker.includes('const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-16-avatar-hotfix-adapters-extraction-r69"')) {
+if (!worker.includes('const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-17-coin-shop-badge-adapter-extraction-r70"')) {
   fail("Previous service-worker cache boundary is missing");
 }
-if (!worker.includes('const CACHE_NAME = "salita-quest-v5-6-17-coin-shop-badge-adapter-extraction-r70"')) {
+if (!worker.includes('const CACHE_NAME = "salita-quest-v5-6-18-incorrect-order-feedback-adapter-extraction-r71"')) {
   fail("Current modular-bootstrap service-worker cache is missing");
 }
 

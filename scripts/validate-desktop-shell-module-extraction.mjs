@@ -92,6 +92,8 @@ const topbarExpected = "src/features/interface/clean-topbar.js?v=5.4.21";
 if (!courses) fail("Course manifest was not installed");
 for (const courseId of ["tagalog", "cebuano"]) {
   const scripts = courses[courseId]?.scripts || [];
+  const feedbackAdapter = scripts.indexOf("src/adapters/exercise/incorrect-order-feedback-runtime-v1.js?v=5.4.21");
+  const feedbackFeature = scripts.indexOf("src/features/exercise/incorrect-order-feedback.js?v=5.4.21");
   const feedback = scripts.indexOf("incorrect-order-feedback.js?v=5.4.21");
   const compact = scripts.indexOf(compactExpected);
   const topbar = scripts.indexOf(topbarExpected);
@@ -108,8 +110,8 @@ for (const path of [compactModulePath, topbarModulePath]) {
   if (!refresh.includes(path)) fail(`Mobile refresh does not fetch ${path}`);
 }
 requireMarkers(worker, [
-  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-16-avatar-hotfix-adapters-extraction-r69"',
-  'const CACHE_NAME = "salita-quest-v5-6-17-coin-shop-badge-adapter-extraction-r70"',
+  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-17-coin-shop-badge-adapter-extraction-r70"',
+  'const CACHE_NAME = "salita-quest-v5-6-18-incorrect-order-feedback-adapter-extraction-r71"',
   '"./compact-desktop-layout.js"',
   '"./src/features/interface/compact-desktop-layout.js"',
   '"./clean-topbar.js"',

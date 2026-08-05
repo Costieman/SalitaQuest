@@ -92,8 +92,8 @@ for (const token of refreshTokens) {
 
 const previousCache = worker.match(/const PREVIOUS_CACHE_NAME = "([^"]+)"/)?.[1] || "";
 const currentCache = worker.match(/const CACHE_NAME = "([^"]+)"/)?.[1] || "";
-if (previousCache !== "salita-quest-v5-6-16-avatar-hotfix-adapters-extraction-r69") fail("Previous cache is not r68");
-if (currentCache !== "salita-quest-v5-6-17-coin-shop-badge-adapter-extraction-r70") fail("Current cache is not r69");
+if (previousCache !== "salita-quest-v5-6-17-coin-shop-badge-adapter-extraction-r70") fail("Previous cache is not r68");
+if (currentCache !== "salita-quest-v5-6-18-incorrect-order-feedback-adapter-extraction-r71") fail("Current cache is not r69");
 for (const marker of [`"./${rootFile}"`, `"./${modelFile}"`, `"./${navigationFile}"`]) {
   if (!worker.includes(marker)) fail(`Offline delivery missing ${marker}`);
 }
