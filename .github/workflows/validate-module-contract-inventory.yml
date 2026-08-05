@@ -1,0 +1,43 @@
+name: Validate module contract inventory
+
+on:
+  pull_request:
+    paths:
+      - "*.js"
+      - "src/**/*.js"
+      - "src/config/module-contracts.generated.json"
+      - "docs/MODULE_CONTRACT_INVENTORY.md"
+      - "scripts/generate-module-contract-inventory-v2.mjs"
+      - ".github/workflows/validate-module-contract-inventory.yml"
+  push:
+    branches:
+      - main
+      - agent/modular-refactor-foundation
+      - agent/module-contract-inventory
+    paths:
+      - "*.js"
+      - "src/**/*.js"
+      - "src/config/module-contracts.generated.json"
+      - "docs/MODULE_CONTRACT_INVENTORY.md"
+      - "scripts/generate-module-contract-inventory-v2.mjs"
+      - ".github/workflows/validate-module-contract-inventory.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Check scanner syntax
+        run: node --check scripts/generate-module-contract-inventory-v2.mjs
+      - name: Validate generated inventory
+        run: node scripts/generate-module-contract-inventory-v2.mjs --check
+      - name: Check whitespace
+        run: git diff --check
