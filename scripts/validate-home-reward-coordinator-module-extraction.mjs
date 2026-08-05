@@ -79,8 +79,8 @@ for (const courseId of ["tagalog", "cebuano"]) {
 }
 
 for (const marker of [
-  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-18-incorrect-order-feedback-adapter-extraction-r71"',
-  'const CACHE_NAME = "salita-quest-v5-6-19-long-term-badge-adapter-extraction-r72"',
+  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-19-long-term-badge-adapter-extraction-r72"',
+  'const CACHE_NAME = "salita-quest-v5-6-20-avatar-case-profile-adapter-extraction-r73"',
   '"./home-reward-coordinator.js"',
   '"./src/features/progression/home-reward-coordinator.js"'
 ]) if (!worker.includes(marker)) fail(`Offline delivery is missing ${marker}`);

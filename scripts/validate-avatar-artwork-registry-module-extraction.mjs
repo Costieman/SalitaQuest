@@ -89,8 +89,8 @@ if (!(mobileCatalogue >= 0 && mobileCatalogue < mobileMigration && mobileMigrati
 }
 
 for (const required of [
-  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-18-incorrect-order-feedback-adapter-extraction-r71"',
-  'const CACHE_NAME = "salita-quest-v5-6-19-long-term-badge-adapter-extraction-r72"',
+  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-19-long-term-badge-adapter-extraction-r72"',
+  'const CACHE_NAME = "salita-quest-v5-6-20-avatar-case-profile-adapter-extraction-r73"',
   '"./avatar-artwork-registry-v554.js"',
   '"./src/features/avatar/avatar-artwork-registry-v554.js"'
 ]) {
