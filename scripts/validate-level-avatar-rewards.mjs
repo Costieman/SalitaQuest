@@ -5,7 +5,7 @@ const root = new URL("../", import.meta.url);
 const read = path => fs.readFileSync(new URL(path, root), "utf8");
 const fail = message => { throw new Error(message); };
 
-const catalogueSource = read("avatar-catalogue-v1.js");
+const catalogueSource = read("src/features/avatar/avatar-catalogue-v1.js");
 const rewardSource = read("level-avatar-rewards-v1.js");
 const loaderSource = read("profile-emblem-control.js");
 
@@ -116,7 +116,7 @@ for (const required of [
   if (!rewardSource.includes(required)) fail(`Milestone runtime is missing ${required}`);
 }
 if (/state\.xp\s*(?:\+|-|\*|\/)?=/.test(rewardSource)) fail("Milestone rewards must not alter XP or existing levels");
-if (!loaderSource.includes('const RELEASE_VERSION = "5.5.1"')) fail("Shared profile runtime release version is not 5.5.1");
+if (!loaderSource.includes('const RELEASE_VERSION = "5.5.6"')) fail("Shared profile runtime release version is not 5.5.1");
 if (!loaderSource.includes("level-avatar-rewards-v1.js") || !loaderSource.includes('loadScript("level"')) {
   fail("Shared profile runtime does not load milestone rewards");
 }
