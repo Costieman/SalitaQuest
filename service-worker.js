@@ -1,5 +1,5 @@
-const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-19-long-term-badge-adapter-extraction-r72";
-const CACHE_NAME = "salita-quest-v5-6-20-avatar-case-profile-adapter-extraction-r73";
+const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-20-avatar-case-profile-adapter-extraction-r73";
+const CACHE_NAME = "salita-quest-v5-6-21-avatar-collection-profile-adapter-extraction-r74";
 const AVATAR_CASE_DISPLAY_HOTFIX = "2026-08-01-compact-display-share-stack-1";
 const TOPBAR_WORLD_PROGRESS_HOTFIX = "2026-08-01-separated-heading-rail-1";
 const SHARE_IMAGE_TRANSPORT_DELIVERY = "2026-08-02-direct-loader-1";
@@ -42,7 +42,7 @@ const APP_ENHANCEMENTS = [
   "./achievement-sharing-router-v2.js", "./achievement-sharing-router-v2.css", "./achievement-sharing-router-v3.js", "./src/features/sharing/achievement-sharing-router-v3.js",
   "./facebook-share-link-v1.js", "./src/features/sharing/facebook-share-link-v1.js",
   "./progression-v54.js", "./exercise-fixes-v545.js",
-  "./collection-key-translation-hotfix.js", "./src/features/interface/collection-key-translation-hotfix.js",
+  "./collection-key-translation-hotfix.js", "./src/features/interface/collection-key-translation-hotfix.js", "./avatar-collection-page-v2.js", "./avatar-collection-page-v2.css",
   "./long-term-badges-v1.js", "./src/adapters/badges/badge-catalogue-runtime-v1.js", "./src/features/badges/long-term-badges-v1.js",
   "./coin-avatar-shop-badges-v1.js", "./src/adapters/badges/coin-shop-badge-runtime-v1.js",
   "./src/features/economy/coin-avatar-shop-badges-v1.js"
@@ -52,7 +52,7 @@ const AVATAR_PROGRESSION_FILES = [
   "./avatars/canonical/manifest.json", "./avatar-catalogue-v1.js", "./src/features/avatar/avatar-catalogue-v1.js", "./avatar-artwork-registry-v554.js", "./src/features/avatar/avatar-artwork-registry-v554.js",
   "./avatar-progression-hotfix-v551.js", "./src/features/avatar/avatar-progression-model-v551.js",
       "./src/adapters/navigation/avatar-collections-navigation-v551.js", "./avatar-progression-hotfix-v551.css",
-  "./avatar-progression-migration-v1.js", "./src/features/avatar/avatar-progression-migration-v1.js", "./avatar-collection-screen-v1.js", "./avatar-collection-screen-v1.css",
+  "./avatar-progression-migration-v1.js", "./src/features/avatar/avatar-progression-migration-v1.js", "./avatar-collection-screen-v1.js", "./src/adapters/avatar/avatar-collection-profile-runtime-v1.js", "./src/features/avatar/avatar-collection-screen-v1.js", "./avatar-collection-screen-v1.css",
   "./avatar-case-v1.js", "./src/adapters/avatar/avatar-case-profile-runtime-v1.js", "./src/features/avatar/avatar-case-v1.js", "./avatar-case-v1.css",
   "./avatar-collection-summary-v1.js", "./src/features/avatar/avatar-collection-summary-v1.js", "./avatar-collection-summary-v1.css",
   "./economy-tracking-phase6-v1.js", "./src/features/economy/economy-tracking-phase6-v1.js", "./economy-tracking-phase6-v1.css",

@@ -5,8 +5,6 @@
   if (window[INSTALL_FLAG]) return;
   window[INSTALL_FLAG] = true;
 
-  const PROFILE_STORE = "salitaQuestLocalProfilesV1";
-  const ACTIVE_PROFILE = "salitaQuestActiveProfileId";
   const RARITY_ORDER = ["starter", "common", "uncommon", "rare", "special"];
   const RARITY_LABELS = {
     starter:"Starter flora",
@@ -28,29 +26,13 @@
     "&":"&amp;", "<":"&lt;", ">":"&gt;", "'":"&#39;", '"':"&quot;"
   }[character]));
 
-  function readContext() {
-    try {
-      const store = JSON.parse(localStorage.getItem(PROFILE_STORE) || "null");
-      const activeId = sessionStorage.getItem(ACTIVE_PROFILE);
-      const profile = store?.profiles?.find(item => item.id === activeId);
-      if (!store || !profile || !model) return null;
-      const collection = model.normaliseCollectionState(profile.avatarCollection, profile.avatarId);
-      profile.avatarCollection = collection;
-      if (collection.equippedAvatarId) profile.avatarId = collection.equippedAvatarId;
-      store.updatedAt = new Date().toISOString();
-      localStorage.setItem(PROFILE_STORE, JSON.stringify(store));
-      return {store, profile, collection};
-    } catch {
-      return null;
-    }
-  }
+  function runtime() {
+  return window.SalitaAvatarCollectionProfileRuntimeV1 || null;
+}
 
-  function saveContext(context) {
-    context.profile.avatarCollection = context.collection;
-    if (context.collection.equippedAvatarId) context.profile.avatarId = context.collection.equippedAvatarId;
-    context.store.updatedAt = new Date().toISOString();
-    localStorage.setItem(PROFILE_STORE, JSON.stringify(context.store));
-  }
+function readContext() {
+  return runtime()?.readContext?.() || null;
+}
 
   function revealPercent(percent) {
     if (percent >= 100) return 100;
@@ -140,18 +122,15 @@
   }
 
   function equip(id) {
-    const context = readContext();
-    if (!context) return false;
-    const item = model.get(id);
-    if (!item || !context.collection.ownedAvatarIds.includes(item.id)) return false;
-    context.collection.equippedAvatarId = item.id;
-    saveContext(context);
-    document.dispatchEvent(new CustomEvent("salita:avatar-equipped", {detail:{avatarId:item.id, avatar:item}}));
-    document.dispatchEvent(new CustomEvent("salita:avatar-collection-changed", {detail:{avatarId:item.id, source:"avatar-page-v2"}}));
-    render();
-    openDetail(item.id);
-    return true;
-  }
+  const result = runtime()?.equip?.(id);
+  if (!result) return false;
+  const {item} = result;
+  document.dispatchEvent(new CustomEvent("salita:avatar-equipped", {detail:{avatarId:item.id, avatar:item}}));
+  document.dispatchEvent(new CustomEvent("salita:avatar-collection-changed", {detail:{avatarId:item.id, source:"avatar-page-v2"}}));
+  render();
+  openDetail(item.id);
+  return true;
+}
 
   function openDetail(id) {
     const context = readContext();
@@ -260,7 +239,7 @@
 
   function install() {
     model = window.SalitaAvatarModel;
-    if (!model || typeof model.catalogue === "undefined" || !document.querySelector(".main-area")) {
+    if (!model || !runtime() || typeof model.catalogue === "undefined" || !document.querySelector(".main-area")) {
       window.setTimeout(install, 100);
       return;
     }

@@ -61,7 +61,9 @@
       await window.SalitaAvatarHotfixReady;
       await window.SalitaAvatarArtworkReady;
       await loadScript("migration", `./src/features/avatar/avatar-progression-migration-v1.js?v=${RELEASE_VERSION}`, "Avatar progression migration could not be loaded.");
-      await loadScript("collection", `./avatar-collection-screen-v1.js?v=${RELEASE_VERSION}`, "Avatar collection screen could not be loaded.");
+      await loadScript("collection-profile-runtime", `./src/adapters/avatar/avatar-collection-profile-runtime-v1.js?v=${RELEASE_VERSION}`, "Avatar collection profile runtime could not be loaded.");
+      await loadScript("collection-feature", `./src/features/avatar/avatar-collection-screen-v1.js?v=${RELEASE_VERSION}`, "Avatar collection screen feature could not be loaded.");
+      await loadScript("collection", `./avatar-collection-screen-v1.js?v=${RELEASE_VERSION}`, "Avatar collection compatibility coordinator could not be loaded.");
       await loadScript("case-profile-runtime", `./src/adapters/avatar/avatar-case-profile-runtime-v1.js?v=${AVATAR_CASE_VERSION}`, "Avatar Case profile runtime could not be loaded.");
       await loadScript("case-feature", `./src/features/avatar/avatar-case-v1.js?v=${AVATAR_CASE_VERSION}`, "Avatar Case feature could not be loaded.");
       await loadScript("case", `./avatar-case-v1.js?v=${AVATAR_CASE_VERSION}`, "Avatar Case could not be loaded.");

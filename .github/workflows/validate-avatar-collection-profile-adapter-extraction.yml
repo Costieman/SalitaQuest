@@ -1,0 +1,74 @@
+name: Validate Avatar Collection profile adapter extraction
+
+on:
+  push:
+    branches:
+      - agent/extract-avatar-collection-profile-adapter
+  pull_request:
+    paths:
+      - "avatar-collection-screen-v1.js"
+      - "avatar-collection-page-v2.js"
+      - "src/adapters/avatar/avatar-collection-profile-runtime-v1.js"
+      - "src/features/avatar/avatar-collection-screen-v1.js"
+      - "src/features/interface/collection-key-translation-hotfix.js"
+      - "profile-emblem-control.js"
+      - "mobile-refresh.html"
+      - "service-worker.js"
+      - "scripts/validate-avatar-collection-profile-adapter-extraction.mjs"
+      - "scripts/validate-avatar-collection-screen.mjs"
+      - "scripts/validate-avatar-runtime-v556.mjs"
+      - "scripts/validate-avatar-progression-v550.mjs"
+      - "scripts/validate-collection-key-translation-hotfix-module-extraction.mjs"
+      - "scripts/validate-avatar-collection-pane-flow.mjs"
+      - "scripts/validate-avatar-case-profile-adapter-extraction.mjs"
+      - "scripts/validate-long-term-badges.mjs"
+      - "scripts/validate-coin-shop-badge-adapter-extraction.mjs"
+      - "scripts/validate-coin-avatar-shop.mjs"
+      - "scripts/validate-bisaya.mjs"
+      - "scripts/validate_modular_bootstrap.py"
+      - "scripts/generate-module-contract-inventory-v2.mjs"
+      - "src/config/module-contracts.generated.json"
+      - "docs/MODULE_CONTRACT_INVENTORY.md"
+      - "docs/MODULE_EXTRACTION_PLAN.md"
+      - ".github/workflows/validate-avatar-collection-profile-adapter-extraction.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Validate Avatar Collection persistence boundary
+        run: node scripts/validate-avatar-collection-profile-adapter-extraction.mjs
+      - name: Validate historical collection screen
+        run: node scripts/validate-avatar-collection-screen.mjs
+      - name: Validate full avatar runtime
+        run: node scripts/validate-avatar-runtime-v556.mjs
+      - name: Validate Avatar Progression
+        run: node scripts/validate-avatar-progression-v550.mjs
+      - name: Validate collection compatibility delivery
+        run: node scripts/validate-collection-key-translation-hotfix-module-extraction.mjs
+      - name: Validate collection pane flow
+        run: node scripts/validate-avatar-collection-pane-flow.mjs
+      - name: Validate Avatar Case integration
+        run: node scripts/validate-avatar-case-profile-adapter-extraction.mjs
+      - name: Validate long-term badges
+        run: node scripts/validate-long-term-badges.mjs
+      - name: Validate coin-shop badge adapter
+        run: node scripts/validate-coin-shop-badge-adapter-extraction.mjs
+      - name: Validate coin avatar shop
+        run: node scripts/validate-coin-avatar-shop.mjs
+      - name: Validate Bisaya edition
+        run: node scripts/validate-bisaya.mjs
+      - name: Validate modular bootstrap
+        run: python3 scripts/validate_modular_bootstrap.py
+      - name: Validate deterministic module inventory
+        run: node scripts/generate-module-contract-inventory-v2.mjs --check
+      - name: Validate whitespace
+        run: git diff --check

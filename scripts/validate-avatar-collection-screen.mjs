@@ -6,12 +6,18 @@ const read = path => fs.readFileSync(new URL(path, root), "utf8");
 const fail = message => { throw new Error(message); };
 
 const catalogueSource = read("src/features/avatar/avatar-catalogue-v1.js");
-const screenSource = read("avatar-collection-screen-v1.js");
+const compatibilitySource = read("avatar-collection-screen-v1.js");
+const runtimeSource = read("src/adapters/avatar/avatar-collection-profile-runtime-v1.js");
+const screenSource = read("src/features/avatar/avatar-collection-screen-v1.js");
+const pageSource = read("avatar-collection-page-v2.js");
 const screenCss = read("avatar-collection-screen-v1.css");
 const hotfixCss = read("avatar-progression-hotfix-v551.css");
 const emblemSource = read("profile-emblem-control.js");
 
-new vm.Script(screenSource, {filename:"avatar-collection-screen-v1.js"});
+new vm.Script(compatibilitySource, {filename:"avatar-collection-screen-v1.js"});
+new vm.Script(runtimeSource, {filename:"avatar-collection-profile-runtime-v1.js"});
+new vm.Script(screenSource, {filename:"src/features/avatar/avatar-collection-screen-v1.js"});
+new vm.Script(pageSource, {filename:"avatar-collection-page-v2.js"});
 new vm.Script(emblemSource, {filename:"profile-emblem-control.js"});
 
 const sandbox = {};
@@ -34,7 +40,6 @@ for (const required of [
   "sq-avatar-colour",
   "data-avatar-action",
   "data-avatar-detail",
-  "collection.ownedAvatarIds.includes",
   "salita:avatar-equipped",
   "Avatar collection",
   "Unlock:"
@@ -63,9 +68,13 @@ if (!emblemSource.includes('const RELEASE_VERSION = "5.5.6"')) fail("Shared prof
 if (!emblemSource.includes("avatar-collection-screen-v1.css") || !emblemSource.includes("addStylesheet")) {
   fail("Collection CSS is not loaded by the shared profile runtime");
 }
-if (!emblemSource.includes("avatar-collection-screen-v1.js") || !emblemSource.includes('loadScript("collection"')) {
-  fail("Collection JavaScript is not loaded by the shared profile runtime");
+if (!emblemSource.includes("src/adapters/avatar/avatar-collection-profile-runtime-v1.js") || !emblemSource.includes("src/features/avatar/avatar-collection-screen-v1.js") || !emblemSource.includes('loadScript("collection"')) {
+  fail("Collection adapter/feature/coordinator order is not loaded by the shared profile runtime");
 }
+if (/localStorage|sessionStorage/.test(screenSource + pageSource)) fail("Collection UI still owns profile storage");
+if (!runtimeSource.includes("SalitaAvatarCollectionProfileRuntimeV1")) fail("Collection profile runtime API is missing");
+if (!runtimeSource.includes("collection.ownedAvatarIds.includes")) fail("Owned-only equipping is not owned by the collection profile adapter");
+if (!compatibilitySource.includes("document.write") || !compatibilitySource.includes("script.async = false")) fail("Historical collection URL is not a compatibility coordinator");
 if (!emblemSource.includes("await window.SalitaAvatarHotfixReady")) fail("Collection starts before canonical progression data is ready");
 
 console.log("Avatar collection screen validation passed: all avatars, locked greyscale, 25/50/75% reveal, stable cards and owned-only equipping.");

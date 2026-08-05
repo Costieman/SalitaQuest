@@ -71,11 +71,11 @@
     ]
   },
   "summary": {
-    "modules": 68,
-    "dependencyEdges": 173,
+    "modules": 70,
+    "dependencyEdges": 180,
     "storageContracts": 21,
     "salitaEvents": 36,
-    "extractionCandidates": 27,
+    "extractionCandidates": 29,
     "prepareAdapters": 23,
     "highCoupling": 7,
     "held": 11
@@ -675,7 +675,7 @@
     },
     {
       "file": "avatar-collection-screen-v1.js",
-      "bytes": 13858,
+      "bytes": 2661,
       "contexts": [
         "cebuano",
         "tagalog"
@@ -684,80 +684,42 @@
         "cebuano",
         "tagalog"
       ],
-      "references": [],
+      "references": [
+        "src/adapters/avatar/avatar-collection-profile-runtime-v1.js",
+        "src/features/avatar/avatar-collection-screen-v1.js"
+      ],
       "loads": [],
       "fetches": [],
       "workers": [],
       "coreGlobals": [],
       "window": {
         "provides": [
-          "__salitaAvatarCollectionScreenInstalled",
-          "SalitaAvatarCollectionScreen"
+          "__salitaQuestAvatarCollectionScreenCompatibilityLoading",
+          "__salitaQuestAvatarCollectionScreenCoordinatorInstalled"
         ],
         "consumes": [
-          "clearInterval",
-          "SalitaAvatarArtwork",
-          "SalitaAvatarModel",
-          "setInterval"
+          "__salitaAvatarCollectionScreenInstalled",
+          "SalitaAvatarCollectionProfileRuntimeV1"
         ]
       },
-      "storage": [
-        {
-          "store": "localStorage",
-          "operation": "getItem",
-          "key": "salitaQuestLocalProfilesV1"
-        },
-        {
-          "store": "localStorage",
-          "operation": "setItem",
-          "key": "salitaQuestLocalProfilesV1"
-        },
-        {
-          "store": "sessionStorage",
-          "operation": "getItem",
-          "key": "salitaQuestActiveProfileId"
-        }
-      ],
+      "storage": [],
       "dom": {
         "ids": [],
-        "selectors": [
-          ".sq-avatar-collection-close",
-          ".sq-avatar-collection-scroll",
-          ".sq-avatar-collection-summary",
-          ".sq-profile-button img,.sq-profile-identity img,.sq-profile-emblem-trigger img,.player-avatar img",
-          ".sq-profile-menu",
-          "[data-avatar-action]",
-          "[data-avatar-choice]",
-          "[data-avatar-collection]",
-          "[data-avatar-detail]",
-          "[data-course]",
-          "[data-detail-close]",
-          "[data-detail-equip]"
-        ],
+        "selectors": [],
         "datasets": [
-          "avatarAction",
-          "avatarChoice",
-          "avatarCollection",
-          "avatarDetail",
-          "detailEquip",
-          "sqAvatarId"
+          "sqAvatarCollectionDependency"
         ]
       },
       "events": {
         "listens": [
-          "click",
-          "keydown",
-          "salita:avatar-collection-changed",
-          "salita:open-avatar-collection"
+          "error",
+          "load"
         ],
-        "dispatches": [
-          "salita:avatar-collection-changed",
-          "salita:avatar-equipped"
-        ]
+        "dispatches": []
       },
       "role": "collection-and-rewards",
-      "readiness": "prepare-adapter",
-      "risk": 29
+      "readiness": "extraction-candidate",
+      "risk": 8
     },
     {
       "file": "avatar-progression-hotfix-v551.js",
@@ -2531,7 +2493,7 @@
     },
     {
       "file": "profile-emblem-control.js",
-      "bytes": 10792,
+      "bytes": 11189,
       "contexts": [
         "cebuano",
         "tagalog"
@@ -2552,12 +2514,14 @@
         "coin-avatar-shop-topbar-v1.js",
         "long-term-badges-v1.js",
         "src/adapters/avatar/avatar-case-profile-runtime-v1.js",
+        "src/adapters/avatar/avatar-collection-profile-runtime-v1.js",
         "src/adapters/badges/badge-catalogue-runtime-v1.js",
         "src/adapters/badges/coin-shop-badge-runtime-v1.js",
         "src/adapters/navigation/avatar-collections-navigation-v551.js",
         "src/features/avatar/avatar-artwork-registry-v554.js",
         "src/features/avatar/avatar-case-v1.js",
         "src/features/avatar/avatar-catalogue-v1.js",
+        "src/features/avatar/avatar-collection-screen-v1.js",
         "src/features/avatar/avatar-progression-migration-v1.js",
         "src/features/avatar/avatar-progression-model-v551.js",
         "src/features/avatar/level-avatar-rewards-v1.js",
@@ -2577,12 +2541,14 @@
         "coin-avatar-shop-topbar-v1.js",
         "long-term-badges-v1.js",
         "src/adapters/avatar/avatar-case-profile-runtime-v1.js",
+        "src/adapters/avatar/avatar-collection-profile-runtime-v1.js",
         "src/adapters/badges/badge-catalogue-runtime-v1.js",
         "src/adapters/badges/coin-shop-badge-runtime-v1.js",
         "src/adapters/navigation/avatar-collections-navigation-v551.js",
         "src/features/avatar/avatar-artwork-registry-v554.js",
         "src/features/avatar/avatar-case-v1.js",
         "src/features/avatar/avatar-catalogue-v1.js",
+        "src/features/avatar/avatar-collection-screen-v1.js",
         "src/features/avatar/avatar-progression-migration-v1.js",
         "src/features/avatar/avatar-progression-model-v551.js",
         "src/features/avatar/level-avatar-rewards-v1.js",
@@ -2641,7 +2607,7 @@
       },
       "role": "runtime-loader",
       "readiness": "hold",
-      "risk": 131
+      "risk": 141
     },
     {
       "file": "progression-v54.js",
@@ -2701,7 +2667,7 @@
     },
     {
       "file": "service-worker.js",
-      "bytes": 13305,
+      "bytes": 13505,
       "contexts": [
         "worker"
       ],
@@ -2716,6 +2682,7 @@
         "avatar-artwork-registry-v554.js",
         "avatar-case-v1.js",
         "avatar-catalogue-v1.js",
+        "avatar-collection-page-v2.js",
         "avatar-collection-screen-v1.js",
         "avatar-collection-summary-v1.js",
         "avatar-collection-tabs-phase6-1-v1.js",
@@ -2755,6 +2722,7 @@
         "pronunciation-release-control.js",
         "social-connections-v2.js",
         "src/adapters/avatar/avatar-case-profile-runtime-v1.js",
+        "src/adapters/avatar/avatar-collection-profile-runtime-v1.js",
         "src/adapters/badges/badge-catalogue-runtime-v1.js",
         "src/adapters/badges/coin-shop-badge-runtime-v1.js",
         "src/adapters/exercise/incorrect-order-feedback-runtime-v1.js",
@@ -2765,6 +2733,7 @@
         "src/features/avatar/avatar-artwork-registry-v554.js",
         "src/features/avatar/avatar-case-v1.js",
         "src/features/avatar/avatar-catalogue-v1.js",
+        "src/features/avatar/avatar-collection-screen-v1.js",
         "src/features/avatar/avatar-collection-summary-v1.js",
         "src/features/avatar/avatar-collection-tabs-phase6-1-v1.js",
         "src/features/avatar/avatar-progression-migration-v1.js",
@@ -2957,6 +2926,61 @@
       "role": "collection-and-rewards",
       "readiness": "extraction-candidate",
       "risk": 11
+    },
+    {
+      "file": "src/adapters/avatar/avatar-collection-profile-runtime-v1.js",
+      "bytes": 2265,
+      "contexts": [
+        "cebuano",
+        "tagalog"
+      ],
+      "courses": [
+        "cebuano",
+        "tagalog"
+      ],
+      "references": [],
+      "loads": [],
+      "fetches": [],
+      "workers": [],
+      "coreGlobals": [],
+      "window": {
+        "provides": [
+          "__salitaQuestAvatarCollectionProfileRuntimeV1Installed",
+          "SalitaAvatarCollectionProfileRuntimeV1"
+        ],
+        "consumes": [
+          "SalitaAvatarModel"
+        ]
+      },
+      "storage": [
+        {
+          "store": "localStorage",
+          "operation": "getItem",
+          "key": "salitaQuestLocalProfilesV1"
+        },
+        {
+          "store": "localStorage",
+          "operation": "setItem",
+          "key": "salitaQuestLocalProfilesV1"
+        },
+        {
+          "store": "sessionStorage",
+          "operation": "getItem",
+          "key": "salitaQuestActiveProfileId"
+        }
+      ],
+      "dom": {
+        "ids": [],
+        "selectors": [],
+        "datasets": []
+      },
+      "events": {
+        "listens": [],
+        "dispatches": []
+      },
+      "role": "collection-and-rewards",
+      "readiness": "extraction-candidate",
+      "risk": 13
     },
     {
       "file": "src/adapters/badges/badge-catalogue-runtime-v1.js",
@@ -3577,6 +3601,77 @@
       "risk": 3
     },
     {
+      "file": "src/features/avatar/avatar-collection-screen-v1.js",
+      "bytes": 13058,
+      "contexts": [
+        "cebuano",
+        "tagalog"
+      ],
+      "courses": [
+        "cebuano",
+        "tagalog"
+      ],
+      "references": [],
+      "loads": [],
+      "fetches": [],
+      "workers": [],
+      "coreGlobals": [],
+      "window": {
+        "provides": [
+          "__salitaAvatarCollectionScreenInstalled",
+          "SalitaAvatarCollectionScreen"
+        ],
+        "consumes": [
+          "clearInterval",
+          "SalitaAvatarArtwork",
+          "SalitaAvatarCollectionProfileRuntimeV1",
+          "SalitaAvatarModel",
+          "setInterval"
+        ]
+      },
+      "storage": [],
+      "dom": {
+        "ids": [],
+        "selectors": [
+          ".sq-avatar-collection-close",
+          ".sq-avatar-collection-scroll",
+          ".sq-avatar-collection-summary",
+          ".sq-profile-button img,.sq-profile-identity img,.sq-profile-emblem-trigger img,.player-avatar img",
+          ".sq-profile-menu",
+          "[data-avatar-action]",
+          "[data-avatar-choice]",
+          "[data-avatar-collection]",
+          "[data-avatar-detail]",
+          "[data-course]",
+          "[data-detail-close]",
+          "[data-detail-equip]"
+        ],
+        "datasets": [
+          "avatarAction",
+          "avatarChoice",
+          "avatarCollection",
+          "avatarDetail",
+          "detailEquip",
+          "sqAvatarId"
+        ]
+      },
+      "events": {
+        "listens": [
+          "click",
+          "keydown",
+          "salita:avatar-collection-changed",
+          "salita:open-avatar-collection"
+        ],
+        "dispatches": [
+          "salita:avatar-collection-changed",
+          "salita:avatar-equipped"
+        ]
+      },
+      "role": "collection-and-rewards",
+      "readiness": "prepare-adapter",
+      "risk": 24
+    },
+    {
       "file": "src/features/avatar/avatar-collection-summary-v1.js",
       "bytes": 3383,
       "contexts": [
@@ -4075,7 +4170,7 @@
     },
     {
       "file": "src/features/interface/collection-key-translation-hotfix.js",
-      "bytes": 8247,
+      "bytes": 8705,
       "contexts": [
         "tagalog"
       ],
@@ -4086,7 +4181,8 @@
         "avatar-card-actions-v1.js",
         "avatar-case-page-tab-v1.js",
         "avatar-collection-page-v2.js",
-        "mystery-rarity-roll-v1.js"
+        "mystery-rarity-roll-v1.js",
+        "src/adapters/avatar/avatar-collection-profile-runtime-v1.js"
       ],
       "loads": [],
       "fetches": [],
@@ -4962,26 +5058,18 @@
     },
     {
       "from": "avatar-collection-screen-v1.js",
-      "to": "src/features/avatar/avatar-artwork-registry-v554.js",
+      "to": "src/features/avatar/avatar-collection-screen-v1.js",
       "type": "window-api",
       "symbols": [
-        "SalitaAvatarArtwork"
+        "__salitaAvatarCollectionScreenInstalled"
       ]
     },
     {
       "from": "avatar-collection-screen-v1.js",
-      "to": "coin-avatar-shop-reveal-v1.js",
+      "to": "src/adapters/avatar/avatar-collection-profile-runtime-v1.js",
       "type": "window-api",
       "symbols": [
-        "SalitaAvatarModel"
-      ]
-    },
-    {
-      "from": "avatar-collection-screen-v1.js",
-      "to": "src/features/avatar/avatar-progression-model-v551.js",
-      "type": "window-api",
-      "symbols": [
-        "SalitaAvatarModel"
+        "SalitaAvatarCollectionProfileRuntimeV1"
       ]
     },
     {
@@ -5058,7 +5146,7 @@
     },
     {
       "from": "avatar-unlock-celebration-v1.js",
-      "to": "avatar-collection-screen-v1.js",
+      "to": "src/features/avatar/avatar-collection-screen-v1.js",
       "type": "window-api",
       "symbols": [
         "SalitaAvatarCollectionScreen"
@@ -5655,6 +5743,11 @@
     },
     {
       "from": "profile-emblem-control.js",
+      "to": "src/adapters/avatar/avatar-collection-profile-runtime-v1.js",
+      "type": "loads"
+    },
+    {
+      "from": "profile-emblem-control.js",
       "to": "src/adapters/badges/badge-catalogue-runtime-v1.js",
       "type": "loads"
     },
@@ -5681,6 +5774,11 @@
     {
       "from": "profile-emblem-control.js",
       "to": "src/features/avatar/avatar-catalogue-v1.js",
+      "type": "loads"
+    },
+    {
+      "from": "profile-emblem-control.js",
+      "to": "src/features/avatar/avatar-collection-screen-v1.js",
       "type": "loads"
     },
     {
@@ -5796,6 +5894,22 @@
     },
     {
       "from": "src/adapters/avatar/avatar-case-profile-runtime-v1.js",
+      "to": "src/features/avatar/avatar-progression-model-v551.js",
+      "type": "window-api",
+      "symbols": [
+        "SalitaAvatarModel"
+      ]
+    },
+    {
+      "from": "src/adapters/avatar/avatar-collection-profile-runtime-v1.js",
+      "to": "coin-avatar-shop-reveal-v1.js",
+      "type": "window-api",
+      "symbols": [
+        "SalitaAvatarModel"
+      ]
+    },
+    {
+      "from": "src/adapters/avatar/avatar-collection-profile-runtime-v1.js",
       "to": "src/features/avatar/avatar-progression-model-v551.js",
       "type": "window-api",
       "symbols": [
@@ -5948,6 +6062,38 @@
       "type": "core-globals",
       "symbols": [
         "state"
+      ]
+    },
+    {
+      "from": "src/features/avatar/avatar-collection-screen-v1.js",
+      "to": "src/features/avatar/avatar-artwork-registry-v554.js",
+      "type": "window-api",
+      "symbols": [
+        "SalitaAvatarArtwork"
+      ]
+    },
+    {
+      "from": "src/features/avatar/avatar-collection-screen-v1.js",
+      "to": "src/adapters/avatar/avatar-collection-profile-runtime-v1.js",
+      "type": "window-api",
+      "symbols": [
+        "SalitaAvatarCollectionProfileRuntimeV1"
+      ]
+    },
+    {
+      "from": "src/features/avatar/avatar-collection-screen-v1.js",
+      "to": "coin-avatar-shop-reveal-v1.js",
+      "type": "window-api",
+      "symbols": [
+        "SalitaAvatarModel"
+      ]
+    },
+    {
+      "from": "src/features/avatar/avatar-collection-screen-v1.js",
+      "to": "src/features/avatar/avatar-progression-model-v551.js",
+      "type": "window-api",
+      "symbols": [
+        "SalitaAvatarModel"
       ]
     },
     {
@@ -6377,7 +6523,6 @@
       "readers": [
         "achievement-sharing-avatar-bridge-v1.js",
         "achievement-sharing-v4.js",
-        "avatar-collection-screen-v1.js",
         "avatar-unlock-celebration-v1.js",
         "coin-avatar-shard-shop-v1.js",
         "coin-avatar-shop-reveal-v1.js",
@@ -6385,6 +6530,7 @@
         "profile-app.js",
         "social-connections-v2.js",
         "src/adapters/avatar/avatar-case-profile-runtime-v1.js",
+        "src/adapters/avatar/avatar-collection-profile-runtime-v1.js",
         "src/adapters/badges/badge-catalogue-runtime-v1.js",
         "src/adapters/badges/coin-shop-badge-runtime-v1.js",
         "src/features/avatar/avatar-artwork-registry-v554.js",
@@ -6393,12 +6539,12 @@
         "weekly-avatar-shard-rewards-v1.js"
       ],
       "writers": [
-        "avatar-collection-screen-v1.js",
         "avatar-unlock-celebration-v1.js",
         "coin-avatar-shard-shop-v1.js",
         "coin-avatar-shop-reveal-v1.js",
         "profile-app.js",
         "src/adapters/avatar/avatar-case-profile-runtime-v1.js",
+        "src/adapters/avatar/avatar-collection-profile-runtime-v1.js",
         "src/features/avatar/level-avatar-rewards-v1.js",
         "weekly-avatar-shard-rewards-v1.js"
       ],
@@ -6489,7 +6635,6 @@
       "readers": [
         "achievement-sharing-avatar-bridge-v1.js",
         "achievement-sharing-v4.js",
-        "avatar-collection-screen-v1.js",
         "avatar-unlock-celebration-v1.js",
         "coin-avatar-shard-shop-v1.js",
         "coin-avatar-shop-reveal-v1.js",
@@ -6498,6 +6643,7 @@
         "profile-app.js",
         "social-connections-v2.js",
         "src/adapters/avatar/avatar-case-profile-runtime-v1.js",
+        "src/adapters/avatar/avatar-collection-profile-runtime-v1.js",
         "src/adapters/badges/badge-catalogue-runtime-v1.js",
         "src/adapters/badges/coin-shop-badge-runtime-v1.js",
         "src/features/avatar/avatar-artwork-registry-v554.js",
@@ -6566,7 +6712,6 @@
         "achievement-sharing-v4.js",
         "adaptive-scenarios.js",
         "app.js",
-        "avatar-collection-screen-v1.js",
         "avatar-unlock-celebration-v1.js",
         "badge-chest-v2.js",
         "bisaya-review-regions.js",
@@ -6585,6 +6730,7 @@
         "src/adapters/navigation/avatar-collections-navigation-v551.js",
         "src/features/audio/pronunciation-release-control.js",
         "src/features/avatar/avatar-case-v1.js",
+        "src/features/avatar/avatar-collection-screen-v1.js",
         "src/features/avatar/avatar-collection-tabs-phase6-1-v1.js",
         "src/features/sharing/achievement-sharing-router-v3.js",
         "weekly-avatar-chest.js",
@@ -6604,6 +6750,7 @@
       "name": "error",
       "listeners": [
         "avatar-case-v1.js",
+        "avatar-collection-screen-v1.js",
         "avatar-progression-hotfix-v551.js",
         "avatar-unlock-celebration-v1.js",
         "badge-catalogue-v2.js",
@@ -6643,12 +6790,12 @@
       "listeners": [
         "achievement-sharing-v4.js",
         "app.js",
-        "avatar-collection-screen-v1.js",
         "avatar-unlock-celebration-v1.js",
         "badge-chest-v2.js",
         "profile-app.js",
         "profile-emblem-control.js",
         "src/features/avatar/avatar-case-v1.js",
+        "src/features/avatar/avatar-collection-screen-v1.js",
         "weekly-avatar-chest.js",
         "weekly-avatar-shard-rewards-v1.js"
       ],
@@ -6658,6 +6805,7 @@
       "name": "load",
       "listeners": [
         "avatar-case-v1.js",
+        "avatar-collection-screen-v1.js",
         "avatar-progression-hotfix-v551.js",
         "avatar-unlock-celebration-v1.js",
         "badge-catalogue-v2.js",
@@ -6753,17 +6901,17 @@
       "listeners": [
         "achievement-sharing-avatar-bridge-v1.js",
         "achievement-sharing-v4.js",
-        "avatar-collection-screen-v1.js",
         "avatar-unlock-celebration-v1.js",
         "src/features/avatar/avatar-artwork-registry-v554.js",
         "src/features/avatar/avatar-case-v1.js",
+        "src/features/avatar/avatar-collection-screen-v1.js",
         "src/features/avatar/avatar-collection-summary-v1.js",
         "weekly-avatar-shard-rewards-v1.js"
       ],
       "dispatchers": [
-        "avatar-collection-screen-v1.js",
         "coin-avatar-shard-shop-v1.js",
         "coin-avatar-shop-reveal-v1.js",
+        "src/features/avatar/avatar-collection-screen-v1.js",
         "src/features/avatar/level-avatar-rewards-v1.js",
         "weekly-avatar-shard-rewards-v1.js"
       ]
@@ -6784,8 +6932,8 @@
         "weekly-avatar-shard-rewards-v1.js"
       ],
       "dispatchers": [
-        "avatar-collection-screen-v1.js",
-        "profile-app.js"
+        "profile-app.js",
+        "src/features/avatar/avatar-collection-screen-v1.js"
       ]
     },
     {
@@ -6964,8 +7112,8 @@
     {
       "name": "salita:open-avatar-collection",
       "listeners": [
-        "avatar-collection-screen-v1.js",
         "src/features/avatar/avatar-case-v1.js",
+        "src/features/avatar/avatar-collection-screen-v1.js",
         "src/features/avatar/avatar-collection-summary-v1.js"
       ],
       "dispatchers": [
@@ -7049,7 +7197,7 @@
     {
       "symbol": "__salitaAvatarCollectionScreenInstalled",
       "providers": [
-        "avatar-collection-screen-v1.js"
+        "src/features/avatar/avatar-collection-screen-v1.js"
       ]
     },
     {
@@ -7158,6 +7306,24 @@
       "symbol": "__salitaQuestAvatarCaseV1Installed",
       "providers": [
         "src/features/avatar/avatar-case-v1.js"
+      ]
+    },
+    {
+      "symbol": "__salitaQuestAvatarCollectionProfileRuntimeV1Installed",
+      "providers": [
+        "src/adapters/avatar/avatar-collection-profile-runtime-v1.js"
+      ]
+    },
+    {
+      "symbol": "__salitaQuestAvatarCollectionScreenCompatibilityLoading",
+      "providers": [
+        "avatar-collection-screen-v1.js"
+      ]
+    },
+    {
+      "symbol": "__salitaQuestAvatarCollectionScreenCoordinatorInstalled",
+      "providers": [
+        "avatar-collection-screen-v1.js"
       ]
     },
     {
@@ -7410,9 +7576,15 @@
       ]
     },
     {
+      "symbol": "SalitaAvatarCollectionProfileRuntimeV1",
+      "providers": [
+        "src/adapters/avatar/avatar-collection-profile-runtime-v1.js"
+      ]
+    },
+    {
       "symbol": "SalitaAvatarCollectionScreen",
       "providers": [
-        "avatar-collection-screen-v1.js"
+        "src/features/avatar/avatar-collection-screen-v1.js"
       ]
     },
     {
