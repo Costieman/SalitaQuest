@@ -1,0 +1,3 @@
+/* Canonical avatar rendering: direct PNGs, no pixel scaling or canvas-derived artwork. */
+.sq-avatar-card-art img,.sq-avatar-detail-card img,.sq-profile-button img,.sq-profile-identity img,.sq-profile-emblem-trigger img,.sq-avatar-choice img,.player-avatar img,.profile-choice img,.profile-login-avatar,.avatar-option img{image-rendering:auto!important;}
+.sq-avatar-card-art img,.sq-avatar-detail-card img,.sq-profile-emblem-trigger img{object-fit:contain;}

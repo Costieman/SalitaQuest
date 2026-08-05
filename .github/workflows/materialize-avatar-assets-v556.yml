@@ -1,0 +1,63 @@
+name: Materialize avatar assets 5.5.6
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - agent/avatar-canonical-rebuild-v5-5-6-1024
+    paths:
+      - avatar_bundle_v556.part*
+      - .github/workflows/materialize-avatar-assets-v556.yml
+  pull_request:
+    branches:
+      - main
+    paths:
+      - avatar_bundle_v556.part*
+      - .github/workflows/materialize-avatar-assets-v556.yml
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    if: ${{ hashFiles('avatar_bundle_v556.part17') != '' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository) }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out rebuild branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/avatar-canonical-rebuild-v5-5-6-1024
+          fetch-depth: 0
+
+      - name: Decode and validate individual 1024 by 1024 avatars
+        run: |
+          set -euo pipefail
+          cat avatar_bundle_v556.part* | base64 --decode > /tmp/avatar_bundle_v556.zip
+          unzip -o /tmp/avatar_bundle_v556.zip -d .
+          test "$(find avatars/final -maxdepth 1 -type f -name '*.avif' | wc -l)" -eq 48
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          manifest = json.loads(Path('avatars/final/manifest.json').read_text())
+          assert len(manifest['avatars']) == 48
+          assert all(item['width'] == 1024 and item['height'] == 1024 for item in manifest['avatars'])
+          print('Manifest confirms 48 individual 1024x1024 avatar assets')
+          PY
+          for image in avatars/final/*.avif; do
+            dimensions="$(identify -format '%wx%h' "$image")"
+            test "$dimensions" = "1024x1024" || { echo "$image is $dimensions"; exit 1; }
+          done
+          rm -f avatar_bundle_v556.part* tools/avatar-assets-1024.tar tools/.avatar-bundle-stage avatars/final/tarsier.svg
+
+      - name: Commit materialized assets
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A avatars/final avatar_bundle_v556.part* tools/avatar-assets-1024.tar tools/.avatar-bundle-stage
+          if git diff --cached --quiet; then
+            echo "Assets already materialized"
+            exit 0
+          fi
+          git commit -m "Materialize 48 canonical 1024px avatar assets"
+          git push origin HEAD:agent/avatar-canonical-rebuild-v5-5-6-1024
