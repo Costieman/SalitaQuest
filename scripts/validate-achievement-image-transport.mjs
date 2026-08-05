@@ -36,7 +36,7 @@ requireMarkers(router,[
   'modes:Object.freeze(["mobile_native_image_share","desktop_save_only"])',
   'const APP_URL = "https://costieman.github.io/SalitaQuest/"',
   'const QR_DATA_URL = "data:image/png;base64,',
-  'function isMobileShareDevice()',
+  'const isMobileShareDevice = () =>',
   'async function decorateWithQr(source)',
   'async function copyCaption()',
   'Play Salita Quest free:',
