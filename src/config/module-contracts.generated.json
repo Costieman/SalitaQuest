@@ -25,7 +25,7 @@
       "profile-emblem-control.js",
       "adaptive-scenarios.js",
       "level-progression-v2.js",
-      "level-up-mobile-safety-v552.js",
+      "src/features/interface/level-up-mobile-safety-v552.js",
       "desktop-navigation-refinement.js",
       "pronunciation-release-control.js",
       "home-reward-coordinator.js",
@@ -55,7 +55,7 @@
       "profile-emblem-control.js",
       "adaptive-scenarios.js",
       "level-progression-v2.js",
-      "level-up-mobile-safety-v552.js",
+      "src/features/interface/level-up-mobile-safety-v552.js",
       "desktop-navigation-refinement.js",
       "pronunciation-release-control.js",
       "home-reward-coordinator.js",
@@ -2883,51 +2883,6 @@
       "risk": 36
     },
     {
-      "file": "level-up-mobile-safety-v552.js",
-      "bytes": 1058,
-      "contexts": [
-        "cebuano",
-        "tagalog"
-      ],
-      "courses": [
-        "cebuano",
-        "tagalog"
-      ],
-      "references": [],
-      "loads": [],
-      "fetches": [],
-      "workers": [],
-      "coreGlobals": [],
-      "window": {
-        "provides": [
-          "__salitaQuestLevelUpMobileSafetyV552Installed",
-          "SalitaLevelUpMobileSafety"
-        ],
-        "consumes": [
-          "SalitaLevelProgression",
-          "SalitaPopupGovernor"
-        ]
-      },
-      "storage": [],
-      "dom": {
-        "ids": [],
-        "selectors": [],
-        "datasets": [
-          "levelUpSafety"
-        ]
-      },
-      "events": {
-        "listens": [
-          "pageshow",
-          "visibilitychange"
-        ],
-        "dispatches": []
-      },
-      "role": "interface",
-      "readiness": "extraction-candidate",
-      "risk": 8
-    },
-    {
       "file": "long-term-badges-v1.js",
       "bytes": 11592,
       "contexts": [
@@ -3634,7 +3589,7 @@
     },
     {
       "file": "service-worker.js",
-      "bytes": 11322,
+      "bytes": 11384,
       "contexts": [
         "worker"
       ],
@@ -3681,6 +3636,7 @@
         "social-connections-v2.js",
         "src/app/course-bootstrap.js",
         "src/config/course-manifest.js",
+        "src/features/interface/level-up-mobile-safety-v552.js",
         "ui-quality-fixes.js",
         "weekly-avatar-chest.js",
         "weekly-avatar-polish.js",
@@ -3918,7 +3874,7 @@
     },
     {
       "file": "src/config/course-manifest.js",
-      "bytes": 5980,
+      "bytes": 6026,
       "contexts": [
         "bootstrap"
       ],
@@ -3941,7 +3897,6 @@
         "key-run-refinement.js",
         "lesson-side-launcher.js",
         "level-progression-v2.js",
-        "level-up-mobile-safety-v552.js",
         "mastery-feedback.js",
         "mobile-session-refinement.js",
         "placement-onboarding-v1.js",
@@ -3951,6 +3906,7 @@
         "progression-v54.js",
         "pronunciation-release-control.js",
         "social-connections-v2.js",
+        "src/features/interface/level-up-mobile-safety-v552.js",
         "ui-quality-fixes.js",
         "weekly-avatar-chest.js",
         "weekly-avatar-polish.js"
@@ -3980,6 +3936,51 @@
       "role": "course-config",
       "readiness": "hold",
       "risk": 5
+    },
+    {
+      "file": "src/features/interface/level-up-mobile-safety-v552.js",
+      "bytes": 1058,
+      "contexts": [
+        "cebuano",
+        "tagalog"
+      ],
+      "courses": [
+        "cebuano",
+        "tagalog"
+      ],
+      "references": [],
+      "loads": [],
+      "fetches": [],
+      "workers": [],
+      "coreGlobals": [],
+      "window": {
+        "provides": [
+          "__salitaQuestLevelUpMobileSafetyV552Installed",
+          "SalitaLevelUpMobileSafety"
+        ],
+        "consumes": [
+          "SalitaLevelProgression",
+          "SalitaPopupGovernor"
+        ]
+      },
+      "storage": [],
+      "dom": {
+        "ids": [],
+        "selectors": [],
+        "datasets": [
+          "levelUpSafety"
+        ]
+      },
+      "events": {
+        "listens": [
+          "pageshow",
+          "visibilitychange"
+        ],
+        "dispatches": []
+      },
+      "role": "interface",
+      "readiness": "extraction-candidate",
+      "risk": 8
     },
     {
       "file": "ui-quality-fixes.js",
@@ -5145,22 +5146,6 @@
       ]
     },
     {
-      "from": "level-up-mobile-safety-v552.js",
-      "to": "level-progression-v2.js",
-      "type": "window-api",
-      "symbols": [
-        "SalitaLevelProgression"
-      ]
-    },
-    {
-      "from": "level-up-mobile-safety-v552.js",
-      "to": "popup-governor-v1.js",
-      "type": "window-api",
-      "symbols": [
-        "SalitaPopupGovernor"
-      ]
-    },
-    {
       "from": "long-term-badges-v1.js",
       "to": "app.js",
       "type": "core-globals",
@@ -5491,6 +5476,22 @@
       "type": "core-globals",
       "symbols": [
         "session"
+      ]
+    },
+    {
+      "from": "src/features/interface/level-up-mobile-safety-v552.js",
+      "to": "level-progression-v2.js",
+      "type": "window-api",
+      "symbols": [
+        "SalitaLevelProgression"
+      ]
+    },
+    {
+      "from": "src/features/interface/level-up-mobile-safety-v552.js",
+      "to": "popup-governor-v1.js",
+      "type": "window-api",
+      "symbols": [
+        "SalitaPopupGovernor"
       ]
     },
     {
@@ -6001,8 +6002,8 @@
       "name": "pageshow",
       "listeners": [
         "home-reward-coordinator.js",
-        "level-up-mobile-safety-v552.js",
-        "popup-governor-v1.js"
+        "popup-governor-v1.js",
+        "src/features/interface/level-up-mobile-safety-v552.js"
       ],
       "dispatchers": []
     },
@@ -6347,8 +6348,8 @@
       "listeners": [
         "avatar-unlock-celebration-v1.js",
         "home-reward-coordinator.js",
-        "level-up-mobile-safety-v552.js",
-        "profile-app.js"
+        "profile-app.js",
+        "src/features/interface/level-up-mobile-safety-v552.js"
       ],
       "dispatchers": []
     }
@@ -6555,7 +6556,7 @@
     {
       "symbol": "__salitaQuestLevelUpMobileSafetyV552Installed",
       "providers": [
-        "level-up-mobile-safety-v552.js"
+        "src/features/interface/level-up-mobile-safety-v552.js"
       ]
     },
     {
@@ -6757,7 +6758,7 @@
     {
       "symbol": "SalitaLevelUpMobileSafety",
       "providers": [
-        "level-up-mobile-safety-v552.js"
+        "src/features/interface/level-up-mobile-safety-v552.js"
       ]
     },
     {

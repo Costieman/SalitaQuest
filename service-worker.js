@@ -1,5 +1,5 @@
-const PREVIOUS_CACHE_NAME = "salita-quest-v5-5-10-persistent-navigation-r52";
-const CACHE_NAME = "salita-quest-v5-6-0-modular-bootstrap-r53";
+const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-0-modular-bootstrap-r53";
+const CACHE_NAME = "salita-quest-v5-6-1-first-module-extraction-r54";
 const AVATAR_CASE_DISPLAY_HOTFIX = "2026-08-01-compact-display-share-stack-1";
 const TOPBAR_WORLD_PROGRESS_HOTFIX = "2026-08-01-separated-heading-rail-1";
 const SHARE_IMAGE_TRANSPORT_DELIVERY = "2026-08-02-direct-loader-1";
@@ -25,6 +25,7 @@ const APP_ENHANCEMENTS = [
   "./mastery-console-overrides.css", "./lesson-side-launcher.js", "./lesson-side-launcher.css",
   "./mobile-session-refinement.js", "./mobile-session-refinement.css", "./popup-governor-v1.js",
   "./level-progression-v2.js", "./level-progression-v2.css", "./level-up-mobile-safety-v552.js",
+  "./src/features/interface/level-up-mobile-safety-v552.js",
   "./fluid-desktop-app.css", "./adaptive-scenarios.js", "./adaptive-scenarios.css",
   "./desktop-navigation-refinement.js", "./desktop-navigation-refinement.css",
   "./pronunciation-release-control.js", "./home-reward-coordinator.js", "./badge-catalogue-v2.js",

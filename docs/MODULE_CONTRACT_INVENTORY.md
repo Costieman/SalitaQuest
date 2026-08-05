@@ -38,7 +38,7 @@
 18. `profile-emblem-control.js`
 19. `adaptive-scenarios.js`
 20. `level-progression-v2.js`
-21. `level-up-mobile-safety-v552.js`
+21. `src/features/interface/level-up-mobile-safety-v552.js`
 22. `desktop-navigation-refinement.js`
 23. `pronunciation-release-control.js`
 24. `home-reward-coordinator.js`
@@ -69,7 +69,7 @@
 16. `profile-emblem-control.js`
 17. `adaptive-scenarios.js`
 18. `level-progression-v2.js`
-19. `level-up-mobile-safety-v552.js`
+19. `src/features/interface/level-up-mobile-safety-v552.js`
 20. `desktop-navigation-refinement.js`
 21. `pronunciation-release-control.js`
 22. `home-reward-coordinator.js`
@@ -87,7 +87,7 @@
 - `facebook-share-link-v1.js` — risk 4; 0 engine globals; 0 storage operations.
 - `avatar-progression-migration-v1.js` — risk 7; 1 engine globals; 0 storage operations.
 - `achievement-sharing-router-v3.js` — risk 8; 0 engine globals; 0 storage operations.
-- `level-up-mobile-safety-v552.js` — risk 8; 0 engine globals; 0 storage operations.
+- `src/features/interface/level-up-mobile-safety-v552.js` — risk 8; 0 engine globals; 0 storage operations.
 - `economy-tracking-phase6-v1.js` — risk 10; 0 engine globals; 0 storage operations.
 - `compact-desktop-layout.js` — risk 11; 1 engine globals; 0 storage operations.
 - `avatar-collection-summary-v1.js` — risk 12; 0 engine globals; 2 storage operations.
@@ -256,7 +256,7 @@
 | `__salitaQuestLessonSideLauncherInstalled` | lesson-side-launcher.js |
 | `__salitaQuestLevelAvatarRewardsV3Installed` | level-avatar-rewards-v1.js |
 | `__salitaQuestLevelProgressionV2Installed` | level-progression-v2.js |
-| `__salitaQuestLevelUpMobileSafetyV552Installed` | level-up-mobile-safety-v552.js |
+| `__salitaQuestLevelUpMobileSafetyV552Installed` | src/features/interface/level-up-mobile-safety-v552.js |
 | `__salitaQuestLongTermBadgesV1Installed` | long-term-badges-v1.js |
 | `__salitaQuestMasteryFeedbackInstalled` | mastery-feedback.js |
 | `__salitaQuestMobileSessionRefinementInstalled` | mobile-session-refinement.js |
@@ -288,7 +288,7 @@
 | `SalitaFacebookShareLink` | facebook-share-link-v1.js |
 | `SalitaLevelAvatarRewards` | level-avatar-rewards-v1.js |
 | `SalitaLevelProgression` | level-progression-v2.js |
-| `SalitaLevelUpMobileSafety` | level-up-mobile-safety-v552.js |
+| `SalitaLevelUpMobileSafety` | src/features/interface/level-up-mobile-safety-v552.js |
 | `SalitaPopupGovernor` | popup-governor-v1.js |
 | `SalitaQuestAchievementSharing` | achievement-sharing-v4.js |
 | `SalitaQuestAvatarCase` | avatar-case-v1.js |
