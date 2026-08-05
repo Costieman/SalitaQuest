@@ -34,7 +34,7 @@ jobs:
           git diff --check
       - name: Commit generated inventory
         run: |
-          if git diff --quiet -- docs/MODULE_CONTRACT_INVENTORY.md src/config/module-contracts.generated.json; then
+          if [ -z "$(git status --porcelain -- docs/MODULE_CONTRACT_INVENTORY.md src/config/module-contracts.generated.json)" ]; then
             echo "Inventory is already current."
             exit 0
           fi
