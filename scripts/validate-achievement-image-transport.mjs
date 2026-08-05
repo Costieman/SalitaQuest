@@ -63,10 +63,13 @@ if (!mobileMarkup[1].includes(': `<button type="button" data-sq-share-save>Save<
 }
 
 requireMarkers(routerCss,[
-  ".achievement-share-router-v2",
-  ".achievement-share-mode-group",
-  ".achievement-share-mode-actions{",
-  ".achievement-share-secondary[hidden]"
+  ".achievement-share-router-v3",
+  ".achievement-share-router-v3 button",
+  ".achievement-share-router-v3 [data-sq-share-main]",
+  ".achievement-share-router-v3 [data-sq-share-save]",
+  ".achievement-share-router-v3 button:disabled",
+  ".achievement-share-secondary[hidden]",
+  "@media(max-width:650px)"
 ],"Sharing router styles");
 
 requireMarkers(loader,[
