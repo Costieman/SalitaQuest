@@ -1,5 +1,5 @@
-const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-15-level-avatar-rewards-extraction-r68";
-const CACHE_NAME = "salita-quest-v5-6-16-avatar-hotfix-adapters-extraction-r69";
+const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-16-avatar-hotfix-adapters-extraction-r69";
+const CACHE_NAME = "salita-quest-v5-6-17-coin-shop-badge-adapter-extraction-r70";
 const AVATAR_CASE_DISPLAY_HOTFIX = "2026-08-01-compact-display-share-stack-1";
 const TOPBAR_WORLD_PROGRESS_HOTFIX = "2026-08-01-separated-heading-rail-1";
 const SHARE_IMAGE_TRANSPORT_DELIVERY = "2026-08-02-direct-loader-1";
@@ -40,7 +40,9 @@ const APP_ENHANCEMENTS = [
   "./achievement-sharing-router-v2.js", "./achievement-sharing-router-v2.css", "./achievement-sharing-router-v3.js", "./src/features/sharing/achievement-sharing-router-v3.js",
   "./facebook-share-link-v1.js", "./src/features/sharing/facebook-share-link-v1.js",
   "./progression-v54.js", "./exercise-fixes-v545.js",
-  "./collection-key-translation-hotfix.js", "./src/features/interface/collection-key-translation-hotfix.js"
+  "./collection-key-translation-hotfix.js", "./src/features/interface/collection-key-translation-hotfix.js",
+  "./coin-avatar-shop-badges-v1.js", "./src/adapters/badges/coin-shop-badge-runtime-v1.js",
+  "./src/features/economy/coin-avatar-shop-badges-v1.js"
 ];
 
 const AVATAR_PROGRESSION_FILES = [
