@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 
-const js = fs.readFileSync('avatar-collection-tabs-phase6-1-v1.js','utf8');
+const js = fs.readFileSync('src/features/avatar/avatar-collection-tabs-phase6-1-v1.js','utf8');
 const css = fs.readFileSync('avatar-collection-tabs-phase6-1-v1.css','utf8');
 const economy = fs.readFileSync('src/features/economy/economy-tracking-phase6-v1.js','utf8');
 const loader = fs.readFileSync('coin-avatar-shop-topbar-v1.js','utf8');

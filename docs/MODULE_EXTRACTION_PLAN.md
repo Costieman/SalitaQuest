@@ -66,3 +66,5 @@ Before extracting these files, introduce an explicit engine adapter that owns ac
 8. `facebook-share-link-v1.js` — completed as `src/features/sharing/facebook-share-link-v1.js`, with the root compatibility URL retained through r62.
 
 9. `economy-tracking-phase6-v1.js` — completed as `src/features/economy/economy-tracking-phase6-v1.js`, with the root compatibility URL retained through r63.
+
+10. `avatar-collection-tabs-phase6-1-v1.js` — completed as `src/features/avatar/avatar-collection-tabs-phase6-1-v1.js`, with the root compatibility URL retained through r64.
