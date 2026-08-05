@@ -17,6 +17,7 @@ const files = [
   "level-avatar-rewards-v1.js",
   "avatar-unlock-celebration-v1.js",
   "profile-emblem-control.js",
+  "src/config/course-manifest.js",
   "service-worker.js"
 ];
 for (const file of files) new vm.Script(read(file), {filename:file});
@@ -80,23 +81,38 @@ if (unlock.indexOf("acknowledge:() => acknowledgePending") > unlock.indexOf("sho
   fail("Avatar unlock must acknowledge before render");
 }
 
-for (const loaderFile of ["app.html", "bisaya.html"]) {
+const manifestContext = {window:{}};
+vm.createContext(manifestContext);
+vm.runInContext(read("src/config/course-manifest.js"), manifestContext, {filename:"src/config/course-manifest.js"});
+const courseManifest = manifestContext.window.SalitaQuestCourseManifest;
+if (!courseManifest?.courses) fail("The modular course manifest was not installed");
+
+for (const [loaderFile, courseId] of [["app.html", "tagalog"], ["bisaya.html", "cebuano"]]) {
   const loader = read(loaderFile);
-  const governorIndex = loader.indexOf("popup-governor-v1.js?v=5.5.3");
-  const levelIndex = loader.indexOf("level-progression-v2.js?v=5.5.3");
+  requireMarkers(loader, [
+    "src/config/course-manifest.js?v=5.6.0",
+    "src/app/course-bootstrap.js?v=5.6.0",
+    `courseId: "${courseId}"`
+  ], `${loaderFile} modular entry point`);
+  const scripts = courseManifest.courses[courseId]?.scripts;
+  if (!Array.isArray(scripts)) fail(`${courseId} has no script manifest`);
+  const governorIndex = scripts.indexOf("popup-governor-v1.js?v=5.5.3");
+  const levelIndex = scripts.indexOf("level-progression-v2.js?v=5.5.3");
   if (governorIndex < 0 || levelIndex < 0 || governorIndex > levelIndex) {
     fail(`${loaderFile} must load popup governance before level progression`);
   }
-  if (!loader.includes("profile-emblem-control.js?v=5.5.3") && !loader.includes("profile-emblem-control.js?v=5.5.4")) {
+  if (!scripts.some(path => /^profile-emblem-control\.js\?v=5\.5\.[34]$/.test(path))) {
     fail(`${loaderFile} must load the governed profile emblem runtime`);
   }
-  requireMarkers(loader, ["level-up-mobile-safety-v552.js?v=5.5.3"], loaderFile);
+  if (!scripts.includes("level-up-mobile-safety-v552.js?v=5.5.3")) {
+    fail(`${loaderFile} is missing level-up-mobile-safety-v552.js?v=5.5.3`);
+  }
 }
 
 const worker = read("service-worker.js");
 requireMarkers(worker, [
-  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-5-9-avatar-case-r51"',
-  'const CACHE_NAME = "salita-quest-v5-5-10-persistent-navigation-r52"',
+  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-5-10-persistent-navigation-r52"',
+  'const CACHE_NAME = "salita-quest-v5-6-0-modular-bootstrap-r53"',
   '"./popup-governor-v1.js"',
   '"./level-avatar-rewards-v1.js"',
   '"./avatar-unlock-celebration-v1.js"',
@@ -119,4 +135,4 @@ for (const marker of ["acknowledgement-before-render", "single popup governor", 
   if (!notes.toLowerCase().includes(marker.toLowerCase())) fail(`Stage 1 release notes are missing ${marker}`);
 }
 
-console.log("Stage 1 popup-governance validation passed: one queue, durable acknowledgement, actual-level gating, placement suppression and persistent-navigation cache refresh.");
+console.log("Stage 1 popup-governance validation passed: one queue, durable acknowledgement, actual-level gating, placement suppression and modular persistent-navigation cache refresh.");
