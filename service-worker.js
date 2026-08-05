@@ -1,5 +1,5 @@
-const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-12-avatar-collection-summary-extraction-r65";
-const CACHE_NAME = "salita-quest-v5-6-13-collection-key-translation-hotfix-extraction-r66";
+const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-13-collection-key-translation-hotfix-extraction-r66";
+const CACHE_NAME = "salita-quest-v5-6-14-popup-governor-extraction-r67";
 const AVATAR_CASE_DISPLAY_HOTFIX = "2026-08-01-compact-display-share-stack-1";
 const TOPBAR_WORLD_PROGRESS_HOTFIX = "2026-08-01-separated-heading-rail-1";
 const SHARE_IMAGE_TRANSPORT_DELIVERY = "2026-08-02-direct-loader-1";
@@ -27,6 +27,7 @@ const APP_ENHANCEMENTS = [
   "./clean-topbar.css", "./topbar-world-progress-hotfix.css", "./mastery-feedback.js", "./mastery-feedback.css",
   "./mastery-console-overrides.css", "./lesson-side-launcher.js", "./lesson-side-launcher.css",
   "./mobile-session-refinement.js", "./mobile-session-refinement.css", "./popup-governor-v1.js",
+  "./src/features/interface/popup-governor-v1.js",
   "./level-progression-v2.js", "./level-progression-v2.css", "./level-up-mobile-safety-v552.js",
   "./src/features/interface/level-up-mobile-safety-v552.js",
   "./fluid-desktop-app.css", "./adaptive-scenarios.js", "./adaptive-scenarios.css",

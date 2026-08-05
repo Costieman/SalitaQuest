@@ -37,6 +37,7 @@ const runtimeFiles = [
   "avatar-progression-hotfix-v551.js",
   "profile-app.js",
   "popup-governor-v1.js",
+  "src/features/interface/popup-governor-v1.js",
   "profile-emblem-control.js",
   "avatar-collection-screen-v1.js",
   "avatar-case-v1.js",
@@ -136,8 +137,8 @@ if (!navigation.includes('action:"avatar-collection"')) fail("Persistent navigat
 if (navigation.includes("salitaQuestDesktopNavigationCollapsed")) fail("Persistent navigation retains the obsolete collapsed-sidebar preference");
 
 const serviceWorker = read("service-worker.js");
-if (!serviceWorker.includes('const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-12-avatar-collection-summary-extraction-r65"')) fail("Service worker does not retain the pre-modular release boundary");
-if (!serviceWorker.includes('const CACHE_NAME = "salita-quest-v5-6-13-collection-key-translation-hotfix-extraction-r66"')) fail("Service worker cache version is not the modular-bootstrap release");
+if (!serviceWorker.includes('const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-13-collection-key-translation-hotfix-extraction-r66"')) fail("Service worker does not retain the pre-modular release boundary");
+if (!serviceWorker.includes('const CACHE_NAME = "salita-quest-v5-6-14-popup-governor-extraction-r67"')) fail("Service worker cache version is not the modular-bootstrap release");
 if (!serviceWorker.includes('const EXPLICIT_SHARING_ROUTER_DELIVERY = "2026-08-02-feed-private-image-router-1"')) fail("Service worker does not advertise the explicit sharing-router update");
 if (!serviceWorker.includes('"./achievement-sharing-router-v2.js"') || !serviceWorker.includes('"./achievement-sharing-router-v2.css"')) fail("Service worker does not precache the sharing compatibility router");
 if (!serviceWorker.includes('"./avatar-case-v1.js"') || !serviceWorker.includes('"./avatar-case-v1.css"')) fail("Service worker does not precache the Avatar Case runtime");

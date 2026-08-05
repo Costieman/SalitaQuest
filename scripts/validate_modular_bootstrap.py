@@ -105,7 +105,7 @@ def validate_storage_contract(manifest_source: str, bootstrap_source: str) -> No
 def validate_service_worker() -> None:
     source = read(SERVICE_WORKER)
     required = (
-        'const CACHE_NAME = "salita-quest-v5-6-13-collection-key-translation-hotfix-extraction-r66";',
+        'const CACHE_NAME = "salita-quest-v5-6-14-popup-governor-extraction-r67";',
         '"./src/config/course-manifest.js"',
         '"./src/app/course-bootstrap.js"',
     )

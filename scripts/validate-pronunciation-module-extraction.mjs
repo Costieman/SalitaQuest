@@ -67,8 +67,8 @@ if (!refresh.includes("src/features/audio/pronunciation-release-control.js")) {
 }
 
 for (const marker of [
-  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-12-avatar-collection-summary-extraction-r65"',
-  'const CACHE_NAME = "salita-quest-v5-6-13-collection-key-translation-hotfix-extraction-r66"',
+  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-13-collection-key-translation-hotfix-extraction-r66"',
+  'const CACHE_NAME = "salita-quest-v5-6-14-popup-governor-extraction-r67"',
   '"./pronunciation-release-control.js"',
   '"./src/features/audio/pronunciation-release-control.js"'
 ]) if (!worker.includes(marker)) fail(`Service worker is missing ${marker}`);
