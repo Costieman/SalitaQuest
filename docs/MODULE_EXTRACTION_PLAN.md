@@ -82,3 +82,5 @@ Before extracting these files, introduce an explicit engine adapter that owns ac
 16. `coin-avatar-shop-badges-v1.js` — adapter-led split into `src/adapters/badges/coin-shop-badge-runtime-v1.js` and `src/features/economy/coin-avatar-shop-badges-v1.js`; the historical root remains the ordered compatibility coordinator through r70.
 
 17. `incorrect-order-feedback.js` — adapter-led split into `src/adapters/exercise/incorrect-order-feedback-runtime-v1.js` and `src/features/exercise/incorrect-order-feedback.js`; the historical root remains the ordered compatibility coordinator through r71.
+
+18. `long-term-badges-v1.js` — adapter-led split into `src/adapters/badges/badge-catalogue-runtime-v1.js` and `src/features/badges/long-term-badges-v1.js`; the historical root remains the ordered compatibility coordinator through r72.

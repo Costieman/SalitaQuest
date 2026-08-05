@@ -78,8 +78,8 @@ for (const courseId of ["tagalog","cebuano"]) {
 }
 if (!refresh.includes('`./src/features/interface/popup-governor-v1.js?v=${RELEASE}`') || refresh.includes('`./popup-governor-v1.js?v=${RELEASE}`')) fail("Mobile refresh delivery changed");
 for (const marker of [
-  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-17-coin-shop-badge-adapter-extraction-r70"',
-  'const CACHE_NAME = "salita-quest-v5-6-18-incorrect-order-feedback-adapter-extraction-r71"',
+  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-18-incorrect-order-feedback-adapter-extraction-r71"',
+  'const CACHE_NAME = "salita-quest-v5-6-19-long-term-badge-adapter-extraction-r72"',
   '"./popup-governor-v1.js"',
   '"./src/features/interface/popup-governor-v1.js"'
 ]) if (!worker.includes(marker)) fail(`Offline delivery is missing ${marker}`);
