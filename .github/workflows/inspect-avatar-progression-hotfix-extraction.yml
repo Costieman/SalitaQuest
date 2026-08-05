@@ -13,6 +13,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
+      - name: Install audit tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ripgrep
       - name: Inspect ownership and consumers
         shell: bash
         run: |
@@ -35,10 +39,16 @@ jobs:
             '(^|[^A-Za-z0-9_])(switchView|closeMobileMenu|renderBadges)([^A-Za-z0-9_]|$)|collectionsView|data-open-badge-collection|data-open-avatar-collection-main' . || true
           echo '=== service worker cache names and target assets ==='
           rg -n 'PREVIOUS_CACHE_NAME|CACHE_NAME|avatar-progression-hotfix-v551' service-worker.js scripts .github/workflows || true
-          echo '=== generated inventory entry ==='
+          echo '=== generated inventory entry and edges ==='
           node - <<'NODE'
           const fs=require('fs');
           const data=JSON.parse(fs.readFileSync('src/config/module-contracts.generated.json','utf8'));
-          const text=JSON.stringify(data,null,2).split('\n');
-          text.forEach((line,index)=>{if(line.includes('avatar-progression-hotfix-v551')) console.log(`${index+1}:${line}`);});
+          const walk=(value,path=[])=>{
+            if(Array.isArray(value)) value.forEach((item,index)=>walk(item,[...path,index]));
+            else if(value&&typeof value==='object') {
+              if(JSON.stringify(value).includes('avatar-progression-hotfix-v551.js')) console.log(JSON.stringify({path,value},null,2));
+              else Object.entries(value).forEach(([key,item])=>walk(item,[...path,key]));
+            }
+          };
+          walk(data);
           NODE
