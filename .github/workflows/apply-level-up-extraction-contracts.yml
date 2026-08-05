@@ -1,0 +1,175 @@
+name: Apply level-up extraction contracts
+
+on:
+  push:
+    branches:
+      - agent/extract-level-up-mobile-safety
+    paths:
+      - ".github/workflows/apply-level-up-extraction-contracts.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/extract-level-up-mobile-safety
+      - name: Update compatibility validators and refresh path
+        shell: python
+        run: |
+          from pathlib import Path
+
+          scripts = Path("scripts")
+          for path in [*scripts.glob("*.mjs"), *scripts.glob("*.py")]:
+              text = path.read_text(encoding="utf-8")
+              text = text.replace(
+                  'salita-quest-v5-6-0-modular-bootstrap-r53',
+                  'salita-quest-v5-6-1-first-module-extraction-r54'
+              )
+              text = text.replace(
+                  'salita-quest-v5-5-10-persistent-navigation-r52',
+                  'salita-quest-v5-6-0-modular-bootstrap-r53'
+              )
+              text = text.replace(
+                  'level-up-mobile-safety-v552.js?v=5.5.3',
+                  'src/features/interface/level-up-mobile-safety-v552.js?v=5.5.3'
+              )
+              path.write_text(text, encoding="utf-8")
+
+          for relative in [
+              "scripts/validate-avatar-progression-v550.mjs",
+              "scripts/validate-stage1-popup-governance-v553.mjs"
+          ]:
+              path = Path(relative)
+              text = path.read_text(encoding="utf-8")
+              token = '  "level-up-mobile-safety-v552.js",\n'
+              replacement = (
+                  '  "level-up-mobile-safety-v552.js",\n'
+                  '  "src/features/interface/level-up-mobile-safety-v552.js",\n'
+              )
+              if token not in text:
+                  raise SystemExit(f"Missing runtime file token in {relative}")
+              path.write_text(text.replace(token, replacement, 1), encoding="utf-8")
+
+          refresh = Path("mobile-refresh.html")
+          refresh_text = refresh.read_text(encoding="utf-8")
+          old_refresh = '`./level-up-mobile-safety-v552.js?v=${RELEASE}`'
+          new_refresh = '`./src/features/interface/level-up-mobile-safety-v552.js?v=${RELEASE}`'
+          if old_refresh not in refresh_text:
+              raise SystemExit("Mobile refresh root module reference was not found")
+          refresh.write_text(refresh_text.replace(old_refresh, new_refresh), encoding="utf-8")
+
+          mobile_validator = Path("scripts/validate-mobile-level-up-hotfix-v552.mjs")
+          mobile_validator.write_text('''import fs from "node:fs";
+          import vm from "node:vm";
+
+          const root = new URL("../", import.meta.url);
+          const read = path => fs.readFileSync(new URL(path, root), "utf8");
+          const fail = message => { throw new Error(message); };
+
+          const loaderPath = "level-up-mobile-safety-v552.js";
+          const modulePath = "src/features/interface/level-up-mobile-safety-v552.js";
+          const loader = read(loaderPath);
+          const safety = read(modulePath);
+          const manifestSource = read("src/config/course-manifest.js");
+          const refresh = read("mobile-refresh.html");
+          const worker = read("service-worker.js");
+
+          new vm.Script(loader, {filename:loaderPath});
+          new vm.Script(safety, {filename:modulePath});
+          new vm.Script(worker, {filename:"service-worker.js"});
+
+          for (const required of [
+            'const TARGET = "./src/features/interface/level-up-mobile-safety-v552.js?v=5.5.3"',
+            "document.currentScript",
+            "document.write",
+            "script.async = false",
+            "salitaCompatibilityLoader"
+          ]) {
+            if (!loader.includes(required)) fail(`Compatibility loader is missing ${required}`);
+          }
+
+          for (const required of [
+            'const INSTALL_FLAG = "__salitaQuestLevelUpMobileSafetyV552Installed"',
+            'const RELEASE = "5.5.3"',
+            "window.SalitaLevelProgression",
+            "window.SalitaPopupGovernor",
+            'window.addEventListener("pageshow"',
+            'document.addEventListener("visibilitychange"',
+            "window.SalitaLevelUpMobileSafety"
+          ]) {
+            if (!safety.includes(required)) fail(`Extracted module is missing ${required}`);
+          }
+
+          const context = {window:{}};
+          vm.createContext(context);
+          vm.runInContext(manifestSource, context, {filename:"src/config/course-manifest.js"});
+          const courses = context.window.SalitaQuestCourseManifest?.courses;
+          if (!courses) fail("Course manifest was not installed");
+          const expected = "src/features/interface/level-up-mobile-safety-v552.js?v=5.5.3";
+          for (const courseId of ["tagalog", "cebuano"]) {
+            const scripts = courses[courseId]?.scripts || [];
+            const level = scripts.indexOf("level-progression-v2.js?v=5.5.3");
+            const safetyIndex = scripts.indexOf(expected);
+            if (level < 0 || safetyIndex <= level) fail(`${courseId} must load the extracted safety module after level progression`);
+            if (scripts.includes("level-up-mobile-safety-v552.js?v=5.5.3")) fail(`${courseId} still loads the root compatibility URL`);
+          }
+
+          if (!refresh.includes("src/features/interface/level-up-mobile-safety-v552.js")) {
+            fail("Mobile refresh does not fetch the extracted module directly");
+          }
+          if (/localStorage\\.(?:clear|removeItem)\\(/.test(refresh)) {
+            fail("Mobile refresh must not clear learner local storage");
+          }
+
+          for (const required of [
+            'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-0-modular-bootstrap-r53"',
+            'const CACHE_NAME = "salita-quest-v5-6-1-first-module-extraction-r54"',
+            '"./level-up-mobile-safety-v552.js"',
+            '"./src/features/interface/level-up-mobile-safety-v552.js"'
+          ]) {
+            if (!worker.includes(required)) fail(`Service worker is missing ${required}`);
+          }
+
+          console.log("Level-up mobile-safety extraction validation passed: direct module loading, root compatibility forwarding, single implementation ownership and r54 offline delivery.");
+          ''`.replace(/^          /gm, ""), encoding="utf-8")
+
+          plan = Path("docs/MODULE_EXTRACTION_PLAN.md")
+          plan_text = plan.read_text(encoding="utf-8")
+          plan_text = plan_text.replace(
+              "## First extraction: mobile level-up safety\n\nThe recommended first physical move is",
+              "## First extraction: mobile level-up safety — completed on the extraction branch\n\nThe first physical move is"
+          ).replace(
+              "src/features/progression/level-up-mobile-safety.js",
+              "src/features/interface/level-up-mobile-safety-v552.js"
+          ).replace(
+              "3. Keep the existing manifest filename and version during the first offline-cache release.",
+              "3. Point current course manifests and mobile refresh directly to the feature path while retaining the versioned root compatibility URL for older cached documents."
+          ).replace(
+              "The compatibility loader should remain for at least one cache release. A later pull request can point the course manifest directly to the feature path and remove the root shim after older installed clients have crossed the cache boundary.",
+              "The compatibility loader remains for the r54 cache release. Current manifests already use the feature path; a later pull request can remove the root shim after older installed clients have crossed this boundary."
+          )
+          plan.write_text(plan_text, encoding="utf-8")
+      - name: Regenerate contract inventory
+        run: node scripts/generate-module-contract-inventory-v2.mjs --write
+      - name: Validate updated contracts
+        run: |
+          node scripts/validate-mobile-level-up-hotfix-v552.mjs
+          node scripts/generate-module-contract-inventory-v2.mjs --check
+          node --check scripts/validate-avatar-progression-v550.mjs
+          node --check scripts/validate-stage1-popup-governance-v553.mjs
+          python -m py_compile scripts/validate_modular_bootstrap.py
+          git diff --check
+      - name: Commit contract migration
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm .github/workflows/apply-level-up-extraction-contracts.yml
+          git rm -f .github/workflows/inspect-level-up-extraction.yml
+          git add scripts mobile-refresh.html docs/MODULE_EXTRACTION_PLAN.md \
+            docs/MODULE_CONTRACT_INVENTORY.md src/config/module-contracts.generated.json
+          git commit -m "Validate first module extraction contracts"
+          git push origin HEAD:agent/extract-level-up-mobile-safety
