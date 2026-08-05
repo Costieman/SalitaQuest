@@ -26,6 +26,8 @@ jobs:
         run: node scripts/apply-runtime-cleanup.mjs
       - name: Rebuild runtime audit
         run: node scripts/audit-runtime-assets.mjs
+      - name: Preserve workflow definitions
+        run: git restore .github
       - name: Check generated changes
         run: git diff --check
       - name: Commit cleanup to sandbox branch
