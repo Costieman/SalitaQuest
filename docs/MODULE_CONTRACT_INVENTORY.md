@@ -86,8 +86,8 @@
 - `src/features/avatar/avatar-catalogue-v1.js` — risk 3; 1 engine globals; 0 storage operations.
 - `facebook-share-link-v1.js` — risk 4; 0 engine globals; 0 storage operations.
 - `src/features/avatar/avatar-progression-migration-v1.js` — risk 7; 1 engine globals; 0 storage operations.
-- `achievement-sharing-router-v3.js` — risk 8; 0 engine globals; 0 storage operations.
 - `src/features/interface/level-up-mobile-safety-v552.js` — risk 8; 0 engine globals; 0 storage operations.
+- `src/features/sharing/achievement-sharing-router-v3.js` — risk 8; 0 engine globals; 0 storage operations.
 - `economy-tracking-phase6-v1.js` — risk 10; 0 engine globals; 0 storage operations.
 - `src/features/interface/compact-desktop-layout.js` — risk 11; 1 engine globals; 0 storage operations.
 - `avatar-collection-summary-v1.js` — risk 12; 0 engine globals; 2 storage operations.
@@ -236,7 +236,7 @@
 | `__salitaEconomyTrackingPhase6V2Installed` | economy-tracking-phase6-v1.js |
 | `__salitaFacebookShareLinkV1Installed` | facebook-share-link-v1.js |
 | `__salitaQuestAchievementSharingAvatarCompatibilityV558Installed` | achievement-sharing-avatar-bridge-v1.js |
-| `__salitaQuestAchievementSharingRouterV3Installed` | achievement-sharing-router-v3.js |
+| `__salitaQuestAchievementSharingRouterV3Installed` | src/features/sharing/achievement-sharing-router-v3.js |
 | `__salitaQuestAchievementSharingV4Installed` | achievement-sharing-v4.js |
 | `__salitaQuestAchievementSharingV6Installed` | achievement-sharing-v4.js |
 | `__salitaQuestAdaptiveScenariosInstalled` | adaptive-scenarios.js |
@@ -296,7 +296,7 @@
 | `SalitaQuestCourseBootstrap` | src/app/course-bootstrap.js |
 | `SalitaQuestCourseManifest` | src/config/course-manifest.js |
 | `SalitaQuestPersistentNavigation` | desktop-navigation-refinement.js |
-| `SalitaQuestSharingRouter` | achievement-sharing-router-v3.js |
+| `SalitaQuestSharingRouter` | src/features/sharing/achievement-sharing-router-v3.js |
 | `SalitaQuestSocialConnections` | social-connections-v2.js |
 | `SalitaWeeklyAvatarRewards` | weekly-avatar-shard-rewards-v1.js |
 
@@ -304,8 +304,8 @@
 
 | Event | Dispatchers | Listeners |
 |---|---|---|
-| `salita:achievement-share-closed` | — | achievement-sharing-router-v3.js |
-| `salita:achievement-share-prepared` | achievement-sharing-v4.js | achievement-sharing-router-v3.js |
+| `salita:achievement-share-closed` | — | src/features/sharing/achievement-sharing-router-v3.js |
+| `salita:achievement-share-prepared` | achievement-sharing-v4.js | src/features/sharing/achievement-sharing-router-v3.js |
 | `salita:avatar-case-changed` | avatar-case-v1.js | — |
 | `salita:avatar-case-ready` | avatar-case-v1.js | — |
 | `salita:avatar-collection-changed` | avatar-collection-screen-v1.js, coin-avatar-shard-shop-v1.js, coin-avatar-shop-reveal-v1.js, level-avatar-rewards-v1.js, weekly-avatar-shard-rewards-v1.js | achievement-sharing-avatar-bridge-v1.js, achievement-sharing-v4.js, avatar-case-v1.js, avatar-collection-screen-v1.js, avatar-collection-summary-v1.js, avatar-unlock-celebration-v1.js, src/features/avatar/avatar-artwork-registry-v554.js, weekly-avatar-shard-rewards-v1.js |
@@ -367,9 +367,9 @@
 | `questChestText` | app.js, daily-goal-refinement.js, weekly-avatar-polish.js |
 | `viewTitle` | app.js, avatar-progression-hotfix-v551.js, desktop-navigation-refinement.js |
 | `achievementCount` | app.js, badge-catalogue-v2.js |
-| `achievementShareDescription` | achievement-sharing-router-v3.js, achievement-sharing-v4.js |
-| `achievementSharePlatforms` | achievement-sharing-router-v3.js, achievement-sharing-v4.js |
-| `achievementShareTitle` | achievement-sharing-router-v3.js, achievement-sharing-v4.js |
+| `achievementShareDescription` | achievement-sharing-v4.js, src/features/sharing/achievement-sharing-router-v3.js |
+| `achievementSharePlatforms` | achievement-sharing-v4.js, src/features/sharing/achievement-sharing-router-v3.js |
+| `achievementShareTitle` | achievement-sharing-v4.js, src/features/sharing/achievement-sharing-router-v3.js |
 | `answerDetail` | app.js, exercise-fixes-v545.js |
 | `beginnerSetting` | app.js, placement-onboarding-v1.js |
 | `bossStatus` | app.js, bisaya-review-regions.js |

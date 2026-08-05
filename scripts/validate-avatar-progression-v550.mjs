@@ -48,6 +48,7 @@ const runtimeFiles = [
   "avatar-unlock-celebration-v1.js",
   "achievement-sharing-router-v2.js",
   "achievement-sharing-router-v3.js",
+  "src/features/sharing/achievement-sharing-router-v3.js",
   "achievement-sharing-avatar-bridge-v1.js",
   "avatar-progression-migration-v1.js",
   "src/features/avatar/avatar-progression-migration-v1.js",
@@ -112,8 +113,8 @@ if (artwork.includes("MutationObserver") || compatibility.includes("MutationObse
 }
 
 const sharingShim = read("achievement-sharing-router-v2.js");
-if (!sharingShim.includes('achievement-sharing-router-v3.js?v=5.5.21')) fail("Sharing compatibility shim does not load the current v3 router");
-const sharingRouter = read("achievement-sharing-router-v3.js");
+if (!sharingShim.includes('src/features/sharing/achievement-sharing-router-v3.js?v=5.5.21')) fail("Sharing compatibility shim does not load the current v3 router");
+const sharingRouter = read("src/features/sharing/achievement-sharing-router-v3.js");
 if (!sharingRouter.includes('const RELEASE = "5.5.21-mobile-share-desktop-save-only"')) fail("Current achievement sharing release marker is missing");
 if (!sharingRouter.includes('modes:Object.freeze(["mobile_native_image_share","desktop_save_only"])')) fail("Current achievement sharing modes are missing");
 
@@ -135,8 +136,8 @@ if (!navigation.includes('action:"avatar-collection"')) fail("Persistent navigat
 if (navigation.includes("salitaQuestDesktopNavigationCollapsed")) fail("Persistent navigation retains the obsolete collapsed-sidebar preference");
 
 const serviceWorker = read("service-worker.js");
-if (!serviceWorker.includes('const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-5-avatar-data-migration-extraction-r58"')) fail("Service worker does not retain the pre-modular release boundary");
-if (!serviceWorker.includes('const CACHE_NAME = "salita-quest-v5-6-6-avatar-artwork-registry-extraction-r59"')) fail("Service worker cache version is not the modular-bootstrap release");
+if (!serviceWorker.includes('const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-6-avatar-artwork-registry-extraction-r59"')) fail("Service worker does not retain the pre-modular release boundary");
+if (!serviceWorker.includes('const CACHE_NAME = "salita-quest-v5-6-7-achievement-sharing-router-extraction-r60"')) fail("Service worker cache version is not the modular-bootstrap release");
 if (!serviceWorker.includes('const EXPLICIT_SHARING_ROUTER_DELIVERY = "2026-08-02-feed-private-image-router-1"')) fail("Service worker does not advertise the explicit sharing-router update");
 if (!serviceWorker.includes('"./achievement-sharing-router-v2.js"') || !serviceWorker.includes('"./achievement-sharing-router-v2.css"')) fail("Service worker does not precache the sharing compatibility router");
 if (!serviceWorker.includes('"./avatar-case-v1.js"') || !serviceWorker.includes('"./avatar-case-v1.css"')) fail("Service worker does not precache the Avatar Case runtime");

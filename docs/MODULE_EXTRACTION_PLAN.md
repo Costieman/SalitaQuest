@@ -41,6 +41,7 @@ After the first move is verified, the next candidates should be extracted separa
 3. `even-progress-rail.js` — completed as `src/features/progression/even-progress-rail.js`, with the root compatibility URL retained through r57.
 4. `avatar-catalogue-v1.js` and `avatar-progression-migration-v1.js` — completed as paired modules under `src/features/avatar/`, with both root compatibility URLs retained through r58.
 5. `avatar-artwork-registry-v554.js` — completed as `src/features/avatar/avatar-artwork-registry-v554.js`, with the root compatibility URL retained through r59.
+6. `achievement-sharing-router-v3.js` — completed as `src/features/sharing/achievement-sharing-router-v3.js`, with the v2 entry loader and root v3 compatibility URL retained through r60.
 
 These rankings are migration guidance rather than proof of independence. Static analysis cannot fully resolve computed DOM selectors, dynamically constructed storage keys, or runtime mutation timing. Each proposed move therefore still requires targeted browser validation.
 
