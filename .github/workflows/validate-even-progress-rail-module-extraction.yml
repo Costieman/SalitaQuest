@@ -1,0 +1,53 @@
+name: Validate even progress rail module extraction
+
+on:
+  pull_request:
+    paths:
+      - "even-progress-rail.js"
+      - "src/features/progression/even-progress-rail.js"
+      - "src/config/course-manifest.js"
+      - "mobile-refresh.html"
+      - "service-worker.js"
+      - "scripts/validate-even-progress-rail-module-extraction.mjs"
+      - "scripts/validate-key-run-refinement.mjs"
+      - "scripts/validate-progression-scenarios-navigation.mjs"
+      - "scripts/validate-desktop-shell-module-extraction.mjs"
+      - "scripts/generate-module-contract-inventory-v2.mjs"
+      - "src/config/module-contracts.generated.json"
+      - "docs/MODULE_CONTRACT_INVENTORY.md"
+      - ".github/workflows/validate-even-progress-rail-module-extraction.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "even-progress-rail.js"
+      - "src/features/progression/even-progress-rail.js"
+      - "src/config/course-manifest.js"
+      - "mobile-refresh.html"
+      - "service-worker.js"
+      - "scripts/validate-even-progress-rail-module-extraction.mjs"
+      - "scripts/validate-key-run-refinement.mjs"
+      - "scripts/validate-progression-scenarios-navigation.mjs"
+      - "scripts/validate-desktop-shell-module-extraction.mjs"
+      - "scripts/generate-module-contract-inventory-v2.mjs"
+      - "src/config/module-contracts.generated.json"
+      - "docs/MODULE_CONTRACT_INVENTORY.md"
+      - ".github/workflows/validate-even-progress-rail-module-extraction.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - run: node scripts/validate-even-progress-rail-module-extraction.mjs
+      - run: node scripts/validate-key-run-refinement.mjs
+      - run: node scripts/validate-progression-scenarios-navigation.mjs
+      - run: node scripts/validate-desktop-shell-module-extraction.mjs
+      - run: node scripts/generate-module-contract-inventory-v2.mjs --check
+      - run: git diff --check

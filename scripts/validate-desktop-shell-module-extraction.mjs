@@ -95,7 +95,7 @@ for (const courseId of ["tagalog", "cebuano"]) {
   const feedback = scripts.indexOf("incorrect-order-feedback.js?v=5.4.21");
   const compact = scripts.indexOf(compactExpected);
   const topbar = scripts.indexOf(topbarExpected);
-  const rail = scripts.indexOf("even-progress-rail.js?v=5.4.21");
+  const rail = scripts.indexOf("src/features/progression/even-progress-rail.js?v=5.4.21");
   if (!(feedback >= 0 && compact > feedback && topbar > compact && rail > topbar)) {
     fail(`${courseId} does not preserve feedback → compact layout → topbar → progress rail order`);
   }
@@ -108,12 +108,12 @@ for (const path of [compactModulePath, topbarModulePath]) {
   if (!refresh.includes(path)) fail(`Mobile refresh does not fetch ${path}`);
 }
 requireMarkers(worker, [
-  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-2-pronunciation-module-extraction-r55"',
-  'const CACHE_NAME = "salita-quest-v5-6-3-desktop-shell-extraction-r56"',
+  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-3-desktop-shell-extraction-r56"',
+  'const CACHE_NAME = "salita-quest-v5-6-4-progress-rail-extraction-r57"',
   '"./compact-desktop-layout.js"',
   '"./src/features/interface/compact-desktop-layout.js"',
   '"./clean-topbar.js"',
   '"./src/features/interface/clean-topbar.js"'
 ], "Desktop shell offline contract");
 
-console.log("Desktop shell extraction validation passed: two direct interface modules, two root compatibility loaders, preserved order and r56 offline delivery.");
+console.log("Desktop shell extraction validation passed: two direct interface modules, two root compatibility loaders, preserved order and r57 offline delivery.");

@@ -16,7 +16,7 @@
       "incorrect-order-feedback.js",
       "src/features/interface/compact-desktop-layout.js",
       "src/features/interface/clean-topbar.js",
-      "even-progress-rail.js",
+      "src/features/progression/even-progress-rail.js",
       "mastery-feedback.js",
       "lesson-side-launcher.js",
       "mobile-session-refinement.js",
@@ -47,7 +47,7 @@
       "incorrect-order-feedback.js",
       "src/features/interface/compact-desktop-layout.js",
       "src/features/interface/clean-topbar.js",
-      "even-progress-rail.js",
+      "src/features/progression/even-progress-rail.js",
       "mastery-feedback.js",
       "lesson-side-launcher.js",
       "mobile-session-refinement.js",
@@ -2222,58 +2222,6 @@
       "risk": 10
     },
     {
-      "file": "even-progress-rail.js",
-      "bytes": 2891,
-      "contexts": [
-        "cebuano",
-        "tagalog"
-      ],
-      "courses": [
-        "cebuano",
-        "tagalog"
-      ],
-      "references": [],
-      "loads": [],
-      "fetches": [],
-      "workers": [],
-      "coreGlobals": [
-        "MODULES",
-        "renderMasteryRail",
-        "totalLearningPoints"
-      ],
-      "window": {
-        "provides": [
-          "__salitaQuestEvenProgressRailInstalled"
-        ],
-        "consumes": []
-      },
-      "storage": [],
-      "dom": {
-        "ids": [
-          "masteryMilestones"
-        ],
-        "selectors": [
-          ".mastery-dot",
-          ".mastery-milestone",
-          ".mastery-track-fill",
-          ".mastery-you"
-        ],
-        "datasets": [
-          "evenMilestone",
-          "evenSpacing"
-        ]
-      },
-      "events": {
-        "listens": [
-          "resize"
-        ],
-        "dispatches": []
-      },
-      "role": "progression",
-      "readiness": "extraction-candidate",
-      "risk": 14
-    },
-    {
       "file": "exercise-fixes-v545.js",
       "bytes": 10731,
       "contexts": [
@@ -3437,7 +3385,7 @@
     },
     {
       "file": "service-worker.js",
-      "bytes": 11560,
+      "bytes": 11607,
       "contexts": [
         "worker"
       ],
@@ -3488,6 +3436,7 @@
         "src/features/interface/clean-topbar.js",
         "src/features/interface/compact-desktop-layout.js",
         "src/features/interface/level-up-mobile-safety-v552.js",
+        "src/features/progression/even-progress-rail.js",
         "ui-quality-fixes.js",
         "weekly-avatar-chest.js",
         "weekly-avatar-polish.js",
@@ -3725,7 +3674,7 @@
     },
     {
       "file": "src/config/course-manifest.js",
-      "bytes": 6156,
+      "bytes": 6206,
       "contexts": [
         "bootstrap"
       ],
@@ -3739,7 +3688,6 @@
         "collection-key-translation-hotfix.js",
         "daily-goal-refinement.js",
         "desktop-navigation-refinement.js",
-        "even-progress-rail.js",
         "exercise-fixes-v545.js",
         "home-reward-coordinator.js",
         "incorrect-order-feedback.js",
@@ -3758,6 +3706,7 @@
         "src/features/interface/clean-topbar.js",
         "src/features/interface/compact-desktop-layout.js",
         "src/features/interface/level-up-mobile-safety-v552.js",
+        "src/features/progression/even-progress-rail.js",
         "ui-quality-fixes.js",
         "weekly-avatar-chest.js",
         "weekly-avatar-polish.js"
@@ -3984,6 +3933,58 @@
       "role": "interface",
       "readiness": "extraction-candidate",
       "risk": 8
+    },
+    {
+      "file": "src/features/progression/even-progress-rail.js",
+      "bytes": 2891,
+      "contexts": [
+        "cebuano",
+        "tagalog"
+      ],
+      "courses": [
+        "cebuano",
+        "tagalog"
+      ],
+      "references": [],
+      "loads": [],
+      "fetches": [],
+      "workers": [],
+      "coreGlobals": [
+        "MODULES",
+        "renderMasteryRail",
+        "totalLearningPoints"
+      ],
+      "window": {
+        "provides": [
+          "__salitaQuestEvenProgressRailInstalled"
+        ],
+        "consumes": []
+      },
+      "storage": [],
+      "dom": {
+        "ids": [
+          "masteryMilestones"
+        ],
+        "selectors": [
+          ".mastery-dot",
+          ".mastery-milestone",
+          ".mastery-track-fill",
+          ".mastery-you"
+        ],
+        "datasets": [
+          "evenMilestone",
+          "evenSpacing"
+        ]
+      },
+      "events": {
+        "listens": [
+          "resize"
+        ],
+        "dispatches": []
+      },
+      "role": "progression",
+      "readiness": "extraction-candidate",
+      "risk": 14
     },
     {
       "file": "ui-quality-fixes.js",
@@ -4985,16 +4986,6 @@
       ]
     },
     {
-      "from": "even-progress-rail.js",
-      "to": "app.js",
-      "type": "core-globals",
-      "symbols": [
-        "MODULES",
-        "renderMasteryRail",
-        "totalLearningPoints"
-      ]
-    },
-    {
       "from": "exercise-fixes-v545.js",
       "to": "app.js",
       "type": "core-globals",
@@ -5495,6 +5486,16 @@
       "type": "window-api",
       "symbols": [
         "SalitaPopupGovernor"
+      ]
+    },
+    {
+      "from": "src/features/progression/even-progress-rail.js",
+      "to": "app.js",
+      "type": "core-globals",
+      "symbols": [
+        "MODULES",
+        "renderMasteryRail",
+        "totalLearningPoints"
       ]
     },
     {
@@ -6027,11 +6028,11 @@
     {
       "name": "resize",
       "listeners": [
-        "even-progress-rail.js",
         "lesson-side-launcher.js",
         "mobile-session-refinement.js",
         "profile-emblem-control.js",
-        "src/features/interface/compact-desktop-layout.js"
+        "src/features/interface/compact-desktop-layout.js",
+        "src/features/progression/even-progress-rail.js"
       ],
       "dispatchers": []
     },
@@ -6517,7 +6518,7 @@
     {
       "symbol": "__salitaQuestEvenProgressRailInstalled",
       "providers": [
-        "even-progress-rail.js"
+        "src/features/progression/even-progress-rail.js"
       ]
     },
     {
