@@ -1,0 +1,42 @@
+name: Apply runtime cleanup
+
+on:
+  push:
+    branches:
+      - sandbox/refactor-audit-v1
+    paths:
+      - "scripts/apply-runtime-cleanup.mjs"
+      - ".github/workflows/apply-runtime-cleanup.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: sandbox/refactor-audit-v1
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Delete unreachable files and normalize live filenames
+        run: node scripts/apply-runtime-cleanup.mjs
+      - name: Rebuild runtime audit
+        run: node scripts/audit-runtime-assets.mjs
+      - name: Check generated changes
+        run: git diff --check
+      - name: Commit cleanup to sandbox branch
+        run: |
+          rm -rf audit
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "Cleanup is already applied."
+          else
+            git commit -m "refactor(sandbox): delete unreachable runtime files"
+            git push origin HEAD:sandbox/refactor-audit-v1
+          fi
