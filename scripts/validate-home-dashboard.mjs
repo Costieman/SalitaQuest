@@ -13,6 +13,7 @@ for (const file of [
   "weekly-avatar-chest.js",
   "weekly-avatar-polish.js",
   "clean-topbar.js",
+  "src/features/interface/clean-topbar.js",
   "profile-app.js",
   "mobile-session-refinement.js",
   "src/config/course-manifest.js",
@@ -76,7 +77,16 @@ if (/body\[data-current-view="home"\][^{]*\.mastery-rail-shell\s*\{[^}]*position
   fail("Mobile World Progress must not return to a sticky or fixed overlay.");
 }
 
-const topbar = read("clean-topbar.js");
+const topbarLoader = read("clean-topbar.js");
+const topbar = read("src/features/interface/clean-topbar.js");
+requireMarkers(topbarLoader, [
+  'const TARGET = "./src/features/interface/clean-topbar.js?v=5.4.21"',
+  'document.currentScript',
+  'document.write',
+  'script.async = false',
+  'salitaCompatibilityLoader'
+], "Clean topbar compatibility loader");
+
 requireMarkers(topbar, [
   'const STYLESHEETS = [',
   'topbar-world-progress-hotfix.css?v=5.5.10.1',
@@ -142,7 +152,7 @@ for (const [htmlFile, courseId] of [["app.html", "tagalog"], ["bisaya.html", "ce
     'clean-topbar.css?v=5.4.21'
   ], `${htmlFile} Home release styles`);
   requireMarkers(scriptSource, [
-    'clean-topbar.js?v=5.4.21',
+    'src/features/interface/clean-topbar.js?v=5.4.21',
     'weekly-avatar-polish.js?v=5.4.21'
   ], `${htmlFile} Home release scripts`);
 }
@@ -164,6 +174,7 @@ requireMarkers(serviceWorker, [
   '"./weekly-avatar-polish.js"',
   '"./weekly-avatar-chest.css"',
   '"./clean-topbar.js"',
+  '"./src/features/interface/clean-topbar.js"',
   '"./topbar-world-progress-hotfix.css"',
   '"./profile-app.js"'
 ], "Home offline release");

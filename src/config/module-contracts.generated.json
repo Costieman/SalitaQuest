@@ -14,8 +14,8 @@
       "key-run-refinement.js",
       "weekly-avatar-polish.js",
       "incorrect-order-feedback.js",
-      "compact-desktop-layout.js",
-      "clean-topbar.js",
+      "src/features/interface/compact-desktop-layout.js",
+      "src/features/interface/clean-topbar.js",
       "even-progress-rail.js",
       "mastery-feedback.js",
       "lesson-side-launcher.js",
@@ -45,8 +45,8 @@
       "key-run-refinement.js",
       "weekly-avatar-polish.js",
       "incorrect-order-feedback.js",
-      "compact-desktop-layout.js",
-      "clean-topbar.js",
+      "src/features/interface/compact-desktop-layout.js",
+      "src/features/interface/clean-topbar.js",
       "even-progress-rail.js",
       "mastery-feedback.js",
       "lesson-side-launcher.js",
@@ -1525,58 +1525,6 @@
       "risk": 103
     },
     {
-      "file": "clean-topbar.js",
-      "bytes": 5066,
-      "contexts": [
-        "cebuano",
-        "tagalog"
-      ],
-      "courses": [
-        "cebuano",
-        "tagalog"
-      ],
-      "references": [],
-      "loads": [],
-      "fetches": [],
-      "workers": [],
-      "coreGlobals": [
-        "renderMasteryRail",
-        "totalLearningPoints"
-      ],
-      "window": {
-        "provides": [
-          "__salitaQuestCleanTopbarInstalled"
-        ],
-        "consumes": []
-      },
-      "storage": [],
-      "dom": {
-        "ids": [
-          "masteryNextRegion",
-          "masteryNextText",
-          "masteryRailTitle"
-        ],
-        "selectors": [
-          ":scope > .mastery-next-copy",
-          ":scope > .mastery-summary-compact",
-          ".mastery-milestones",
-          ".mastery-next-copy",
-          ".mastery-points-compact",
-          ".mastery-rail-shell"
-        ],
-        "datasets": [
-          "compactMastery"
-        ]
-      },
-      "events": {
-        "listens": [],
-        "dispatches": []
-      },
-      "role": "interface",
-      "readiness": "extraction-candidate",
-      "risk": 14
-    },
-    {
       "file": "coin-avatar-shard-shop-v1.js",
       "bytes": 11617,
       "contexts": [
@@ -2069,57 +2017,6 @@
       "role": "feature-extension",
       "readiness": "extraction-candidate",
       "risk": 12
-    },
-    {
-      "file": "compact-desktop-layout.js",
-      "bytes": 2993,
-      "contexts": [
-        "cebuano",
-        "tagalog"
-      ],
-      "courses": [
-        "cebuano",
-        "tagalog"
-      ],
-      "references": [],
-      "loads": [],
-      "fetches": [],
-      "workers": [],
-      "coreGlobals": [
-        "session"
-      ],
-      "window": {
-        "provides": [
-          "__salitaQuestCompactDesktopInstalled"
-        ],
-        "consumes": []
-      },
-      "storage": [],
-      "dom": {
-        "ids": [
-          "audioBtn",
-          "lessonCard",
-          "structureBox"
-        ],
-        "selectors": [
-          ":scope > .eyebrow",
-          ":scope > .session-panel",
-          ".lesson-content",
-          ".lesson-topline",
-          "#learnView .learn-layout",
-          "#learnView .session-panel"
-        ],
-        "datasets": []
-      },
-      "events": {
-        "listens": [
-          "resize"
-        ],
-        "dispatches": []
-      },
-      "role": "interface",
-      "readiness": "extraction-candidate",
-      "risk": 11
     },
     {
       "file": "daily-goal-refinement.js",
@@ -3540,7 +3437,7 @@
     },
     {
       "file": "service-worker.js",
-      "bytes": 11457,
+      "bytes": 11560,
       "contexts": [
         "worker"
       ],
@@ -3588,6 +3485,8 @@
         "src/app/course-bootstrap.js",
         "src/config/course-manifest.js",
         "src/features/audio/pronunciation-release-control.js",
+        "src/features/interface/clean-topbar.js",
+        "src/features/interface/compact-desktop-layout.js",
         "src/features/interface/level-up-mobile-safety-v552.js",
         "ui-quality-fixes.js",
         "weekly-avatar-chest.js",
@@ -3826,7 +3725,7 @@
     },
     {
       "file": "src/config/course-manifest.js",
-      "bytes": 6064,
+      "bytes": 6156,
       "contexts": [
         "bootstrap"
       ],
@@ -3837,9 +3736,7 @@
         "badge-catalogue-v2.js",
         "badge-chest-v2.js",
         "bisaya-app-loader.js",
-        "clean-topbar.js",
         "collection-key-translation-hotfix.js",
-        "compact-desktop-layout.js",
         "daily-goal-refinement.js",
         "desktop-navigation-refinement.js",
         "even-progress-rail.js",
@@ -3858,6 +3755,8 @@
         "progression-v54.js",
         "social-connections-v2.js",
         "src/features/audio/pronunciation-release-control.js",
+        "src/features/interface/clean-topbar.js",
+        "src/features/interface/compact-desktop-layout.js",
         "src/features/interface/level-up-mobile-safety-v552.js",
         "ui-quality-fixes.js",
         "weekly-avatar-chest.js",
@@ -3937,6 +3836,109 @@
       "role": "audio",
       "readiness": "extraction-candidate",
       "risk": 12
+    },
+    {
+      "file": "src/features/interface/clean-topbar.js",
+      "bytes": 5066,
+      "contexts": [
+        "cebuano",
+        "tagalog"
+      ],
+      "courses": [
+        "cebuano",
+        "tagalog"
+      ],
+      "references": [],
+      "loads": [],
+      "fetches": [],
+      "workers": [],
+      "coreGlobals": [
+        "renderMasteryRail",
+        "totalLearningPoints"
+      ],
+      "window": {
+        "provides": [
+          "__salitaQuestCleanTopbarInstalled"
+        ],
+        "consumes": []
+      },
+      "storage": [],
+      "dom": {
+        "ids": [
+          "masteryNextRegion",
+          "masteryNextText",
+          "masteryRailTitle"
+        ],
+        "selectors": [
+          ":scope > .mastery-next-copy",
+          ":scope > .mastery-summary-compact",
+          ".mastery-milestones",
+          ".mastery-next-copy",
+          ".mastery-points-compact",
+          ".mastery-rail-shell"
+        ],
+        "datasets": [
+          "compactMastery"
+        ]
+      },
+      "events": {
+        "listens": [],
+        "dispatches": []
+      },
+      "role": "interface",
+      "readiness": "extraction-candidate",
+      "risk": 14
+    },
+    {
+      "file": "src/features/interface/compact-desktop-layout.js",
+      "bytes": 2993,
+      "contexts": [
+        "cebuano",
+        "tagalog"
+      ],
+      "courses": [
+        "cebuano",
+        "tagalog"
+      ],
+      "references": [],
+      "loads": [],
+      "fetches": [],
+      "workers": [],
+      "coreGlobals": [
+        "session"
+      ],
+      "window": {
+        "provides": [
+          "__salitaQuestCompactDesktopInstalled"
+        ],
+        "consumes": []
+      },
+      "storage": [],
+      "dom": {
+        "ids": [
+          "audioBtn",
+          "lessonCard",
+          "structureBox"
+        ],
+        "selectors": [
+          ":scope > .eyebrow",
+          ":scope > .session-panel",
+          ".lesson-content",
+          ".lesson-topline",
+          "#learnView .learn-layout",
+          "#learnView .session-panel"
+        ],
+        "datasets": []
+      },
+      "events": {
+        "listens": [
+          "resize"
+        ],
+        "dispatches": []
+      },
+      "role": "interface",
+      "readiness": "extraction-candidate",
+      "risk": 11
     },
     {
       "file": "src/features/interface/level-up-mobile-safety-v552.js",
@@ -4779,15 +4781,6 @@
       ]
     },
     {
-      "from": "clean-topbar.js",
-      "to": "app.js",
-      "type": "core-globals",
-      "symbols": [
-        "renderMasteryRail",
-        "totalLearningPoints"
-      ]
-    },
-    {
       "from": "coin-avatar-shard-shop-v1.js",
       "to": "coin-avatar-shop-reveal-v1.js",
       "type": "loads"
@@ -4906,14 +4899,6 @@
       "symbols": [
         "ITEMS",
         "state"
-      ]
-    },
-    {
-      "from": "compact-desktop-layout.js",
-      "to": "app.js",
-      "type": "core-globals",
-      "symbols": [
-        "session"
       ]
     },
     {
@@ -5480,6 +5465,23 @@
       ]
     },
     {
+      "from": "src/features/interface/clean-topbar.js",
+      "to": "app.js",
+      "type": "core-globals",
+      "symbols": [
+        "renderMasteryRail",
+        "totalLearningPoints"
+      ]
+    },
+    {
+      "from": "src/features/interface/compact-desktop-layout.js",
+      "to": "app.js",
+      "type": "core-globals",
+      "symbols": [
+        "session"
+      ]
+    },
+    {
       "from": "src/features/interface/level-up-mobile-safety-v552.js",
       "to": "level-progression-v2.js",
       "type": "window-api",
@@ -6025,11 +6027,11 @@
     {
       "name": "resize",
       "listeners": [
-        "compact-desktop-layout.js",
         "even-progress-rail.js",
         "lesson-side-launcher.js",
         "mobile-session-refinement.js",
-        "profile-emblem-control.js"
+        "profile-emblem-control.js",
+        "src/features/interface/compact-desktop-layout.js"
       ],
       "dispatchers": []
     },
@@ -6485,7 +6487,7 @@
     {
       "symbol": "__salitaQuestCleanTopbarInstalled",
       "providers": [
-        "clean-topbar.js"
+        "src/features/interface/clean-topbar.js"
       ]
     },
     {
@@ -6503,7 +6505,7 @@
     {
       "symbol": "__salitaQuestCompactDesktopInstalled",
       "providers": [
-        "compact-desktop-layout.js"
+        "src/features/interface/compact-desktop-layout.js"
       ]
     },
     {

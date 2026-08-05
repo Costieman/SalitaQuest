@@ -67,8 +67,8 @@ if (!refresh.includes("src/features/audio/pronunciation-release-control.js")) {
 }
 
 for (const marker of [
-  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-1-first-module-extraction-r54"',
-  'const CACHE_NAME = "salita-quest-v5-6-2-pronunciation-module-extraction-r55"',
+  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-2-pronunciation-module-extraction-r55"',
+  'const CACHE_NAME = "salita-quest-v5-6-3-desktop-shell-extraction-r56"',
   '"./pronunciation-release-control.js"',
   '"./src/features/audio/pronunciation-release-control.js"'
 ]) if (!worker.includes(marker)) fail(`Service worker is missing ${marker}`);
