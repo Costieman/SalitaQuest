@@ -196,8 +196,8 @@ requireMarkers(catalogue, [
 
 const worker = read("service-worker.js");
 requireMarkers(worker, [
-  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-5-avatar-data-migration-extraction-r58"',
-  'const CACHE_NAME = "salita-quest-v5-6-6-avatar-artwork-registry-extraction-r59"',
+  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-6-avatar-artwork-registry-extraction-r59"',
+  'const CACHE_NAME = "salita-quest-v5-6-7-achievement-sharing-router-extraction-r60"',
   '"./badge-chest-v2.js"',
   '"./badge-chest-v2.css"',
   '"./achievement-sharing-v4.js"',

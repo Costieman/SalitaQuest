@@ -150,7 +150,7 @@
     },
     {
       "file": "achievement-sharing-router-v2.js",
-      "bytes": 518,
+      "bytes": 539,
       "contexts": [
         "cebuano",
         "tagalog"
@@ -160,10 +160,10 @@
         "tagalog"
       ],
       "references": [
-        "achievement-sharing-router-v3.js"
+        "src/features/sharing/achievement-sharing-router-v3.js"
       ],
       "loads": [
-        "achievement-sharing-router-v3.js"
+        "src/features/sharing/achievement-sharing-router-v3.js"
       ],
       "fetches": [],
       "workers": [],
@@ -190,56 +190,6 @@
       },
       "role": "runtime-loader",
       "readiness": "hold",
-      "risk": 8
-    },
-    {
-      "file": "achievement-sharing-router-v3.js",
-      "bytes": 8346,
-      "contexts": [
-        "cebuano",
-        "tagalog"
-      ],
-      "courses": [
-        "cebuano",
-        "tagalog"
-      ],
-      "references": [],
-      "loads": [],
-      "fetches": [],
-      "workers": [],
-      "coreGlobals": [],
-      "window": {
-        "provides": [
-          "__salitaQuestAchievementSharingRouterV3Installed",
-          "SalitaQuestSharingRouter"
-        ],
-        "consumes": []
-      },
-      "storage": [],
-      "dom": {
-        "ids": [
-          "achievementShareDescription",
-          "achievementSharePlatforms",
-          "achievementShareTitle"
-        ],
-        "selectors": [
-          ".achievement-share-preview small, #achievementShareStatus",
-          ".achievement-share-secondary"
-        ],
-        "datasets": [
-          "achievementSharingRouter"
-        ]
-      },
-      "events": {
-        "listens": [
-          "click",
-          "salita:achievement-share-closed",
-          "salita:achievement-share-prepared"
-        ],
-        "dispatches": []
-      },
-      "role": "collection-and-rewards",
-      "readiness": "extraction-candidate",
       "risk": 8
     },
     {
@@ -3245,7 +3195,7 @@
     },
     {
       "file": "service-worker.js",
-      "bytes": 11790,
+      "bytes": 11892,
       "contexts": [
         "worker"
       ],
@@ -3253,6 +3203,7 @@
       "references": [
         "achievement-sharing-avatar-bridge-v1.js",
         "achievement-sharing-router-v2.js",
+        "achievement-sharing-router-v3.js",
         "achievement-sharing-v4.js",
         "adaptive-scenarios.js",
         "app.js",
@@ -3300,6 +3251,7 @@
         "src/features/interface/compact-desktop-layout.js",
         "src/features/interface/level-up-mobile-safety-v552.js",
         "src/features/progression/even-progress-rail.js",
+        "src/features/sharing/achievement-sharing-router-v3.js",
         "ui-quality-fixes.js",
         "weekly-avatar-chest.js",
         "weekly-avatar-polish.js",
@@ -3990,6 +3942,56 @@
       "risk": 14
     },
     {
+      "file": "src/features/sharing/achievement-sharing-router-v3.js",
+      "bytes": 8346,
+      "contexts": [
+        "cebuano",
+        "tagalog"
+      ],
+      "courses": [
+        "cebuano",
+        "tagalog"
+      ],
+      "references": [],
+      "loads": [],
+      "fetches": [],
+      "workers": [],
+      "coreGlobals": [],
+      "window": {
+        "provides": [
+          "__salitaQuestAchievementSharingRouterV3Installed",
+          "SalitaQuestSharingRouter"
+        ],
+        "consumes": []
+      },
+      "storage": [],
+      "dom": {
+        "ids": [
+          "achievementShareDescription",
+          "achievementSharePlatforms",
+          "achievementShareTitle"
+        ],
+        "selectors": [
+          ".achievement-share-preview small, #achievementShareStatus",
+          ".achievement-share-secondary"
+        ],
+        "datasets": [
+          "achievementSharingRouter"
+        ]
+      },
+      "events": {
+        "listens": [
+          "click",
+          "salita:achievement-share-closed",
+          "salita:achievement-share-prepared"
+        ],
+        "dispatches": []
+      },
+      "role": "collection-and-rewards",
+      "readiness": "extraction-candidate",
+      "risk": 8
+    },
+    {
       "file": "ui-quality-fixes.js",
       "bytes": 7690,
       "contexts": [
@@ -4330,12 +4332,12 @@
     },
     {
       "from": "achievement-sharing-router-v2.js",
-      "to": "achievement-sharing-router-v3.js",
+      "to": "src/features/sharing/achievement-sharing-router-v3.js",
       "type": "loads"
     },
     {
       "from": "achievement-sharing-router-v2.js",
-      "to": "achievement-sharing-router-v3.js",
+      "to": "src/features/sharing/achievement-sharing-router-v3.js",
       "type": "window-api",
       "symbols": [
         "__salitaQuestAchievementSharingRouterV3Installed"
@@ -5894,7 +5896,6 @@
     {
       "name": "click",
       "listeners": [
-        "achievement-sharing-router-v3.js",
         "achievement-sharing-v4.js",
         "adaptive-scenarios.js",
         "app.js",
@@ -5918,6 +5919,7 @@
         "progression-v54.js",
         "social-connections-v2.js",
         "src/features/audio/pronunciation-release-control.js",
+        "src/features/sharing/achievement-sharing-router-v3.js",
         "weekly-avatar-chest.js",
         "weekly-avatar-shard-rewards-v1.js"
       ],
@@ -6042,14 +6044,14 @@
     {
       "name": "salita:achievement-share-closed",
       "listeners": [
-        "achievement-sharing-router-v3.js"
+        "src/features/sharing/achievement-sharing-router-v3.js"
       ],
       "dispatchers": []
     },
     {
       "name": "salita:achievement-share-prepared",
       "listeners": [
-        "achievement-sharing-router-v3.js"
+        "src/features/sharing/achievement-sharing-router-v3.js"
       ],
       "dispatchers": [
         "achievement-sharing-v4.js"
@@ -6443,7 +6445,7 @@
     {
       "symbol": "__salitaQuestAchievementSharingRouterV3Installed",
       "providers": [
-        "achievement-sharing-router-v3.js"
+        "src/features/sharing/achievement-sharing-router-v3.js"
       ]
     },
     {
@@ -6813,7 +6815,7 @@
     {
       "symbol": "SalitaQuestSharingRouter",
       "providers": [
-        "achievement-sharing-router-v3.js"
+        "src/features/sharing/achievement-sharing-router-v3.js"
       ]
     },
     {
