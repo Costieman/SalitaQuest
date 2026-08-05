@@ -188,8 +188,8 @@ for (const [htmlFile, courseId] of [["app.html", "tagalog"], ["bisaya.html", "ce
 
 const worker = read("service-worker.js");
 requireMarkers(worker, [
-  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-6-avatar-artwork-registry-extraction-r59"',
-  'const CACHE_NAME = "salita-quest-v5-6-7-achievement-sharing-router-extraction-r60"',
+  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-7-achievement-sharing-router-extraction-r60"',
+  'const CACHE_NAME = "salita-quest-v5-6-8-home-reward-coordinator-extraction-r61"',
   '"./social-connections-v2.js"',
   '"./badge-chest-v2.js"',
   '"./achievement-sharing-v4.js"',

@@ -60,3 +60,5 @@ Before extracting these files, introduce an explicit engine adapter that owns ac
 - Keep one implementation owner for each feature; compatibility loaders must not install duplicate listeners.
 - Do not combine physical relocation with feature redesign.
 - Keep the original repository backup and the modular-bootstrap rollback point available throughout the migration.
+
+7. `home-reward-coordinator.js` — completed as `src/features/progression/home-reward-coordinator.js`, with the root compatibility URL retained through r61.

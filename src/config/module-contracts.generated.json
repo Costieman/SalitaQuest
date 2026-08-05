@@ -28,7 +28,7 @@
       "src/features/interface/level-up-mobile-safety-v552.js",
       "desktop-navigation-refinement.js",
       "src/features/audio/pronunciation-release-control.js",
-      "home-reward-coordinator.js",
+      "src/features/progression/home-reward-coordinator.js",
       "badge-catalogue-v2.js",
       "badge-chest-v2.js",
       "placement-onboarding-v1.js",
@@ -58,7 +58,7 @@
       "src/features/interface/level-up-mobile-safety-v552.js",
       "desktop-navigation-refinement.js",
       "src/features/audio/pronunciation-release-control.js",
-      "home-reward-coordinator.js",
+      "src/features/progression/home-reward-coordinator.js",
       "badge-catalogue-v2.js",
       "badge-chest-v2.js",
       "placement-onboarding-v1.js",
@@ -2139,63 +2139,6 @@
       "risk": 4
     },
     {
-      "file": "home-reward-coordinator.js",
-      "bytes": 8028,
-      "contexts": [
-        "cebuano",
-        "tagalog"
-      ],
-      "courses": [
-        "cebuano",
-        "tagalog"
-      ],
-      "references": [],
-      "loads": [],
-      "fetches": [],
-      "workers": [],
-      "coreGlobals": [
-        "currentView",
-        "DAILY_QUESTS",
-        "ensureDailyActivity",
-        "renderDailyQuests",
-        "saveState",
-        "state",
-        "switchView",
-        "todayKey"
-      ],
-      "window": {
-        "provides": [
-          "__salitaQuestHomeRewardCoordinatorInstalled"
-        ],
-        "consumes": []
-      },
-      "storage": [],
-      "dom": {
-        "ids": [
-          "homeView"
-        ],
-        "selectors": [
-          ".daily-key-celebration.reward-coordinator",
-          ".daily-key-spark-field",
-          ".quest-chest",
-          ".weekly-key-meter"
-        ],
-        "datasets": [
-          "currentView"
-        ]
-      },
-      "events": {
-        "listens": [
-          "pageshow",
-          "visibilitychange"
-        ],
-        "dispatches": []
-      },
-      "role": "feature-extension",
-      "readiness": "prepare-adapter",
-      "risk": 29
-    },
-    {
       "file": "incorrect-order-feedback.js",
       "bytes": 5881,
       "contexts": [
@@ -3195,7 +3138,7 @@
     },
     {
       "file": "service-worker.js",
-      "bytes": 11892,
+      "bytes": 11949,
       "contexts": [
         "worker"
       ],
@@ -3251,6 +3194,7 @@
         "src/features/interface/compact-desktop-layout.js",
         "src/features/interface/level-up-mobile-safety-v552.js",
         "src/features/progression/even-progress-rail.js",
+        "src/features/progression/home-reward-coordinator.js",
         "src/features/sharing/achievement-sharing-router-v3.js",
         "ui-quality-fixes.js",
         "weekly-avatar-chest.js",
@@ -3489,7 +3433,7 @@
     },
     {
       "file": "src/config/course-manifest.js",
-      "bytes": 6206,
+      "bytes": 6256,
       "contexts": [
         "bootstrap"
       ],
@@ -3504,7 +3448,6 @@
         "daily-goal-refinement.js",
         "desktop-navigation-refinement.js",
         "exercise-fixes-v545.js",
-        "home-reward-coordinator.js",
         "incorrect-order-feedback.js",
         "key-run-refinement.js",
         "lesson-side-launcher.js",
@@ -3522,6 +3465,7 @@
         "src/features/interface/compact-desktop-layout.js",
         "src/features/interface/level-up-mobile-safety-v552.js",
         "src/features/progression/even-progress-rail.js",
+        "src/features/progression/home-reward-coordinator.js",
         "ui-quality-fixes.js",
         "weekly-avatar-chest.js",
         "weekly-avatar-polish.js"
@@ -3940,6 +3884,63 @@
       "role": "progression",
       "readiness": "extraction-candidate",
       "risk": 14
+    },
+    {
+      "file": "src/features/progression/home-reward-coordinator.js",
+      "bytes": 8028,
+      "contexts": [
+        "cebuano",
+        "tagalog"
+      ],
+      "courses": [
+        "cebuano",
+        "tagalog"
+      ],
+      "references": [],
+      "loads": [],
+      "fetches": [],
+      "workers": [],
+      "coreGlobals": [
+        "currentView",
+        "DAILY_QUESTS",
+        "ensureDailyActivity",
+        "renderDailyQuests",
+        "saveState",
+        "state",
+        "switchView",
+        "todayKey"
+      ],
+      "window": {
+        "provides": [
+          "__salitaQuestHomeRewardCoordinatorInstalled"
+        ],
+        "consumes": []
+      },
+      "storage": [],
+      "dom": {
+        "ids": [
+          "homeView"
+        ],
+        "selectors": [
+          ".daily-key-celebration.reward-coordinator",
+          ".daily-key-spark-field",
+          ".quest-chest",
+          ".weekly-key-meter"
+        ],
+        "datasets": [
+          "currentView"
+        ]
+      },
+      "events": {
+        "listens": [
+          "pageshow",
+          "visibilitychange"
+        ],
+        "dispatches": []
+      },
+      "role": "progression",
+      "readiness": "prepare-adapter",
+      "risk": 29
     },
     {
       "file": "src/features/sharing/achievement-sharing-router-v3.js",
@@ -4965,21 +4966,6 @@
       ]
     },
     {
-      "from": "home-reward-coordinator.js",
-      "to": "app.js",
-      "type": "core-globals",
-      "symbols": [
-        "currentView",
-        "DAILY_QUESTS",
-        "ensureDailyActivity",
-        "renderDailyQuests",
-        "saveState",
-        "state",
-        "switchView",
-        "todayKey"
-      ]
-    },
-    {
       "from": "incorrect-order-feedback.js",
       "to": "app.js",
       "type": "core-globals",
@@ -5504,6 +5490,21 @@
       ]
     },
     {
+      "from": "src/features/progression/home-reward-coordinator.js",
+      "to": "app.js",
+      "type": "core-globals",
+      "symbols": [
+        "currentView",
+        "DAILY_QUESTS",
+        "ensureDailyActivity",
+        "renderDailyQuests",
+        "saveState",
+        "state",
+        "switchView",
+        "todayKey"
+      ]
+    },
+    {
       "from": "ui-quality-fixes.js",
       "to": "app.js",
       "type": "core-globals",
@@ -6010,9 +6011,9 @@
     {
       "name": "pageshow",
       "listeners": [
-        "home-reward-coordinator.js",
         "popup-governor-v1.js",
-        "src/features/interface/level-up-mobile-safety-v552.js"
+        "src/features/interface/level-up-mobile-safety-v552.js",
+        "src/features/progression/home-reward-coordinator.js"
       ],
       "dispatchers": []
     },
@@ -6356,9 +6357,9 @@
       "name": "visibilitychange",
       "listeners": [
         "avatar-unlock-celebration-v1.js",
-        "home-reward-coordinator.js",
         "profile-app.js",
-        "src/features/interface/level-up-mobile-safety-v552.js"
+        "src/features/interface/level-up-mobile-safety-v552.js",
+        "src/features/progression/home-reward-coordinator.js"
       ],
       "dispatchers": []
     }
@@ -6529,7 +6530,7 @@
     {
       "symbol": "__salitaQuestHomeRewardCoordinatorInstalled",
       "providers": [
-        "home-reward-coordinator.js"
+        "src/features/progression/home-reward-coordinator.js"
       ]
     },
     {

@@ -126,8 +126,8 @@ for (const path of [catalogueModulePath, migrationModulePath]) {
 }
 
 requireMarkers(worker, [
-  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-6-avatar-artwork-registry-extraction-r59"',
-  'const CACHE_NAME = "salita-quest-v5-6-7-achievement-sharing-router-extraction-r60"',
+  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-7-achievement-sharing-router-extraction-r60"',
+  'const CACHE_NAME = "salita-quest-v5-6-8-home-reward-coordinator-extraction-r61"',
   '"./avatar-catalogue-v1.js"',
   '"./src/features/avatar/avatar-catalogue-v1.js"',
   '"./avatar-progression-migration-v1.js"',

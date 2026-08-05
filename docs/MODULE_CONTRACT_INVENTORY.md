@@ -41,7 +41,7 @@
 21. `src/features/interface/level-up-mobile-safety-v552.js`
 22. `desktop-navigation-refinement.js`
 23. `src/features/audio/pronunciation-release-control.js`
-24. `home-reward-coordinator.js`
+24. `src/features/progression/home-reward-coordinator.js`
 25. `badge-catalogue-v2.js`
 26. `badge-chest-v2.js`
 27. `placement-onboarding-v1.js`
@@ -72,7 +72,7 @@
 19. `src/features/interface/level-up-mobile-safety-v552.js`
 20. `desktop-navigation-refinement.js`
 21. `src/features/audio/pronunciation-release-control.js`
-22. `home-reward-coordinator.js`
+22. `src/features/progression/home-reward-coordinator.js`
 23. `badge-catalogue-v2.js`
 24. `badge-chest-v2.js`
 25. `placement-onboarding-v1.js`
@@ -111,7 +111,7 @@
 - `coin-testing-grant-50k-phase5-v1.js` — 2 engine globals; 1 exported browser APIs; 0 DOM hooks.
 - `avatar-collection-screen-v1.js` — 0 engine globals; 2 exported browser APIs; 12 DOM hooks.
 - `badge-chest-v2.js` — 5 engine globals; 2 exported browser APIs; 12 DOM hooks.
-- `home-reward-coordinator.js` — 8 engine globals; 1 exported browser APIs; 5 DOM hooks.
+- `src/features/progression/home-reward-coordinator.js` — 8 engine globals; 1 exported browser APIs; 5 DOM hooks.
 - `mastery-feedback.js` — 8 engine globals; 1 exported browser APIs; 10 DOM hooks.
 - `social-connections-v2.js` — 1 engine globals; 3 exported browser APIs; 8 DOM hooks.
 - `level-progression-v2.js` — 6 engine globals; 2 exported browser APIs; 6 DOM hooks.
@@ -182,7 +182,7 @@
 | `mastery-feedback.js` | progression | 2 | 31 | 8 | 0/1 | 0 | 10 | 0 |
 | `avatar-collection-screen-v1.js` | collection-and-rewards | 2 | 29 | 0 | 4/2 | 3 | 12 | 0 |
 | `badge-chest-v2.js` | collection-and-rewards | 2 | 29 | 5 | 1/2 | 0 | 12 | 0 |
-| `home-reward-coordinator.js` | feature-extension | 2 | 29 | 8 | 0/1 | 0 | 5 | 0 |
+| `src/features/progression/home-reward-coordinator.js` | progression | 2 | 29 | 8 | 0/1 | 0 | 5 | 0 |
 | `coin-avatar-shop-topbar-v1.js` | runtime-loader | 2 | 28 | 0 | 0/1 | 0 | 2 | 5 |
 | `avatar-case-v1.js` | collection-and-rewards | 2 | 27 | 0 | 3/2 | 3 | 12 | 0 |
 | `coin-testing-grant-100k-v1.js` | collection-and-rewards | 2 | 27 | 2 | 3/1 | 3 | 0 | 0 |
@@ -250,7 +250,7 @@
 | `__salitaQuestCompactDesktopInstalled` | src/features/interface/compact-desktop-layout.js |
 | `__salitaQuestDailyGoalRefinementInstalled` | daily-goal-refinement.js |
 | `__salitaQuestEvenProgressRailInstalled` | src/features/progression/even-progress-rail.js |
-| `__salitaQuestHomeRewardCoordinatorInstalled` | home-reward-coordinator.js |
+| `__salitaQuestHomeRewardCoordinatorInstalled` | src/features/progression/home-reward-coordinator.js |
 | `__salitaQuestIncorrectOrderFeedbackInstalled` | incorrect-order-feedback.js |
 | `__salitaQuestKeyRunRefinementInstalled` | key-run-refinement.js |
 | `__salitaQuestLessonSideLauncherInstalled` | lesson-side-launcher.js |
@@ -345,7 +345,7 @@
 
 | ID | Referencing files |
 |---|---|
-| `homeView` | badge-catalogue-v2.js, home-reward-coordinator.js, key-run-refinement.js, level-progression-v2.js, popup-governor-v1.js, weekly-avatar-polish.js |
+| `homeView` | badge-catalogue-v2.js, key-run-refinement.js, level-progression-v2.js, popup-governor-v1.js, src/features/progression/home-reward-coordinator.js, weekly-avatar-polish.js |
 | `questChest` | app.js, collection-key-translation-hotfix.js, key-run-refinement.js, weekly-avatar-chest.js, weekly-avatar-polish.js, weekly-avatar-shard-rewards-v1.js |
 | `feedbackBox` | app.js, exercise-fixes-v545.js, lesson-side-launcher.js, mobile-session-refinement.js, ui-quality-fixes.js |
 | `audioBtn` | app.js, bisaya-app-loader.js, lesson-side-launcher.js, src/features/interface/compact-desktop-layout.js |
