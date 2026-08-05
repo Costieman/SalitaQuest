@@ -17,7 +17,7 @@ if(feature.split('clipboard.writeText = value => nativeWriteText(linkedCaption(v
 if(/localStorage|sessionStorage|addEventListener\(/.test(feature)) fail("Feature gained storage or listener ownership");
 if(!bridge.includes('script.src = "./src/features/sharing/facebook-share-link-v1.js?v=1.0.0";')||bridge.includes('script.src = "./facebook-share-link-v1.js?v=1.0.0";')) fail("Bridge path was not migrated cleanly");
 for(const marker of ['script.dataset.facebookShareLink = "true"','document.body.appendChild(script)','Facebook share link formatting could not be loaded.']) if(!bridge.includes(marker)) fail(`Bridge contract changed: ${marker}`);
-for(const marker of ['const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-21-avatar-collection-profile-adapter-extraction-r74"','const CACHE_NAME = "salita-quest-v5-6-22-avatar-sharing-bridge-extraction-r75"','"./facebook-share-link-v1.js"','"./src/features/sharing/facebook-share-link-v1.js"']) if(!worker.includes(marker)) fail(`Offline delivery missing ${marker}`);
+for(const marker of ['const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-22-avatar-sharing-bridge-extraction-r75"','const CACHE_NAME = "salita-quest-v5-6-23-badge-catalogue-extraction-r76"','"./facebook-share-link-v1.js"','"./src/features/sharing/facebook-share-link-v1.js"']) if(!worker.includes(marker)) fail(`Offline delivery missing ${marker}`);
 const shared=[],copied=[];
 const navigator={share(payload){shared.push(payload);return Promise.resolve();},clipboard:{writeText(value){copied.push(value);return Promise.resolve();}}};
 const context={window:{},navigator,console}; context.window.window=context.window; context.window.navigator=navigator;

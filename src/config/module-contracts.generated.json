@@ -31,7 +31,8 @@
       "desktop-navigation-refinement.js",
       "src/features/audio/pronunciation-release-control.js",
       "src/features/progression/home-reward-coordinator.js",
-      "badge-catalogue-v2.js",
+      "src/adapters/badges/badge-catalogue-runtime-v1.js",
+      "src/features/badges/badge-catalogue-v2.js",
       "badge-chest-v2.js",
       "placement-onboarding-v1.js",
       "social-connections-v2.js",
@@ -63,7 +64,8 @@
       "desktop-navigation-refinement.js",
       "src/features/audio/pronunciation-release-control.js",
       "src/features/progression/home-reward-coordinator.js",
-      "badge-catalogue-v2.js",
+      "src/adapters/badges/badge-catalogue-runtime-v1.js",
+      "src/features/badges/badge-catalogue-v2.js",
       "badge-chest-v2.js",
       "placement-onboarding-v1.js",
       "social-connections-v2.js",
@@ -72,7 +74,7 @@
   },
   "summary": {
     "modules": 70,
-    "dependencyEdges": 181,
+    "dependencyEdges": 183,
     "storageContracts": 21,
     "salitaEvents": 36,
     "extractionCandidates": 29,
@@ -786,75 +788,6 @@
       "role": "collection-and-rewards",
       "readiness": "prepare-adapter",
       "risk": 39
-    },
-    {
-      "file": "badge-catalogue-v2.js",
-      "bytes": 17068,
-      "contexts": [
-        "cebuano",
-        "tagalog"
-      ],
-      "courses": [
-        "cebuano",
-        "tagalog"
-      ],
-      "references": [],
-      "loads": [],
-      "fetches": [],
-      "workers": [],
-      "coreGlobals": [
-        "badgeArt",
-        "BADGES",
-        "bossReady",
-        "currentView",
-        "levelInfo",
-        "recordDailyAnswer",
-        "recordDailySession",
-        "renderBadges",
-        "saveState",
-        "session",
-        "state",
-        "switchView",
-        "totalLearningPoints"
-      ],
-      "window": {
-        "provides": [
-          "__salitaQuestBadgeCatalogueV2Installed"
-        ],
-        "consumes": [
-          "dispatchEvent"
-        ]
-      },
-      "storage": [],
-      "dom": {
-        "ids": [
-          "achievementCount",
-          "badgeShelf",
-          "homeView"
-        ],
-        "selectors": [
-          ".badge-custom-image",
-          ".badge-earned-medal",
-          "#badgesView .badges-page-summary h3",
-          "img"
-        ],
-        "datasets": [
-          "badgeId",
-          "currentView"
-        ]
-      },
-      "events": {
-        "listens": [
-          "error",
-          "load"
-        ],
-        "dispatches": [
-          "salita:badges-rendered"
-        ]
-      },
-      "role": "collection-and-rewards",
-      "readiness": "high-coupling",
-      "risk": 50
     },
     {
       "file": "badge-chest-v2.js",
@@ -2422,7 +2355,7 @@
     },
     {
       "file": "profile-emblem-control.js",
-      "bytes": 11210,
+      "bytes": 11279,
       "contexts": [
         "cebuano",
         "tagalog"
@@ -2496,7 +2429,8 @@
           "SalitaAvatarArtwork",
           "SalitaAvatarArtworkReady",
           "SalitaAvatarHotfixReady",
-          "SalitaAvatarModel"
+          "SalitaAvatarModel",
+          "SalitaBadgeCatalogueRuntimeV1"
         ]
       },
       "storage": [],
@@ -2536,7 +2470,7 @@
       },
       "role": "runtime-loader",
       "readiness": "hold",
-      "risk": 141
+      "risk": 143
     },
     {
       "file": "progression-v54.js",
@@ -2596,7 +2530,7 @@
     },
     {
       "file": "service-worker.js",
-      "bytes": 13565,
+      "bytes": 13651,
       "contexts": [
         "worker"
       ],
@@ -2668,6 +2602,7 @@
         "src/features/avatar/avatar-progression-migration-v1.js",
         "src/features/avatar/avatar-progression-model-v551.js",
         "src/features/avatar/level-avatar-rewards-v1.js",
+        "src/features/badges/badge-catalogue-v2.js",
         "src/features/badges/long-term-badges-v1.js",
         "src/features/economy/coin-avatar-shop-badges-v1.js",
         "src/features/economy/economy-tracking-phase6-v1.js",
@@ -2914,7 +2849,7 @@
     },
     {
       "file": "src/adapters/badges/badge-catalogue-runtime-v1.js",
-      "bytes": 1955,
+      "bytes": 3764,
       "contexts": [
         "cebuano",
         "tagalog"
@@ -2928,9 +2863,17 @@
       "fetches": [],
       "workers": [],
       "coreGlobals": [
+        "badgeArt",
         "BADGES",
+        "bossReady",
         "levelInfo",
+        "recordDailyAnswer",
+        "recordDailySession",
+        "renderBadges",
+        "saveState",
+        "session",
         "state",
+        "switchView",
         "totalLearningPoints"
       ],
       "window": {
@@ -2940,6 +2883,7 @@
         "consumes": [
           "BADGES",
           "SalitaAvatarModel",
+          "session",
           "state"
         ]
       },
@@ -2965,8 +2909,8 @@
         "dispatches": []
       },
       "role": "collection-and-rewards",
-      "readiness": "prepare-adapter",
-      "risk": 22
+      "readiness": "high-coupling",
+      "risk": 48
     },
     {
       "file": "src/adapters/badges/coin-shop-badge-runtime-v1.js",
@@ -3248,7 +3192,7 @@
     },
     {
       "file": "src/config/course-manifest.js",
-      "bytes": 6611,
+      "bytes": 6781,
       "contexts": [
         "bootstrap"
       ],
@@ -3256,7 +3200,6 @@
       "references": [
         "achievement-sharing-v4.js",
         "adaptive-scenarios.js",
-        "badge-catalogue-v2.js",
         "badge-chest-v2.js",
         "bisaya-app-loader.js",
         "daily-goal-refinement.js",
@@ -3273,8 +3216,10 @@
         "profile-emblem-control.js",
         "progression-v54.js",
         "social-connections-v2.js",
+        "src/adapters/badges/badge-catalogue-runtime-v1.js",
         "src/adapters/exercise/incorrect-order-feedback-runtime-v1.js",
         "src/features/audio/pronunciation-release-control.js",
+        "src/features/badges/badge-catalogue-v2.js",
         "src/features/exercise/incorrect-order-feedback.js",
         "src/features/interface/clean-topbar.js",
         "src/features/interface/collection-key-translation-hotfix.js",
@@ -3871,6 +3816,72 @@
       "role": "collection-and-rewards",
       "readiness": "extraction-candidate",
       "risk": 25
+    },
+    {
+      "file": "src/features/badges/badge-catalogue-v2.js",
+      "bytes": 17595,
+      "contexts": [
+        "cebuano",
+        "tagalog"
+      ],
+      "courses": [
+        "cebuano",
+        "tagalog"
+      ],
+      "references": [],
+      "loads": [],
+      "fetches": [],
+      "workers": [],
+      "coreGlobals": [
+        "badgeArt",
+        "bossReady",
+        "currentView",
+        "recordDailyAnswer",
+        "recordDailySession",
+        "renderBadges",
+        "session",
+        "switchView"
+      ],
+      "window": {
+        "provides": [
+          "__salitaQuestBadgeCatalogueV2Installed",
+          "SalitaBadgeCatalogueFeatureV2"
+        ],
+        "consumes": [
+          "dispatchEvent",
+          "SalitaBadgeCatalogueRuntimeV1"
+        ]
+      },
+      "storage": [],
+      "dom": {
+        "ids": [
+          "achievementCount",
+          "badgeShelf",
+          "homeView"
+        ],
+        "selectors": [
+          ".badge-custom-image",
+          ".badge-earned-medal",
+          "#badgesView .badges-page-summary h3",
+          "img"
+        ],
+        "datasets": [
+          "badgeId",
+          "currentView"
+        ]
+      },
+      "events": {
+        "listens": [
+          "error",
+          "load"
+        ],
+        "dispatches": [
+          "salita:badges-rendered"
+        ]
+      },
+      "role": "collection-and-rewards",
+      "readiness": "prepare-adapter",
+      "risk": 39
     },
     {
       "file": "src/features/badges/long-term-badges-v1.js",
@@ -5123,26 +5134,6 @@
       ]
     },
     {
-      "from": "badge-catalogue-v2.js",
-      "to": "app.js",
-      "type": "core-globals",
-      "symbols": [
-        "badgeArt",
-        "BADGES",
-        "bossReady",
-        "currentView",
-        "levelInfo",
-        "recordDailyAnswer",
-        "recordDailySession",
-        "renderBadges",
-        "saveState",
-        "session",
-        "state",
-        "switchView",
-        "totalLearningPoints"
-      ]
-    },
-    {
       "from": "badge-chest-v2.js",
       "to": "app.js",
       "type": "core-globals",
@@ -5790,6 +5781,14 @@
       ]
     },
     {
+      "from": "profile-emblem-control.js",
+      "to": "src/adapters/badges/badge-catalogue-runtime-v1.js",
+      "type": "window-api",
+      "symbols": [
+        "SalitaBadgeCatalogueRuntimeV1"
+      ]
+    },
+    {
       "from": "progression-v54.js",
       "to": "app.js",
       "type": "core-globals",
@@ -5859,9 +5858,17 @@
       "to": "app.js",
       "type": "core-globals",
       "symbols": [
+        "badgeArt",
         "BADGES",
+        "bossReady",
         "levelInfo",
+        "recordDailyAnswer",
+        "recordDailySession",
+        "renderBadges",
+        "saveState",
+        "session",
         "state",
+        "switchView",
         "totalLearningPoints"
       ]
     },
@@ -6120,6 +6127,29 @@
       "type": "window-api",
       "symbols": [
         "SalitaAvatarModel"
+      ]
+    },
+    {
+      "from": "src/features/badges/badge-catalogue-v2.js",
+      "to": "app.js",
+      "type": "core-globals",
+      "symbols": [
+        "badgeArt",
+        "bossReady",
+        "currentView",
+        "recordDailyAnswer",
+        "recordDailySession",
+        "renderBadges",
+        "session",
+        "switchView"
+      ]
+    },
+    {
+      "from": "src/features/badges/badge-catalogue-v2.js",
+      "to": "src/adapters/badges/badge-catalogue-runtime-v1.js",
+      "type": "window-api",
+      "symbols": [
+        "SalitaBadgeCatalogueRuntimeV1"
       ]
     },
     {
@@ -6750,14 +6780,14 @@
         "avatar-collection-screen-v1.js",
         "avatar-progression-hotfix-v551.js",
         "avatar-unlock-celebration-v1.js",
-        "badge-catalogue-v2.js",
         "badge-chest-v2.js",
         "coin-avatar-shop-badges-v1.js",
         "incorrect-order-feedback.js",
         "level-progression-v2.js",
         "long-term-badges-v1.js",
         "profile-app.js",
-        "profile-emblem-control.js"
+        "profile-emblem-control.js",
+        "src/features/badges/badge-catalogue-v2.js"
       ],
       "dispatchers": []
     },
@@ -6805,13 +6835,13 @@
         "avatar-collection-screen-v1.js",
         "avatar-progression-hotfix-v551.js",
         "avatar-unlock-celebration-v1.js",
-        "badge-catalogue-v2.js",
         "badge-chest-v2.js",
         "coin-avatar-shop-badges-v1.js",
         "incorrect-order-feedback.js",
         "long-term-badges-v1.js",
         "profile-app.js",
-        "profile-emblem-control.js"
+        "profile-emblem-control.js",
+        "src/features/badges/badge-catalogue-v2.js"
       ],
       "dispatchers": []
     },
@@ -7016,7 +7046,7 @@
       "name": "salita:badges-rendered",
       "listeners": [],
       "dispatchers": [
-        "badge-catalogue-v2.js"
+        "src/features/badges/badge-catalogue-v2.js"
       ]
     },
     {
@@ -7332,7 +7362,7 @@
     {
       "symbol": "__salitaQuestBadgeCatalogueV2Installed",
       "providers": [
-        "badge-catalogue-v2.js"
+        "src/features/badges/badge-catalogue-v2.js"
       ]
     },
     {
@@ -7625,6 +7655,12 @@
       "symbol": "SalitaAvatarUnlockCelebration",
       "providers": [
         "avatar-unlock-celebration-v1.js"
+      ]
+    },
+    {
+      "symbol": "SalitaBadgeCatalogueFeatureV2",
+      "providers": [
+        "src/features/badges/badge-catalogue-v2.js"
       ]
     },
     {

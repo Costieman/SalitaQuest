@@ -9,6 +9,8 @@ const fail = message => { throw new Error(message); };
 for (const file of [
   "placement-onboarding-v1.js",
   "badge-catalogue-v2.js",
+  "src/adapters/badges/badge-catalogue-runtime-v1.js",
+  "src/features/badges/badge-catalogue-v2.js",
   "badge-chest-v2.js",
   "src/config/course-manifest.js",
   "service-worker.js"
@@ -37,7 +39,7 @@ for (const marker of [".placement-modal", ".placement-level-grid", ".placement-a
   if (!placementCss.includes(marker)) fail(`Missing placement style: ${marker}`);
 }
 
-const catalogue = read("badge-catalogue-v2.js");
+const catalogue = read("src/features/badges/badge-catalogue-v2.js");
 for (const marker of [
   "ADDITIONAL_BADGES",
   "badgeProgress",
@@ -88,11 +90,11 @@ for (const [htmlFile, courseId] of [["app.html", "tagalog"], ["bisaya.html", "ce
     "placement-onboarding-v1.css?v=5.4.23"
   ]) if (!course.styles.includes(asset)) fail(`${htmlFile} does not load ${asset}`);
   for (const asset of [
-    "badge-catalogue-v2.js?v=5.4.23",
+    "src/features/badges/badge-catalogue-v2.js?v=5.4.23",
     "badge-chest-v2.js?v=5.4.29",
     "placement-onboarding-v1.js?v=5.4.23"
   ]) if (!course.scripts.includes(asset)) fail(`${htmlFile} does not load ${asset}`);
-  const catalogueIndex = course.scripts.indexOf("badge-catalogue-v2.js?v=5.4.23");
+  const catalogueIndex = course.scripts.indexOf("src/features/badges/badge-catalogue-v2.js?v=5.4.23");
   const chestIndex = course.scripts.indexOf("badge-chest-v2.js?v=5.4.29");
   const placementIndex = course.scripts.indexOf("placement-onboarding-v1.js?v=5.4.23");
   if (!(catalogueIndex >= 0 && chestIndex > catalogueIndex && placementIndex > chestIndex)) {
@@ -117,10 +119,10 @@ for (const asset of [
   '"./src/config/course-manifest.js"',
   '"./src/app/course-bootstrap.js"'
 ]) if (!worker.includes(asset)) fail(`Offline cache is missing ${asset}`);
-if (!worker.includes('const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-21-avatar-collection-profile-adapter-extraction-r74"')) {
+if (!worker.includes('const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-22-avatar-sharing-bridge-extraction-r75"')) {
   fail("Previous service-worker cache boundary is missing");
 }
-if (!worker.includes('const CACHE_NAME = "salita-quest-v5-6-22-avatar-sharing-bridge-extraction-r75"')) {
+if (!worker.includes('const CACHE_NAME = "salita-quest-v5-6-23-badge-catalogue-extraction-r76"')) {
   fail("Current modular-bootstrap service-worker cache is missing");
 }
 

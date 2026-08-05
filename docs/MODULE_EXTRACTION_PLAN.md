@@ -88,3 +88,5 @@ Before extracting these files, introduce an explicit engine adapter that owns ac
 19. `avatar-case-v1.js` — adapter-led split into `src/adapters/avatar/avatar-case-profile-runtime-v1.js` and `src/features/avatar/avatar-case-v1.js`; the historical root remains the ordered compatibility coordinator through r73.
 
 20. `achievement-sharing-avatar-bridge-v1.js` — extracted as `src/features/sharing/achievement-sharing-avatar-bridge-v1.js`; profile lookup now consumes the read-only Avatar Collection profile adapter snapshot, while the historical root remains an ordered compatibility coordinator through r75.
+
+21. `badge-catalogue-v2.js` — adapter-led split into `src/adapters/badges/badge-catalogue-runtime-v1.js` and `src/features/badges/badge-catalogue-v2.js`; all engine function replacement now crosses the badge runtime boundary, while the historical root remains an ordered compatibility coordinator through r76.

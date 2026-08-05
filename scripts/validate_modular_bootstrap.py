@@ -53,8 +53,8 @@ def validate_page(path: str, course_id: str) -> None:
 def validate_assets(manifest_source: str) -> None:
     expected = {
         "sharedStyles": (23, "ui-quality-fixes.css?v=5.4.21", "achievement-sharing-v4.css?v=5.4.29"),
-        "tagalogScripts": (31, "progression-v54.js?v=5.4.21", "src/features/interface/collection-key-translation-hotfix.js?v=5.5.11"),
-        "cebuanoScripts": (28, "bisaya-app-loader.js?v=0.3.2", "achievement-sharing-v4.js?v=5.4.29"),
+        "tagalogScripts": (32, "progression-v54.js?v=5.4.21", "src/features/interface/collection-key-translation-hotfix.js?v=5.5.11"),
+        "cebuanoScripts": (29, "bisaya-app-loader.js?v=0.3.2", "achievement-sharing-v4.js?v=5.4.29"),
     }
 
     all_assets: set[str] = set()
@@ -105,7 +105,7 @@ def validate_storage_contract(manifest_source: str, bootstrap_source: str) -> No
 def validate_service_worker() -> None:
     source = read(SERVICE_WORKER)
     required = (
-        'const CACHE_NAME = "salita-quest-v5-6-22-avatar-sharing-bridge-extraction-r75";',
+        'const CACHE_NAME = "salita-quest-v5-6-23-badge-catalogue-extraction-r76";',
         '"./src/config/course-manifest.js"',
         '"./src/app/course-bootstrap.js"',
     )
