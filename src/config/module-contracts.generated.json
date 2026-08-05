@@ -1,93 +1,101 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "manifestFile": "src/config/course-manifest.js",
   "sourceDocument": "https://raw.githubusercontent.com/Costieman/SalitaQuest/cb89fa4778737b16408bd5a66dd8fcc7f7f37f81/index.html",
   "sourceDocumentCommit": "cb89fa4778737b16408bd5a66dd8fcc7f7f37f81",
   "courseSeeds": {
     "tagalog": [
-      "achievement-sharing-v4.js",
-      "adaptive-scenarios.js",
       "app.js",
-      "badge-catalogue-v2.js",
-      "badge-chest-v2.js",
-      "clean-topbar.js",
-      "collection-key-translation-hotfix.js",
-      "compact-desktop-layout.js",
-      "daily-goal-refinement.js",
-      "desktop-navigation-refinement.js",
-      "even-progress-rail.js",
+      "progression-v54.js",
       "exercise-fixes-v545.js",
-      "home-reward-coordinator.js",
-      "incorrect-order-feedback.js",
+      "ui-quality-fixes.js",
+      "daily-goal-refinement.js",
+      "weekly-avatar-chest.js",
       "key-run-refinement.js",
-      "lesson-side-launcher.js",
-      "level-progression-v2.js",
-      "level-up-mobile-safety-v552.js",
+      "weekly-avatar-polish.js",
+      "incorrect-order-feedback.js",
+      "compact-desktop-layout.js",
+      "clean-topbar.js",
+      "even-progress-rail.js",
       "mastery-feedback.js",
+      "lesson-side-launcher.js",
       "mobile-session-refinement.js",
-      "placement-onboarding-v1.js",
       "popup-governor-v1.js",
       "profile-app.js",
       "profile-emblem-control.js",
-      "progression-v54.js",
-      "pronunciation-release-control.js",
-      "social-connections-v2.js",
-      "ui-quality-fixes.js",
-      "weekly-avatar-chest.js",
-      "weekly-avatar-polish.js"
-    ],
-    "cebuano": [
-      "achievement-sharing-v4.js",
       "adaptive-scenarios.js",
-      "app.js",
-      "badge-catalogue-v2.js",
-      "badge-chest-v2.js",
-      "bisaya-app-loader.js",
-      "clean-topbar.js",
-      "compact-desktop-layout.js",
-      "daily-goal-refinement.js",
-      "desktop-navigation-refinement.js",
-      "even-progress-rail.js",
-      "home-reward-coordinator.js",
-      "incorrect-order-feedback.js",
-      "key-run-refinement.js",
-      "lesson-side-launcher.js",
       "level-progression-v2.js",
       "level-up-mobile-safety-v552.js",
-      "mastery-feedback.js",
-      "mobile-session-refinement.js",
+      "desktop-navigation-refinement.js",
+      "pronunciation-release-control.js",
+      "home-reward-coordinator.js",
+      "badge-catalogue-v2.js",
+      "badge-chest-v2.js",
       "placement-onboarding-v1.js",
+      "social-connections-v2.js",
+      "achievement-sharing-v4.js",
+      "collection-key-translation-hotfix.js"
+    ],
+    "cebuano": [
+      "app.js",
+      "bisaya-app-loader.js",
+      "ui-quality-fixes.js",
+      "daily-goal-refinement.js",
+      "weekly-avatar-chest.js",
+      "key-run-refinement.js",
+      "weekly-avatar-polish.js",
+      "incorrect-order-feedback.js",
+      "compact-desktop-layout.js",
+      "clean-topbar.js",
+      "even-progress-rail.js",
+      "mastery-feedback.js",
+      "lesson-side-launcher.js",
+      "mobile-session-refinement.js",
       "popup-governor-v1.js",
       "profile-emblem-control.js",
+      "adaptive-scenarios.js",
+      "level-progression-v2.js",
+      "level-up-mobile-safety-v552.js",
+      "desktop-navigation-refinement.js",
       "pronunciation-release-control.js",
+      "home-reward-coordinator.js",
+      "badge-catalogue-v2.js",
+      "badge-chest-v2.js",
+      "placement-onboarding-v1.js",
       "social-connections-v2.js",
-      "ui-quality-fixes.js",
-      "weekly-avatar-chest.js",
-      "weekly-avatar-polish.js"
+      "achievement-sharing-v4.js"
     ]
   },
   "summary": {
-    "modules": 66,
-    "dependencyEdges": 254,
+    "modules": 58,
+    "dependencyEdges": 147,
     "storageContracts": 21,
-    "customEvents": 37,
-    "extractionCandidates": 22,
+    "salitaEvents": 36,
+    "extractionCandidates": 17,
+    "prepareAdapters": 23,
     "highCoupling": 7,
-    "held": 10
+    "held": 11
   },
   "modules": [
     {
       "file": "achievement-sharing-avatar-bridge-v1.js",
       "bytes": 4432,
-      "courses": [
-        "bootstrap",
+      "contexts": [
         "cebuano",
         "tagalog"
       ],
-      "dynamicScripts": [
+      "courses": [
+        "cebuano",
+        "tagalog"
+      ],
+      "references": [
         "facebook-share-link-v1.js"
       ],
-      "topLevelDeclarations": [],
+      "loads": [
+        "facebook-share-link-v1.js"
+      ],
+      "fetches": [],
+      "workers": [],
       "coreGlobals": [],
       "window": {
         "provides": [
@@ -101,24 +109,18 @@
           "SalitaQuestAchievementSharing"
         ]
       },
-      "storage": {
-        "operations": [
-          {
-            "store": "localStorage",
-            "operation": "getItem",
-            "key": "salitaQuestLocalProfilesV1"
-          },
-          {
-            "store": "sessionStorage",
-            "operation": "getItem",
-            "key": "salitaQuestActiveProfileId"
-          }
-        ],
-        "candidateKeys": [
-          "salitaQuestActiveProfileId",
-          "salitaQuestLocalProfilesV1"
-        ]
-      },
+      "storage": [
+        {
+          "store": "localStorage",
+          "operation": "getItem",
+          "key": "salitaQuestLocalProfilesV1"
+        },
+        {
+          "store": "sessionStorage",
+          "operation": "getItem",
+          "key": "salitaQuestActiveProfileId"
+        }
+      ],
       "dom": {
         "ids": [],
         "selectors": [
@@ -142,22 +144,29 @@
           "salita:avatar-sharing-bridge-ready"
         ]
       },
-      "classification": "runtime-loader",
+      "role": "runtime-loader",
       "readiness": "hold",
-      "riskScore": 23
+      "risk": 23
     },
     {
       "file": "achievement-sharing-router-v2.js",
       "bytes": 518,
-      "courses": [
-        "bootstrap",
+      "contexts": [
         "cebuano",
         "tagalog"
       ],
-      "dynamicScripts": [
+      "courses": [
+        "cebuano",
+        "tagalog"
+      ],
+      "references": [
         "achievement-sharing-router-v3.js"
       ],
-      "topLevelDeclarations": [],
+      "loads": [
+        "achievement-sharing-router-v3.js"
+      ],
+      "fetches": [],
+      "workers": [],
       "coreGlobals": [],
       "window": {
         "provides": [],
@@ -165,10 +174,7 @@
           "__salitaQuestAchievementSharingRouterV3Installed"
         ]
       },
-      "storage": {
-        "operations": [],
-        "candidateKeys": []
-      },
+      "storage": [],
       "dom": {
         "ids": [],
         "selectors": [
@@ -182,20 +188,25 @@
         "listens": [],
         "dispatches": []
       },
-      "classification": "runtime-loader",
+      "role": "runtime-loader",
       "readiness": "hold",
-      "riskScore": 8
+      "risk": 8
     },
     {
       "file": "achievement-sharing-router-v3.js",
       "bytes": 8346,
-      "courses": [
-        "bootstrap",
+      "contexts": [
         "cebuano",
         "tagalog"
       ],
-      "dynamicScripts": [],
-      "topLevelDeclarations": [],
+      "courses": [
+        "cebuano",
+        "tagalog"
+      ],
+      "references": [],
+      "loads": [],
+      "fetches": [],
+      "workers": [],
       "coreGlobals": [],
       "window": {
         "provides": [
@@ -204,10 +215,7 @@
         ],
         "consumes": []
       },
-      "storage": {
-        "operations": [],
-        "candidateKeys": []
-      },
+      "storage": [],
       "dom": {
         "ids": [
           "achievementShareDescription",
@@ -230,20 +238,25 @@
         ],
         "dispatches": []
       },
-      "classification": "collection-and-rewards",
+      "role": "collection-and-rewards",
       "readiness": "extraction-candidate",
-      "riskScore": 8
+      "risk": 8
     },
     {
       "file": "achievement-sharing-v4.js",
       "bytes": 41132,
-      "courses": [
-        "bootstrap",
+      "contexts": [
         "cebuano",
         "tagalog"
       ],
-      "dynamicScripts": [],
-      "topLevelDeclarations": [],
+      "courses": [
+        "cebuano",
+        "tagalog"
+      ],
+      "references": [],
+      "loads": [],
+      "fetches": [],
+      "workers": [],
       "coreGlobals": [
         "BADGES",
         "levelInfo",
@@ -267,24 +280,18 @@
           "SalitaQuestSocialConnections"
         ]
       },
-      "storage": {
-        "operations": [
-          {
-            "store": "localStorage",
-            "operation": "getItem",
-            "key": "salitaQuestLocalProfilesV1"
-          },
-          {
-            "store": "sessionStorage",
-            "operation": "getItem",
-            "key": "salitaQuestActiveProfileId"
-          }
-        ],
-        "candidateKeys": [
-          "salitaQuestActiveProfileId",
-          "salitaQuestLocalProfilesV1"
-        ]
-      },
+      "storage": [
+        {
+          "store": "localStorage",
+          "operation": "getItem",
+          "key": "salitaQuestLocalProfilesV1"
+        },
+        {
+          "store": "sessionStorage",
+          "operation": "getItem",
+          "key": "salitaQuestActiveProfileId"
+        }
+      ],
       "dom": {
         "ids": [
           "achievementShareDescription",
@@ -329,20 +336,25 @@
           "salita:achievement-share-prepared"
         ]
       },
-      "classification": "collection-and-rewards",
+      "role": "collection-and-rewards",
       "readiness": "prepare-adapter",
-      "riskScore": 48
+      "risk": 48
     },
     {
       "file": "adaptive-scenarios.js",
       "bytes": 14743,
-      "courses": [
-        "bootstrap",
+      "contexts": [
         "cebuano",
         "tagalog"
       ],
-      "dynamicScripts": [],
-      "topLevelDeclarations": [],
+      "courses": [
+        "cebuano",
+        "tagalog"
+      ],
+      "references": [],
+      "loads": [],
+      "fetches": [],
+      "workers": [],
       "coreGlobals": [
         "currentExercise",
         "escapeHTML",
@@ -365,10 +377,7 @@
         ],
         "consumes": []
       },
-      "storage": {
-        "operations": [],
-        "candidateKeys": []
-      },
+      "storage": [],
       "dom": {
         "ids": [
           "adaptiveScenarioGrid",
@@ -390,222 +399,60 @@
         ],
         "dispatches": []
       },
-      "classification": "feature-extension",
+      "role": "feature-extension",
       "readiness": "high-coupling",
-      "riskScore": 50
+      "risk": 50
     },
     {
       "file": "app.js",
       "bytes": 181419,
-      "courses": [
-        "bootstrap",
+      "contexts": [
         "cebuano",
         "tagalog"
       ],
-      "dynamicScripts": [
+      "courses": [
+        "cebuano",
+        "tagalog"
+      ],
+      "references": [
         "service-worker.js"
       ],
-      "topLevelDeclarations": [
-        "accepted",
-        "activeAudio",
-        "activeDialogueId",
-        "APP_VERSION",
-        "applyDisplaySettings",
-        "applyImportedProgress",
-        "attachDialogueAudio",
-        "attachWorldMapEvents",
-        "audioCache",
-        "badgeArt",
-        "BADGES",
-        "beginQueueSession",
-        "BOSS_ITEMS",
-        "bossReady",
-        "buildChoices",
-        "buildHandsFreeQueue",
-        "buildSentenceOptions",
-        "buildWorldMap",
-        "builtSentenceAnswer",
-        "capitaliseFirst",
-        "checkAnswer",
-        "claimDailyQuestRewards",
-        "clearBuilderWords",
-        "closeDialogue",
-        "closeMobileMenu",
-        "closeSessionComplete",
-        "COMMON_WORD_DISTRACTORS",
-        "comparableMeanings",
-        "comparableTerms",
-        "countMastered",
-        "countMasteredInModule",
-        "countPractisedByOrigin",
-        "currentExercise",
-        "currentView",
-        "DAILY_QUESTS",
-        "DATA_SCHEMA_VERSION",
-        "decodeTransferCode",
-        "DEFAULT_STATE",
-        "deferredInstallPrompt",
-        "dialogueLineHTML",
-        "DIALOGUES",
-        "dictionaryAudio",
-        "dictionaryRevealIds",
-        "dictionaryTagalog",
-        "dueItems",
-        "encodeTransferCode",
-        "ensureDailyActivity",
-        "escapeHTML",
-        "escapeRegex",
-        "estimateHandsFreeItemSeconds",
-        "estimateSpeechSeconds",
-        "exportProgress",
-        "fallbackSpeech",
-        "fillReviewQueue",
-        "finishSession",
-        "formatAudioTime",
-        "generateExercise",
-        "generateVerbExercise",
-        "generateWordExercise",
-        "getItemState",
-        "HANDS_FREE_MAX_SECONDS",
-        "handsFreeActiveItems",
-        "handsFreeDelay",
-        "handsFreeElapsedSeconds",
-        "handsFreeEnglish",
-        "handsFreeReview",
-        "handsFreeTagalog",
-        "hydratePictograms",
-        "importProgress",
-        "isModuleUnlocked",
-        "ITEMS",
-        "launchConfetti",
-        "LEGACY_STORAGE_KEYS",
-        "LEVEL_TITLES",
-        "levelInfo",
-        "loadBossExercise",
-        "loadExercise",
-        "loadState",
-        "lockSentenceBuilder",
-        "mergeState",
-        "migrateState",
-        "MODULE_META",
-        "moduleById",
-        "MODULES",
-        "moduleStats",
-        "newItems",
-        "nextExercise",
-        "normalise",
-        "openDialogue",
-        "openMobileMenu",
-        "openRandomDictionaryCard",
-        "pictogram",
-        "playSuccessDing",
-        "practisedItems",
-        "progressPackage",
-        "questProgress",
-        "recordDailyAnswer",
-        "recordDailySession",
-        "recordExposure",
-        "registerInstallSupport",
-        "removeSelectedWord",
-        "renderBadges",
-        "renderDailyQuests",
-        "renderDialoguePreview",
-        "renderDictionary",
-        "renderDictionaryFilters",
-        "renderExercise",
-        "renderFeedback",
-        "renderHandsFreeReview",
-        "renderHomeTopicControls",
-        "renderJourney",
-        "renderMasteryRail",
-        "renderProgress",
-        "renderSentenceBuilder",
-        "renderSkillTree",
-        "renderStructureBox",
-        "renderTopicReview",
-        "renderWeekMomentum",
-        "restoreTransferCode",
-        "reviewPool",
-        "saveState",
-        "selectBuilderWord",
-        "selectedChoice",
-        "sentenceBuilderState",
-        "sentenceForVerbAspect",
-        "sentenceTokens",
-        "session",
-        "showAnswerPop",
-        "showRewardBurst",
-        "showSessionComplete",
-        "shuffle",
-        "skillScore",
-        "startModuleSession",
-        "startSession",
-        "startTopicReview",
-        "state",
-        "staticAudioManifest",
-        "staticAudioManifestPromise",
-        "stopHandsFreeReview",
-        "STORAGE_KEY",
-        "studyWeekDays",
-        "switchView",
-        "syncSettings",
-        "toast",
-        "todayKey",
-        "toggleHandsFreePause",
-        "totalLearningPoints",
-        "undoBuilderWord",
-        "unlockedModules",
-        "unlockStructureBox",
-        "unwrapProgressPayload",
-        "updateAll",
-        "updateBoss",
-        "updateGlobalUI",
-        "updateHandsFreeClock",
-        "updateHome",
-        "updateSentenceBuilderUI",
-        "updateSessionStats",
-        "updateSRS",
-        "updateStudyStreak",
-        "updateTransferStatus"
+      "loads": [],
+      "fetches": [],
+      "workers": [
+        "service-worker.js"
       ],
       "coreGlobals": [],
       "window": {
         "provides": [],
         "consumes": [
           "AudioContext",
+          "scrollTo",
           "webkitAudioContext"
         ]
       },
-      "storage": {
-        "operations": [
-          {
-            "store": "localStorage",
-            "operation": "getItem",
-            "key": "key"
-          },
-          {
-            "store": "localStorage",
-            "operation": "setItem",
-            "key": "salitaQuestProgress"
-          },
-          {
-            "store": "localStorage",
-            "operation": "setItem",
-            "key": "salitaQuestProgress"
-          },
-          {
-            "store": "localStorage",
-            "operation": "setItem",
-            "key": "${STORAGE_KEY}.beforeImport"
-          }
-        ],
-        "candidateKeys": [
-          "salitaQuestProgress",
-          "salitaQuestState",
-          "salitaQuestStateV2",
-          "salitaQuestStateV3"
-        ]
-      },
+      "storage": [
+        {
+          "store": "localStorage",
+          "operation": "getItem",
+          "key": "key"
+        },
+        {
+          "store": "localStorage",
+          "operation": "setItem",
+          "key": "salitaQuestProgress"
+        },
+        {
+          "store": "localStorage",
+          "operation": "setItem",
+          "key": "salitaQuestProgress"
+        },
+        {
+          "store": "localStorage",
+          "operation": "setItem",
+          "key": "${STORAGE_KEY}.beforeImport"
+        }
+      ],
       "dom": {
         "ids": [
           "achievementCount",
@@ -820,20 +667,25 @@
         ],
         "dispatches": []
       },
-      "classification": "core-engine",
+      "role": "core-engine",
       "readiness": "hold",
-      "riskScore": 204
+      "risk": 203
     },
     {
       "file": "avatar-artwork-registry-v554.js",
       "bytes": 5921,
-      "courses": [
-        "bootstrap",
+      "contexts": [
         "cebuano",
         "tagalog"
       ],
-      "dynamicScripts": [],
-      "topLevelDeclarations": [],
+      "courses": [
+        "cebuano",
+        "tagalog"
+      ],
+      "references": [],
+      "loads": [],
+      "fetches": [],
+      "workers": [],
       "coreGlobals": [],
       "window": {
         "provides": [
@@ -846,24 +698,18 @@
           "SalitaAvatarModel"
         ]
       },
-      "storage": {
-        "operations": [
-          {
-            "store": "localStorage",
-            "operation": "getItem",
-            "key": "salitaQuestLocalProfilesV1"
-          },
-          {
-            "store": "sessionStorage",
-            "operation": "getItem",
-            "key": "salitaQuestActiveProfileId"
-          }
-        ],
-        "candidateKeys": [
-          "salitaQuestActiveProfileId",
-          "salitaQuestLocalProfilesV1"
-        ]
-      },
+      "storage": [
+        {
+          "store": "localStorage",
+          "operation": "getItem",
+          "key": "salitaQuestLocalProfilesV1"
+        },
+        {
+          "store": "sessionStorage",
+          "operation": "getItem",
+          "key": "salitaQuestActiveProfileId"
+        }
+      ],
       "dom": {
         "ids": [],
         "selectors": [
@@ -885,162 +731,25 @@
         ],
         "dispatches": []
       },
-      "classification": "collection-and-rewards",
+      "role": "collection-and-rewards",
       "readiness": "extraction-candidate",
-      "riskScore": 13
-    },
-    {
-      "file": "avatar-card-actions-v1.js",
-      "bytes": 6411,
-      "courses": [
-        "bootstrap",
-        "cebuano",
-        "tagalog"
-      ],
-      "dynamicScripts": [
-        "daily-key-weekday-reconciliation-v1.js",
-        "universal-share-simplifier-v1.js",
-        "weekly-avatar-projected-unlock-fix-v1.js"
-      ],
-      "topLevelDeclarations": [],
-      "coreGlobals": [],
-      "window": {
-        "provides": [
-          "__salitaAvatarCardActionsV1Installed"
-        ],
-        "consumes": [
-          "__salitaDailyKeyWeekdayReconciliationV3Installed",
-          "__salitaUniversalShareSimplifierV1Installed",
-          "__salitaWeeklyAvatarProjectedUnlockFixV1Installed",
-          "SalitaAvatarModel",
-          "SalitaQuestAchievementSharing",
-          "SalitaQuestAvatarCase"
-        ]
-      },
-      "storage": {
-        "operations": [
-          {
-            "store": "localStorage",
-            "operation": "getItem",
-            "key": "salitaQuestLocalProfilesV1"
-          },
-          {
-            "store": "sessionStorage",
-            "operation": "getItem",
-            "key": "salitaQuestActiveProfileId"
-          }
-        ],
-        "candidateKeys": [
-          "salitaQuestActiveProfileId",
-          "salitaQuestLocalProfilesV1"
-        ]
-      },
-      "dom": {
-        "ids": [],
-        "selectors": [
-          ".avatar-page-card-actions",
-          "[data-avatar-page-detail]",
-          "[data-avatar-page-display]",
-          "[data-avatar-page-primary]",
-          "[data-avatar-page-share]",
-          "link[data-sq-universal-share]",
-          "script[data-sq-daily-key-reconciliation]",
-          "script[data-sq-universal-share]",
-          "script[data-sq-weekly-projected-unlock-fix]"
-        ],
-        "datasets": [
-          "avatarPageCard",
-          "avatarPageDetail",
-          "avatarPageDisplay",
-          "avatarPagePrimary",
-          "avatarPageShare",
-          "sqDailyKeyReconciliation",
-          "sqUniversalShare",
-          "sqWeeklyProjectedUnlockFix"
-        ]
-      },
-      "events": {
-        "listens": [
-          "click",
-          "salita:avatar-case-changed",
-          "salita:avatar-collection-changed"
-        ],
-        "dispatches": [
-          "salita:open-avatar-share"
-        ]
-      },
-      "classification": "runtime-loader",
-      "readiness": "hold",
-      "riskScore": 38
-    },
-    {
-      "file": "avatar-case-page-tab-v1.js",
-      "bytes": 5911,
-      "courses": [
-        "bootstrap",
-        "cebuano",
-        "tagalog"
-      ],
-      "dynamicScripts": [],
-      "topLevelDeclarations": [],
-      "coreGlobals": [],
-      "window": {
-        "provides": [
-          "__salitaAvatarCasePageTabV1Installed"
-        ],
-        "consumes": [
-          "getAvatarImagePath",
-          "SalitaAvatarArtwork",
-          "SalitaQuestAvatarCase"
-        ]
-      },
-      "storage": {
-        "operations": [],
-        "candidateKeys": []
-      },
-      "dom": {
-        "ids": [
-          "avatarsView"
-        ],
-        "selectors": [
-          ".avatar-page-case-panel",
-          ".avatar-page-content",
-          ".avatar-page-detail",
-          ".avatar-page-search",
-          ".avatar-page-toolbar",
-          "[data-avatar-page-case-edit]",
-          "[data-avatar-page-filter]",
-          "#avatarsView",
-          "link[data-avatar-case-page-tab-style]"
-        ],
-        "datasets": [
-          "avatarCasePageTabStyle",
-          "avatarPageFilter"
-        ]
-      },
-      "events": {
-        "listens": [
-          "click",
-          "salita:avatar-case-changed",
-          "salita:avatar-case-ready",
-          "salita:view-changed"
-        ],
-        "dispatches": []
-      },
-      "classification": "collection-and-rewards",
-      "readiness": "extraction-candidate",
-      "riskScore": 14
+      "risk": 13
     },
     {
       "file": "avatar-case-v1.js",
       "bytes": 14488,
-      "courses": [
-        "bootstrap",
+      "contexts": [
         "cebuano",
         "tagalog"
       ],
-      "dynamicScripts": [],
-      "topLevelDeclarations": [],
+      "courses": [
+        "cebuano",
+        "tagalog"
+      ],
+      "references": [],
+      "loads": [],
+      "fetches": [],
+      "workers": [],
       "coreGlobals": [],
       "window": {
         "provides": [
@@ -1053,29 +762,23 @@
           "SalitaAvatarModel"
         ]
       },
-      "storage": {
-        "operations": [
-          {
-            "store": "localStorage",
-            "operation": "getItem",
-            "key": "salitaQuestLocalProfilesV1"
-          },
-          {
-            "store": "sessionStorage",
-            "operation": "getItem",
-            "key": "salitaQuestActiveProfileId"
-          },
-          {
-            "store": "localStorage",
-            "operation": "setItem",
-            "key": "salitaQuestLocalProfilesV1"
-          }
-        ],
-        "candidateKeys": [
-          "salitaQuestActiveProfileId",
-          "salitaQuestLocalProfilesV1"
-        ]
-      },
+      "storage": [
+        {
+          "store": "localStorage",
+          "operation": "getItem",
+          "key": "salitaQuestLocalProfilesV1"
+        },
+        {
+          "store": "sessionStorage",
+          "operation": "getItem",
+          "key": "salitaQuestActiveProfileId"
+        },
+        {
+          "store": "localStorage",
+          "operation": "setItem",
+          "key": "salitaQuestLocalProfilesV1"
+        }
+      ],
       "dom": {
         "ids": [],
         "selectors": [
@@ -1113,20 +816,25 @@
           "salita:avatar-case-ready"
         ]
       },
-      "classification": "collection-and-rewards",
+      "role": "collection-and-rewards",
       "readiness": "prepare-adapter",
-      "riskScore": 27
+      "risk": 27
     },
     {
       "file": "avatar-catalogue-v1.js",
       "bytes": 14246,
-      "courses": [
-        "bootstrap",
+      "contexts": [
         "cebuano",
         "tagalog"
       ],
-      "dynamicScripts": [],
-      "topLevelDeclarations": [],
+      "courses": [
+        "cebuano",
+        "tagalog"
+      ],
+      "references": [],
+      "loads": [],
+      "fetches": [],
+      "workers": [],
       "coreGlobals": [
         "state"
       ],
@@ -1134,10 +842,7 @@
         "provides": [],
         "consumes": []
       },
-      "storage": {
-        "operations": [],
-        "candidateKeys": []
-      },
+      "storage": [],
       "dom": {
         "ids": [],
         "selectors": [],
@@ -1147,117 +852,25 @@
         "listens": [],
         "dispatches": []
       },
-      "classification": "collection-and-rewards",
+      "role": "collection-and-rewards",
       "readiness": "extraction-candidate",
-      "riskScore": 3
-    },
-    {
-      "file": "avatar-collection-page-v2.js",
-      "bytes": 12600,
-      "courses": [
-        "bootstrap",
-        "cebuano",
-        "tagalog"
-      ],
-      "dynamicScripts": [],
-      "topLevelDeclarations": [],
-      "coreGlobals": [
-        "currentView",
-        "switchView"
-      ],
-      "window": {
-        "provides": [
-          "__salitaQuestAvatarCollectionPageV2Installed",
-          "SalitaAvatarCollectionPage"
-        ],
-        "consumes": [
-          "SalitaAvatarArtwork",
-          "SalitaAvatarModel"
-        ]
-      },
-      "storage": {
-        "operations": [
-          {
-            "store": "localStorage",
-            "operation": "getItem",
-            "key": "salitaQuestLocalProfilesV1"
-          },
-          {
-            "store": "sessionStorage",
-            "operation": "getItem",
-            "key": "salitaQuestActiveProfileId"
-          },
-          {
-            "store": "localStorage",
-            "operation": "setItem",
-            "key": "salitaQuestLocalProfilesV1"
-          },
-          {
-            "store": "localStorage",
-            "operation": "setItem",
-            "key": "salitaQuestLocalProfilesV1"
-          }
-        ],
-        "candidateKeys": [
-          "salitaQuestActiveProfileId",
-          "salitaQuestLocalProfilesV1"
-        ]
-      },
-      "dom": {
-        "ids": [
-          "avatarsView",
-          "mobileViewTitle",
-          "settingsView",
-          "viewTitle"
-        ],
-        "selectors": [
-          ".avatar-page-content",
-          ".avatar-page-detail",
-          ".avatar-page-search",
-          ".avatar-page-summary",
-          ".main-area",
-          ".view",
-          "[data-avatar-page-close-detail]",
-          "[data-avatar-page-detail]",
-          "[data-avatar-page-emblem]",
-          "[data-avatar-page-filter]",
-          "[data-avatar-page-primary]"
-        ],
-        "datasets": [
-          "avatarPageDetail",
-          "avatarPageFilter",
-          "avatarPagePrimary",
-          "currentView",
-          "sqAvatarId"
-        ]
-      },
-      "events": {
-        "listens": [
-          "click",
-          "input",
-          "salita:avatar-collection-changed",
-          "salita:avatar-equipped",
-          "salita:open-avatar-collection"
-        ],
-        "dispatches": [
-          "salita:avatar-collection-changed",
-          "salita:avatar-equipped"
-        ]
-      },
-      "classification": "collection-and-rewards",
-      "readiness": "prepare-adapter",
-      "riskScore": 40
+      "risk": 3
     },
     {
       "file": "avatar-collection-screen-v1.js",
       "bytes": 13858,
-      "courses": [
-        "bootstrap",
+      "contexts": [
         "cebuano",
         "tagalog"
       ],
-      "dynamicScripts": [],
-      "topLevelDeclarations": [],
+      "courses": [
+        "cebuano",
+        "tagalog"
+      ],
+      "references": [],
+      "loads": [],
+      "fetches": [],
+      "workers": [],
       "coreGlobals": [],
       "window": {
         "provides": [
@@ -1265,33 +878,29 @@
           "SalitaAvatarCollectionScreen"
         ],
         "consumes": [
+          "clearInterval",
           "SalitaAvatarArtwork",
-          "SalitaAvatarModel"
+          "SalitaAvatarModel",
+          "setInterval"
         ]
       },
-      "storage": {
-        "operations": [
-          {
-            "store": "localStorage",
-            "operation": "getItem",
-            "key": "salitaQuestLocalProfilesV1"
-          },
-          {
-            "store": "localStorage",
-            "operation": "setItem",
-            "key": "salitaQuestLocalProfilesV1"
-          },
-          {
-            "store": "sessionStorage",
-            "operation": "getItem",
-            "key": "salitaQuestActiveProfileId"
-          }
-        ],
-        "candidateKeys": [
-          "salitaQuestActiveProfileId",
-          "salitaQuestLocalProfilesV1"
-        ]
-      },
+      "storage": [
+        {
+          "store": "localStorage",
+          "operation": "getItem",
+          "key": "salitaQuestLocalProfilesV1"
+        },
+        {
+          "store": "localStorage",
+          "operation": "setItem",
+          "key": "salitaQuestLocalProfilesV1"
+        },
+        {
+          "store": "sessionStorage",
+          "operation": "getItem",
+          "key": "salitaQuestActiveProfileId"
+        }
+      ],
       "dom": {
         "ids": [],
         "selectors": [
@@ -1329,20 +938,25 @@
           "salita:avatar-equipped"
         ]
       },
-      "classification": "collection-and-rewards",
+      "role": "collection-and-rewards",
       "readiness": "prepare-adapter",
-      "riskScore": 25
+      "risk": 29
     },
     {
       "file": "avatar-collection-summary-v1.js",
       "bytes": 3383,
-      "courses": [
-        "bootstrap",
+      "contexts": [
         "cebuano",
         "tagalog"
       ],
-      "dynamicScripts": [],
-      "topLevelDeclarations": [],
+      "courses": [
+        "cebuano",
+        "tagalog"
+      ],
+      "references": [],
+      "loads": [],
+      "fetches": [],
+      "workers": [],
       "coreGlobals": [],
       "window": {
         "provides": [
@@ -1350,27 +964,22 @@
           "SalitaAvatarCollectionSummary"
         ],
         "consumes": [
-          "SalitaAvatarModel"
+          "SalitaAvatarModel",
+          "setInterval"
         ]
       },
-      "storage": {
-        "operations": [
-          {
-            "store": "localStorage",
-            "operation": "getItem",
-            "key": "salitaQuestLocalProfilesV1"
-          },
-          {
-            "store": "sessionStorage",
-            "operation": "getItem",
-            "key": "salitaQuestActiveProfileId"
-          }
-        ],
-        "candidateKeys": [
-          "salitaQuestActiveProfileId",
-          "salitaQuestLocalProfilesV1"
-        ]
-      },
+      "storage": [
+        {
+          "store": "localStorage",
+          "operation": "getItem",
+          "key": "salitaQuestLocalProfilesV1"
+        },
+        {
+          "store": "sessionStorage",
+          "operation": "getItem",
+          "key": "salitaQuestActiveProfileId"
+        }
+      ],
       "dom": {
         "ids": [],
         "selectors": [
@@ -1389,20 +998,25 @@
         ],
         "dispatches": []
       },
-      "classification": "collection-and-rewards",
+      "role": "collection-and-rewards",
       "readiness": "extraction-candidate",
-      "riskScore": 10
+      "risk": 12
     },
     {
       "file": "avatar-collection-tabs-phase6-1-v1.js",
       "bytes": 5487,
-      "courses": [
-        "bootstrap",
+      "contexts": [
         "cebuano",
         "tagalog"
       ],
-      "dynamicScripts": [],
-      "topLevelDeclarations": [],
+      "courses": [
+        "cebuano",
+        "tagalog"
+      ],
+      "references": [],
+      "loads": [],
+      "fetches": [],
+      "workers": [],
       "coreGlobals": [],
       "window": {
         "provides": [
@@ -1413,10 +1027,7 @@
           "SalitaEconomyTrackingPhase6"
         ]
       },
-      "storage": {
-        "operations": [],
-        "candidateKeys": []
-      },
+      "storage": [],
       "dom": {
         "ids": [],
         "selectors": [
@@ -1442,20 +1053,25 @@
           "salita:avatar-collection-tabs-ready"
         ]
       },
-      "classification": "collection-and-rewards",
+      "role": "collection-and-rewards",
       "readiness": "extraction-candidate",
-      "riskScore": 12
+      "risk": 12
     },
     {
       "file": "avatar-progression-hotfix-v551.js",
       "bytes": 10493,
-      "courses": [
-        "bootstrap",
+      "contexts": [
         "cebuano",
         "tagalog"
       ],
-      "dynamicScripts": [],
-      "topLevelDeclarations": [],
+      "courses": [
+        "cebuano",
+        "tagalog"
+      ],
+      "references": [],
+      "loads": [],
+      "fetches": [],
+      "workers": [],
       "coreGlobals": [
         "closeMobileMenu",
         "pictogram",
@@ -1472,10 +1088,7 @@
         ],
         "consumes": []
       },
-      "storage": {
-        "operations": [],
-        "candidateKeys": []
-      },
+      "storage": [],
       "dom": {
         "ids": [
           "badgesView",
@@ -1503,20 +1116,25 @@
           "salita:open-avatar-collection"
         ]
       },
-      "classification": "collection-and-rewards",
+      "role": "collection-and-rewards",
       "readiness": "extraction-candidate",
-      "riskScore": 34
+      "risk": 34
     },
     {
       "file": "avatar-progression-migration-v1.js",
       "bytes": 9067,
-      "courses": [
-        "bootstrap",
+      "contexts": [
         "cebuano",
         "tagalog"
       ],
-      "dynamicScripts": [],
-      "topLevelDeclarations": [],
+      "courses": [
+        "cebuano",
+        "tagalog"
+      ],
+      "references": [],
+      "loads": [],
+      "fetches": [],
+      "workers": [],
       "coreGlobals": [
         "state"
       ],
@@ -1526,13 +1144,7 @@
           "SalitaAvatarModel"
         ]
       },
-      "storage": {
-        "operations": [],
-        "candidateKeys": [
-          "salitaQuestLocalProfilesV1",
-          "salitaQuestProgress.profile."
-        ]
-      },
+      "storage": [],
       "dom": {
         "ids": [],
         "selectors": [],
@@ -1544,20 +1156,25 @@
           "salita:avatar-progression-migrated"
         ]
       },
-      "classification": "collection-and-rewards",
+      "role": "collection-and-rewards",
       "readiness": "extraction-candidate",
-      "riskScore": 7
+      "risk": 7
     },
     {
       "file": "avatar-unlock-celebration-v1.js",
       "bytes": 11499,
-      "courses": [
-        "bootstrap",
+      "contexts": [
         "cebuano",
         "tagalog"
       ],
-      "dynamicScripts": [],
-      "topLevelDeclarations": [],
+      "courses": [
+        "cebuano",
+        "tagalog"
+      ],
+      "references": [],
+      "loads": [],
+      "fetches": [],
+      "workers": [],
       "coreGlobals": [
         "levelInfo"
       ],
@@ -1576,34 +1193,28 @@
           "SalitaPopupGovernor"
         ]
       },
-      "storage": {
-        "operations": [
-          {
-            "store": "localStorage",
-            "operation": "getItem",
-            "key": "salitaQuestLocalProfilesV1"
-          },
-          {
-            "store": "localStorage",
-            "operation": "setItem",
-            "key": "salitaQuestLocalProfilesV1"
-          },
-          {
-            "store": "sessionStorage",
-            "operation": "getItem",
-            "key": "salitaQuestActiveProfileId"
-          },
-          {
-            "store": "sessionStorage",
-            "operation": "getItem",
-            "key": "salitaQuestActiveProfileId"
-          }
-        ],
-        "candidateKeys": [
-          "salitaQuestActiveProfileId",
-          "salitaQuestLocalProfilesV1"
-        ]
-      },
+      "storage": [
+        {
+          "store": "localStorage",
+          "operation": "getItem",
+          "key": "salitaQuestLocalProfilesV1"
+        },
+        {
+          "store": "localStorage",
+          "operation": "setItem",
+          "key": "salitaQuestLocalProfilesV1"
+        },
+        {
+          "store": "sessionStorage",
+          "operation": "getItem",
+          "key": "salitaQuestActiveProfileId"
+        },
+        {
+          "store": "sessionStorage",
+          "operation": "getItem",
+          "key": "salitaQuestActiveProfileId"
+        }
+      ],
       "dom": {
         "ids": [],
         "selectors": [
@@ -1634,20 +1245,25 @@
           "salita:open-avatar-collection"
         ]
       },
-      "classification": "collection-and-rewards",
+      "role": "collection-and-rewards",
       "readiness": "prepare-adapter",
-      "riskScore": 39
+      "risk": 39
     },
     {
       "file": "badge-catalogue-v2.js",
       "bytes": 17068,
-      "courses": [
-        "bootstrap",
+      "contexts": [
         "cebuano",
         "tagalog"
       ],
-      "dynamicScripts": [],
-      "topLevelDeclarations": [],
+      "courses": [
+        "cebuano",
+        "tagalog"
+      ],
+      "references": [],
+      "loads": [],
+      "fetches": [],
+      "workers": [],
       "coreGlobals": [
         "badgeArt",
         "BADGES",
@@ -1667,12 +1283,11 @@
         "provides": [
           "__salitaQuestBadgeCatalogueV2Installed"
         ],
-        "consumes": []
+        "consumes": [
+          "dispatchEvent"
+        ]
       },
-      "storage": {
-        "operations": [],
-        "candidateKeys": []
-      },
+      "storage": [],
       "dom": {
         "ids": [
           "achievementCount",
@@ -1699,20 +1314,25 @@
           "salita:badges-rendered"
         ]
       },
-      "classification": "collection-and-rewards",
+      "role": "collection-and-rewards",
       "readiness": "high-coupling",
-      "riskScore": 48
+      "risk": 50
     },
     {
       "file": "badge-chest-v2.js",
       "bytes": 15360,
-      "courses": [
-        "bootstrap",
+      "contexts": [
         "cebuano",
         "tagalog"
       ],
-      "dynamicScripts": [],
-      "topLevelDeclarations": [],
+      "courses": [
+        "cebuano",
+        "tagalog"
+      ],
+      "references": [],
+      "loads": [],
+      "fetches": [],
+      "workers": [],
       "coreGlobals": [
         "badgeArt",
         "BADGES",
@@ -1725,12 +1345,11 @@
           "__salitaQuestBadgeChestV2Installed",
           "SalitaQuestBadgeChest"
         ],
-        "consumes": []
+        "consumes": [
+          "dispatchEvent"
+        ]
       },
-      "storage": {
-        "operations": [],
-        "candidateKeys": []
-      },
+      "storage": [],
       "dom": {
         "ids": [
           "badgeChestPanel",
@@ -1767,26 +1386,32 @@
         ],
         "dispatches": []
       },
-      "classification": "collection-and-rewards",
+      "role": "collection-and-rewards",
       "readiness": "prepare-adapter",
-      "riskScore": 27
+      "risk": 29
     },
     {
       "file": "bisaya-app-loader.js",
       "bytes": 14054,
-      "courses": [
-        "bootstrap",
-        "cebuano",
-        "tagalog"
+      "contexts": [
+        "cebuano"
       ],
-      "dynamicScripts": [
+      "courses": [
+        "cebuano"
+      ],
+      "references": [
         "app.js",
         "exercise-fixes-v545.js",
         "profile-app.js"
       ],
-      "topLevelDeclarations": [
-        "fallbackSpeech"
+      "loads": [
+        "exercise-fixes-v545.js",
+        "profile-app.js"
       ],
+      "fetches": [
+        "app.js"
+      ],
+      "workers": [],
       "coreGlobals": [
         "accepted",
         "activeAudio",
@@ -1798,10 +1423,7 @@
         "provides": [],
         "consumes": []
       },
-      "storage": {
-        "operations": [],
-        "candidateKeys": []
-      },
+      "storage": [],
       "dom": {
         "ids": [
           "audioBtn",
@@ -1816,20 +1438,25 @@
         "listens": [],
         "dispatches": []
       },
-      "classification": "runtime-loader",
+      "role": "runtime-loader",
       "readiness": "hold",
-      "riskScore": 33
+      "risk": 32
     },
     {
       "file": "bisaya-review-regions.js",
       "bytes": 14162,
-      "courses": [
-        "bootstrap",
+      "contexts": [
         "cebuano",
         "tagalog"
       ],
-      "dynamicScripts": [],
-      "topLevelDeclarations": [],
+      "courses": [
+        "cebuano",
+        "tagalog"
+      ],
+      "references": [],
+      "loads": [],
+      "fetches": [],
+      "workers": [],
       "coreGlobals": [
         "attachWorldMapEvents",
         "BADGES",
@@ -1868,10 +1495,7 @@
         "provides": [],
         "consumes": []
       },
-      "storage": {
-        "operations": [],
-        "candidateKeys": []
-      },
+      "storage": [],
       "dom": {
         "ids": [
           "bossStatus",
@@ -1896,20 +1520,25 @@
         ],
         "dispatches": []
       },
-      "classification": "feature-extension",
+      "role": "feature-extension",
       "readiness": "high-coupling",
-      "riskScore": 103
+      "risk": 103
     },
     {
       "file": "clean-topbar.js",
       "bytes": 5066,
-      "courses": [
-        "bootstrap",
+      "contexts": [
         "cebuano",
         "tagalog"
       ],
-      "dynamicScripts": [],
-      "topLevelDeclarations": [],
+      "courses": [
+        "cebuano",
+        "tagalog"
+      ],
+      "references": [],
+      "loads": [],
+      "fetches": [],
+      "workers": [],
       "coreGlobals": [
         "renderMasteryRail",
         "totalLearningPoints"
@@ -1920,10 +1549,7 @@
         ],
         "consumes": []
       },
-      "storage": {
-        "operations": [],
-        "candidateKeys": []
-      },
+      "storage": [],
       "dom": {
         "ids": [
           "masteryNextRegion",
@@ -1946,22 +1572,29 @@
         "listens": [],
         "dispatches": []
       },
-      "classification": "interface",
+      "role": "interface",
       "readiness": "extraction-candidate",
-      "riskScore": 14
+      "risk": 14
     },
     {
       "file": "coin-avatar-shard-shop-v1.js",
       "bytes": 11617,
-      "courses": [
-        "bootstrap",
+      "contexts": [
         "cebuano",
         "tagalog"
       ],
-      "dynamicScripts": [
+      "courses": [
+        "cebuano",
+        "tagalog"
+      ],
+      "references": [
         "coin-avatar-shop-reveal-v1.js"
       ],
-      "topLevelDeclarations": [],
+      "loads": [
+        "coin-avatar-shop-reveal-v1.js"
+      ],
+      "fetches": [],
+      "workers": [],
       "coreGlobals": [
         "updateGlobalUI"
       ],
@@ -1974,40 +1607,34 @@
           "renderCatalogue",
           "SalitaAvatarModel",
           "saveState",
+          "setInterval",
           "state",
           "syncEarned",
           "updateGlobalUI"
         ]
       },
-      "storage": {
-        "operations": [
-          {
-            "store": "localStorage",
-            "operation": "setItem",
-            "key": "salitaQuestProgress"
-          },
-          {
-            "store": "localStorage",
-            "operation": "getItem",
-            "key": "salitaQuestLocalProfilesV1"
-          },
-          {
-            "store": "sessionStorage",
-            "operation": "getItem",
-            "key": "salitaQuestActiveProfileId"
-          },
-          {
-            "store": "localStorage",
-            "operation": "setItem",
-            "key": "salitaQuestLocalProfilesV1"
-          }
-        ],
-        "candidateKeys": [
-          "salitaQuestActiveProfileId",
-          "salitaQuestLocalProfilesV1",
-          "salitaQuestProgress"
-        ]
-      },
+      "storage": [
+        {
+          "store": "localStorage",
+          "operation": "setItem",
+          "key": "salitaQuestProgress"
+        },
+        {
+          "store": "localStorage",
+          "operation": "getItem",
+          "key": "salitaQuestLocalProfilesV1"
+        },
+        {
+          "store": "sessionStorage",
+          "operation": "getItem",
+          "key": "salitaQuestActiveProfileId"
+        },
+        {
+          "store": "localStorage",
+          "operation": "setItem",
+          "key": "salitaQuestLocalProfilesV1"
+        }
+      ],
       "dom": {
         "ids": [],
         "selectors": [
@@ -2041,20 +1668,25 @@
           "salita:coin-shard-pack-purchased"
         ]
       },
-      "classification": "runtime-loader",
+      "role": "runtime-loader",
       "readiness": "hold",
-      "riskScore": 50
+      "risk": 52
     },
     {
       "file": "coin-avatar-shop-badges-v1.js",
       "bytes": 4109,
-      "courses": [
-        "bootstrap",
+      "contexts": [
         "cebuano",
         "tagalog"
       ],
-      "dynamicScripts": [],
-      "topLevelDeclarations": [],
+      "courses": [
+        "cebuano",
+        "tagalog"
+      ],
+      "references": [],
+      "loads": [],
+      "fetches": [],
+      "workers": [],
       "coreGlobals": [
         "BADGES"
       ],
@@ -2070,24 +1702,18 @@
           "syncEarned"
         ]
       },
-      "storage": {
-        "operations": [
-          {
-            "store": "sessionStorage",
-            "operation": "getItem",
-            "key": "salitaQuestActiveProfileId"
-          },
-          {
-            "store": "localStorage",
-            "operation": "getItem",
-            "key": "salitaQuestLocalProfilesV1"
-          }
-        ],
-        "candidateKeys": [
-          "salitaQuestActiveProfileId",
-          "salitaQuestLocalProfilesV1"
-        ]
-      },
+      "storage": [
+        {
+          "store": "sessionStorage",
+          "operation": "getItem",
+          "key": "salitaQuestActiveProfileId"
+        },
+        {
+          "store": "localStorage",
+          "operation": "getItem",
+          "key": "salitaQuestLocalProfilesV1"
+        }
+      ],
       "dom": {
         "ids": [],
         "selectors": [],
@@ -2099,20 +1725,25 @@
           "salita:coin-shop-badges-ready"
         ]
       },
-      "classification": "collection-and-rewards",
+      "role": "collection-and-rewards",
       "readiness": "prepare-adapter",
-      "riskScore": 19
+      "risk": 19
     },
     {
       "file": "coin-avatar-shop-reveal-v1.js",
       "bytes": 16804,
-      "courses": [
-        "bootstrap",
+      "contexts": [
         "cebuano",
         "tagalog"
       ],
-      "dynamicScripts": [],
-      "topLevelDeclarations": [],
+      "courses": [
+        "cebuano",
+        "tagalog"
+      ],
+      "references": [],
+      "loads": [],
+      "fetches": [],
+      "workers": [],
       "coreGlobals": [
         "updateGlobalUI"
       ],
@@ -2125,50 +1756,44 @@
         "consumes": [
           "SalitaAvatarArtwork",
           "saveState",
+          "setInterval",
           "state",
           "syncEarned",
           "updateGlobalUI"
         ]
       },
-      "storage": {
-        "operations": [
-          {
-            "store": "localStorage",
-            "operation": "setItem",
-            "key": "salitaQuestProgress"
-          },
-          {
-            "store": "localStorage",
-            "operation": "getItem",
-            "key": "key"
-          },
-          {
-            "store": "localStorage",
-            "operation": "setItem",
-            "key": "key"
-          },
-          {
-            "store": "localStorage",
-            "operation": "getItem",
-            "key": "salitaQuestLocalProfilesV1"
-          },
-          {
-            "store": "sessionStorage",
-            "operation": "getItem",
-            "key": "salitaQuestActiveProfileId"
-          },
-          {
-            "store": "localStorage",
-            "operation": "setItem",
-            "key": "salitaQuestLocalProfilesV1"
-          }
-        ],
-        "candidateKeys": [
-          "salitaQuestActiveProfileId",
-          "salitaQuestLocalProfilesV1",
-          "salitaQuestProgress"
-        ]
-      },
+      "storage": [
+        {
+          "store": "localStorage",
+          "operation": "setItem",
+          "key": "salitaQuestProgress"
+        },
+        {
+          "store": "localStorage",
+          "operation": "getItem",
+          "key": "key"
+        },
+        {
+          "store": "localStorage",
+          "operation": "setItem",
+          "key": "key"
+        },
+        {
+          "store": "localStorage",
+          "operation": "getItem",
+          "key": "salitaQuestLocalProfilesV1"
+        },
+        {
+          "store": "sessionStorage",
+          "operation": "getItem",
+          "key": "salitaQuestActiveProfileId"
+        },
+        {
+          "store": "localStorage",
+          "operation": "setItem",
+          "key": "salitaQuestLocalProfilesV1"
+        }
+      ],
       "dom": {
         "ids": [],
         "selectors": [
@@ -2206,26 +1831,37 @@
           "salita:coin-shard-pack-purchased"
         ]
       },
-      "classification": "collection-and-rewards",
+      "role": "collection-and-rewards",
       "readiness": "prepare-adapter",
-      "riskScore": 54
+      "risk": 56
     },
     {
       "file": "coin-avatar-shop-topbar-v1.js",
       "bytes": 3116,
-      "courses": [
-        "bootstrap",
+      "contexts": [
         "cebuano",
         "tagalog"
       ],
-      "dynamicScripts": [
+      "courses": [
+        "cebuano",
+        "tagalog"
+      ],
+      "references": [
         "avatar-collection-summary-v1.js",
         "avatar-collection-tabs-phase6-1-v1.js",
         "coin-testing-grant-100k-v1.js",
         "coin-testing-grant-50k-phase5-v1.js",
         "economy-tracking-phase6-v1.js"
       ],
-      "topLevelDeclarations": [],
+      "loads": [
+        "avatar-collection-summary-v1.js",
+        "avatar-collection-tabs-phase6-1-v1.js",
+        "coin-testing-grant-100k-v1.js",
+        "coin-testing-grant-50k-phase5-v1.js",
+        "economy-tracking-phase6-v1.js"
+      ],
+      "fetches": [],
+      "workers": [],
       "coreGlobals": [],
       "window": {
         "provides": [
@@ -2233,10 +1869,7 @@
         ],
         "consumes": []
       },
-      "storage": {
-        "operations": [],
-        "candidateKeys": []
-      },
+      "storage": [],
       "dom": {
         "ids": [],
         "selectors": [
@@ -2253,20 +1886,25 @@
         ],
         "dispatches": []
       },
-      "classification": "runtime-loader",
+      "role": "runtime-loader",
       "readiness": "hold",
-      "riskScore": 28
+      "risk": 28
     },
     {
       "file": "coin-testing-grant-100k-v1.js",
       "bytes": 2110,
-      "courses": [
-        "bootstrap",
+      "contexts": [
         "cebuano",
         "tagalog"
       ],
-      "dynamicScripts": [],
-      "topLevelDeclarations": [],
+      "courses": [
+        "cebuano",
+        "tagalog"
+      ],
+      "references": [],
+      "loads": [],
+      "fetches": [],
+      "workers": [],
       "coreGlobals": [
         "saveState",
         "updateGlobalUI"
@@ -2281,28 +1919,23 @@
           "updateGlobalUI"
         ]
       },
-      "storage": {
-        "operations": [
-          {
-            "store": "localStorage",
-            "operation": "getItem",
-            "key": "key"
-          },
-          {
-            "store": "localStorage",
-            "operation": "setItem",
-            "key": "key"
-          },
-          {
-            "store": "localStorage",
-            "operation": "setItem",
-            "key": "salitaQuestProgress"
-          }
-        ],
-        "candidateKeys": [
-          "salitaQuestProgress"
-        ]
-      },
+      "storage": [
+        {
+          "store": "localStorage",
+          "operation": "getItem",
+          "key": "key"
+        },
+        {
+          "store": "localStorage",
+          "operation": "setItem",
+          "key": "key"
+        },
+        {
+          "store": "localStorage",
+          "operation": "setItem",
+          "key": "salitaQuestProgress"
+        }
+      ],
       "dom": {
         "ids": [],
         "selectors": [],
@@ -2314,20 +1947,25 @@
           "salita:coin-balance-changed"
         ]
       },
-      "classification": "collection-and-rewards",
+      "role": "collection-and-rewards",
       "readiness": "prepare-adapter",
-      "riskScore": 27
+      "risk": 27
     },
     {
       "file": "coin-testing-grant-50k-phase5-v1.js",
       "bytes": 2080,
-      "courses": [
-        "bootstrap",
+      "contexts": [
         "cebuano",
         "tagalog"
       ],
-      "dynamicScripts": [],
-      "topLevelDeclarations": [],
+      "courses": [
+        "cebuano",
+        "tagalog"
+      ],
+      "references": [],
+      "loads": [],
+      "fetches": [],
+      "workers": [],
       "coreGlobals": [
         "saveState",
         "updateGlobalUI"
@@ -2342,28 +1980,23 @@
           "updateGlobalUI"
         ]
       },
-      "storage": {
-        "operations": [
-          {
-            "store": "localStorage",
-            "operation": "getItem",
-            "key": "key"
-          },
-          {
-            "store": "localStorage",
-            "operation": "setItem",
-            "key": "key"
-          },
-          {
-            "store": "localStorage",
-            "operation": "setItem",
-            "key": "salitaQuestProgress"
-          }
-        ],
-        "candidateKeys": [
-          "salitaQuestProgress"
-        ]
-      },
+      "storage": [
+        {
+          "store": "localStorage",
+          "operation": "getItem",
+          "key": "key"
+        },
+        {
+          "store": "localStorage",
+          "operation": "setItem",
+          "key": "key"
+        },
+        {
+          "store": "localStorage",
+          "operation": "setItem",
+          "key": "salitaQuestProgress"
+        }
+      ],
       "dom": {
         "ids": [],
         "selectors": [],
@@ -2375,25 +2008,28 @@
           "salita:coin-balance-changed"
         ]
       },
-      "classification": "collection-and-rewards",
+      "role": "collection-and-rewards",
       "readiness": "prepare-adapter",
-      "riskScore": 27
+      "risk": 27
     },
     {
       "file": "collection-key-translation-hotfix.js",
       "bytes": 8247,
-      "courses": [
-        "bootstrap",
-        "cebuano",
+      "contexts": [
         "tagalog"
       ],
-      "dynamicScripts": [
+      "courses": [
+        "tagalog"
+      ],
+      "references": [
         "avatar-card-actions-v1.js",
         "avatar-case-page-tab-v1.js",
         "avatar-collection-page-v2.js",
         "mystery-rarity-roll-v1.js"
       ],
-      "topLevelDeclarations": [],
+      "loads": [],
+      "fetches": [],
+      "workers": [],
       "coreGlobals": [
         "ITEMS",
         "state"
@@ -2404,10 +2040,7 @@
         ],
         "consumes": []
       },
-      "storage": {
-        "operations": [],
-        "candidateKeys": []
-      },
+      "storage": [],
       "dom": {
         "ids": [
           "questChest"
@@ -2433,20 +2066,25 @@
         ],
         "dispatches": []
       },
-      "classification": "runtime-loader",
-      "readiness": "hold",
-      "riskScore": 32
+      "role": "feature-extension",
+      "readiness": "extraction-candidate",
+      "risk": 12
     },
     {
       "file": "compact-desktop-layout.js",
       "bytes": 2993,
-      "courses": [
-        "bootstrap",
+      "contexts": [
         "cebuano",
         "tagalog"
       ],
-      "dynamicScripts": [],
-      "topLevelDeclarations": [],
+      "courses": [
+        "cebuano",
+        "tagalog"
+      ],
+      "references": [],
+      "loads": [],
+      "fetches": [],
+      "workers": [],
       "coreGlobals": [
         "session"
       ],
@@ -2456,10 +2094,7 @@
         ],
         "consumes": []
       },
-      "storage": {
-        "operations": [],
-        "candidateKeys": []
-      },
+      "storage": [],
       "dom": {
         "ids": [
           "audioBtn",
@@ -2482,20 +2117,25 @@
         ],
         "dispatches": []
       },
-      "classification": "interface",
+      "role": "interface",
       "readiness": "extraction-candidate",
-      "riskScore": 11
+      "risk": 11
     },
     {
       "file": "daily-goal-refinement.js",
       "bytes": 8206,
-      "courses": [
-        "bootstrap",
+      "contexts": [
         "cebuano",
         "tagalog"
       ],
-      "dynamicScripts": [],
-      "topLevelDeclarations": [],
+      "courses": [
+        "cebuano",
+        "tagalog"
+      ],
+      "references": [],
+      "loads": [],
+      "fetches": [],
+      "workers": [],
       "coreGlobals": [
         "claimDailyQuestRewards",
         "currentExercise",
@@ -2519,10 +2159,7 @@
         ],
         "consumes": []
       },
-      "storage": {
-        "operations": [],
-        "candidateKeys": []
-      },
+      "storage": [],
       "dom": {
         "ids": [
           "questChestText",
@@ -2539,90 +2176,25 @@
           "salita:economy-v2-phase1-ready"
         ]
       },
-      "classification": "progression",
+      "role": "progression",
       "readiness": "high-coupling",
-      "riskScore": 51
-    },
-    {
-      "file": "daily-key-weekday-reconciliation-v1.js",
-      "bytes": 5592,
-      "courses": [
-        "bootstrap",
-        "cebuano",
-        "tagalog"
-      ],
-      "dynamicScripts": [],
-      "topLevelDeclarations": [],
-      "coreGlobals": [
-        "state"
-      ],
-      "window": {
-        "provides": [
-          "__salitaDailyKeyWeekdayReconciliationV3Installed",
-          "SalitaDailyKeyReconciliation"
-        ],
-        "consumes": [
-          "state"
-        ]
-      },
-      "storage": {
-        "operations": [
-          {
-            "store": "localStorage",
-            "operation": "getItem",
-            "key": "salitaQuestLocalProfilesV1"
-          },
-          {
-            "store": "sessionStorage",
-            "operation": "getItem",
-            "key": "salitaQuestActiveProfileId"
-          }
-        ],
-        "candidateKeys": [
-          "salitaQuestActiveProfileId",
-          "salitaQuestLocalProfilesV1"
-        ]
-      },
-      "dom": {
-        "ids": [
-          "questChest"
-        ],
-        "selectors": [
-          ".weekly-key-meter",
-          "#questChestStatus, .weekly-key-action",
-          "#questChestText, .weekly-key-copy small",
-          "#questChestTitle, .weekly-key-copy strong",
-          "section, article, div"
-        ],
-        "datasets": [
-          "localDate",
-          "localWeekday",
-          "reconciledKeyCount",
-          "reconciledKeyDates"
-        ]
-      },
-      "events": {
-        "listens": [
-          "DOMContentLoaded",
-          "focus",
-          "visibilitychange"
-        ],
-        "dispatches": []
-      },
-      "classification": "progression",
-      "readiness": "extraction-candidate",
-      "riskScore": 15
+      "risk": 51
     },
     {
       "file": "desktop-navigation-refinement.js",
       "bytes": 13173,
-      "courses": [
-        "bootstrap",
+      "contexts": [
         "cebuano",
         "tagalog"
       ],
-      "dynamicScripts": [],
-      "topLevelDeclarations": [],
+      "courses": [
+        "cebuano",
+        "tagalog"
+      ],
+      "references": [],
+      "loads": [],
+      "fetches": [],
+      "workers": [],
       "coreGlobals": [
         "closeMobileMenu",
         "currentView",
@@ -2644,24 +2216,18 @@
           "SalitaCoinAvatarShop"
         ]
       },
-      "storage": {
-        "operations": [
-          {
-            "store": "localStorage",
-            "operation": "getItem",
-            "key": "salitaQuestLocalProfilesV1"
-          },
-          {
-            "store": "sessionStorage",
-            "operation": "getItem",
-            "key": "salitaQuestActiveProfileId"
-          }
-        ],
-        "candidateKeys": [
-          "salitaQuestActiveProfileId",
-          "salitaQuestLocalProfilesV1"
-        ]
-      },
+      "storage": [
+        {
+          "store": "localStorage",
+          "operation": "getItem",
+          "key": "salitaQuestLocalProfilesV1"
+        },
+        {
+          "store": "sessionStorage",
+          "operation": "getItem",
+          "key": "salitaQuestActiveProfileId"
+        }
+      ],
       "dom": {
         "ids": [
           "badgesView",
@@ -2707,20 +2273,25 @@
           "salita:view-changed"
         ]
       },
-      "classification": "interface",
+      "role": "interface",
       "readiness": "prepare-adapter",
-      "riskScore": 52
+      "risk": 52
     },
     {
       "file": "economy-tracking-phase6-v1.js",
       "bytes": 3504,
-      "courses": [
-        "bootstrap",
+      "contexts": [
         "cebuano",
         "tagalog"
       ],
-      "dynamicScripts": [],
-      "topLevelDeclarations": [],
+      "courses": [
+        "cebuano",
+        "tagalog"
+      ],
+      "references": [],
+      "loads": [],
+      "fetches": [],
+      "workers": [],
       "coreGlobals": [],
       "window": {
         "provides": [
@@ -2731,10 +2302,7 @@
           "state"
         ]
       },
-      "storage": {
-        "operations": [],
-        "candidateKeys": []
-      },
+      "storage": [],
       "dom": {
         "ids": [],
         "selectors": [
@@ -2752,20 +2320,25 @@
           "salita:economy-tracking-ready"
         ]
       },
-      "classification": "feature-extension",
+      "role": "feature-extension",
       "readiness": "extraction-candidate",
-      "riskScore": 10
+      "risk": 10
     },
     {
       "file": "even-progress-rail.js",
       "bytes": 2891,
-      "courses": [
-        "bootstrap",
+      "contexts": [
         "cebuano",
         "tagalog"
       ],
-      "dynamicScripts": [],
-      "topLevelDeclarations": [],
+      "courses": [
+        "cebuano",
+        "tagalog"
+      ],
+      "references": [],
+      "loads": [],
+      "fetches": [],
+      "workers": [],
       "coreGlobals": [
         "MODULES",
         "renderMasteryRail",
@@ -2777,10 +2350,7 @@
         ],
         "consumes": []
       },
-      "storage": {
-        "operations": [],
-        "candidateKeys": []
-      },
+      "storage": [],
       "dom": {
         "ids": [
           "masteryMilestones"
@@ -2802,20 +2372,25 @@
         ],
         "dispatches": []
       },
-      "classification": "progression",
+      "role": "progression",
       "readiness": "extraction-candidate",
-      "riskScore": 14
+      "risk": 14
     },
     {
       "file": "exercise-fixes-v545.js",
       "bytes": 10731,
-      "courses": [
-        "bootstrap",
+      "contexts": [
         "cebuano",
         "tagalog"
       ],
-      "dynamicScripts": [],
-      "topLevelDeclarations": [],
+      "courses": [
+        "cebuano",
+        "tagalog"
+      ],
+      "references": [],
+      "loads": [],
+      "fetches": [],
+      "workers": [],
       "coreGlobals": [
         "buildChoices",
         "buildSentenceOptions",
@@ -2839,10 +2414,7 @@
         ],
         "consumes": []
       },
-      "storage": {
-        "operations": [],
-        "candidateKeys": []
-      },
+      "storage": [],
       "dom": {
         "ids": [
           "answerDetail",
@@ -2870,20 +2442,25 @@
         ],
         "dispatches": []
       },
-      "classification": "feature-extension",
+      "role": "feature-extension",
       "readiness": "high-coupling",
-      "riskScore": 57
+      "risk": 57
     },
     {
       "file": "facebook-share-link-v1.js",
       "bytes": 1393,
-      "courses": [
-        "bootstrap",
+      "contexts": [
         "cebuano",
         "tagalog"
       ],
-      "dynamicScripts": [],
-      "topLevelDeclarations": [],
+      "courses": [
+        "cebuano",
+        "tagalog"
+      ],
+      "references": [],
+      "loads": [],
+      "fetches": [],
+      "workers": [],
       "coreGlobals": [],
       "window": {
         "provides": [
@@ -2892,10 +2469,7 @@
         ],
         "consumes": []
       },
-      "storage": {
-        "operations": [],
-        "candidateKeys": []
-      },
+      "storage": [],
       "dom": {
         "ids": [],
         "selectors": [],
@@ -2905,20 +2479,25 @@
         "listens": [],
         "dispatches": []
       },
-      "classification": "feature-extension",
+      "role": "feature-extension",
       "readiness": "extraction-candidate",
-      "riskScore": 4
+      "risk": 4
     },
     {
       "file": "home-reward-coordinator.js",
       "bytes": 8028,
-      "courses": [
-        "bootstrap",
+      "contexts": [
         "cebuano",
         "tagalog"
       ],
-      "dynamicScripts": [],
-      "topLevelDeclarations": [],
+      "courses": [
+        "cebuano",
+        "tagalog"
+      ],
+      "references": [],
+      "loads": [],
+      "fetches": [],
+      "workers": [],
       "coreGlobals": [
         "currentView",
         "DAILY_QUESTS",
@@ -2935,10 +2514,7 @@
         ],
         "consumes": []
       },
-      "storage": {
-        "operations": [],
-        "candidateKeys": []
-      },
+      "storage": [],
       "dom": {
         "ids": [
           "homeView"
@@ -2960,20 +2536,25 @@
         ],
         "dispatches": []
       },
-      "classification": "feature-extension",
+      "role": "feature-extension",
       "readiness": "prepare-adapter",
-      "riskScore": 29
+      "risk": 29
     },
     {
       "file": "incorrect-order-feedback.js",
       "bytes": 5881,
-      "courses": [
-        "bootstrap",
+      "contexts": [
         "cebuano",
         "tagalog"
       ],
-      "dynamicScripts": [],
-      "topLevelDeclarations": [],
+      "courses": [
+        "cebuano",
+        "tagalog"
+      ],
+      "references": [],
+      "loads": [],
+      "fetches": [],
+      "workers": [],
       "coreGlobals": [
         "currentExercise",
         "renderFeedback",
@@ -2988,10 +2569,7 @@
         ],
         "consumes": []
       },
-      "storage": {
-        "operations": [],
-        "candidateKeys": []
-      },
+      "storage": [],
       "dom": {
         "ids": [
           "builtSentence",
@@ -3006,20 +2584,25 @@
         "listens": [],
         "dispatches": []
       },
-      "classification": "feature-extension",
+      "role": "feature-extension",
       "readiness": "prepare-adapter",
-      "riskScore": 23
+      "risk": 23
     },
     {
       "file": "key-run-refinement.js",
       "bytes": 24682,
-      "courses": [
-        "bootstrap",
+      "contexts": [
         "cebuano",
         "tagalog"
       ],
-      "dynamicScripts": [],
-      "topLevelDeclarations": [],
+      "courses": [
+        "cebuano",
+        "tagalog"
+      ],
+      "references": [],
+      "loads": [],
+      "fetches": [],
+      "workers": [],
       "coreGlobals": [
         "claimDailyQuestRewards",
         "currentView",
@@ -3039,13 +2622,11 @@
         ],
         "consumes": [
           "AudioContext",
+          "crypto",
           "webkitAudioContext"
         ]
       },
-      "storage": {
-        "operations": [],
-        "candidateKeys": []
-      },
+      "storage": [],
       "dom": {
         "ids": [
           "homeView",
@@ -3078,20 +2659,25 @@
         ],
         "dispatches": []
       },
-      "classification": "progression",
-      "readiness": "prepare-adapter",
-      "riskScore": 48
+      "role": "progression",
+      "readiness": "high-coupling",
+      "risk": 50
     },
     {
       "file": "lesson-side-launcher.js",
       "bytes": 10061,
-      "courses": [
-        "bootstrap",
+      "contexts": [
         "cebuano",
         "tagalog"
       ],
-      "dynamicScripts": [],
-      "topLevelDeclarations": [],
+      "courses": [
+        "cebuano",
+        "tagalog"
+      ],
+      "references": [],
+      "loads": [],
+      "fetches": [],
+      "workers": [],
       "coreGlobals": [
         "currentExercise",
         "finishSession",
@@ -3110,10 +2696,7 @@
         ],
         "consumes": []
       },
-      "storage": {
-        "operations": [],
-        "candidateKeys": []
-      },
+      "storage": [],
       "dom": {
         "ids": [
           "audioBtn",
@@ -3145,20 +2728,25 @@
         ],
         "dispatches": []
       },
-      "classification": "feature-extension",
+      "role": "feature-extension",
       "readiness": "prepare-adapter",
-      "riskScore": 41
+      "risk": 41
     },
     {
       "file": "level-avatar-rewards-v1.js",
       "bytes": 12787,
-      "courses": [
-        "bootstrap",
+      "contexts": [
         "cebuano",
         "tagalog"
       ],
-      "dynamicScripts": [],
-      "topLevelDeclarations": [],
+      "courses": [
+        "cebuano",
+        "tagalog"
+      ],
+      "references": [],
+      "loads": [],
+      "fetches": [],
+      "workers": [],
       "coreGlobals": [
         "levelInfo"
       ],
@@ -3172,35 +2760,28 @@
           "SalitaAvatarModel"
         ]
       },
-      "storage": {
-        "operations": [
-          {
-            "store": "localStorage",
-            "operation": "getItem",
-            "key": "salitaQuestLocalProfilesV1"
-          },
-          {
-            "store": "localStorage",
-            "operation": "setItem",
-            "key": "salitaQuestLocalProfilesV1"
-          },
-          {
-            "store": "sessionStorage",
-            "operation": "getItem",
-            "key": "salitaQuestActiveCourse"
-          },
-          {
-            "store": "sessionStorage",
-            "operation": "getItem",
-            "key": "salitaQuestActiveProfileId"
-          }
-        ],
-        "candidateKeys": [
-          "salitaQuestActiveCourse",
-          "salitaQuestActiveProfileId",
-          "salitaQuestLocalProfilesV1"
-        ]
-      },
+      "storage": [
+        {
+          "store": "localStorage",
+          "operation": "getItem",
+          "key": "salitaQuestLocalProfilesV1"
+        },
+        {
+          "store": "localStorage",
+          "operation": "setItem",
+          "key": "salitaQuestLocalProfilesV1"
+        },
+        {
+          "store": "sessionStorage",
+          "operation": "getItem",
+          "key": "salitaQuestActiveCourse"
+        },
+        {
+          "store": "sessionStorage",
+          "operation": "getItem",
+          "key": "salitaQuestActiveProfileId"
+        }
+      ],
       "dom": {
         "ids": [],
         "selectors": [],
@@ -3221,20 +2802,25 @@
           "salita:avatar-milestones-repaired"
         ]
       },
-      "classification": "collection-and-rewards",
+      "role": "collection-and-rewards",
       "readiness": "extraction-candidate",
-      "riskScore": 25
+      "risk": 25
     },
     {
       "file": "level-progression-v2.js",
       "bytes": 11375,
-      "courses": [
-        "bootstrap",
+      "contexts": [
         "cebuano",
         "tagalog"
       ],
-      "dynamicScripts": [],
-      "topLevelDeclarations": [],
+      "courses": [
+        "cebuano",
+        "tagalog"
+      ],
+      "references": [],
+      "loads": [],
+      "fetches": [],
+      "workers": [],
       "coreGlobals": [
         "currentView",
         "levelInfo",
@@ -3252,24 +2838,18 @@
           "SalitaPopupGovernor"
         ]
       },
-      "storage": {
-        "operations": [
-          {
-            "store": "sessionStorage",
-            "operation": "getItem",
-            "key": "salitaQuestActiveProfileId"
-          },
-          {
-            "store": "sessionStorage",
-            "operation": "getItem",
-            "key": "salitaQuestActiveCourse"
-          }
-        ],
-        "candidateKeys": [
-          "salitaQuestActiveCourse",
-          "salitaQuestActiveProfileId"
-        ]
-      },
+      "storage": [
+        {
+          "store": "sessionStorage",
+          "operation": "getItem",
+          "key": "salitaQuestActiveProfileId"
+        },
+        {
+          "store": "sessionStorage",
+          "operation": "getItem",
+          "key": "salitaQuestActiveCourse"
+        }
+      ],
       "dom": {
         "ids": [
           "homeView",
@@ -3298,20 +2878,25 @@
           "salita:view-changed"
         ]
       },
-      "classification": "progression",
+      "role": "progression",
       "readiness": "prepare-adapter",
-      "riskScore": 36
+      "risk": 36
     },
     {
       "file": "level-up-mobile-safety-v552.js",
       "bytes": 1058,
-      "courses": [
-        "bootstrap",
+      "contexts": [
         "cebuano",
         "tagalog"
       ],
-      "dynamicScripts": [],
-      "topLevelDeclarations": [],
+      "courses": [
+        "cebuano",
+        "tagalog"
+      ],
+      "references": [],
+      "loads": [],
+      "fetches": [],
+      "workers": [],
       "coreGlobals": [],
       "window": {
         "provides": [
@@ -3323,10 +2908,7 @@
           "SalitaPopupGovernor"
         ]
       },
-      "storage": {
-        "operations": [],
-        "candidateKeys": []
-      },
+      "storage": [],
       "dom": {
         "ids": [],
         "selectors": [],
@@ -3341,20 +2923,25 @@
         ],
         "dispatches": []
       },
-      "classification": "interface",
+      "role": "interface",
       "readiness": "extraction-candidate",
-      "riskScore": 8
+      "risk": 8
     },
     {
       "file": "long-term-badges-v1.js",
       "bytes": 11592,
-      "courses": [
-        "bootstrap",
+      "contexts": [
         "cebuano",
         "tagalog"
       ],
-      "dynamicScripts": [],
-      "topLevelDeclarations": [],
+      "courses": [
+        "cebuano",
+        "tagalog"
+      ],
+      "references": [],
+      "loads": [],
+      "fetches": [],
+      "workers": [],
       "coreGlobals": [
         "BADGES",
         "levelInfo",
@@ -3371,24 +2958,18 @@
           "state"
         ]
       },
-      "storage": {
-        "operations": [
-          {
-            "store": "sessionStorage",
-            "operation": "getItem",
-            "key": "salitaQuestActiveProfileId"
-          },
-          {
-            "store": "localStorage",
-            "operation": "getItem",
-            "key": "salitaQuestLocalProfilesV1"
-          }
-        ],
-        "candidateKeys": [
-          "salitaQuestActiveProfileId",
-          "salitaQuestLocalProfilesV1"
-        ]
-      },
+      "storage": [
+        {
+          "store": "sessionStorage",
+          "operation": "getItem",
+          "key": "salitaQuestActiveProfileId"
+        },
+        {
+          "store": "localStorage",
+          "operation": "getItem",
+          "key": "salitaQuestLocalProfilesV1"
+        }
+      ],
       "dom": {
         "ids": [],
         "selectors": [],
@@ -3402,20 +2983,25 @@
           "salita:long-term-badges-ready"
         ]
       },
-      "classification": "collection-and-rewards",
+      "role": "collection-and-rewards",
       "readiness": "prepare-adapter",
-      "riskScore": 24
+      "risk": 24
     },
     {
       "file": "mastery-feedback.js",
       "bytes": 11930,
-      "courses": [
-        "bootstrap",
+      "contexts": [
         "cebuano",
         "tagalog"
       ],
-      "dynamicScripts": [],
-      "topLevelDeclarations": [],
+      "courses": [
+        "cebuano",
+        "tagalog"
+      ],
+      "references": [],
+      "loads": [],
+      "fetches": [],
+      "workers": [],
       "coreGlobals": [
         "currentExercise",
         "getItemState",
@@ -3432,10 +3018,7 @@
         ],
         "consumes": []
       },
-      "storage": {
-        "operations": [],
-        "candidateKeys": []
-      },
+      "storage": [],
       "dom": {
         "ids": [],
         "selectors": [
@@ -3458,20 +3041,25 @@
         "listens": [],
         "dispatches": []
       },
-      "classification": "progression",
+      "role": "progression",
       "readiness": "prepare-adapter",
-      "riskScore": 31
+      "risk": 31
     },
     {
       "file": "mobile-session-refinement.js",
       "bytes": 8201,
-      "courses": [
-        "bootstrap",
+      "contexts": [
         "cebuano",
         "tagalog"
       ],
-      "dynamicScripts": [],
-      "topLevelDeclarations": [],
+      "courses": [
+        "cebuano",
+        "tagalog"
+      ],
+      "references": [],
+      "loads": [],
+      "fetches": [],
+      "workers": [],
       "coreGlobals": [
         "currentExercise",
         "currentView",
@@ -3490,10 +3078,7 @@
         ],
         "consumes": []
       },
-      "storage": {
-        "operations": [],
-        "candidateKeys": []
-      },
+      "storage": [],
       "dom": {
         "ids": [
           "feedbackBox",
@@ -3527,80 +3112,25 @@
         ],
         "dispatches": []
       },
-      "classification": "interface",
+      "role": "interface",
       "readiness": "prepare-adapter",
-      "riskScore": 40
-    },
-    {
-      "file": "mystery-rarity-roll-v1.js",
-      "bytes": 10312,
-      "courses": [
-        "bootstrap",
-        "cebuano",
-        "tagalog"
-      ],
-      "dynamicScripts": [],
-      "topLevelDeclarations": [],
-      "coreGlobals": [],
-      "window": {
-        "provides": [
-          "__salitaMysteryRarityRollV1Installed"
-        ],
-        "consumes": [
-          "SalitaAvatarArtwork",
-          "SalitaAvatarModel"
-        ]
-      },
-      "storage": {
-        "operations": [],
-        "candidateKeys": []
-      },
-      "dom": {
-        "ids": [],
-        "selectors": [
-          ".sq-coin-reveal",
-          ".sq-coin-reveal-art",
-          ".sq-coin-reveal-backdrop",
-          ".sq-coin-reveal-base",
-          ".sq-coin-reveal-colour",
-          ".sq-coin-reveal-colour img",
-          ".sq-coin-reveal-done",
-          ".sq-coin-reveal-kicker",
-          ".sq-coin-reveal-name",
-          ".sq-coin-reveal-progress",
-          ".sq-coin-reveal-title",
-          ".sq-coin-reveal-track span",
-          ".sq-mystery-gift",
-          ".sq-rarity-roll-copy strong",
-          ".sq-rarity-roll-option",
-          ".sq-rarity-roll-result",
-          ".sq-rarity-roll-stage"
-        ],
-        "datasets": [
-          "landed",
-          "rarity"
-        ]
-      },
-      "events": {
-        "listens": [
-          "salita:coin-shard-pack-purchased"
-        ],
-        "dispatches": []
-      },
-      "classification": "feature-extension",
-      "readiness": "prepare-adapter",
-      "riskScore": 15
+      "risk": 40
     },
     {
       "file": "placement-onboarding-v1.js",
       "bytes": 16245,
-      "courses": [
-        "bootstrap",
+      "contexts": [
         "cebuano",
         "tagalog"
       ],
-      "dynamicScripts": [],
-      "topLevelDeclarations": [],
+      "courses": [
+        "cebuano",
+        "tagalog"
+      ],
+      "references": [],
+      "loads": [],
+      "fetches": [],
+      "workers": [],
       "coreGlobals": [
         "ITEMS",
         "MODULES",
@@ -3619,10 +3149,7 @@
         ],
         "consumes": []
       },
-      "storage": {
-        "operations": [],
-        "candidateKeys": []
-      },
+      "storage": [],
       "dom": {
         "ids": [
           "beginnerSetting",
@@ -3656,20 +3183,25 @@
         ],
         "dispatches": []
       },
-      "classification": "profile-and-onboarding",
+      "role": "profile-and-onboarding",
       "readiness": "prepare-adapter",
-      "riskScore": 42
+      "risk": 42
     },
     {
       "file": "popup-governor-v1.js",
       "bytes": 6239,
-      "courses": [
-        "bootstrap",
+      "contexts": [
         "cebuano",
         "tagalog"
       ],
-      "dynamicScripts": [],
-      "topLevelDeclarations": [],
+      "courses": [
+        "cebuano",
+        "tagalog"
+      ],
+      "references": [],
+      "loads": [],
+      "fetches": [],
+      "workers": [],
       "coreGlobals": [
         "currentView",
         "state"
@@ -3685,10 +3217,7 @@
           "SalitaAvatarModel"
         ]
       },
-      "storage": {
-        "operations": [],
-        "candidateKeys": []
-      },
+      "storage": [],
       "dom": {
         "ids": [
           "homeView"
@@ -3706,23 +3235,31 @@
         ],
         "dispatches": []
       },
-      "classification": "feature-extension",
+      "role": "feature-extension",
       "readiness": "extraction-candidate",
-      "riskScore": 17
+      "risk": 17
     },
     {
       "file": "profile-app.js",
       "bytes": 15910,
-      "courses": [
-        "bootstrap",
+      "contexts": [
         "cebuano",
         "tagalog"
       ],
-      "dynamicScripts": [
+      "courses": [
+        "cebuano",
+        "tagalog"
+      ],
+      "references": [
         "avatar-catalogue-v1.js",
         "bisaya-review-regions.js"
       ],
-      "topLevelDeclarations": [],
+      "loads": [
+        "avatar-catalogue-v1.js",
+        "bisaya-review-regions.js"
+      ],
+      "fetches": [],
+      "workers": [],
       "coreGlobals": [
         "saveState",
         "state"
@@ -3730,129 +3267,121 @@
       "window": {
         "provides": [],
         "consumes": [
+          "clearInterval",
           "SalitaAvatarArtwork",
           "SalitaAvatarArtworkReady",
           "SalitaAvatarHotfixReady",
-          "SalitaAvatarModel"
+          "SalitaAvatarModel",
+          "setInterval"
         ]
       },
-      "storage": {
-        "operations": [
-          {
-            "store": "sessionStorage",
-            "operation": "getItem",
-            "key": "salitaQuestActiveCourse"
-          },
-          {
-            "store": "localStorage",
-            "operation": "getItem",
-            "key": "salitaQuestLocalProfilesV1"
-          },
-          {
-            "store": "localStorage",
-            "operation": "setItem",
-            "key": "salitaQuestLocalProfilesV1"
-          },
-          {
-            "store": "sessionStorage",
-            "operation": "getItem",
-            "key": "salitaQuestActiveProfileId"
-          },
-          {
-            "store": "sessionStorage",
-            "operation": "setItem",
-            "key": "salitaQuestActiveCourse"
-          },
-          {
-            "store": "localStorage",
-            "operation": "getItem",
-            "key": "salitaQuestProgress"
-          },
-          {
-            "store": "localStorage",
-            "operation": "getItem",
-            "key": "salitaQuestProgress"
-          },
-          {
-            "store": "localStorage",
-            "operation": "setItem",
-            "key": "${PROFILE_PROGRESS_PREFIX}${activeId}.${COURSE}"
-          },
-          {
-            "store": "localStorage",
-            "operation": "setItem",
-            "key": "${PROFILE_PROGRESS_PREFIX}${activeId}"
-          },
-          {
-            "store": "localStorage",
-            "operation": "removeItem",
-            "key": "${PROFILE_PROGRESS_PREFIX}${activeId}.${COURSE}"
-          },
-          {
-            "store": "localStorage",
-            "operation": "setItem",
-            "key": "salitaQuestBaseProgressOwner"
-          },
-          {
-            "store": "sessionStorage",
-            "operation": "removeItem",
-            "key": "salitaQuestActiveProfileId"
-          },
-          {
-            "store": "sessionStorage",
-            "operation": "removeItem",
-            "key": "salitaQuestActiveCourse"
-          },
-          {
-            "store": "localStorage",
-            "operation": "removeItem",
-            "key": "salitaQuestProgress"
-          },
-          {
-            "store": "localStorage",
-            "operation": "removeItem",
-            "key": "salitaQuestBaseProgressOwner"
-          },
-          {
-            "store": "localStorage",
-            "operation": "getItem",
-            "key": "${PROFILE_PROGRESS_PREFIX}${activeId}.${nextCourse}"
-          },
-          {
-            "store": "localStorage",
-            "operation": "getItem",
-            "key": "${PROFILE_PROGRESS_PREFIX}${activeId}"
-          },
-          {
-            "store": "localStorage",
-            "operation": "setItem",
-            "key": "salitaQuestProgress"
-          },
-          {
-            "store": "localStorage",
-            "operation": "removeItem",
-            "key": "salitaQuestProgress"
-          },
-          {
-            "store": "localStorage",
-            "operation": "setItem",
-            "key": "salitaQuestBaseProgressOwner"
-          },
-          {
-            "store": "sessionStorage",
-            "operation": "setItem",
-            "key": "salitaQuestActiveCourse"
-          }
-        ],
-        "candidateKeys": [
-          "salitaQuestActiveCourse",
-          "salitaQuestActiveProfileId",
-          "salitaQuestBaseProgressOwner",
-          "salitaQuestLocalProfilesV1",
-          "salitaQuestProgress",
-          "salitaQuestProgress.profile."
-        ]
-      },
+      "storage": [
+        {
+          "store": "sessionStorage",
+          "operation": "getItem",
+          "key": "salitaQuestActiveCourse"
+        },
+        {
+          "store": "localStorage",
+          "operation": "getItem",
+          "key": "salitaQuestLocalProfilesV1"
+        },
+        {
+          "store": "localStorage",
+          "operation": "setItem",
+          "key": "salitaQuestLocalProfilesV1"
+        },
+        {
+          "store": "sessionStorage",
+          "operation": "getItem",
+          "key": "salitaQuestActiveProfileId"
+        },
+        {
+          "store": "sessionStorage",
+          "operation": "setItem",
+          "key": "salitaQuestActiveCourse"
+        },
+        {
+          "store": "localStorage",
+          "operation": "getItem",
+          "key": "salitaQuestProgress"
+        },
+        {
+          "store": "localStorage",
+          "operation": "getItem",
+          "key": "salitaQuestProgress"
+        },
+        {
+          "store": "localStorage",
+          "operation": "setItem",
+          "key": "${PROFILE_PROGRESS_PREFIX}${activeId}.${COURSE}"
+        },
+        {
+          "store": "localStorage",
+          "operation": "setItem",
+          "key": "${PROFILE_PROGRESS_PREFIX}${activeId}"
+        },
+        {
+          "store": "localStorage",
+          "operation": "removeItem",
+          "key": "${PROFILE_PROGRESS_PREFIX}${activeId}.${COURSE}"
+        },
+        {
+          "store": "localStorage",
+          "operation": "setItem",
+          "key": "salitaQuestBaseProgressOwner"
+        },
+        {
+          "store": "sessionStorage",
+          "operation": "removeItem",
+          "key": "salitaQuestActiveProfileId"
+        },
+        {
+          "store": "sessionStorage",
+          "operation": "removeItem",
+          "key": "salitaQuestActiveCourse"
+        },
+        {
+          "store": "localStorage",
+          "operation": "removeItem",
+          "key": "salitaQuestProgress"
+        },
+        {
+          "store": "localStorage",
+          "operation": "removeItem",
+          "key": "salitaQuestBaseProgressOwner"
+        },
+        {
+          "store": "localStorage",
+          "operation": "getItem",
+          "key": "${PROFILE_PROGRESS_PREFIX}${activeId}.${nextCourse}"
+        },
+        {
+          "store": "localStorage",
+          "operation": "getItem",
+          "key": "${PROFILE_PROGRESS_PREFIX}${activeId}"
+        },
+        {
+          "store": "localStorage",
+          "operation": "setItem",
+          "key": "salitaQuestProgress"
+        },
+        {
+          "store": "localStorage",
+          "operation": "removeItem",
+          "key": "salitaQuestProgress"
+        },
+        {
+          "store": "localStorage",
+          "operation": "setItem",
+          "key": "salitaQuestBaseProgressOwner"
+        },
+        {
+          "store": "sessionStorage",
+          "operation": "setItem",
+          "key": "salitaQuestActiveCourse"
+        }
+      ],
       "dom": {
         "ids": [],
         "selectors": [
@@ -3896,19 +3425,22 @@
           "salita:avatar-equipped"
         ]
       },
-      "classification": "runtime-loader",
+      "role": "runtime-loader",
       "readiness": "hold",
-      "riskScore": 111
+      "risk": 115
     },
     {
       "file": "profile-emblem-control.js",
       "bytes": 9125,
-      "courses": [
-        "bootstrap",
+      "contexts": [
         "cebuano",
         "tagalog"
       ],
-      "dynamicScripts": [
+      "courses": [
+        "cebuano",
+        "tagalog"
+      ],
+      "references": [
         "achievement-sharing-avatar-bridge-v1.js",
         "achievement-sharing-router-v2.js",
         "avatar-artwork-registry-v554.js",
@@ -3925,7 +3457,25 @@
         "long-term-badges-v1.js",
         "weekly-avatar-shard-rewards-v1.js"
       ],
-      "topLevelDeclarations": [],
+      "loads": [
+        "achievement-sharing-avatar-bridge-v1.js",
+        "achievement-sharing-router-v2.js",
+        "avatar-artwork-registry-v554.js",
+        "avatar-case-v1.js",
+        "avatar-catalogue-v1.js",
+        "avatar-collection-screen-v1.js",
+        "avatar-progression-hotfix-v551.js",
+        "avatar-progression-migration-v1.js",
+        "avatar-unlock-celebration-v1.js",
+        "coin-avatar-shard-shop-v1.js",
+        "coin-avatar-shop-badges-v1.js",
+        "coin-avatar-shop-topbar-v1.js",
+        "level-avatar-rewards-v1.js",
+        "long-term-badges-v1.js",
+        "weekly-avatar-shard-rewards-v1.js"
+      ],
+      "fetches": [],
+      "workers": [],
       "coreGlobals": [],
       "window": {
         "provides": [
@@ -3938,10 +3488,7 @@
           "SalitaAvatarModel"
         ]
       },
-      "storage": {
-        "operations": [],
-        "candidateKeys": []
-      },
+      "storage": [],
       "dom": {
         "ids": [],
         "selectors": [
@@ -3976,70 +3523,23 @@
           "salita:avatar-progression-ready"
         ]
       },
-      "classification": "runtime-loader",
+      "role": "runtime-loader",
       "readiness": "hold",
-      "riskScore": 91
-    },
-    {
-      "file": "profile-install-prompt-v1.js",
-      "bytes": 3849,
-      "courses": [
-        "bootstrap",
-        "cebuano",
-        "tagalog"
-      ],
-      "dynamicScripts": [],
-      "topLevelDeclarations": [],
-      "coreGlobals": [
-        "accepted"
-      ],
-      "window": {
-        "provides": [
-          "__salitaProfileInstallPromptV1"
-        ],
-        "consumes": []
-      },
-      "storage": {
-        "operations": [],
-        "candidateKeys": []
-      },
-      "dom": {
-        "ids": [
-          "profileGate",
-          "profilePanel",
-          "profileToast"
-        ],
-        "selectors": [
-          "[data-install-salita]"
-        ],
-        "datasets": [
-          "installLanding",
-          "installSalita"
-        ]
-      },
-      "events": {
-        "listens": [
-          "appinstalled",
-          "beforeinstallprompt",
-          "click",
-          "DOMContentLoaded"
-        ],
-        "dispatches": []
-      },
-      "classification": "profile-and-onboarding",
-      "readiness": "extraction-candidate",
-      "riskScore": 9
+      "risk": 91
     },
     {
       "file": "progression-v54.js",
       "bytes": 5735,
-      "courses": [
-        "bootstrap",
-        "cebuano",
+      "contexts": [
         "tagalog"
       ],
-      "dynamicScripts": [],
-      "topLevelDeclarations": [],
+      "courses": [
+        "tagalog"
+      ],
+      "references": [],
+      "loads": [],
+      "fetches": [],
+      "workers": [],
       "coreGlobals": [
         "isModuleUnlocked",
         "ITEMS",
@@ -4058,10 +3558,7 @@
         ],
         "consumes": []
       },
-      "storage": {
-        "operations": [],
-        "candidateKeys": []
-      },
+      "storage": [],
       "dom": {
         "ids": [
           "masteryMilestones",
@@ -4082,20 +3579,25 @@
         ],
         "dispatches": []
       },
-      "classification": "progression",
+      "role": "progression",
       "readiness": "prepare-adapter",
-      "riskScore": 37
+      "risk": 37
     },
     {
       "file": "pronunciation-release-control.js",
       "bytes": 2944,
-      "courses": [
-        "bootstrap",
+      "contexts": [
         "cebuano",
         "tagalog"
       ],
-      "dynamicScripts": [],
-      "topLevelDeclarations": [],
+      "courses": [
+        "cebuano",
+        "tagalog"
+      ],
+      "references": [],
+      "loads": [],
+      "fetches": [],
+      "workers": [],
       "coreGlobals": [
         "state",
         "toast"
@@ -4109,10 +3611,7 @@
           "webkitAudioContext"
         ]
       },
-      "storage": {
-        "operations": [],
-        "candidateKeys": []
-      },
+      "storage": [],
       "dom": {
         "ids": [],
         "selectors": [],
@@ -4129,19 +3628,18 @@
         ],
         "dispatches": []
       },
-      "classification": "audio",
+      "role": "audio",
       "readiness": "extraction-candidate",
-      "riskScore": 12
+      "risk": 12
     },
     {
       "file": "service-worker.js",
       "bytes": 11322,
-      "courses": [
-        "bootstrap",
-        "cebuano",
-        "tagalog"
+      "contexts": [
+        "worker"
       ],
-      "dynamicScripts": [
+      "courses": [],
+      "references": [
         "achievement-sharing-avatar-bridge-v1.js",
         "achievement-sharing-router-v2.js",
         "achievement-sharing-v4.js",
@@ -4188,23 +3686,9 @@
         "weekly-avatar-polish.js",
         "weekly-avatar-shard-rewards-v1.js"
       ],
-      "topLevelDeclarations": [
-        "APP_ENHANCEMENTS",
-        "AVATAR_CASE_DISPLAY_HOTFIX",
-        "AVATAR_FILES",
-        "AVATAR_PROGRESSION_FILES",
-        "CACHE_NAME",
-        "CORE_FILES",
-        "COURSE_FILES",
-        "EXPLICIT_SHARING_ROUTER_DELIVERY",
-        "isProfileNavigation",
-        "isSameOriginAudio",
-        "parseRangeHeader",
-        "PREVIOUS_CACHE_NAME",
-        "SHARE_IMAGE_TRANSPORT_DELIVERY",
-        "STATIC_FILES",
-        "TOPBAR_WORLD_PROGRESS_HOTFIX"
-      ],
+      "loads": [],
+      "fetches": [],
+      "workers": [],
       "coreGlobals": [
         "session"
       ],
@@ -4212,10 +3696,7 @@
         "provides": [],
         "consumes": []
       },
-      "storage": {
-        "operations": [],
-        "candidateKeys": []
-      },
+      "storage": [],
       "dom": {
         "ids": [],
         "selectors": [],
@@ -4229,20 +3710,25 @@
         ],
         "dispatches": []
       },
-      "classification": "offline-runtime",
-      "readiness": "extraction-candidate",
-      "riskScore": 228
+      "role": "offline-runtime",
+      "readiness": "hold",
+      "risk": 3
     },
     {
       "file": "social-connections-v2.js",
       "bytes": 12738,
-      "courses": [
-        "bootstrap",
+      "contexts": [
         "cebuano",
         "tagalog"
       ],
-      "dynamicScripts": [],
-      "topLevelDeclarations": [],
+      "courses": [
+        "cebuano",
+        "tagalog"
+      ],
+      "references": [],
+      "loads": [],
+      "fetches": [],
+      "workers": [],
       "coreGlobals": [
         "switchView"
       ],
@@ -4256,45 +3742,38 @@
           "SALITA_SOCIAL_API_BASE"
         ]
       },
-      "storage": {
-        "operations": [
-          {
-            "store": "localStorage",
-            "operation": "getItem",
-            "key": "salitaQuestLocalProfilesV1"
-          },
-          {
-            "store": "sessionStorage",
-            "operation": "getItem",
-            "key": "salitaQuestActiveProfileId"
-          },
-          {
-            "store": "localStorage",
-            "operation": "getItem",
-            "key": "salitaQuestSocialApiBase"
-          },
-          {
-            "store": "localStorage",
-            "operation": "getItem",
-            "key": "salitaQuestSocialApiBase"
-          },
-          {
-            "store": "localStorage",
-            "operation": "setItem",
-            "key": "salitaQuestSocialApiBase"
-          },
-          {
-            "store": "localStorage",
-            "operation": "removeItem",
-            "key": "salitaQuestSocialApiBase"
-          }
-        ],
-        "candidateKeys": [
-          "salitaQuestActiveProfileId",
-          "salitaQuestLocalProfilesV1",
-          "salitaQuestSocialApiBase"
-        ]
-      },
+      "storage": [
+        {
+          "store": "localStorage",
+          "operation": "getItem",
+          "key": "salitaQuestLocalProfilesV1"
+        },
+        {
+          "store": "sessionStorage",
+          "operation": "getItem",
+          "key": "salitaQuestActiveProfileId"
+        },
+        {
+          "store": "localStorage",
+          "operation": "getItem",
+          "key": "salitaQuestSocialApiBase"
+        },
+        {
+          "store": "localStorage",
+          "operation": "getItem",
+          "key": "salitaQuestSocialApiBase"
+        },
+        {
+          "store": "localStorage",
+          "operation": "setItem",
+          "key": "salitaQuestSocialApiBase"
+        },
+        {
+          "store": "localStorage",
+          "operation": "removeItem",
+          "key": "salitaQuestSocialApiBase"
+        }
+      ],
       "dom": {
         "ids": [
           "badgesView",
@@ -4319,22 +3798,23 @@
         ],
         "dispatches": []
       },
-      "classification": "feature-extension",
+      "role": "feature-extension",
       "readiness": "prepare-adapter",
-      "riskScore": 32
+      "risk": 32
     },
     {
       "file": "src/app/course-bootstrap.js",
       "bytes": 5514,
-      "courses": [
-        "bootstrap",
-        "cebuano",
-        "tagalog"
+      "contexts": [
+        "bootstrap"
       ],
-      "dynamicScripts": [
+      "courses": [],
+      "references": [
         "app.js"
       ],
-      "topLevelDeclarations": [],
+      "loads": [],
+      "fetches": [],
+      "workers": [],
       "coreGlobals": [],
       "window": {
         "provides": [
@@ -4344,86 +3824,83 @@
           "SalitaQuestCourseManifest"
         ]
       },
-      "storage": {
-        "operations": [
-          {
-            "store": "localStorage",
-            "operation": "getItem",
-            "key": "storage.profileStore"
-          },
-          {
-            "store": "localStorage",
-            "operation": "setItem",
-            "key": "${storage.profileProgressPrefix}${profileId}.${courseId}"
-          },
-          {
-            "store": "localStorage",
-            "operation": "setItem",
-            "key": "${storage.profileProgressPrefix}${profileId}"
-          },
-          {
-            "store": "sessionStorage",
-            "operation": "getItem",
-            "key": "storage.activeProfile"
-          },
-          {
-            "store": "localStorage",
-            "operation": "getItem",
-            "key": "storage.baseOwner"
-          },
-          {
-            "store": "localStorage",
-            "operation": "getItem",
-            "key": "storage.baseProgress"
-          },
-          {
-            "store": "localStorage",
-            "operation": "getItem",
-            "key": "${storage.profileProgressPrefix}${activeId}.${course.id}"
-          },
-          {
-            "store": "localStorage",
-            "operation": "getItem",
-            "key": "${storage.profileProgressPrefix}${activeId}"
-          },
-          {
-            "store": "localStorage",
-            "operation": "setItem",
-            "key": "storage.baseProgress"
-          },
-          {
-            "store": "localStorage",
-            "operation": "setItem",
-            "key": "${storage.profileProgressPrefix}${activeId}.${course.id}"
-          },
-          {
-            "store": "localStorage",
-            "operation": "removeItem",
-            "key": "storage.baseProgress"
-          },
-          {
-            "store": "localStorage",
-            "operation": "setItem",
-            "key": "storage.baseOwner"
-          },
-          {
-            "store": "sessionStorage",
-            "operation": "setItem",
-            "key": "storage.activeCourse"
-          },
-          {
-            "store": "localStorage",
-            "operation": "setItem",
-            "key": "course.documentCache"
-          },
-          {
-            "store": "localStorage",
-            "operation": "getItem",
-            "key": "course.documentCache"
-          }
-        ],
-        "candidateKeys": []
-      },
+      "storage": [
+        {
+          "store": "localStorage",
+          "operation": "getItem",
+          "key": "storage.profileStore"
+        },
+        {
+          "store": "localStorage",
+          "operation": "setItem",
+          "key": "${storage.profileProgressPrefix}${profileId}.${courseId}"
+        },
+        {
+          "store": "localStorage",
+          "operation": "setItem",
+          "key": "${storage.profileProgressPrefix}${profileId}"
+        },
+        {
+          "store": "sessionStorage",
+          "operation": "getItem",
+          "key": "storage.activeProfile"
+        },
+        {
+          "store": "localStorage",
+          "operation": "getItem",
+          "key": "storage.baseOwner"
+        },
+        {
+          "store": "localStorage",
+          "operation": "getItem",
+          "key": "storage.baseProgress"
+        },
+        {
+          "store": "localStorage",
+          "operation": "getItem",
+          "key": "${storage.profileProgressPrefix}${activeId}.${course.id}"
+        },
+        {
+          "store": "localStorage",
+          "operation": "getItem",
+          "key": "${storage.profileProgressPrefix}${activeId}"
+        },
+        {
+          "store": "localStorage",
+          "operation": "setItem",
+          "key": "storage.baseProgress"
+        },
+        {
+          "store": "localStorage",
+          "operation": "setItem",
+          "key": "${storage.profileProgressPrefix}${activeId}.${course.id}"
+        },
+        {
+          "store": "localStorage",
+          "operation": "removeItem",
+          "key": "storage.baseProgress"
+        },
+        {
+          "store": "localStorage",
+          "operation": "setItem",
+          "key": "storage.baseOwner"
+        },
+        {
+          "store": "sessionStorage",
+          "operation": "setItem",
+          "key": "storage.activeCourse"
+        },
+        {
+          "store": "localStorage",
+          "operation": "setItem",
+          "key": "course.documentCache"
+        },
+        {
+          "store": "localStorage",
+          "operation": "getItem",
+          "key": "course.documentCache"
+        }
+      ],
       "dom": {
         "ids": [
           "loader"
@@ -4435,19 +3912,18 @@
         "listens": [],
         "dispatches": []
       },
-      "classification": "course-bootstrap",
-      "readiness": "high-coupling",
-      "riskScore": 57
+      "role": "course-bootstrap",
+      "readiness": "hold",
+      "risk": 52
     },
     {
       "file": "src/config/course-manifest.js",
       "bytes": 5980,
-      "courses": [
-        "bootstrap",
-        "cebuano",
-        "tagalog"
+      "contexts": [
+        "bootstrap"
       ],
-      "dynamicScripts": [
+      "courses": [],
+      "references": [
         "achievement-sharing-v4.js",
         "adaptive-scenarios.js",
         "badge-catalogue-v2.js",
@@ -4479,7 +3955,9 @@
         "weekly-avatar-chest.js",
         "weekly-avatar-polish.js"
       ],
-      "topLevelDeclarations": [],
+      "loads": [],
+      "fetches": [],
+      "workers": [],
       "coreGlobals": [
         "session"
       ],
@@ -4489,19 +3967,7 @@
         ],
         "consumes": []
       },
-      "storage": {
-        "operations": [],
-        "candidateKeys": [
-          "salitaQuestActiveCourse",
-          "salitaQuestActiveProfileId",
-          "salitaQuestAppDocumentV554",
-          "salitaQuestBaseProgressOwner",
-          "salitaQuestBisayaAppDocumentV554",
-          "salitaQuestLocalProfilesV1",
-          "salitaQuestProgress",
-          "salitaQuestProgress.profile."
-        ]
-      },
+      "storage": [],
       "dom": {
         "ids": [],
         "selectors": [],
@@ -4511,20 +3977,25 @@
         "listens": [],
         "dispatches": []
       },
-      "classification": "course-config",
-      "readiness": "extraction-candidate",
-      "riskScore": 155
+      "role": "course-config",
+      "readiness": "hold",
+      "risk": 5
     },
     {
       "file": "ui-quality-fixes.js",
       "bytes": 7690,
-      "courses": [
-        "bootstrap",
+      "contexts": [
         "cebuano",
         "tagalog"
       ],
-      "dynamicScripts": [],
-      "topLevelDeclarations": [],
+      "courses": [
+        "cebuano",
+        "tagalog"
+      ],
+      "references": [],
+      "loads": [],
+      "fetches": [],
+      "workers": [],
       "coreGlobals": [
         "currentExercise",
         "DAILY_QUESTS",
@@ -4546,10 +4017,7 @@
         ],
         "consumes": []
       },
-      "storage": {
-        "operations": [],
-        "candidateKeys": []
-      },
+      "storage": [],
       "dom": {
         "ids": [
           "answerInput",
@@ -4570,54 +4038,25 @@
         "listens": [],
         "dispatches": []
       },
-      "classification": "interface",
+      "role": "interface",
       "readiness": "high-coupling",
-      "riskScore": 48
-    },
-    {
-      "file": "universal-share-simplifier-v1.js",
-      "bytes": 328,
-      "courses": [
-        "bootstrap",
-        "cebuano",
-        "tagalog"
-      ],
-      "dynamicScripts": [],
-      "topLevelDeclarations": [],
-      "coreGlobals": [],
-      "window": {
-        "provides": [
-          "__salitaUniversalShareSimplifierDisabled"
-        ],
-        "consumes": []
-      },
-      "storage": {
-        "operations": [],
-        "candidateKeys": []
-      },
-      "dom": {
-        "ids": [],
-        "selectors": [],
-        "datasets": []
-      },
-      "events": {
-        "listens": [],
-        "dispatches": []
-      },
-      "classification": "feature-extension",
-      "readiness": "extraction-candidate",
-      "riskScore": 2
+      "risk": 48
     },
     {
       "file": "weekly-avatar-chest.js",
       "bytes": 19092,
-      "courses": [
-        "bootstrap",
+      "contexts": [
         "cebuano",
         "tagalog"
       ],
-      "dynamicScripts": [],
-      "topLevelDeclarations": [],
+      "courses": [
+        "cebuano",
+        "tagalog"
+      ],
+      "references": [],
+      "loads": [],
+      "fetches": [],
+      "workers": [],
       "coreGlobals": [
         "claimDailyQuestRewards",
         "DAILY_QUESTS",
@@ -4633,12 +4072,11 @@
         "provides": [
           "__salitaQuestWeeklyAvatarChestInstalled"
         ],
-        "consumes": []
+        "consumes": [
+          "crypto"
+        ]
       },
-      "storage": {
-        "operations": [],
-        "candidateKeys": []
-      },
+      "storage": [],
       "dom": {
         "ids": [
           "questChest",
@@ -4666,20 +4104,25 @@
         ],
         "dispatches": []
       },
-      "classification": "collection-and-rewards",
+      "role": "collection-and-rewards",
       "readiness": "prepare-adapter",
-      "riskScore": 38
+      "risk": 40
     },
     {
       "file": "weekly-avatar-polish.js",
       "bytes": 15558,
-      "courses": [
-        "bootstrap",
+      "contexts": [
         "cebuano",
         "tagalog"
       ],
-      "dynamicScripts": [],
-      "topLevelDeclarations": [],
+      "courses": [
+        "cebuano",
+        "tagalog"
+      ],
+      "references": [],
+      "loads": [],
+      "fetches": [],
+      "workers": [],
       "coreGlobals": [
         "claimDailyQuestRewards",
         "currentView",
@@ -4699,10 +4142,7 @@
           "webkitAudioContext"
         ]
       },
-      "storage": {
-        "operations": [],
-        "candidateKeys": []
-      },
+      "storage": [],
       "dom": {
         "ids": [
           "homeView",
@@ -4726,91 +4166,25 @@
         "listens": [],
         "dispatches": []
       },
-      "classification": "collection-and-rewards",
+      "role": "collection-and-rewards",
       "readiness": "prepare-adapter",
-      "riskScore": 38
-    },
-    {
-      "file": "weekly-avatar-projected-unlock-fix-v1.js",
-      "bytes": 6319,
-      "courses": [
-        "bootstrap",
-        "cebuano",
-        "tagalog"
-      ],
-      "dynamicScripts": [],
-      "topLevelDeclarations": [],
-      "coreGlobals": [
-        "saveState",
-        "showRewardBurst",
-        "state"
-      ],
-      "window": {
-        "provides": [
-          "__salitaWeeklyAvatarProjectedUnlockFixV1Installed",
-          "SalitaWeeklyAvatarProjectedUnlockFix"
-        ],
-        "consumes": [
-          "SalitaAvatarModel",
-          "SalitaDailyKeyReconciliation",
-          "SalitaWeeklyAvatarRewards"
-        ]
-      },
-      "storage": {
-        "operations": [
-          {
-            "store": "localStorage",
-            "operation": "getItem",
-            "key": "salitaQuestLocalProfilesV1"
-          },
-          {
-            "store": "sessionStorage",
-            "operation": "getItem",
-            "key": "salitaQuestActiveProfileId"
-          },
-          {
-            "store": "localStorage",
-            "operation": "setItem",
-            "key": "salitaQuestLocalProfilesV1"
-          }
-        ],
-        "candidateKeys": [
-          "salitaQuestActiveProfileId",
-          "salitaQuestLocalProfilesV1"
-        ]
-      },
-      "dom": {
-        "ids": [],
-        "selectors": [
-          "#weeklyAvatarShardModal [data-weekly-shard-close]"
-        ],
-        "datasets": [
-          "weeklyAvatarTarget"
-        ]
-      },
-      "events": {
-        "listens": [
-          "click"
-        ],
-        "dispatches": [
-          "salita:avatar-collection-changed",
-          "salita:state-changed"
-        ]
-      },
-      "classification": "collection-and-rewards",
-      "readiness": "prepare-adapter",
-      "riskScore": 31
+      "risk": 38
     },
     {
       "file": "weekly-avatar-shard-rewards-v1.js",
       "bytes": 24374,
-      "courses": [
-        "bootstrap",
+      "contexts": [
         "cebuano",
         "tagalog"
       ],
-      "dynamicScripts": [],
-      "topLevelDeclarations": [],
+      "courses": [
+        "cebuano",
+        "tagalog"
+      ],
+      "references": [],
+      "loads": [],
+      "fetches": [],
+      "workers": [],
       "coreGlobals": [
         "claimDailyQuestRewards",
         "DAILY_QUESTS",
@@ -4831,34 +4205,28 @@
           "SalitaAvatarModel"
         ]
       },
-      "storage": {
-        "operations": [
-          {
-            "store": "localStorage",
-            "operation": "getItem",
-            "key": "salitaQuestLocalProfilesV1"
-          },
-          {
-            "store": "localStorage",
-            "operation": "setItem",
-            "key": "salitaQuestLocalProfilesV1"
-          },
-          {
-            "store": "sessionStorage",
-            "operation": "getItem",
-            "key": "salitaQuestActiveProfileId"
-          },
-          {
-            "store": "sessionStorage",
-            "operation": "getItem",
-            "key": "salitaQuestActiveProfileId"
-          }
-        ],
-        "candidateKeys": [
-          "salitaQuestActiveProfileId",
-          "salitaQuestLocalProfilesV1"
-        ]
-      },
+      "storage": [
+        {
+          "store": "localStorage",
+          "operation": "getItem",
+          "key": "salitaQuestLocalProfilesV1"
+        },
+        {
+          "store": "localStorage",
+          "operation": "setItem",
+          "key": "salitaQuestLocalProfilesV1"
+        },
+        {
+          "store": "sessionStorage",
+          "operation": "getItem",
+          "key": "salitaQuestActiveProfileId"
+        },
+        {
+          "store": "sessionStorage",
+          "operation": "getItem",
+          "key": "salitaQuestActiveProfileId"
+        }
+      ],
       "dom": {
         "ids": [
           "questChest"
@@ -4893,9 +4261,9 @@
           "salita:weekly-key-earned"
         ]
       },
-      "classification": "collection-and-rewards",
+      "role": "collection-and-rewards",
       "readiness": "prepare-adapter",
-      "riskScore": 52
+      "risk": 52
     }
   ],
   "edges": [
@@ -5080,7 +4448,7 @@
     {
       "from": "app.js",
       "to": "service-worker.js",
-      "type": "loads"
+      "type": "registers-worker"
     },
     {
       "from": "avatar-artwork-registry-v554.js",
@@ -5096,101 +4464,6 @@
       "type": "window-api",
       "symbols": [
         "SalitaAvatarModel"
-      ]
-    },
-    {
-      "from": "avatar-card-actions-v1.js",
-      "to": "daily-key-weekday-reconciliation-v1.js",
-      "type": "loads"
-    },
-    {
-      "from": "avatar-card-actions-v1.js",
-      "to": "universal-share-simplifier-v1.js",
-      "type": "loads"
-    },
-    {
-      "from": "avatar-card-actions-v1.js",
-      "to": "weekly-avatar-projected-unlock-fix-v1.js",
-      "type": "loads"
-    },
-    {
-      "from": "avatar-card-actions-v1.js",
-      "to": "daily-key-weekday-reconciliation-v1.js",
-      "type": "window-api",
-      "symbols": [
-        "__salitaDailyKeyWeekdayReconciliationV3Installed"
-      ]
-    },
-    {
-      "from": "avatar-card-actions-v1.js",
-      "to": "weekly-avatar-projected-unlock-fix-v1.js",
-      "type": "window-api",
-      "symbols": [
-        "__salitaWeeklyAvatarProjectedUnlockFixV1Installed"
-      ]
-    },
-    {
-      "from": "avatar-card-actions-v1.js",
-      "to": "avatar-progression-hotfix-v551.js",
-      "type": "window-api",
-      "symbols": [
-        "SalitaAvatarModel"
-      ]
-    },
-    {
-      "from": "avatar-card-actions-v1.js",
-      "to": "coin-avatar-shop-reveal-v1.js",
-      "type": "window-api",
-      "symbols": [
-        "SalitaAvatarModel"
-      ]
-    },
-    {
-      "from": "avatar-card-actions-v1.js",
-      "to": "achievement-sharing-v4.js",
-      "type": "window-api",
-      "symbols": [
-        "SalitaQuestAchievementSharing"
-      ]
-    },
-    {
-      "from": "avatar-card-actions-v1.js",
-      "to": "avatar-case-v1.js",
-      "type": "window-api",
-      "symbols": [
-        "SalitaQuestAvatarCase"
-      ]
-    },
-    {
-      "from": "avatar-case-page-tab-v1.js",
-      "to": "avatar-artwork-registry-v554.js",
-      "type": "window-api",
-      "symbols": [
-        "getAvatarImagePath"
-      ]
-    },
-    {
-      "from": "avatar-case-page-tab-v1.js",
-      "to": "popup-governor-v1.js",
-      "type": "window-api",
-      "symbols": [
-        "getAvatarImagePath"
-      ]
-    },
-    {
-      "from": "avatar-case-page-tab-v1.js",
-      "to": "avatar-artwork-registry-v554.js",
-      "type": "window-api",
-      "symbols": [
-        "SalitaAvatarArtwork"
-      ]
-    },
-    {
-      "from": "avatar-case-page-tab-v1.js",
-      "to": "avatar-case-v1.js",
-      "type": "window-api",
-      "symbols": [
-        "SalitaQuestAvatarCase"
       ]
     },
     {
@@ -5239,39 +4512,6 @@
       "type": "core-globals",
       "symbols": [
         "state"
-      ]
-    },
-    {
-      "from": "avatar-collection-page-v2.js",
-      "to": "app.js",
-      "type": "core-globals",
-      "symbols": [
-        "currentView",
-        "switchView"
-      ]
-    },
-    {
-      "from": "avatar-collection-page-v2.js",
-      "to": "avatar-artwork-registry-v554.js",
-      "type": "window-api",
-      "symbols": [
-        "SalitaAvatarArtwork"
-      ]
-    },
-    {
-      "from": "avatar-collection-page-v2.js",
-      "to": "avatar-progression-hotfix-v551.js",
-      "type": "window-api",
-      "symbols": [
-        "SalitaAvatarModel"
-      ]
-    },
-    {
-      "from": "avatar-collection-page-v2.js",
-      "to": "coin-avatar-shop-reveal-v1.js",
-      "type": "window-api",
-      "symbols": [
-        "SalitaAvatarModel"
       ]
     },
     {
@@ -5472,11 +4712,6 @@
     },
     {
       "from": "bisaya-app-loader.js",
-      "to": "app.js",
-      "type": "loads"
-    },
-    {
-      "from": "bisaya-app-loader.js",
       "to": "exercise-fixes-v545.js",
       "type": "loads"
     },
@@ -5484,6 +4719,11 @@
       "from": "bisaya-app-loader.js",
       "to": "profile-app.js",
       "type": "loads"
+    },
+    {
+      "from": "bisaya-app-loader.js",
+      "to": "app.js",
+      "type": "fetches-script-source"
     },
     {
       "from": "bisaya-app-loader.js",
@@ -5659,26 +4899,6 @@
     },
     {
       "from": "collection-key-translation-hotfix.js",
-      "to": "avatar-card-actions-v1.js",
-      "type": "loads"
-    },
-    {
-      "from": "collection-key-translation-hotfix.js",
-      "to": "avatar-case-page-tab-v1.js",
-      "type": "loads"
-    },
-    {
-      "from": "collection-key-translation-hotfix.js",
-      "to": "avatar-collection-page-v2.js",
-      "type": "loads"
-    },
-    {
-      "from": "collection-key-translation-hotfix.js",
-      "to": "mystery-rarity-roll-v1.js",
-      "type": "loads"
-    },
-    {
-      "from": "collection-key-translation-hotfix.js",
       "to": "app.js",
       "type": "core-globals",
       "symbols": [
@@ -5714,14 +4934,6 @@
         "state",
         "updateAll",
         "updateGlobalUI"
-      ]
-    },
-    {
-      "from": "daily-key-weekday-reconciliation-v1.js",
-      "to": "app.js",
-      "type": "core-globals",
-      "symbols": [
-        "state"
       ]
     },
     {
@@ -6008,30 +5220,6 @@
       ]
     },
     {
-      "from": "mystery-rarity-roll-v1.js",
-      "to": "avatar-artwork-registry-v554.js",
-      "type": "window-api",
-      "symbols": [
-        "SalitaAvatarArtwork"
-      ]
-    },
-    {
-      "from": "mystery-rarity-roll-v1.js",
-      "to": "avatar-progression-hotfix-v551.js",
-      "type": "window-api",
-      "symbols": [
-        "SalitaAvatarModel"
-      ]
-    },
-    {
-      "from": "mystery-rarity-roll-v1.js",
-      "to": "coin-avatar-shop-reveal-v1.js",
-      "type": "window-api",
-      "symbols": [
-        "SalitaAvatarModel"
-      ]
-    },
-    {
       "from": "placement-onboarding-v1.js",
       "to": "app.js",
       "type": "core-globals",
@@ -6248,14 +5436,6 @@
       ]
     },
     {
-      "from": "profile-install-prompt-v1.js",
-      "to": "app.js",
-      "type": "core-globals",
-      "symbols": [
-        "accepted"
-      ]
-    },
-    {
       "from": "progression-v54.js",
       "to": "app.js",
       "type": "core-globals",
@@ -6283,231 +5463,6 @@
     },
     {
       "from": "service-worker.js",
-      "to": "achievement-sharing-avatar-bridge-v1.js",
-      "type": "loads"
-    },
-    {
-      "from": "service-worker.js",
-      "to": "achievement-sharing-router-v2.js",
-      "type": "loads"
-    },
-    {
-      "from": "service-worker.js",
-      "to": "achievement-sharing-v4.js",
-      "type": "loads"
-    },
-    {
-      "from": "service-worker.js",
-      "to": "adaptive-scenarios.js",
-      "type": "loads"
-    },
-    {
-      "from": "service-worker.js",
-      "to": "app.js",
-      "type": "loads"
-    },
-    {
-      "from": "service-worker.js",
-      "to": "avatar-artwork-registry-v554.js",
-      "type": "loads"
-    },
-    {
-      "from": "service-worker.js",
-      "to": "avatar-case-v1.js",
-      "type": "loads"
-    },
-    {
-      "from": "service-worker.js",
-      "to": "avatar-catalogue-v1.js",
-      "type": "loads"
-    },
-    {
-      "from": "service-worker.js",
-      "to": "avatar-collection-screen-v1.js",
-      "type": "loads"
-    },
-    {
-      "from": "service-worker.js",
-      "to": "avatar-progression-hotfix-v551.js",
-      "type": "loads"
-    },
-    {
-      "from": "service-worker.js",
-      "to": "avatar-progression-migration-v1.js",
-      "type": "loads"
-    },
-    {
-      "from": "service-worker.js",
-      "to": "avatar-unlock-celebration-v1.js",
-      "type": "loads"
-    },
-    {
-      "from": "service-worker.js",
-      "to": "badge-catalogue-v2.js",
-      "type": "loads"
-    },
-    {
-      "from": "service-worker.js",
-      "to": "badge-chest-v2.js",
-      "type": "loads"
-    },
-    {
-      "from": "service-worker.js",
-      "to": "bisaya-app-loader.js",
-      "type": "loads"
-    },
-    {
-      "from": "service-worker.js",
-      "to": "bisaya-review-regions.js",
-      "type": "loads"
-    },
-    {
-      "from": "service-worker.js",
-      "to": "clean-topbar.js",
-      "type": "loads"
-    },
-    {
-      "from": "service-worker.js",
-      "to": "compact-desktop-layout.js",
-      "type": "loads"
-    },
-    {
-      "from": "service-worker.js",
-      "to": "daily-goal-refinement.js",
-      "type": "loads"
-    },
-    {
-      "from": "service-worker.js",
-      "to": "desktop-navigation-refinement.js",
-      "type": "loads"
-    },
-    {
-      "from": "service-worker.js",
-      "to": "even-progress-rail.js",
-      "type": "loads"
-    },
-    {
-      "from": "service-worker.js",
-      "to": "exercise-fixes-v545.js",
-      "type": "loads"
-    },
-    {
-      "from": "service-worker.js",
-      "to": "home-reward-coordinator.js",
-      "type": "loads"
-    },
-    {
-      "from": "service-worker.js",
-      "to": "incorrect-order-feedback.js",
-      "type": "loads"
-    },
-    {
-      "from": "service-worker.js",
-      "to": "key-run-refinement.js",
-      "type": "loads"
-    },
-    {
-      "from": "service-worker.js",
-      "to": "lesson-side-launcher.js",
-      "type": "loads"
-    },
-    {
-      "from": "service-worker.js",
-      "to": "level-avatar-rewards-v1.js",
-      "type": "loads"
-    },
-    {
-      "from": "service-worker.js",
-      "to": "level-progression-v2.js",
-      "type": "loads"
-    },
-    {
-      "from": "service-worker.js",
-      "to": "level-up-mobile-safety-v552.js",
-      "type": "loads"
-    },
-    {
-      "from": "service-worker.js",
-      "to": "mastery-feedback.js",
-      "type": "loads"
-    },
-    {
-      "from": "service-worker.js",
-      "to": "mobile-session-refinement.js",
-      "type": "loads"
-    },
-    {
-      "from": "service-worker.js",
-      "to": "placement-onboarding-v1.js",
-      "type": "loads"
-    },
-    {
-      "from": "service-worker.js",
-      "to": "popup-governor-v1.js",
-      "type": "loads"
-    },
-    {
-      "from": "service-worker.js",
-      "to": "profile-app.js",
-      "type": "loads"
-    },
-    {
-      "from": "service-worker.js",
-      "to": "profile-emblem-control.js",
-      "type": "loads"
-    },
-    {
-      "from": "service-worker.js",
-      "to": "profile-install-prompt-v1.js",
-      "type": "loads"
-    },
-    {
-      "from": "service-worker.js",
-      "to": "progression-v54.js",
-      "type": "loads"
-    },
-    {
-      "from": "service-worker.js",
-      "to": "pronunciation-release-control.js",
-      "type": "loads"
-    },
-    {
-      "from": "service-worker.js",
-      "to": "social-connections-v2.js",
-      "type": "loads"
-    },
-    {
-      "from": "service-worker.js",
-      "to": "src/app/course-bootstrap.js",
-      "type": "loads"
-    },
-    {
-      "from": "service-worker.js",
-      "to": "src/config/course-manifest.js",
-      "type": "loads"
-    },
-    {
-      "from": "service-worker.js",
-      "to": "ui-quality-fixes.js",
-      "type": "loads"
-    },
-    {
-      "from": "service-worker.js",
-      "to": "weekly-avatar-chest.js",
-      "type": "loads"
-    },
-    {
-      "from": "service-worker.js",
-      "to": "weekly-avatar-polish.js",
-      "type": "loads"
-    },
-    {
-      "from": "service-worker.js",
-      "to": "weekly-avatar-shard-rewards-v1.js",
-      "type": "loads"
-    },
-    {
-      "from": "service-worker.js",
       "to": "app.js",
       "type": "core-globals",
       "symbols": [
@@ -6524,166 +5479,11 @@
     },
     {
       "from": "src/app/course-bootstrap.js",
-      "to": "app.js",
-      "type": "loads"
-    },
-    {
-      "from": "src/app/course-bootstrap.js",
       "to": "src/config/course-manifest.js",
       "type": "window-api",
       "symbols": [
         "SalitaQuestCourseManifest"
       ]
-    },
-    {
-      "from": "src/config/course-manifest.js",
-      "to": "achievement-sharing-v4.js",
-      "type": "loads"
-    },
-    {
-      "from": "src/config/course-manifest.js",
-      "to": "adaptive-scenarios.js",
-      "type": "loads"
-    },
-    {
-      "from": "src/config/course-manifest.js",
-      "to": "badge-catalogue-v2.js",
-      "type": "loads"
-    },
-    {
-      "from": "src/config/course-manifest.js",
-      "to": "badge-chest-v2.js",
-      "type": "loads"
-    },
-    {
-      "from": "src/config/course-manifest.js",
-      "to": "bisaya-app-loader.js",
-      "type": "loads"
-    },
-    {
-      "from": "src/config/course-manifest.js",
-      "to": "clean-topbar.js",
-      "type": "loads"
-    },
-    {
-      "from": "src/config/course-manifest.js",
-      "to": "collection-key-translation-hotfix.js",
-      "type": "loads"
-    },
-    {
-      "from": "src/config/course-manifest.js",
-      "to": "compact-desktop-layout.js",
-      "type": "loads"
-    },
-    {
-      "from": "src/config/course-manifest.js",
-      "to": "daily-goal-refinement.js",
-      "type": "loads"
-    },
-    {
-      "from": "src/config/course-manifest.js",
-      "to": "desktop-navigation-refinement.js",
-      "type": "loads"
-    },
-    {
-      "from": "src/config/course-manifest.js",
-      "to": "even-progress-rail.js",
-      "type": "loads"
-    },
-    {
-      "from": "src/config/course-manifest.js",
-      "to": "exercise-fixes-v545.js",
-      "type": "loads"
-    },
-    {
-      "from": "src/config/course-manifest.js",
-      "to": "home-reward-coordinator.js",
-      "type": "loads"
-    },
-    {
-      "from": "src/config/course-manifest.js",
-      "to": "incorrect-order-feedback.js",
-      "type": "loads"
-    },
-    {
-      "from": "src/config/course-manifest.js",
-      "to": "key-run-refinement.js",
-      "type": "loads"
-    },
-    {
-      "from": "src/config/course-manifest.js",
-      "to": "lesson-side-launcher.js",
-      "type": "loads"
-    },
-    {
-      "from": "src/config/course-manifest.js",
-      "to": "level-progression-v2.js",
-      "type": "loads"
-    },
-    {
-      "from": "src/config/course-manifest.js",
-      "to": "level-up-mobile-safety-v552.js",
-      "type": "loads"
-    },
-    {
-      "from": "src/config/course-manifest.js",
-      "to": "mastery-feedback.js",
-      "type": "loads"
-    },
-    {
-      "from": "src/config/course-manifest.js",
-      "to": "mobile-session-refinement.js",
-      "type": "loads"
-    },
-    {
-      "from": "src/config/course-manifest.js",
-      "to": "placement-onboarding-v1.js",
-      "type": "loads"
-    },
-    {
-      "from": "src/config/course-manifest.js",
-      "to": "popup-governor-v1.js",
-      "type": "loads"
-    },
-    {
-      "from": "src/config/course-manifest.js",
-      "to": "profile-app.js",
-      "type": "loads"
-    },
-    {
-      "from": "src/config/course-manifest.js",
-      "to": "profile-emblem-control.js",
-      "type": "loads"
-    },
-    {
-      "from": "src/config/course-manifest.js",
-      "to": "progression-v54.js",
-      "type": "loads"
-    },
-    {
-      "from": "src/config/course-manifest.js",
-      "to": "pronunciation-release-control.js",
-      "type": "loads"
-    },
-    {
-      "from": "src/config/course-manifest.js",
-      "to": "social-connections-v2.js",
-      "type": "loads"
-    },
-    {
-      "from": "src/config/course-manifest.js",
-      "to": "ui-quality-fixes.js",
-      "type": "loads"
-    },
-    {
-      "from": "src/config/course-manifest.js",
-      "to": "weekly-avatar-chest.js",
-      "type": "loads"
-    },
-    {
-      "from": "src/config/course-manifest.js",
-      "to": "weekly-avatar-polish.js",
-      "type": "loads"
     },
     {
       "from": "src/config/course-manifest.js",
@@ -6742,48 +5542,6 @@
         "saveState",
         "state",
         "switchView"
-      ]
-    },
-    {
-      "from": "weekly-avatar-projected-unlock-fix-v1.js",
-      "to": "app.js",
-      "type": "core-globals",
-      "symbols": [
-        "saveState",
-        "showRewardBurst",
-        "state"
-      ]
-    },
-    {
-      "from": "weekly-avatar-projected-unlock-fix-v1.js",
-      "to": "avatar-progression-hotfix-v551.js",
-      "type": "window-api",
-      "symbols": [
-        "SalitaAvatarModel"
-      ]
-    },
-    {
-      "from": "weekly-avatar-projected-unlock-fix-v1.js",
-      "to": "coin-avatar-shop-reveal-v1.js",
-      "type": "window-api",
-      "symbols": [
-        "SalitaAvatarModel"
-      ]
-    },
-    {
-      "from": "weekly-avatar-projected-unlock-fix-v1.js",
-      "to": "daily-key-weekday-reconciliation-v1.js",
-      "type": "window-api",
-      "symbols": [
-        "SalitaDailyKeyReconciliation"
-      ]
-    },
-    {
-      "from": "weekly-avatar-projected-unlock-fix-v1.js",
-      "to": "weekly-avatar-shard-rewards-v1.js",
-      "type": "window-api",
-      "symbols": [
-        "SalitaWeeklyAvatarRewards"
       ]
     },
     {
@@ -6943,34 +5701,28 @@
         "achievement-sharing-avatar-bridge-v1.js",
         "achievement-sharing-v4.js",
         "avatar-artwork-registry-v554.js",
-        "avatar-card-actions-v1.js",
         "avatar-case-v1.js",
-        "avatar-collection-page-v2.js",
         "avatar-collection-screen-v1.js",
         "avatar-collection-summary-v1.js",
         "avatar-unlock-celebration-v1.js",
         "coin-avatar-shard-shop-v1.js",
         "coin-avatar-shop-badges-v1.js",
         "coin-avatar-shop-reveal-v1.js",
-        "daily-key-weekday-reconciliation-v1.js",
         "desktop-navigation-refinement.js",
         "level-avatar-rewards-v1.js",
         "long-term-badges-v1.js",
         "profile-app.js",
         "social-connections-v2.js",
-        "weekly-avatar-projected-unlock-fix-v1.js",
         "weekly-avatar-shard-rewards-v1.js"
       ],
       "writers": [
         "avatar-case-v1.js",
-        "avatar-collection-page-v2.js",
         "avatar-collection-screen-v1.js",
         "avatar-unlock-celebration-v1.js",
         "coin-avatar-shard-shop-v1.js",
         "coin-avatar-shop-reveal-v1.js",
         "level-avatar-rewards-v1.js",
         "profile-app.js",
-        "weekly-avatar-projected-unlock-fix-v1.js",
         "weekly-avatar-shard-rewards-v1.js"
       ],
       "removers": []
@@ -7061,23 +5813,19 @@
         "achievement-sharing-avatar-bridge-v1.js",
         "achievement-sharing-v4.js",
         "avatar-artwork-registry-v554.js",
-        "avatar-card-actions-v1.js",
         "avatar-case-v1.js",
-        "avatar-collection-page-v2.js",
         "avatar-collection-screen-v1.js",
         "avatar-collection-summary-v1.js",
         "avatar-unlock-celebration-v1.js",
         "coin-avatar-shard-shop-v1.js",
         "coin-avatar-shop-badges-v1.js",
         "coin-avatar-shop-reveal-v1.js",
-        "daily-key-weekday-reconciliation-v1.js",
         "desktop-navigation-refinement.js",
         "level-avatar-rewards-v1.js",
         "level-progression-v2.js",
         "long-term-badges-v1.js",
         "profile-app.js",
         "social-connections-v2.js",
-        "weekly-avatar-projected-unlock-fix-v1.js",
         "weekly-avatar-shard-rewards-v1.js"
       ],
       "writers": [],
@@ -7113,17 +5861,9 @@
       "dispatchers": []
     },
     {
-      "name": "appinstalled",
-      "listeners": [
-        "profile-install-prompt-v1.js"
-      ],
-      "dispatchers": []
-    },
-    {
       "name": "beforeinstallprompt",
       "listeners": [
-        "app.js",
-        "profile-install-prompt-v1.js"
+        "app.js"
       ],
       "dispatchers": []
     },
@@ -7150,10 +5890,7 @@
         "achievement-sharing-v4.js",
         "adaptive-scenarios.js",
         "app.js",
-        "avatar-card-actions-v1.js",
-        "avatar-case-page-tab-v1.js",
         "avatar-case-v1.js",
-        "avatar-collection-page-v2.js",
         "avatar-collection-screen-v1.js",
         "avatar-collection-tabs-phase6-1-v1.js",
         "avatar-progression-hotfix-v551.js",
@@ -7170,12 +5907,10 @@
         "placement-onboarding-v1.js",
         "profile-app.js",
         "profile-emblem-control.js",
-        "profile-install-prompt-v1.js",
         "progression-v54.js",
         "pronunciation-release-control.js",
         "social-connections-v2.js",
         "weekly-avatar-chest.js",
-        "weekly-avatar-projected-unlock-fix-v1.js",
         "weekly-avatar-shard-rewards-v1.js"
       ],
       "dispatchers": []
@@ -7184,9 +5919,7 @@
       "name": "DOMContentLoaded",
       "listeners": [
         "collection-key-translation-hotfix.js",
-        "daily-key-weekday-reconciliation-v1.js",
-        "profile-app.js",
-        "profile-install-prompt-v1.js"
+        "profile-app.js"
       ],
       "dispatchers": []
     },
@@ -7210,17 +5943,9 @@
       "dispatchers": []
     },
     {
-      "name": "focus",
-      "listeners": [
-        "daily-key-weekday-reconciliation-v1.js"
-      ],
-      "dispatchers": []
-    },
-    {
       "name": "input",
       "listeners": [
-        "app.js",
-        "avatar-collection-page-v2.js"
+        "app.js"
       ],
       "dispatchers": []
     },
@@ -7324,19 +6049,14 @@
     },
     {
       "name": "salita:avatar-case-changed",
-      "listeners": [
-        "avatar-card-actions-v1.js",
-        "avatar-case-page-tab-v1.js"
-      ],
+      "listeners": [],
       "dispatchers": [
         "avatar-case-v1.js"
       ]
     },
     {
       "name": "salita:avatar-case-ready",
-      "listeners": [
-        "avatar-case-page-tab-v1.js"
-      ],
+      "listeners": [],
       "dispatchers": [
         "avatar-case-v1.js"
       ]
@@ -7347,21 +6067,17 @@
         "achievement-sharing-avatar-bridge-v1.js",
         "achievement-sharing-v4.js",
         "avatar-artwork-registry-v554.js",
-        "avatar-card-actions-v1.js",
         "avatar-case-v1.js",
-        "avatar-collection-page-v2.js",
         "avatar-collection-screen-v1.js",
         "avatar-collection-summary-v1.js",
         "avatar-unlock-celebration-v1.js",
         "weekly-avatar-shard-rewards-v1.js"
       ],
       "dispatchers": [
-        "avatar-collection-page-v2.js",
         "avatar-collection-screen-v1.js",
         "coin-avatar-shard-shop-v1.js",
         "coin-avatar-shop-reveal-v1.js",
         "level-avatar-rewards-v1.js",
-        "weekly-avatar-projected-unlock-fix-v1.js",
         "weekly-avatar-shard-rewards-v1.js"
       ]
     },
@@ -7376,13 +6092,11 @@
       "name": "salita:avatar-equipped",
       "listeners": [
         "avatar-artwork-registry-v554.js",
-        "avatar-collection-page-v2.js",
         "desktop-navigation-refinement.js",
         "profile-emblem-control.js",
         "weekly-avatar-shard-rewards-v1.js"
       ],
       "dispatchers": [
-        "avatar-collection-page-v2.js",
         "avatar-collection-screen-v1.js",
         "profile-app.js"
       ]
@@ -7495,8 +6209,7 @@
       "name": "salita:coin-shard-pack-purchased",
       "listeners": [
         "coin-avatar-shop-reveal-v1.js",
-        "coin-avatar-shop-topbar-v1.js",
-        "mystery-rarity-roll-v1.js"
+        "coin-avatar-shop-topbar-v1.js"
       ],
       "dispatchers": [
         "coin-avatar-shard-shop-v1.js",
@@ -7566,7 +6279,6 @@
       "name": "salita:open-avatar-collection",
       "listeners": [
         "avatar-case-v1.js",
-        "avatar-collection-page-v2.js",
         "avatar-collection-screen-v1.js",
         "avatar-collection-summary-v1.js"
       ],
@@ -7575,13 +6287,6 @@
         "avatar-unlock-celebration-v1.js",
         "desktop-navigation-refinement.js",
         "weekly-avatar-shard-rewards-v1.js"
-      ]
-    },
-    {
-      "name": "salita:open-avatar-share",
-      "listeners": [],
-      "dispatchers": [
-        "avatar-card-actions-v1.js"
       ]
     },
     {
@@ -7611,15 +6316,12 @@
       "listeners": [
         "collection-key-translation-hotfix.js"
       ],
-      "dispatchers": [
-        "weekly-avatar-projected-unlock-fix-v1.js"
-      ]
+      "dispatchers": []
     },
     {
       "name": "salita:view-changed",
       "listeners": [
-        "achievement-sharing-v4.js",
-        "avatar-case-page-tab-v1.js"
+        "achievement-sharing-v4.js"
       ],
       "dispatchers": [
         "desktop-navigation-refinement.js",
@@ -7644,7 +6346,6 @@
       "name": "visibilitychange",
       "listeners": [
         "avatar-unlock-celebration-v1.js",
-        "daily-key-weekday-reconciliation-v1.js",
         "home-reward-coordinator.js",
         "level-up-mobile-safety-v552.js",
         "profile-app.js"
@@ -7657,18 +6358,6 @@
       "symbol": "__salitaAvatarArtworkRegistryV556Installed",
       "providers": [
         "avatar-artwork-registry-v554.js"
-      ]
-    },
-    {
-      "symbol": "__salitaAvatarCardActionsV1Installed",
-      "providers": [
-        "avatar-card-actions-v1.js"
-      ]
-    },
-    {
-      "symbol": "__salitaAvatarCasePageTabV1Installed",
-      "providers": [
-        "avatar-case-page-tab-v1.js"
       ]
     },
     {
@@ -7726,12 +6415,6 @@
       ]
     },
     {
-      "symbol": "__salitaDailyKeyWeekdayReconciliationV3Installed",
-      "providers": [
-        "daily-key-weekday-reconciliation-v1.js"
-      ]
-    },
-    {
       "symbol": "__salitaEconomyTrackingPhase6V2Installed",
       "providers": [
         "economy-tracking-phase6-v1.js"
@@ -7741,18 +6424,6 @@
       "symbol": "__salitaFacebookShareLinkV1Installed",
       "providers": [
         "facebook-share-link-v1.js"
-      ]
-    },
-    {
-      "symbol": "__salitaMysteryRarityRollV1Installed",
-      "providers": [
-        "mystery-rarity-roll-v1.js"
-      ]
-    },
-    {
-      "symbol": "__salitaProfileInstallPromptV1",
-      "providers": [
-        "profile-install-prompt-v1.js"
       ]
     },
     {
@@ -7789,12 +6460,6 @@
       "symbol": "__salitaQuestAvatarCaseV1Installed",
       "providers": [
         "avatar-case-v1.js"
-      ]
-    },
-    {
-      "symbol": "__salitaQuestAvatarCollectionPageV2Installed",
-      "providers": [
-        "avatar-collection-page-v2.js"
       ]
     },
     {
@@ -7985,18 +6650,6 @@
       ]
     },
     {
-      "symbol": "__salitaUniversalShareSimplifierDisabled",
-      "providers": [
-        "universal-share-simplifier-v1.js"
-      ]
-    },
-    {
-      "symbol": "__salitaWeeklyAvatarProjectedUnlockFixV1Installed",
-      "providers": [
-        "weekly-avatar-projected-unlock-fix-v1.js"
-      ]
-    },
-    {
       "symbol": "getAvatarImagePath",
       "providers": [
         "avatar-artwork-registry-v554.js",
@@ -8032,12 +6685,6 @@
       "providers": [
         "avatar-progression-hotfix-v551.js",
         "coin-avatar-shop-reveal-v1.js"
-      ]
-    },
-    {
-      "symbol": "SalitaAvatarCollectionPage",
-      "providers": [
-        "avatar-collection-page-v2.js"
       ]
     },
     {
@@ -8081,12 +6728,6 @@
       "symbol": "SalitaCoinAvatarShop",
       "providers": [
         "coin-avatar-shard-shop-v1.js"
-      ]
-    },
-    {
-      "symbol": "SalitaDailyKeyReconciliation",
-      "providers": [
-        "daily-key-weekday-reconciliation-v1.js"
       ]
     },
     {
@@ -8177,12 +6818,6 @@
       "symbol": "salitaUnlockProgress",
       "providers": [
         "progression-v54.js"
-      ]
-    },
-    {
-      "symbol": "SalitaWeeklyAvatarProjectedUnlockFix",
-      "providers": [
-        "weekly-avatar-projected-unlock-fix-v1.js"
       ]
     },
     {
