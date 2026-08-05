@@ -4,12 +4,15 @@ on:
     branches:
       - agent/audit-avatar-progression-hotfix-extraction
 permissions:
-  contents: read
+  contents: write
 jobs:
   inspect:
+    if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: agent/audit-avatar-progression-hotfix-extraction
       - uses: actions/setup-node@v4
         with:
           node-version: 20
@@ -21,34 +24,57 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          echo '=== target metadata ==='
-          wc -l -c avatar-progression-hotfix-v551.js
-          sha256sum avatar-progression-hotfix-v551.js
-          node --check avatar-progression-hotfix-v551.js
-          echo '=== exact target/API/event references ==='
-          rg -n --hidden \
-            --glob '!node_modules/**' --glob '!.git/**' \
-            'avatar-progression-hotfix-v551\.js|SalitaAvatarHotfixReady|__salitaQuestCollectionsNavigationV551Installed|salita:avatar-model-hotfixed|hotfixRelease' . || true
-          echo '=== avatar model owners and consumers ==='
-          rg -n --hidden \
-            --glob '!node_modules/**' --glob '!.git/**' \
-            'SalitaAvatarModel|SalitaAvatarCatalogue|normaliseCollectionState|weeklyShardAward|levelRewards' . || true
-          echo '=== navigation engine ownership ==='
-          rg -n --hidden \
-            --glob '!node_modules/**' --glob '!.git/**' \
-            '(^|[^A-Za-z0-9_])(switchView|closeMobileMenu|renderBadges)([^A-Za-z0-9_]|$)|collectionsView|data-open-badge-collection|data-open-avatar-collection-main' . || true
-          echo '=== service worker cache names and target assets ==='
-          rg -n 'PREVIOUS_CACHE_NAME|CACHE_NAME|avatar-progression-hotfix-v551' service-worker.js scripts .github/workflows || true
-          echo '=== generated inventory entry and edges ==='
-          node - <<'NODE'
+          report=docs/AVATAR_HOTFIX_EXTRACTION_AUDIT.tmp.md
+          {
+            echo '# Temporary avatar hotfix extraction audit'
+            echo
+            echo '## Target metadata'
+            echo '```text'
+            wc -l -c avatar-progression-hotfix-v551.js
+            sha256sum avatar-progression-hotfix-v551.js
+            node --check avatar-progression-hotfix-v551.js
+            echo '```'
+            echo
+            echo '## Exact target, API and event references'
+            echo '```text'
+            rg -n --hidden --glob '!node_modules/**' --glob '!.git/**' --glob '!docs/AVATAR_HOTFIX_EXTRACTION_AUDIT.tmp.md' 'avatar-progression-hotfix-v551\.js|SalitaAvatarHotfixReady|__salitaQuestCollectionsNavigationV551Installed|salita:avatar-model-hotfixed|hotfixRelease' . || true
+            echo '```'
+            echo
+            echo '## Avatar model owners and consumers'
+            echo '```text'
+            rg -n --hidden --glob '!node_modules/**' --glob '!.git/**' --glob '!docs/AVATAR_HOTFIX_EXTRACTION_AUDIT.tmp.md' 'SalitaAvatarModel|SalitaAvatarCatalogue|normaliseCollectionState|weeklyShardAward|levelRewards' . || true
+            echo '```'
+            echo
+            echo '## Navigation engine ownership'
+            echo '```text'
+            rg -n --hidden --glob '!node_modules/**' --glob '!.git/**' --glob '!docs/AVATAR_HOTFIX_EXTRACTION_AUDIT.tmp.md' '(^|[^A-Za-z0-9_])(switchView|closeMobileMenu|renderBadges)([^A-Za-z0-9_]|$)|collectionsView|data-open-badge-collection|data-open-avatar-collection-main' . || true
+            echo '```'
+            echo
+            echo '## Cache and validator references'
+            echo '```text'
+            rg -n 'PREVIOUS_CACHE_NAME|CACHE_NAME|avatar-progression-hotfix-v551' service-worker.js scripts .github/workflows || true
+            echo '```'
+            echo
+            echo '## Generated inventory entry'
+            echo '```json'
+            node - <<'NODE'
           const fs=require('fs');
           const data=JSON.parse(fs.readFileSync('src/config/module-contracts.generated.json','utf8'));
+          const matches=[];
           const walk=(value,path=[])=>{
             if(Array.isArray(value)) value.forEach((item,index)=>walk(item,[...path,index]));
             else if(value&&typeof value==='object') {
-              if(JSON.stringify(value).includes('avatar-progression-hotfix-v551.js')) console.log(JSON.stringify({path,value},null,2));
+              if(JSON.stringify(value).includes('avatar-progression-hotfix-v551.js')) matches.push({path,value});
               else Object.entries(value).forEach(([key,item])=>walk(item,[...path,key]));
             }
           };
           walk(data);
+          console.log(JSON.stringify(matches,null,2));
           NODE
+            echo '```'
+          } > "$report"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$report"
+          git commit -m "Record avatar hotfix extraction audit"
+          git push origin HEAD:agent/audit-avatar-progression-hotfix-extraction
