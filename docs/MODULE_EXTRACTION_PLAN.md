@@ -10,14 +10,14 @@ The current application contains 58 discovered runtime files connected through 1
 
 For Cebuano, `bisaya-app-loader.js` is the executed loader and `app.js` is a fetched, transformed engine source. The inventory includes both because both are runtime inputs; they must not be interpreted as two directly executed initial scripts.
 
-## First extraction: mobile level-up safety
+## First extraction: mobile level-up safety — completed on the extraction branch
 
-The recommended first physical move is `level-up-mobile-safety-v552.js` because it is loaded by both courses, has no storage operations, no direct shared-engine dependencies, and a low static coupling score.
+The first physical move is `level-up-mobile-safety-v552.js` because it is loaded by both courses, has no storage operations, no direct shared-engine dependencies, and a low static coupling score.
 
 Target structure:
 
 ```text
-src/features/progression/level-up-mobile-safety.js
+src/features/interface/level-up-mobile-safety-v552.js
 level-up-mobile-safety-v552.js  # temporary compatibility loader
 ```
 
@@ -25,12 +25,12 @@ The first extraction pull request should:
 
 1. Copy the implementation to the feature path without changing behavior.
 2. Convert the root file into a minimal ordered compatibility loader.
-3. Keep the existing manifest filename and version during the first offline-cache release.
+3. Point current course manifests and mobile refresh directly to the feature path while retaining the versioned root compatibility URL for older cached documents.
 4. Add the new feature path to the service-worker cache.
 5. Extend validators to confirm that the compatibility loader loads exactly one implementation and does not duplicate event listeners.
 6. Run all Tagalog, Bisaya, avatar, economy, navigation, and installed-app validation suites.
 
-The compatibility loader should remain for at least one cache release. A later pull request can point the course manifest directly to the feature path and remove the root shim after older installed clients have crossed the cache boundary.
+The compatibility loader remains for the r54 cache release. Current manifests already use the feature path; a later pull request can remove the root shim after older installed clients have crossed this boundary.
 
 ## Subsequent low-coupling sequence
 

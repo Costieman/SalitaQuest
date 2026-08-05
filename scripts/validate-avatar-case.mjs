@@ -81,8 +81,8 @@ requireMarkers(loader,[
 ],"Shared avatar loader");
 
 requireMarkers(worker,[
-  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-5-10-persistent-navigation-r52"',
-  'const CACHE_NAME = "salita-quest-v5-6-0-modular-bootstrap-r53"',
+  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-0-modular-bootstrap-r53"',
+  'const CACHE_NAME = "salita-quest-v5-6-1-first-module-extraction-r54"',
   'const AVATAR_CASE_DISPLAY_HOTFIX = "2026-08-01-compact-display-share-stack-1"',
   '"./avatar-case-v1.js"',
   '"./avatar-case-v1.css"',
