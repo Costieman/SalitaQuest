@@ -134,9 +134,9 @@ check(serviceWorker.includes("function isSameOriginAudio"),
   "service worker lacks the audio request classifier");
 check(serviceWorker.includes("audioCacheFirst"),
   "service worker lacks cache-first audio delivery");
-check(serviceWorker.includes('const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-10-economy-tracking-extraction-r63"'),
+check(serviceWorker.includes('const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-11-avatar-collection-tabs-extraction-r64"'),
   "service worker no longer records the pre-modular persistent-navigation boundary");
-check(serviceWorker.includes('const CACHE_NAME = "salita-quest-v5-6-11-avatar-collection-tabs-extraction-r64"'),
+check(serviceWorker.includes('const CACHE_NAME = "salita-quest-v5-6-12-avatar-collection-summary-extraction-r65"'),
   "service-worker cache revision is not the modular-bootstrap release");
 check(serviceWorker.includes('"./src/config/course-manifest.js"') && serviceWorker.includes('"./src/app/course-bootstrap.js"'),
   "service worker does not precache the modular course bootstrap");

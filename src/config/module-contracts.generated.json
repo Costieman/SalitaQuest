@@ -793,66 +793,6 @@
       "risk": 29
     },
     {
-      "file": "avatar-collection-summary-v1.js",
-      "bytes": 3383,
-      "contexts": [
-        "cebuano",
-        "tagalog"
-      ],
-      "courses": [
-        "cebuano",
-        "tagalog"
-      ],
-      "references": [],
-      "loads": [],
-      "fetches": [],
-      "workers": [],
-      "coreGlobals": [],
-      "window": {
-        "provides": [
-          "__salitaAvatarCollectionSummaryV1Installed",
-          "SalitaAvatarCollectionSummary"
-        ],
-        "consumes": [
-          "SalitaAvatarModel",
-          "setInterval"
-        ]
-      },
-      "storage": [
-        {
-          "store": "localStorage",
-          "operation": "getItem",
-          "key": "salitaQuestLocalProfilesV1"
-        },
-        {
-          "store": "sessionStorage",
-          "operation": "getItem",
-          "key": "salitaQuestActiveProfileId"
-        }
-      ],
-      "dom": {
-        "ids": [],
-        "selectors": [
-          ".sq-avatar-collection",
-          ".sq-avatar-collection-header",
-          ".sq-avatar-collection-summary"
-        ],
-        "datasets": []
-      },
-      "events": {
-        "listens": [
-          "salita:avatar-collection-changed",
-          "salita:avatar-progression-ready",
-          "salita:avatar-random-pools-ready",
-          "salita:open-avatar-collection"
-        ],
-        "dispatches": []
-      },
-      "role": "collection-and-rewards",
-      "readiness": "extraction-candidate",
-      "risk": 12
-    },
-    {
       "file": "avatar-progression-hotfix-v551.js",
       "bytes": 10493,
       "contexts": [
@@ -1540,7 +1480,7 @@
     },
     {
       "file": "coin-avatar-shop-topbar-v1.js",
-      "bytes": 3157,
+      "bytes": 3177,
       "contexts": [
         "cebuano",
         "tagalog"
@@ -1550,16 +1490,16 @@
         "tagalog"
       ],
       "references": [
-        "avatar-collection-summary-v1.js",
         "coin-testing-grant-100k-v1.js",
         "coin-testing-grant-50k-phase5-v1.js",
+        "src/features/avatar/avatar-collection-summary-v1.js",
         "src/features/avatar/avatar-collection-tabs-phase6-1-v1.js",
         "src/features/economy/economy-tracking-phase6-v1.js"
       ],
       "loads": [
-        "avatar-collection-summary-v1.js",
         "coin-testing-grant-100k-v1.js",
         "coin-testing-grant-50k-phase5-v1.js",
+        "src/features/avatar/avatar-collection-summary-v1.js",
         "src/features/avatar/avatar-collection-tabs-phase6-1-v1.js",
         "src/features/economy/economy-tracking-phase6-v1.js"
       ],
@@ -2999,7 +2939,7 @@
     },
     {
       "file": "service-worker.js",
-      "bytes": 12306,
+      "bytes": 12449,
       "contexts": [
         "worker"
       ],
@@ -3015,6 +2955,7 @@
         "avatar-case-v1.js",
         "avatar-catalogue-v1.js",
         "avatar-collection-screen-v1.js",
+        "avatar-collection-summary-v1.js",
         "avatar-collection-tabs-phase6-1-v1.js",
         "avatar-progression-hotfix-v551.js",
         "avatar-progression-migration-v1.js",
@@ -3053,6 +2994,7 @@
         "src/features/audio/pronunciation-release-control.js",
         "src/features/avatar/avatar-artwork-registry-v554.js",
         "src/features/avatar/avatar-catalogue-v1.js",
+        "src/features/avatar/avatar-collection-summary-v1.js",
         "src/features/avatar/avatar-collection-tabs-phase6-1-v1.js",
         "src/features/avatar/avatar-progression-migration-v1.js",
         "src/features/economy/economy-tracking-phase6-v1.js",
@@ -3511,6 +3453,66 @@
       "role": "collection-and-rewards",
       "readiness": "extraction-candidate",
       "risk": 3
+    },
+    {
+      "file": "src/features/avatar/avatar-collection-summary-v1.js",
+      "bytes": 3383,
+      "contexts": [
+        "cebuano",
+        "tagalog"
+      ],
+      "courses": [
+        "cebuano",
+        "tagalog"
+      ],
+      "references": [],
+      "loads": [],
+      "fetches": [],
+      "workers": [],
+      "coreGlobals": [],
+      "window": {
+        "provides": [
+          "__salitaAvatarCollectionSummaryV1Installed",
+          "SalitaAvatarCollectionSummary"
+        ],
+        "consumes": [
+          "SalitaAvatarModel",
+          "setInterval"
+        ]
+      },
+      "storage": [
+        {
+          "store": "localStorage",
+          "operation": "getItem",
+          "key": "salitaQuestLocalProfilesV1"
+        },
+        {
+          "store": "sessionStorage",
+          "operation": "getItem",
+          "key": "salitaQuestActiveProfileId"
+        }
+      ],
+      "dom": {
+        "ids": [],
+        "selectors": [
+          ".sq-avatar-collection",
+          ".sq-avatar-collection-header",
+          ".sq-avatar-collection-summary"
+        ],
+        "datasets": []
+      },
+      "events": {
+        "listens": [
+          "salita:avatar-collection-changed",
+          "salita:avatar-progression-ready",
+          "salita:avatar-random-pools-ready",
+          "salita:open-avatar-collection"
+        ],
+        "dispatches": []
+      },
+      "role": "collection-and-rewards",
+      "readiness": "extraction-candidate",
+      "risk": 12
     },
     {
       "file": "src/features/avatar/avatar-collection-tabs-phase6-1-v1.js",
@@ -4532,22 +4534,6 @@
       ]
     },
     {
-      "from": "avatar-collection-summary-v1.js",
-      "to": "avatar-progression-hotfix-v551.js",
-      "type": "window-api",
-      "symbols": [
-        "SalitaAvatarModel"
-      ]
-    },
-    {
-      "from": "avatar-collection-summary-v1.js",
-      "to": "coin-avatar-shop-reveal-v1.js",
-      "type": "window-api",
-      "symbols": [
-        "SalitaAvatarModel"
-      ]
-    },
-    {
       "from": "avatar-progression-hotfix-v551.js",
       "to": "app.js",
       "type": "core-globals",
@@ -4808,17 +4794,17 @@
     },
     {
       "from": "coin-avatar-shop-topbar-v1.js",
-      "to": "avatar-collection-summary-v1.js",
-      "type": "loads"
-    },
-    {
-      "from": "coin-avatar-shop-topbar-v1.js",
       "to": "coin-testing-grant-100k-v1.js",
       "type": "loads"
     },
     {
       "from": "coin-avatar-shop-topbar-v1.js",
       "to": "coin-testing-grant-50k-phase5-v1.js",
+      "type": "loads"
+    },
+    {
+      "from": "coin-avatar-shop-topbar-v1.js",
+      "to": "src/features/avatar/avatar-collection-summary-v1.js",
       "type": "loads"
     },
     {
@@ -5421,6 +5407,22 @@
       ]
     },
     {
+      "from": "src/features/avatar/avatar-collection-summary-v1.js",
+      "to": "avatar-progression-hotfix-v551.js",
+      "type": "window-api",
+      "symbols": [
+        "SalitaAvatarModel"
+      ]
+    },
+    {
+      "from": "src/features/avatar/avatar-collection-summary-v1.js",
+      "to": "coin-avatar-shop-reveal-v1.js",
+      "type": "window-api",
+      "symbols": [
+        "SalitaAvatarModel"
+      ]
+    },
+    {
       "from": "src/features/avatar/avatar-collection-tabs-phase6-1-v1.js",
       "to": "src/features/economy/economy-tracking-phase6-v1.js",
       "type": "window-api",
@@ -5719,7 +5721,6 @@
         "achievement-sharing-v4.js",
         "avatar-case-v1.js",
         "avatar-collection-screen-v1.js",
-        "avatar-collection-summary-v1.js",
         "avatar-unlock-celebration-v1.js",
         "coin-avatar-shard-shop-v1.js",
         "coin-avatar-shop-badges-v1.js",
@@ -5730,6 +5731,7 @@
         "profile-app.js",
         "social-connections-v2.js",
         "src/features/avatar/avatar-artwork-registry-v554.js",
+        "src/features/avatar/avatar-collection-summary-v1.js",
         "weekly-avatar-shard-rewards-v1.js"
       ],
       "writers": [
@@ -5831,7 +5833,6 @@
         "achievement-sharing-v4.js",
         "avatar-case-v1.js",
         "avatar-collection-screen-v1.js",
-        "avatar-collection-summary-v1.js",
         "avatar-unlock-celebration-v1.js",
         "coin-avatar-shard-shop-v1.js",
         "coin-avatar-shop-badges-v1.js",
@@ -5843,6 +5844,7 @@
         "profile-app.js",
         "social-connections-v2.js",
         "src/features/avatar/avatar-artwork-registry-v554.js",
+        "src/features/avatar/avatar-collection-summary-v1.js",
         "weekly-avatar-shard-rewards-v1.js"
       ],
       "writers": [],
@@ -6085,9 +6087,9 @@
         "achievement-sharing-v4.js",
         "avatar-case-v1.js",
         "avatar-collection-screen-v1.js",
-        "avatar-collection-summary-v1.js",
         "avatar-unlock-celebration-v1.js",
         "src/features/avatar/avatar-artwork-registry-v554.js",
+        "src/features/avatar/avatar-collection-summary-v1.js",
         "weekly-avatar-shard-rewards-v1.js"
       ],
       "dispatchers": [
@@ -6152,8 +6154,8 @@
       "name": "salita:avatar-progression-ready",
       "listeners": [
         "avatar-case-v1.js",
-        "avatar-collection-summary-v1.js",
-        "desktop-navigation-refinement.js"
+        "desktop-navigation-refinement.js",
+        "src/features/avatar/avatar-collection-summary-v1.js"
       ],
       "dispatchers": [
         "profile-emblem-control.js"
@@ -6162,7 +6164,7 @@
     {
       "name": "salita:avatar-random-pools-ready",
       "listeners": [
-        "avatar-collection-summary-v1.js"
+        "src/features/avatar/avatar-collection-summary-v1.js"
       ],
       "dispatchers": [
         "coin-avatar-shop-reveal-v1.js"
@@ -6297,7 +6299,7 @@
       "listeners": [
         "avatar-case-v1.js",
         "avatar-collection-screen-v1.js",
-        "avatar-collection-summary-v1.js"
+        "src/features/avatar/avatar-collection-summary-v1.js"
       ],
       "dispatchers": [
         "avatar-progression-hotfix-v551.js",
@@ -6386,7 +6388,7 @@
     {
       "symbol": "__salitaAvatarCollectionSummaryV1Installed",
       "providers": [
-        "avatar-collection-summary-v1.js"
+        "src/features/avatar/avatar-collection-summary-v1.js"
       ]
     },
     {
@@ -6713,7 +6715,7 @@
     {
       "symbol": "SalitaAvatarCollectionSummary",
       "providers": [
-        "avatar-collection-summary-v1.js"
+        "src/features/avatar/avatar-collection-summary-v1.js"
       ]
     },
     {
