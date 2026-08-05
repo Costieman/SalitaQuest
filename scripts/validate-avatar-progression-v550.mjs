@@ -34,6 +34,8 @@ const runtimeFiles = [
   "avatar-catalogue-v1.js",
   "src/features/avatar/avatar-catalogue-v1.js",
   "src/features/avatar/avatar-artwork-registry-v554.js",
+  "src/features/avatar/avatar-progression-model-v551.js",
+  "src/adapters/navigation/avatar-collections-navigation-v551.js",
   "avatar-progression-hotfix-v551.js",
   "profile-app.js",
   "popup-governor-v1.js",
@@ -74,6 +76,8 @@ const loader = read("profile-emblem-control.js");
 const orderedTokens = [
   'await loadScript("catalogue"',
   'await loadScript("artwork-runtime"',
+  'await loadScript("hotfix-model"',
+  'await loadScript("hotfix-navigation"',
   'await loadScript("hotfix-runtime"',
   "await window.SalitaAvatarHotfixReady",
   "await window.SalitaAvatarArtworkReady",
@@ -98,8 +102,10 @@ if (!loader.includes('const SHARING_VERSION = "5.5.20.1"')) fail("Shared avatar 
 if (loader.includes("repair(document)")) fail("Shared loader must not run a document-wide avatar repair pass");
 
 const artwork = read("src/features/avatar/avatar-artwork-registry-v554.js");
+const modelHotfix = read("src/features/avatar/avatar-progression-model-v551.js");
+const navigationAdapter = read("src/adapters/navigation/avatar-collections-navigation-v551.js");
 const compatibility = read("avatar-progression-hotfix-v551.js");
-const combinedArtworkRuntime = artwork + compatibility;
+const combinedArtworkRuntime = artwork + modelHotfix + navigationAdapter + compatibility;
 for (const prohibited of [
   "raw.githubusercontent.com",
   "rare-animals-set2-sprite",
@@ -137,8 +143,8 @@ if (!navigation.includes('action:"avatar-collection"')) fail("Persistent navigat
 if (navigation.includes("salitaQuestDesktopNavigationCollapsed")) fail("Persistent navigation retains the obsolete collapsed-sidebar preference");
 
 const serviceWorker = read("service-worker.js");
-if (!serviceWorker.includes('const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-14-popup-governor-extraction-r67"')) fail("Service worker does not retain the pre-modular release boundary");
-if (!serviceWorker.includes('const CACHE_NAME = "salita-quest-v5-6-15-level-avatar-rewards-extraction-r68"')) fail("Service worker cache version is not the modular-bootstrap release");
+if (!serviceWorker.includes('const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-15-level-avatar-rewards-extraction-r68"')) fail("Service worker does not retain the pre-modular release boundary");
+if (!serviceWorker.includes('const CACHE_NAME = "salita-quest-v5-6-16-avatar-hotfix-adapters-extraction-r69"')) fail("Service worker cache version is not the modular-bootstrap release");
 if (!serviceWorker.includes('const EXPLICIT_SHARING_ROUTER_DELIVERY = "2026-08-02-feed-private-image-router-1"')) fail("Service worker does not advertise the explicit sharing-router update");
 if (!serviceWorker.includes('"./achievement-sharing-router-v2.js"') || !serviceWorker.includes('"./achievement-sharing-router-v2.css"')) fail("Service worker does not precache the sharing compatibility router");
 if (!serviceWorker.includes('"./avatar-case-v1.js"') || !serviceWorker.includes('"./avatar-case-v1.css"')) fail("Service worker does not precache the Avatar Case runtime");

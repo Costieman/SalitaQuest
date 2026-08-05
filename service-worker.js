@@ -1,5 +1,5 @@
-const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-14-popup-governor-extraction-r67";
-const CACHE_NAME = "salita-quest-v5-6-15-level-avatar-rewards-extraction-r68";
+const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-15-level-avatar-rewards-extraction-r68";
+const CACHE_NAME = "salita-quest-v5-6-16-avatar-hotfix-adapters-extraction-r69";
 const AVATAR_CASE_DISPLAY_HOTFIX = "2026-08-01-compact-display-share-stack-1";
 const TOPBAR_WORLD_PROGRESS_HOTFIX = "2026-08-01-separated-heading-rail-1";
 const SHARE_IMAGE_TRANSPORT_DELIVERY = "2026-08-02-direct-loader-1";
@@ -45,7 +45,8 @@ const APP_ENHANCEMENTS = [
 
 const AVATAR_PROGRESSION_FILES = [
   "./avatars/canonical/manifest.json", "./avatar-catalogue-v1.js", "./src/features/avatar/avatar-catalogue-v1.js", "./avatar-artwork-registry-v554.js", "./src/features/avatar/avatar-artwork-registry-v554.js",
-  "./avatar-progression-hotfix-v551.js", "./avatar-progression-hotfix-v551.css",
+  "./avatar-progression-hotfix-v551.js", "./src/features/avatar/avatar-progression-model-v551.js",
+      "./src/adapters/navigation/avatar-collections-navigation-v551.js", "./avatar-progression-hotfix-v551.css",
   "./avatar-progression-migration-v1.js", "./src/features/avatar/avatar-progression-migration-v1.js", "./avatar-collection-screen-v1.js", "./avatar-collection-screen-v1.css",
   "./avatar-case-v1.js", "./avatar-case-v1.css",
   "./avatar-collection-summary-v1.js", "./src/features/avatar/avatar-collection-summary-v1.js", "./avatar-collection-summary-v1.css",

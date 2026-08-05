@@ -120,8 +120,8 @@ for (const [loaderFile, courseId] of [["app.html", "tagalog"], ["bisaya.html", "
 
 const worker = read("service-worker.js");
 requireMarkers(worker, [
-  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-14-popup-governor-extraction-r67"',
-  'const CACHE_NAME = "salita-quest-v5-6-15-level-avatar-rewards-extraction-r68"',
+  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-15-level-avatar-rewards-extraction-r68"',
+  'const CACHE_NAME = "salita-quest-v5-6-16-avatar-hotfix-adapters-extraction-r69"',
   '"./popup-governor-v1.js"',
   '"./src/features/interface/popup-governor-v1.js"',
   '"./level-avatar-rewards-v1.js"',

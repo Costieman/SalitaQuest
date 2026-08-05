@@ -67,11 +67,11 @@
     ]
   },
   "summary": {
-    "modules": 58,
-    "dependencyEdges": 147,
+    "modules": 60,
+    "dependencyEdges": 154,
     "storageContracts": 21,
     "salitaEvents": 36,
-    "extractionCandidates": 17,
+    "extractionCandidates": 19,
     "prepareAdapters": 23,
     "highCoupling": 7,
     "held": 11
@@ -794,7 +794,7 @@
     },
     {
       "file": "avatar-progression-hotfix-v551.js",
-      "bytes": 10493,
+      "bytes": 2156,
       "contexts": [
         "cebuano",
         "tagalog"
@@ -803,57 +803,42 @@
         "cebuano",
         "tagalog"
       ],
-      "references": [],
+      "references": [
+        "src/adapters/navigation/avatar-collections-navigation-v551.js",
+        "src/features/avatar/avatar-progression-model-v551.js"
+      ],
       "loads": [],
       "fetches": [],
       "workers": [],
-      "coreGlobals": [
-        "closeMobileMenu",
-        "pictogram",
-        "renderBadges",
-        "state",
-        "switchView"
-      ],
+      "coreGlobals": [],
       "window": {
         "provides": [
-          "__salitaQuestCollectionsNavigationV551Installed",
-          "SalitaAvatarCatalogue",
-          "SalitaAvatarHotfixReady",
-          "SalitaAvatarModel"
+          "SalitaAvatarHotfixReady"
         ],
-        "consumes": []
+        "consumes": [
+          "SalitaAvatarCollectionsNavigationV551",
+          "SalitaAvatarModel",
+          "SalitaAvatarProgressionModelV551"
+        ]
       },
       "storage": [],
       "dom": {
-        "ids": [
-          "badgesView",
-          "collectionsView",
-          "mobileViewTitle",
-          "settingsView",
-          "viewTitle"
-        ],
-        "selectors": [
-          ".main-area",
-          ".sidebar .nav-item",
-          "[data-open-avatar-collection-main]",
-          "[data-open-badge-collection]"
-        ],
+        "ids": [],
+        "selectors": [],
         "datasets": [
-          "view"
+          "sqAvatarHotfixDependency"
         ]
       },
       "events": {
         "listens": [
-          "click"
+          "error",
+          "load"
         ],
-        "dispatches": [
-          "salita:avatar-model-hotfixed",
-          "salita:open-avatar-collection"
-        ]
+        "dispatches": []
       },
       "role": "collection-and-rewards",
       "readiness": "extraction-candidate",
-      "risk": 34
+      "risk": 8
     },
     {
       "file": "avatar-unlock-celebration-v1.js",
@@ -2601,7 +2586,7 @@
     },
     {
       "file": "profile-emblem-control.js",
-      "bytes": 9205,
+      "bytes": 9588,
       "contexts": [
         "cebuano",
         "tagalog"
@@ -2621,9 +2606,11 @@
         "coin-avatar-shop-badges-v1.js",
         "coin-avatar-shop-topbar-v1.js",
         "long-term-badges-v1.js",
+        "src/adapters/navigation/avatar-collections-navigation-v551.js",
         "src/features/avatar/avatar-artwork-registry-v554.js",
         "src/features/avatar/avatar-catalogue-v1.js",
         "src/features/avatar/avatar-progression-migration-v1.js",
+        "src/features/avatar/avatar-progression-model-v551.js",
         "src/features/avatar/level-avatar-rewards-v1.js",
         "weekly-avatar-shard-rewards-v1.js"
       ],
@@ -2638,9 +2625,11 @@
         "coin-avatar-shop-badges-v1.js",
         "coin-avatar-shop-topbar-v1.js",
         "long-term-badges-v1.js",
+        "src/adapters/navigation/avatar-collections-navigation-v551.js",
         "src/features/avatar/avatar-artwork-registry-v554.js",
         "src/features/avatar/avatar-catalogue-v1.js",
         "src/features/avatar/avatar-progression-migration-v1.js",
+        "src/features/avatar/avatar-progression-model-v551.js",
         "src/features/avatar/level-avatar-rewards-v1.js",
         "weekly-avatar-shard-rewards-v1.js"
       ],
@@ -2695,7 +2684,7 @@
       },
       "role": "runtime-loader",
       "readiness": "hold",
-      "risk": 91
+      "risk": 101
     },
     {
       "file": "progression-v54.js",
@@ -2755,7 +2744,7 @@
     },
     {
       "file": "service-worker.js",
-      "bytes": 12648,
+      "bytes": 12787,
       "contexts": [
         "worker"
       ],
@@ -2806,6 +2795,7 @@
         "progression-v54.js",
         "pronunciation-release-control.js",
         "social-connections-v2.js",
+        "src/adapters/navigation/avatar-collections-navigation-v551.js",
         "src/app/course-bootstrap.js",
         "src/config/course-manifest.js",
         "src/features/audio/pronunciation-release-control.js",
@@ -2814,6 +2804,7 @@
         "src/features/avatar/avatar-collection-summary-v1.js",
         "src/features/avatar/avatar-collection-tabs-phase6-1-v1.js",
         "src/features/avatar/avatar-progression-migration-v1.js",
+        "src/features/avatar/avatar-progression-model-v551.js",
         "src/features/avatar/level-avatar-rewards-v1.js",
         "src/features/economy/economy-tracking-phase6-v1.js",
         "src/features/interface/clean-topbar.js",
@@ -2945,6 +2936,65 @@
       "role": "feature-extension",
       "readiness": "prepare-adapter",
       "risk": 32
+    },
+    {
+      "file": "src/adapters/navigation/avatar-collections-navigation-v551.js",
+      "bytes": 4748,
+      "contexts": [
+        "cebuano",
+        "tagalog"
+      ],
+      "courses": [
+        "cebuano",
+        "tagalog"
+      ],
+      "references": [],
+      "loads": [],
+      "fetches": [],
+      "workers": [],
+      "coreGlobals": [
+        "closeMobileMenu",
+        "pictogram",
+        "renderBadges",
+        "switchView"
+      ],
+      "window": {
+        "provides": [
+          "__salitaQuestCollectionsNavigationV551Installed",
+          "SalitaAvatarCollectionsNavigationV551"
+        ],
+        "consumes": []
+      },
+      "storage": [],
+      "dom": {
+        "ids": [
+          "badgesView",
+          "collectionsView",
+          "mobileViewTitle",
+          "settingsView",
+          "viewTitle"
+        ],
+        "selectors": [
+          ".main-area",
+          ".sidebar .nav-item",
+          "[data-open-avatar-collection-main]",
+          "[data-open-badge-collection]"
+        ],
+        "datasets": [
+          "view"
+        ]
+      },
+      "events": {
+        "listens": [
+          "click"
+        ],
+        "dispatches": [
+          "salita:open-avatar-collection"
+        ]
+      },
+      "role": "collection-and-rewards",
+      "readiness": "extraction-candidate",
+      "risk": 25
     },
     {
       "file": "src/app/course-bootstrap.js",
@@ -3428,6 +3478,48 @@
       "role": "collection-and-rewards",
       "readiness": "extraction-candidate",
       "risk": 7
+    },
+    {
+      "file": "src/features/avatar/avatar-progression-model-v551.js",
+      "bytes": 5788,
+      "contexts": [
+        "cebuano",
+        "tagalog"
+      ],
+      "courses": [
+        "cebuano",
+        "tagalog"
+      ],
+      "references": [],
+      "loads": [],
+      "fetches": [],
+      "workers": [],
+      "coreGlobals": [
+        "state"
+      ],
+      "window": {
+        "provides": [
+          "SalitaAvatarCatalogue",
+          "SalitaAvatarModel",
+          "SalitaAvatarProgressionModelV551"
+        ],
+        "consumes": []
+      },
+      "storage": [],
+      "dom": {
+        "ids": [],
+        "selectors": [],
+        "datasets": []
+      },
+      "events": {
+        "listens": [],
+        "dispatches": [
+          "salita:avatar-model-hotfixed"
+        ]
+      },
+      "role": "collection-and-rewards",
+      "readiness": "extraction-candidate",
+      "risk": 11
     },
     {
       "file": "src/features/avatar/level-avatar-rewards-v1.js",
@@ -4321,7 +4413,7 @@
     },
     {
       "from": "achievement-sharing-avatar-bridge-v1.js",
-      "to": "avatar-progression-hotfix-v551.js",
+      "to": "coin-avatar-shop-reveal-v1.js",
       "type": "window-api",
       "symbols": [
         "SalitaAvatarModel"
@@ -4329,7 +4421,7 @@
     },
     {
       "from": "achievement-sharing-avatar-bridge-v1.js",
-      "to": "coin-avatar-shop-reveal-v1.js",
+      "to": "src/features/avatar/avatar-progression-model-v551.js",
       "type": "window-api",
       "symbols": [
         "SalitaAvatarModel"
@@ -4401,7 +4493,7 @@
     },
     {
       "from": "achievement-sharing-v4.js",
-      "to": "avatar-progression-hotfix-v551.js",
+      "to": "coin-avatar-shop-reveal-v1.js",
       "type": "window-api",
       "symbols": [
         "SalitaAvatarModel"
@@ -4409,7 +4501,7 @@
     },
     {
       "from": "achievement-sharing-v4.js",
-      "to": "coin-avatar-shop-reveal-v1.js",
+      "to": "src/features/avatar/avatar-progression-model-v551.js",
       "type": "window-api",
       "symbols": [
         "SalitaAvatarModel"
@@ -4499,7 +4591,7 @@
     },
     {
       "from": "avatar-case-v1.js",
-      "to": "avatar-progression-hotfix-v551.js",
+      "to": "coin-avatar-shop-reveal-v1.js",
       "type": "window-api",
       "symbols": [
         "SalitaAvatarModel"
@@ -4507,7 +4599,7 @@
     },
     {
       "from": "avatar-case-v1.js",
-      "to": "coin-avatar-shop-reveal-v1.js",
+      "to": "src/features/avatar/avatar-progression-model-v551.js",
       "type": "window-api",
       "symbols": [
         "SalitaAvatarModel"
@@ -4523,7 +4615,7 @@
     },
     {
       "from": "avatar-collection-screen-v1.js",
-      "to": "avatar-progression-hotfix-v551.js",
+      "to": "coin-avatar-shop-reveal-v1.js",
       "type": "window-api",
       "symbols": [
         "SalitaAvatarModel"
@@ -4531,6 +4623,22 @@
     },
     {
       "from": "avatar-collection-screen-v1.js",
+      "to": "src/features/avatar/avatar-progression-model-v551.js",
+      "type": "window-api",
+      "symbols": [
+        "SalitaAvatarModel"
+      ]
+    },
+    {
+      "from": "avatar-progression-hotfix-v551.js",
+      "to": "src/adapters/navigation/avatar-collections-navigation-v551.js",
+      "type": "window-api",
+      "symbols": [
+        "SalitaAvatarCollectionsNavigationV551"
+      ]
+    },
+    {
+      "from": "avatar-progression-hotfix-v551.js",
       "to": "coin-avatar-shop-reveal-v1.js",
       "type": "window-api",
       "symbols": [
@@ -4539,14 +4647,18 @@
     },
     {
       "from": "avatar-progression-hotfix-v551.js",
-      "to": "app.js",
-      "type": "core-globals",
+      "to": "src/features/avatar/avatar-progression-model-v551.js",
+      "type": "window-api",
       "symbols": [
-        "closeMobileMenu",
-        "pictogram",
-        "renderBadges",
-        "state",
-        "switchView"
+        "SalitaAvatarModel"
+      ]
+    },
+    {
+      "from": "avatar-progression-hotfix-v551.js",
+      "to": "src/features/avatar/avatar-progression-model-v551.js",
+      "type": "window-api",
+      "symbols": [
+        "SalitaAvatarProgressionModelV551"
       ]
     },
     {
@@ -4599,7 +4711,7 @@
     },
     {
       "from": "avatar-unlock-celebration-v1.js",
-      "to": "avatar-progression-hotfix-v551.js",
+      "to": "coin-avatar-shop-reveal-v1.js",
       "type": "window-api",
       "symbols": [
         "SalitaAvatarModel"
@@ -4607,7 +4719,7 @@
     },
     {
       "from": "avatar-unlock-celebration-v1.js",
-      "to": "coin-avatar-shop-reveal-v1.js",
+      "to": "src/features/avatar/avatar-progression-model-v551.js",
       "type": "window-api",
       "symbols": [
         "SalitaAvatarModel"
@@ -4742,7 +4854,7 @@
     },
     {
       "from": "coin-avatar-shard-shop-v1.js",
-      "to": "avatar-progression-hotfix-v551.js",
+      "to": "coin-avatar-shop-reveal-v1.js",
       "type": "window-api",
       "symbols": [
         "SalitaAvatarModel"
@@ -4750,7 +4862,7 @@
     },
     {
       "from": "coin-avatar-shard-shop-v1.js",
-      "to": "coin-avatar-shop-reveal-v1.js",
+      "to": "src/features/avatar/avatar-progression-model-v551.js",
       "type": "window-api",
       "symbols": [
         "SalitaAvatarModel"
@@ -4766,7 +4878,7 @@
     },
     {
       "from": "coin-avatar-shop-badges-v1.js",
-      "to": "avatar-progression-hotfix-v551.js",
+      "to": "coin-avatar-shop-reveal-v1.js",
       "type": "window-api",
       "symbols": [
         "SalitaAvatarModel"
@@ -4774,7 +4886,7 @@
     },
     {
       "from": "coin-avatar-shop-badges-v1.js",
-      "to": "coin-avatar-shop-reveal-v1.js",
+      "to": "src/features/avatar/avatar-progression-model-v551.js",
       "type": "window-api",
       "symbols": [
         "SalitaAvatarModel"
@@ -4900,7 +5012,7 @@
     },
     {
       "from": "desktop-navigation-refinement.js",
-      "to": "avatar-progression-hotfix-v551.js",
+      "to": "coin-avatar-shop-reveal-v1.js",
       "type": "window-api",
       "symbols": [
         "SalitaAvatarModel"
@@ -4908,7 +5020,7 @@
     },
     {
       "from": "desktop-navigation-refinement.js",
-      "to": "coin-avatar-shop-reveal-v1.js",
+      "to": "src/features/avatar/avatar-progression-model-v551.js",
       "type": "window-api",
       "symbols": [
         "SalitaAvatarModel"
@@ -5025,7 +5137,7 @@
     },
     {
       "from": "long-term-badges-v1.js",
-      "to": "avatar-progression-hotfix-v551.js",
+      "to": "coin-avatar-shop-reveal-v1.js",
       "type": "window-api",
       "symbols": [
         "SalitaAvatarModel"
@@ -5033,7 +5145,7 @@
     },
     {
       "from": "long-term-badges-v1.js",
-      "to": "coin-avatar-shop-reveal-v1.js",
+      "to": "src/features/avatar/avatar-progression-model-v551.js",
       "type": "window-api",
       "symbols": [
         "SalitaAvatarModel"
@@ -5133,7 +5245,7 @@
     },
     {
       "from": "profile-app.js",
-      "to": "avatar-progression-hotfix-v551.js",
+      "to": "coin-avatar-shop-reveal-v1.js",
       "type": "window-api",
       "symbols": [
         "SalitaAvatarModel"
@@ -5141,7 +5253,7 @@
     },
     {
       "from": "profile-app.js",
-      "to": "coin-avatar-shop-reveal-v1.js",
+      "to": "src/features/avatar/avatar-progression-model-v551.js",
       "type": "window-api",
       "symbols": [
         "SalitaAvatarModel"
@@ -5199,6 +5311,11 @@
     },
     {
       "from": "profile-emblem-control.js",
+      "to": "src/adapters/navigation/avatar-collections-navigation-v551.js",
+      "type": "loads"
+    },
+    {
+      "from": "profile-emblem-control.js",
       "to": "src/features/avatar/avatar-artwork-registry-v554.js",
       "type": "loads"
     },
@@ -5210,6 +5327,11 @@
     {
       "from": "profile-emblem-control.js",
       "to": "src/features/avatar/avatar-progression-migration-v1.js",
+      "type": "loads"
+    },
+    {
+      "from": "profile-emblem-control.js",
+      "to": "src/features/avatar/avatar-progression-model-v551.js",
       "type": "loads"
     },
     {
@@ -5248,7 +5370,7 @@
     },
     {
       "from": "profile-emblem-control.js",
-      "to": "avatar-progression-hotfix-v551.js",
+      "to": "coin-avatar-shop-reveal-v1.js",
       "type": "window-api",
       "symbols": [
         "SalitaAvatarModel"
@@ -5256,7 +5378,7 @@
     },
     {
       "from": "profile-emblem-control.js",
-      "to": "coin-avatar-shop-reveal-v1.js",
+      "to": "src/features/avatar/avatar-progression-model-v551.js",
       "type": "window-api",
       "symbols": [
         "SalitaAvatarModel"
@@ -5296,6 +5418,17 @@
       ]
     },
     {
+      "from": "src/adapters/navigation/avatar-collections-navigation-v551.js",
+      "to": "app.js",
+      "type": "core-globals",
+      "symbols": [
+        "closeMobileMenu",
+        "pictogram",
+        "renderBadges",
+        "switchView"
+      ]
+    },
+    {
       "from": "src/app/course-bootstrap.js",
       "to": "src/config/course-manifest.js",
       "type": "window-api",
@@ -5322,7 +5455,7 @@
     },
     {
       "from": "src/features/avatar/avatar-artwork-registry-v554.js",
-      "to": "avatar-progression-hotfix-v551.js",
+      "to": "coin-avatar-shop-reveal-v1.js",
       "type": "window-api",
       "symbols": [
         "SalitaAvatarModel"
@@ -5330,7 +5463,7 @@
     },
     {
       "from": "src/features/avatar/avatar-artwork-registry-v554.js",
-      "to": "coin-avatar-shop-reveal-v1.js",
+      "to": "src/features/avatar/avatar-progression-model-v551.js",
       "type": "window-api",
       "symbols": [
         "SalitaAvatarModel"
@@ -5346,7 +5479,7 @@
     },
     {
       "from": "src/features/avatar/avatar-collection-summary-v1.js",
-      "to": "avatar-progression-hotfix-v551.js",
+      "to": "coin-avatar-shop-reveal-v1.js",
       "type": "window-api",
       "symbols": [
         "SalitaAvatarModel"
@@ -5354,7 +5487,7 @@
     },
     {
       "from": "src/features/avatar/avatar-collection-summary-v1.js",
-      "to": "coin-avatar-shop-reveal-v1.js",
+      "to": "src/features/avatar/avatar-progression-model-v551.js",
       "type": "window-api",
       "symbols": [
         "SalitaAvatarModel"
@@ -5378,7 +5511,7 @@
     },
     {
       "from": "src/features/avatar/avatar-progression-migration-v1.js",
-      "to": "avatar-progression-hotfix-v551.js",
+      "to": "coin-avatar-shop-reveal-v1.js",
       "type": "window-api",
       "symbols": [
         "SalitaAvatarModel"
@@ -5386,10 +5519,18 @@
     },
     {
       "from": "src/features/avatar/avatar-progression-migration-v1.js",
-      "to": "coin-avatar-shop-reveal-v1.js",
+      "to": "src/features/avatar/avatar-progression-model-v551.js",
       "type": "window-api",
       "symbols": [
         "SalitaAvatarModel"
+      ]
+    },
+    {
+      "from": "src/features/avatar/avatar-progression-model-v551.js",
+      "to": "app.js",
+      "type": "core-globals",
+      "symbols": [
+        "state"
       ]
     },
     {
@@ -5410,7 +5551,7 @@
     },
     {
       "from": "src/features/avatar/level-avatar-rewards-v1.js",
-      "to": "avatar-progression-hotfix-v551.js",
+      "to": "coin-avatar-shop-reveal-v1.js",
       "type": "window-api",
       "symbols": [
         "SalitaAvatarModel"
@@ -5418,7 +5559,7 @@
     },
     {
       "from": "src/features/avatar/level-avatar-rewards-v1.js",
-      "to": "coin-avatar-shop-reveal-v1.js",
+      "to": "src/features/avatar/avatar-progression-model-v551.js",
       "type": "window-api",
       "symbols": [
         "SalitaAvatarModel"
@@ -5477,7 +5618,7 @@
     },
     {
       "from": "src/features/interface/popup-governor-v1.js",
-      "to": "avatar-progression-hotfix-v551.js",
+      "to": "coin-avatar-shop-reveal-v1.js",
       "type": "window-api",
       "symbols": [
         "SalitaAvatarModel"
@@ -5485,7 +5626,7 @@
     },
     {
       "from": "src/features/interface/popup-governor-v1.js",
-      "to": "coin-avatar-shop-reveal-v1.js",
+      "to": "src/features/avatar/avatar-progression-model-v551.js",
       "type": "window-api",
       "symbols": [
         "SalitaAvatarModel"
@@ -5585,7 +5726,7 @@
     },
     {
       "from": "weekly-avatar-shard-rewards-v1.js",
-      "to": "avatar-progression-hotfix-v551.js",
+      "to": "coin-avatar-shop-reveal-v1.js",
       "type": "window-api",
       "symbols": [
         "SalitaAvatarModel"
@@ -5593,7 +5734,7 @@
     },
     {
       "from": "weekly-avatar-shard-rewards-v1.js",
-      "to": "coin-avatar-shop-reveal-v1.js",
+      "to": "src/features/avatar/avatar-progression-model-v551.js",
       "type": "window-api",
       "symbols": [
         "SalitaAvatarModel"
@@ -5914,7 +6055,6 @@
         "app.js",
         "avatar-case-v1.js",
         "avatar-collection-screen-v1.js",
-        "avatar-progression-hotfix-v551.js",
         "avatar-unlock-celebration-v1.js",
         "badge-chest-v2.js",
         "bisaya-review-regions.js",
@@ -5930,6 +6070,7 @@
         "profile-emblem-control.js",
         "progression-v54.js",
         "social-connections-v2.js",
+        "src/adapters/navigation/avatar-collections-navigation-v551.js",
         "src/features/audio/pronunciation-release-control.js",
         "src/features/avatar/avatar-collection-tabs-phase6-1-v1.js",
         "src/features/sharing/achievement-sharing-router-v3.js",
@@ -5949,6 +6090,7 @@
     {
       "name": "error",
       "listeners": [
+        "avatar-progression-hotfix-v551.js",
         "avatar-unlock-celebration-v1.js",
         "badge-catalogue-v2.js",
         "badge-chest-v2.js",
@@ -5998,6 +6140,7 @@
     {
       "name": "load",
       "listeners": [
+        "avatar-progression-hotfix-v551.js",
         "avatar-unlock-celebration-v1.js",
         "badge-catalogue-v2.js",
         "badge-chest-v2.js",
@@ -6144,7 +6287,7 @@
       "name": "salita:avatar-model-hotfixed",
       "listeners": [],
       "dispatchers": [
-        "avatar-progression-hotfix-v551.js"
+        "src/features/avatar/avatar-progression-model-v551.js"
       ]
     },
     {
@@ -6306,9 +6449,9 @@
         "src/features/avatar/avatar-collection-summary-v1.js"
       ],
       "dispatchers": [
-        "avatar-progression-hotfix-v551.js",
         "avatar-unlock-celebration-v1.js",
         "desktop-navigation-refinement.js",
+        "src/adapters/navigation/avatar-collections-navigation-v551.js",
         "weekly-avatar-shard-rewards-v1.js"
       ]
     },
@@ -6518,7 +6661,7 @@
     {
       "symbol": "__salitaQuestCollectionsNavigationV551Installed",
       "providers": [
-        "avatar-progression-hotfix-v551.js"
+        "src/adapters/navigation/avatar-collections-navigation-v551.js"
       ]
     },
     {
@@ -6706,14 +6849,20 @@
     {
       "symbol": "SalitaAvatarCatalogue",
       "providers": [
-        "avatar-progression-hotfix-v551.js",
-        "coin-avatar-shop-reveal-v1.js"
+        "coin-avatar-shop-reveal-v1.js",
+        "src/features/avatar/avatar-progression-model-v551.js"
       ]
     },
     {
       "symbol": "SalitaAvatarCollectionScreen",
       "providers": [
         "avatar-collection-screen-v1.js"
+      ]
+    },
+    {
+      "symbol": "SalitaAvatarCollectionsNavigationV551",
+      "providers": [
+        "src/adapters/navigation/avatar-collections-navigation-v551.js"
       ]
     },
     {
@@ -6737,8 +6886,14 @@
     {
       "symbol": "SalitaAvatarModel",
       "providers": [
-        "avatar-progression-hotfix-v551.js",
-        "coin-avatar-shop-reveal-v1.js"
+        "coin-avatar-shop-reveal-v1.js",
+        "src/features/avatar/avatar-progression-model-v551.js"
+      ]
+    },
+    {
+      "symbol": "SalitaAvatarProgressionModelV551",
+      "providers": [
+        "src/features/avatar/avatar-progression-model-v551.js"
       ]
     },
     {
