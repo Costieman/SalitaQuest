@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate the first Salita Quest modularization boundary."""
+"""Validate the stable Salita Quest course-bootstrap contract."""
 
 from __future__ import annotations
 
@@ -36,42 +36,49 @@ def array_values(source: str, variable: str) -> list[str]:
     return re.findall(r'"([^"\n]+)"', match.group(1))
 
 
+def asset_path(value: str) -> str:
+    return value.split("?", 1)[0]
+
+
 def validate_page(path: str, course_id: str) -> None:
     source = read(ROOT / path)
-    required_fragments = (
-        'src/config/course-manifest.js?v=5.6.0',
-        'src/app/course-bootstrap.js?v=5.6.0',
-        f'courseId: "{course_id}"',
+    required_paths = (
+        "src/config/course-manifest.js",
+        "src/app/course-bootstrap.js",
     )
-    for fragment in required_fragments:
-        if fragment not in source:
-            fail(f"{path} does not reference {fragment}")
+    script_sources = {
+        asset_path(value)
+        for value in re.findall(r'<script\s+[^>]*src=["\']([^"\']+)["\']', source)
+    }
+    for required in required_paths:
+        if required not in script_sources:
+            fail(f"{path} does not load {required}")
+    if f'courseId: "{course_id}"' not in source:
+        fail(f"{path} does not start course {course_id}")
     if "raw.githubusercontent.com" in source:
         fail(f"{path} still contains duplicated source-document bootstrap logic")
 
 
 def validate_assets(manifest_source: str) -> None:
-    expected = {
-        "sharedStyles": (23, "ui-quality-fixes.css?v=5.4.21", "achievement-sharing-v4.css?v=5.4.29"),
-        "tagalogScripts": (31, "progression-v54.js?v=5.4.21", "src/features/interface/collection-key-translation-hotfix.js?v=5.5.11"),
-        "cebuanoScripts": (28, "bisaya-app-loader.js?v=0.3.2", "achievement-sharing-v4.js?v=5.4.29"),
+    arrays = {
+        "sharedStyles": array_values(manifest_source, "sharedStyles"),
+        "tagalogScripts": array_values(manifest_source, "tagalogScripts"),
+        "cebuanoScripts": array_values(manifest_source, "cebuanoScripts"),
     }
+    for variable, values in arrays.items():
+        if not values:
+            fail(f"{variable} is empty")
+        paths = [asset_path(value) for value in values]
+        if len(paths) != len(set(paths)):
+            fail(f"{variable} contains duplicate component paths")
+        for relative_path in paths:
+            if not (ROOT / relative_path).is_file():
+                fail(f"Manifest references a missing asset: {relative_path}")
 
-    all_assets: set[str] = set()
-    for variable, (count, first, last) in expected.items():
-        values = array_values(manifest_source, variable)
-        if len(values) != count:
-            fail(f"{variable} contains {len(values)} assets; expected {count}")
-        if values[0] != first or values[-1] != last:
-            fail(f"{variable} load-order boundary changed")
-        if len(values) != len(set(values)):
-            fail(f"{variable} contains duplicate assets")
-        all_assets.update(values)
-
-    for asset in sorted(all_assets):
-        relative_path = asset.split("?", 1)[0]
-        if not (ROOT / relative_path).is_file():
-            fail(f"Manifest references a missing asset: {relative_path}")
+    if asset_path(arrays["tagalogScripts"][0]) != "progression.js":
+        fail("Tagalog bootstrap must load the course runtime before enhancements")
+    if asset_path(arrays["cebuanoScripts"][0]) != "bisaya-app-loader.js":
+        fail("Cebuano bootstrap must load the course adapter before enhancements")
 
 
 def validate_storage_contract(manifest_source: str, bootstrap_source: str) -> None:
@@ -105,7 +112,8 @@ def validate_storage_contract(manifest_source: str, bootstrap_source: str) -> No
 def validate_service_worker() -> None:
     source = read(SERVICE_WORKER)
     required = (
-        'const CACHE_NAME = "salita-quest-v5-6-20-avatar-case-profile-adapter-extraction-r73";',
+        'const CACHE_PREFIX = "salita-quest-sandbox-";',
+        "key.startsWith(CACHE_PREFIX)",
         '"./src/config/course-manifest.js"',
         '"./src/app/course-bootstrap.js"',
     )
