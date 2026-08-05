@@ -1,0 +1,293 @@
+name: Apply pronunciation release-control extraction
+
+on:
+  push:
+    branches:
+      - agent/extract-pronunciation-release-control
+    paths:
+      - ".github/workflows/apply-pronunciation-extraction.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/extract-pronunciation-release-control
+      - name: Extract pronunciation implementation
+        run: |
+          mkdir -p src/features/audio
+          cp pronunciation-release-control.js src/features/audio/pronunciation-release-control.js
+          cat > pronunciation-release-control.js <<'EOF'
+          (() => {
+            "use strict";
+
+            const TARGET = "./src/features/audio/pronunciation-release-control.js?v=5.4.22";
+            const LOADING_FLAG = "__salitaQuestPronunciationReleaseControlCompatibilityLoading";
+
+            if (window.__salitaQuestPronunciationReleaseControlInstalled || window[LOADING_FLAG]) return;
+            window[LOADING_FLAG] = true;
+
+            const current = document.currentScript;
+            const targetUrl = new URL(TARGET, current?.src || document.baseURI).href;
+            if (document.readyState === "loading" && current) {
+              document.write(`<script src="${targetUrl}"><\/script>`);
+              window[LOADING_FLAG] = false;
+              return;
+            }
+
+            const script = document.createElement("script");
+            script.src = targetUrl;
+            script.async = false;
+            script.dataset.salitaCompatibilityLoader = "pronunciation-release-control";
+            script.addEventListener("load", () => { window[LOADING_FLAG] = false; }, {once:true});
+            script.addEventListener("error", () => {
+              window[LOADING_FLAG] = false;
+              console.error("Salita Quest could not load the extracted pronunciation release-control module.");
+            }, {once:true});
+            (document.head || document.documentElement).appendChild(script);
+          })();
+          EOF
+          sed -i 's/^          //' pronunciation-release-control.js
+      - name: Update manifests, cache boundary, validators and documentation
+        shell: python
+        run: |
+          from pathlib import Path
+
+          root = Path('.')
+          old_current = 'salita-quest-v5-6-1-first-module-extraction-r54'
+          old_previous = 'salita-quest-v5-6-0-modular-bootstrap-r53'
+          new_current = 'salita-quest-v5-6-2-pronunciation-module-extraction-r55'
+          placeholder = '__SQ_NEW_CACHE_R55__'
+
+          for path in [*Path('scripts').glob('*.mjs'), *Path('scripts').glob('*.py')]:
+              text = path.read_text(encoding='utf-8')
+              text = text.replace(old_current, placeholder)
+              text = text.replace(old_previous, old_current)
+              text = text.replace(placeholder, new_current)
+              path.write_text(text, encoding='utf-8')
+
+          manifest = Path('src/config/course-manifest.js')
+          manifest_text = manifest.read_text(encoding='utf-8')
+          old_asset = '"pronunciation-release-control.js?v=5.4.22"'
+          new_asset = '"src/features/audio/pronunciation-release-control.js?v=5.4.22"'
+          if manifest_text.count(old_asset) != 2:
+              raise SystemExit('Expected exactly two pronunciation manifest references')
+          manifest.write_text(manifest_text.replace(old_asset, new_asset), encoding='utf-8')
+
+          worker = Path('service-worker.js')
+          worker_text = worker.read_text(encoding='utf-8')
+          worker_text = worker_text.replace(
+              f'const PREVIOUS_CACHE_NAME = "{old_previous}";\nconst CACHE_NAME = "{old_current}";',
+              f'const PREVIOUS_CACHE_NAME = "{old_current}";\nconst CACHE_NAME = "{new_current}";'
+          )
+          cache_token = '  "./pronunciation-release-control.js", "./home-reward-coordinator.js"'
+          cache_replacement = (
+              '  "./pronunciation-release-control.js", "./src/features/audio/pronunciation-release-control.js",\n'
+              '  "./home-reward-coordinator.js"'
+          )
+          if cache_token not in worker_text:
+              raise SystemExit('Pronunciation service-worker cache token was not found')
+          worker.write_text(worker_text.replace(cache_token, cache_replacement), encoding='utf-8')
+
+          refresh = Path('mobile-refresh.html')
+          refresh_text = refresh.read_text(encoding='utf-8')
+          module_refresh = '      `./src/features/audio/pronunciation-release-control.js?v=${RELEASE}`,'
+          if module_refresh not in refresh_text:
+              anchor = '      `./src/features/interface/level-up-mobile-safety-v552.js?v=${RELEASE}`,'
+              if anchor not in refresh_text:
+                  raise SystemExit('Mobile refresh insertion anchor was not found')
+              refresh_text = refresh_text.replace(anchor, anchor + '\n' + module_refresh)
+          refresh.write_text(refresh_text, encoding='utf-8')
+
+          validator = Path('scripts/validate-audio-badge-release.mjs')
+          text = validator.read_text(encoding='utf-8')
+          text = text.replace(
+              '  "pronunciation-release-control.js",\n  "home-reward-coordinator.js",',
+              '  "pronunciation-release-control.js",\n  "src/features/audio/pronunciation-release-control.js",\n  "home-reward-coordinator.js",'
+          )
+          text = text.replace(
+              'const pronunciation = read("pronunciation-release-control.js");',
+              'const pronunciationLoader = read("pronunciation-release-control.js");\nconst pronunciation = read("src/features/audio/pronunciation-release-control.js");'
+          )
+          loader_check = '''for (const marker of [
+            'const TARGET = "./src/features/audio/pronunciation-release-control.js?v=5.4.22"',
+            "document.currentScript",
+            "document.write",
+            "script.async = false",
+            "salitaCompatibilityLoader"
+          ]) if (!pronunciationLoader.includes(marker)) fail(`Missing pronunciation compatibility-loader marker: ${marker}`);
+
+          '''
+          reward_anchor = 'const reward = read("home-reward-coordinator.js");'
+          if loader_check.strip() not in text:
+              text = text.replace(reward_anchor, loader_check + reward_anchor)
+          text = text.replace(
+              "'pronunciation-release-control.js?v=5.4.22'",
+              "'src/features/audio/pronunciation-release-control.js?v=5.4.22'"
+          )
+          text = text.replace(
+              "course.scripts.indexOf('pronunciation-release-control.js?v=5.4.22')",
+              "course.scripts.indexOf('src/features/audio/pronunciation-release-control.js?v=5.4.22')"
+          )
+          text = text.replace(
+              "  '\"./pronunciation-release-control.js\"',\n  '\"./home-reward-coordinator.js\"',",
+              "  '\"./pronunciation-release-control.js\"',\n  '\"./src/features/audio/pronunciation-release-control.js\"',\n  '\"./home-reward-coordinator.js\"',"
+          )
+          validator.write_text(text, encoding='utf-8')
+
+          plan = Path('docs/MODULE_EXTRACTION_PLAN.md')
+          plan_text = plan.read_text(encoding='utf-8')
+          plan_text = plan_text.replace(
+              '1. `pronunciation-release-control.js` — audio interaction safety.',
+              '1. `pronunciation-release-control.js` — completed as `src/features/audio/pronunciation-release-control.js`, with the root compatibility URL retained through r55.'
+          )
+          plan.write_text(plan_text, encoding='utf-8')
+      - name: Add extraction-specific validator
+        run: |
+          cat > scripts/validate-pronunciation-module-extraction.mjs <<'EOF'
+          import fs from "node:fs";
+          import vm from "node:vm";
+
+          const root = new URL("../", import.meta.url);
+          const read = path => fs.readFileSync(new URL(path, root), "utf8");
+          const fail = message => { throw new Error(message); };
+
+          const loaderPath = "pronunciation-release-control.js";
+          const modulePath = "src/features/audio/pronunciation-release-control.js";
+          const loader = read(loaderPath);
+          const moduleSource = read(modulePath);
+          const manifestSource = read("src/config/course-manifest.js");
+          const refresh = read("mobile-refresh.html");
+          const worker = read("service-worker.js");
+
+          new vm.Script(loader, {filename:loaderPath});
+          new vm.Script(moduleSource, {filename:modulePath});
+          new vm.Script(worker, {filename:"service-worker.js"});
+
+          for (const marker of [
+            'const TARGET = "./src/features/audio/pronunciation-release-control.js?v=5.4.22"',
+            "document.currentScript",
+            "document.write",
+            "script.async = false",
+            "salitaCompatibilityLoader"
+          ]) if (!loader.includes(marker)) fail(`Compatibility loader is missing ${marker}`);
+
+          if ((loader.match(/document\.addEventListener/g) || []).length !== 0) {
+            fail("The root compatibility loader must not own audio interaction listeners");
+          }
+
+          for (const marker of [
+            'const INSTALL_FLAG = "__salitaQuestPronunciationReleaseControlInstalled"',
+            'const BUTTON_SELECTOR = "#audioBtn"',
+            'document.addEventListener("pointerup"',
+            'document.addEventListener("click"',
+            'document.addEventListener("pointerdown"',
+            "speakFilipino",
+            "loadStaticAudioManifest?.()"
+          ]) if (!moduleSource.includes(marker)) fail(`Extracted pronunciation module is missing ${marker}`);
+
+          if ((moduleSource.match(/document\.addEventListener/g) || []).length !== 3) {
+            fail("The extracted pronunciation module must remain the sole owner of exactly three document listeners");
+          }
+
+          const context = {window:{}};
+          vm.createContext(context);
+          vm.runInContext(manifestSource, context, {filename:"src/config/course-manifest.js"});
+          const courses = context.window.SalitaQuestCourseManifest?.courses;
+          const expected = "src/features/audio/pronunciation-release-control.js?v=5.4.22";
+          if (!courses) fail("Course manifest was not installed");
+          for (const courseId of ["tagalog", "cebuano"]) {
+            const scripts = courses[courseId]?.scripts || [];
+            const navigation = scripts.indexOf("desktop-navigation-refinement.js?v=5.5.3");
+            const pronunciation = scripts.indexOf(expected);
+            const reward = scripts.indexOf("home-reward-coordinator.js?v=5.4.22");
+            if (!(navigation >= 0 && pronunciation > navigation && reward > pronunciation)) {
+              fail(`${courseId} does not preserve pronunciation runtime order`);
+            }
+            if (scripts.includes("pronunciation-release-control.js?v=5.4.22")) {
+              fail(`${courseId} still loads the root compatibility URL directly`);
+            }
+          }
+
+          if (!refresh.includes("src/features/audio/pronunciation-release-control.js")) {
+            fail("Mobile refresh does not fetch the extracted pronunciation module");
+          }
+
+          for (const marker of [
+            'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-1-first-module-extraction-r54"',
+            'const CACHE_NAME = "salita-quest-v5-6-2-pronunciation-module-extraction-r55"',
+            '"./pronunciation-release-control.js"',
+            '"./src/features/audio/pronunciation-release-control.js"'
+          ]) if (!worker.includes(marker)) fail(`Service worker is missing ${marker}`);
+
+          console.log("Pronunciation release-control extraction validation passed: direct module loading, root compatibility forwarding, one listener owner and r55 offline delivery.");
+          EOF
+          sed -i 's/^          //' scripts/validate-pronunciation-module-extraction.mjs
+
+          cat > .github/workflows/validate-pronunciation-module-extraction.yml <<'EOF'
+          name: Validate pronunciation module extraction
+
+          on:
+            pull_request:
+              paths:
+                - "pronunciation-release-control.js"
+                - "src/features/audio/pronunciation-release-control.js"
+                - "src/config/course-manifest.js"
+                - "mobile-refresh.html"
+                - "service-worker.js"
+                - "scripts/validate-pronunciation-module-extraction.mjs"
+                - ".github/workflows/validate-pronunciation-module-extraction.yml"
+            push:
+              branches:
+                - main
+              paths:
+                - "pronunciation-release-control.js"
+                - "src/features/audio/pronunciation-release-control.js"
+                - "src/config/course-manifest.js"
+                - "mobile-refresh.html"
+                - "service-worker.js"
+                - "scripts/validate-pronunciation-module-extraction.mjs"
+                - ".github/workflows/validate-pronunciation-module-extraction.yml"
+
+          permissions:
+            contents: read
+
+          jobs:
+            validate:
+              runs-on: ubuntu-latest
+              steps:
+                - uses: actions/checkout@v4
+                - uses: actions/setup-node@v4
+                  with:
+                    node-version: "20"
+                - run: node scripts/validate-pronunciation-module-extraction.mjs
+                - run: git diff --check
+          EOF
+          sed -i 's/^          //' .github/workflows/validate-pronunciation-module-extraction.yml
+      - name: Regenerate module contract inventory
+        run: node scripts/generate-module-contract-inventory-v2.mjs --write
+      - name: Validate extraction and integrations
+        run: |
+          node --check pronunciation-release-control.js
+          node --check src/features/audio/pronunciation-release-control.js
+          node --check scripts/validate-pronunciation-module-extraction.mjs
+          node scripts/validate-pronunciation-module-extraction.mjs
+          node scripts/validate-audio-badge-release.mjs
+          node scripts/generate-module-contract-inventory-v2.mjs --check
+          python scripts/validate_modular_bootstrap.py
+          node scripts/validate-bisaya-audio-library.mjs
+          node scripts/validate-avatar-progression-v550.mjs
+          git diff --check
+      - name: Commit pronunciation extraction
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm .github/workflows/apply-pronunciation-extraction.yml
+          git rm .github/workflows/inspect-pronunciation-extraction.yml
+          git add -A
+          git commit -m "Extract pronunciation release control module"
+          git push origin HEAD:agent/extract-pronunciation-release-control
