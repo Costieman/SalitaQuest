@@ -1,0 +1,27 @@
+name: Inspect desktop shell extraction references
+
+on:
+  push:
+    branches:
+      - agent/extract-desktop-shell-pair
+    paths:
+      - ".github/workflows/inspect-desktop-shell-extraction.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Inspect shell paths, contracts and cache assertions
+        run: |
+          grep -R -n -E 'clean-topbar|compact-desktop-layout|pronunciation-module-extraction-r55' . \
+            --exclude-dir=.git \
+            --exclude='module-contracts.generated.json' \
+            --exclude='MODULE_CONTRACT_INVENTORY.md' || true
+          echo '--- clean-topbar source markers ---'
+          grep -n -E 'INSTALL_FLAG|STYLESHEETS|renderMasteryRail|mastery-rail-shell|dataset|setTimeout' clean-topbar.js
+          echo '--- compact-desktop-layout source markers ---'
+          grep -n -E 'INSTALL_FLAG|DESKTOP_QUERY|lessonCard|audioBtn|session-panel|matchMedia|addEventListener|classList' compact-desktop-layout.js
