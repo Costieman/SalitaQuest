@@ -29,7 +29,7 @@
 9. `incorrect-order-feedback.js`
 10. `src/features/interface/compact-desktop-layout.js`
 11. `src/features/interface/clean-topbar.js`
-12. `even-progress-rail.js`
+12. `src/features/progression/even-progress-rail.js`
 13. `mastery-feedback.js`
 14. `lesson-side-launcher.js`
 15. `mobile-session-refinement.js`
@@ -61,7 +61,7 @@
 8. `incorrect-order-feedback.js`
 9. `src/features/interface/compact-desktop-layout.js`
 10. `src/features/interface/clean-topbar.js`
-11. `even-progress-rail.js`
+11. `src/features/progression/even-progress-rail.js`
 12. `mastery-feedback.js`
 13. `lesson-side-launcher.js`
 14. `mobile-session-refinement.js`
@@ -95,8 +95,8 @@
 - `collection-key-translation-hotfix.js` — risk 12; 2 engine globals; 0 storage operations.
 - `src/features/audio/pronunciation-release-control.js` — risk 12; 2 engine globals; 0 storage operations.
 - `avatar-artwork-registry-v554.js` — risk 13; 0 engine globals; 2 storage operations.
-- `even-progress-rail.js` — risk 14; 3 engine globals; 0 storage operations.
 - `src/features/interface/clean-topbar.js` — risk 14; 2 engine globals; 0 storage operations.
+- `src/features/progression/even-progress-rail.js` — risk 14; 3 engine globals; 0 storage operations.
 - `popup-governor-v1.js` — risk 17; 2 engine globals; 0 storage operations.
 - `level-avatar-rewards-v1.js` — risk 25; 1 engine globals; 4 storage operations.
 - `avatar-progression-hotfix-v551.js` — risk 34; 5 engine globals; 0 storage operations.
@@ -249,7 +249,7 @@
 | `__salitaQuestCollectionsNavigationV551Installed` | avatar-progression-hotfix-v551.js |
 | `__salitaQuestCompactDesktopInstalled` | src/features/interface/compact-desktop-layout.js |
 | `__salitaQuestDailyGoalRefinementInstalled` | daily-goal-refinement.js |
-| `__salitaQuestEvenProgressRailInstalled` | even-progress-rail.js |
+| `__salitaQuestEvenProgressRailInstalled` | src/features/progression/even-progress-rail.js |
 | `__salitaQuestHomeRewardCoordinatorInstalled` | home-reward-coordinator.js |
 | `__salitaQuestIncorrectOrderFeedbackInstalled` | incorrect-order-feedback.js |
 | `__salitaQuestKeyRunRefinementInstalled` | key-run-refinement.js |
@@ -358,7 +358,7 @@
 | `builtSentence` | app.js, exercise-fixes-v545.js, incorrect-order-feedback.js |
 | `lessonCard` | app.js, lesson-side-launcher.js, src/features/interface/compact-desktop-layout.js |
 | `lessonModule` | adaptive-scenarios.js, app.js, bisaya-review-regions.js |
-| `masteryMilestones` | app.js, even-progress-rail.js, progression-v54.js |
+| `masteryMilestones` | app.js, progression-v54.js, src/features/progression/even-progress-rail.js |
 | `masteryNextRegion` | app.js, progression-v54.js, src/features/interface/clean-topbar.js |
 | `masteryNextText` | app.js, progression-v54.js, src/features/interface/clean-topbar.js |
 | `masteryRailTitle` | app.js, progression-v54.js, src/features/interface/clean-topbar.js |

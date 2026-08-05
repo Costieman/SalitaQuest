@@ -12,6 +12,7 @@ const requireMarkers = (source, markers, label) => markers.forEach(marker => {
 for (const file of [
   "daily-goal-refinement.js",
   "even-progress-rail.js",
+  "src/features/progression/even-progress-rail.js",
   "level-progression-v2.js",
   "adaptive-scenarios.js",
   "desktop-navigation-refinement.js",
@@ -61,7 +62,7 @@ for (const file of [
   if (context.state.dailyActivity.dailySessions !== 1) fail("A completed Daily Session did not increment dailySessions.");
 }
 
-const rail = read("even-progress-rail.js");
+const rail = read("src/features/progression/even-progress-rail.js");
 requireMarkers(rail, [
   "visualProgress(points, milestones)",
   "(index + 1) / count * 100",
@@ -202,6 +203,7 @@ for (const [htmlFile, courseId] of [["app.html", "tagalog"], ["bisaya.html", "ce
     "adaptive-scenarios.css?v=5.4.21"
   ], `${htmlFile} progression release styles`);
   requireMarkers(course.scripts.join("\n"), [
+    "src/features/progression/even-progress-rail.js?v=5.4.21",
     "adaptive-scenarios.js?v=5.4.21"
   ], `${htmlFile} progression release scripts`);
   for (const [asset, kind, collection] of [
@@ -224,8 +226,10 @@ for (const [htmlFile, courseId] of [["app.html", "tagalog"], ["bisaya.html", "ce
 
 const serviceWorker = read("service-worker.js");
 requireMarkers(serviceWorker, [
-  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-2-pronunciation-module-extraction-r55"',
-  'const CACHE_NAME = "salita-quest-v5-6-3-desktop-shell-extraction-r56"',
+  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-3-desktop-shell-extraction-r56"',
+  'const CACHE_NAME = "salita-quest-v5-6-4-progress-rail-extraction-r57"',
+  '"./even-progress-rail.js"',
+  '"./src/features/progression/even-progress-rail.js"',
   '"./world-progress-status.css"',
   '"./level-progression-v2.js"',
   '"./level-progression-v2.css"',

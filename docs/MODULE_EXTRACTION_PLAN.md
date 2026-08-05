@@ -38,7 +38,7 @@ After the first move is verified, the next candidates should be extracted separa
 
 1. `pronunciation-release-control.js` — completed as `src/features/audio/pronunciation-release-control.js`, with the root compatibility URL retained through r55.
 2. `clean-topbar.js` and `compact-desktop-layout.js` — completed as separate modules under `src/features/interface/`, with both root compatibility URLs retained through r56.
-3. `even-progress-rail.js` — progress presentation.
+3. `even-progress-rail.js` — completed as `src/features/progression/even-progress-rail.js`, with the root compatibility URL retained through r57.
 4. `avatar-catalogue-v1.js` and `avatar-progression-migration-v1.js` — avatar data and migration, with stable exported APIs.
 5. `avatar-artwork-registry-v554.js` — artwork resolution, retaining existing storage and API contracts.
 
