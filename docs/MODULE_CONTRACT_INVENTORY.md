@@ -47,7 +47,7 @@
 27. `placement-onboarding-v1.js`
 28. `social-connections-v2.js`
 29. `achievement-sharing-v4.js`
-30. `collection-key-translation-hotfix.js`
+30. `src/features/interface/collection-key-translation-hotfix.js`
 
 ### Cebuano
 
@@ -90,10 +90,10 @@
 - `src/features/sharing/achievement-sharing-router-v3.js` — risk 8; 0 engine globals; 0 storage operations.
 - `src/features/economy/economy-tracking-phase6-v1.js` — risk 10; 0 engine globals; 0 storage operations.
 - `src/features/interface/compact-desktop-layout.js` — risk 11; 1 engine globals; 0 storage operations.
-- `collection-key-translation-hotfix.js` — risk 12; 2 engine globals; 0 storage operations.
 - `src/features/audio/pronunciation-release-control.js` — risk 12; 2 engine globals; 0 storage operations.
 - `src/features/avatar/avatar-collection-summary-v1.js` — risk 12; 0 engine globals; 2 storage operations.
 - `src/features/avatar/avatar-collection-tabs-phase6-1-v1.js` — risk 12; 0 engine globals; 0 storage operations.
+- `src/features/interface/collection-key-translation-hotfix.js` — risk 12; 2 engine globals; 0 storage operations.
 - `src/features/avatar/avatar-artwork-registry-v554.js` — risk 13; 0 engine globals; 2 storage operations.
 - `src/features/interface/clean-topbar.js` — risk 14; 2 engine globals; 0 storage operations.
 - `src/features/progression/even-progress-rail.js` — risk 14; 3 engine globals; 0 storage operations.
@@ -245,7 +245,7 @@
 | `__salitaQuestBadgeCatalogueV2Installed` | badge-catalogue-v2.js |
 | `__salitaQuestBadgeChestV2Installed` | badge-chest-v2.js |
 | `__salitaQuestCleanTopbarInstalled` | src/features/interface/clean-topbar.js |
-| `__salitaQuestCollectionKeyTranslationHotfixV2` | collection-key-translation-hotfix.js |
+| `__salitaQuestCollectionKeyTranslationHotfixV2` | src/features/interface/collection-key-translation-hotfix.js |
 | `__salitaQuestCollectionsNavigationV551Installed` | avatar-progression-hotfix-v551.js |
 | `__salitaQuestCompactDesktopInstalled` | src/features/interface/compact-desktop-layout.js |
 | `__salitaQuestDailyGoalRefinementInstalled` | daily-goal-refinement.js |
@@ -327,7 +327,7 @@
 | `salita:coin-shard-pack-purchased` | coin-avatar-shard-shop-v1.js, coin-avatar-shop-reveal-v1.js | coin-avatar-shop-reveal-v1.js, coin-avatar-shop-topbar-v1.js |
 | `salita:coin-shop-badges-ready` | coin-avatar-shop-badges-v1.js | — |
 | `salita:course-progress-restored` | — | level-avatar-rewards-v1.js |
-| `salita:daily-quests-rendered` | — | collection-key-translation-hotfix.js |
+| `salita:daily-quests-rendered` | — | src/features/interface/collection-key-translation-hotfix.js |
 | `salita:economy-tracking-ready` | src/features/economy/economy-tracking-phase6-v1.js | — |
 | `salita:economy-v2-phase1-ready` | daily-goal-refinement.js | — |
 | `salita:level-progression-saved` | level-progression-v2.js | — |
@@ -337,7 +337,7 @@
 | `salita:placement-finished` | — | level-avatar-rewards-v1.js |
 | `salita:popup-finished` | — | achievement-sharing-v4.js, avatar-unlock-celebration-v1.js |
 | `salita:shop-opened` | desktop-navigation-refinement.js | — |
-| `salita:state-changed` | — | collection-key-translation-hotfix.js |
+| `salita:state-changed` | — | src/features/interface/collection-key-translation-hotfix.js |
 | `salita:view-changed` | desktop-navigation-refinement.js, level-progression-v2.js | achievement-sharing-v4.js |
 | `salita:weekly-key-earned` | weekly-avatar-shard-rewards-v1.js | — |
 
@@ -346,7 +346,7 @@
 | ID | Referencing files |
 |---|---|
 | `homeView` | badge-catalogue-v2.js, key-run-refinement.js, level-progression-v2.js, popup-governor-v1.js, src/features/progression/home-reward-coordinator.js, weekly-avatar-polish.js |
-| `questChest` | app.js, collection-key-translation-hotfix.js, key-run-refinement.js, weekly-avatar-chest.js, weekly-avatar-polish.js, weekly-avatar-shard-rewards-v1.js |
+| `questChest` | app.js, key-run-refinement.js, src/features/interface/collection-key-translation-hotfix.js, weekly-avatar-chest.js, weekly-avatar-polish.js, weekly-avatar-shard-rewards-v1.js |
 | `feedbackBox` | app.js, exercise-fixes-v545.js, lesson-side-launcher.js, mobile-session-refinement.js, ui-quality-fixes.js |
 | `audioBtn` | app.js, bisaya-app-loader.js, lesson-side-launcher.js, src/features/interface/compact-desktop-layout.js |
 | `badgesView` | avatar-progression-hotfix-v551.js, badge-chest-v2.js, desktop-navigation-refinement.js, social-connections-v2.js |

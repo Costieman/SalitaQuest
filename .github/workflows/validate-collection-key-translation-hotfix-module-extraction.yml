@@ -1,0 +1,49 @@
+name: Validate collection key translation hotfix module extraction
+on:
+  pull_request:
+    paths:
+      - 'collection-key-translation-hotfix.js'
+      - 'src/features/interface/collection-key-translation-hotfix.js'
+      - 'src/config/course-manifest.js'
+      - 'service-worker.js'
+      - 'start.html'
+      - 'scripts/validate-collection-key-translation-hotfix-module-extraction.mjs'
+      - 'scripts/validate-targeted-hotfix.mjs'
+      - 'scripts/validate-home-dashboard.mjs'
+      - 'scripts/validate-home-reward-coordinator-module-extraction.mjs'
+      - 'scripts/validate-avatar-progression-v550.mjs'
+      - 'scripts/validate-bisaya-audio-library.mjs'
+      - 'scripts/validate_modular_bootstrap.py'
+      - 'scripts/generate-module-contract-inventory-v2.mjs'
+      - 'src/config/module-contracts.generated.json'
+      - '.github/workflows/validate-collection-key-translation-hotfix-module-extraction.yml'
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Validate hotfix extraction
+        run: |
+          node --check collection-key-translation-hotfix.js
+          node --check src/features/interface/collection-key-translation-hotfix.js
+          node scripts/validate-collection-key-translation-hotfix-module-extraction.mjs
+          node scripts/validate-targeted-hotfix.mjs
+      - name: Validate home and key integration
+        run: |
+          node scripts/validate-home-dashboard.mjs
+          node scripts/validate-home-reward-coordinator-module-extraction.mjs
+      - name: Validate Avatar Progression integration
+        run: node scripts/validate-avatar-progression-v550.mjs
+      - name: Validate Bisaya and modular bootstrap
+        run: |
+          node scripts/validate-bisaya-audio-library.mjs
+          python3 scripts/validate_modular_bootstrap.py
+      - name: Validate deterministic contract inventory
+        run: node scripts/generate-module-contract-inventory-v2.mjs --check
+      - name: Check whitespace
+        run: git diff --check
