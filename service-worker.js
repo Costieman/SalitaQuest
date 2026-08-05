@@ -1,5 +1,5 @@
-const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-7-achievement-sharing-router-extraction-r60";
-const CACHE_NAME = "salita-quest-v5-6-8-home-reward-coordinator-extraction-r61";
+const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-8-home-reward-coordinator-extraction-r61";
+const CACHE_NAME = "salita-quest-v5-6-9-facebook-share-link-extraction-r62";
 const AVATAR_CASE_DISPLAY_HOTFIX = "2026-08-01-compact-display-share-stack-1";
 const TOPBAR_WORLD_PROGRESS_HOTFIX = "2026-08-01-separated-heading-rail-1";
 const SHARE_IMAGE_TRANSPORT_DELIVERY = "2026-08-02-direct-loader-1";
@@ -37,6 +37,7 @@ const APP_ENHANCEMENTS = [
   "./placement-onboarding-v1.js", "./placement-onboarding-v1.css", "./social-connections-v2.js",
   "./social-connections-v2.css", "./achievement-sharing-v4.js", "./achievement-sharing-v4.css",
   "./achievement-sharing-router-v2.js", "./achievement-sharing-router-v2.css", "./achievement-sharing-router-v3.js", "./src/features/sharing/achievement-sharing-router-v3.js",
+  "./facebook-share-link-v1.js", "./src/features/sharing/facebook-share-link-v1.js",
   "./progression-v54.js", "./exercise-fixes-v545.js"
 ];
 
