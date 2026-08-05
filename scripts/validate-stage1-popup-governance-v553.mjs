@@ -14,6 +14,7 @@ const files = [
   "popup-governor-v1.js",
   "level-progression-v2.js",
   "level-up-mobile-safety-v552.js",
+  "src/features/interface/level-up-mobile-safety-v552.js",
   "level-avatar-rewards-v1.js",
   "avatar-unlock-celebration-v1.js",
   "profile-emblem-control.js",
@@ -104,15 +105,15 @@ for (const [loaderFile, courseId] of [["app.html", "tagalog"], ["bisaya.html", "
   if (!scripts.some(path => /^profile-emblem-control\.js\?v=5\.5\.[34]$/.test(path))) {
     fail(`${loaderFile} must load the governed profile emblem runtime`);
   }
-  if (!scripts.includes("level-up-mobile-safety-v552.js?v=5.5.3")) {
-    fail(`${loaderFile} is missing level-up-mobile-safety-v552.js?v=5.5.3`);
+  if (!scripts.includes("src/features/interface/level-up-mobile-safety-v552.js?v=5.5.3")) {
+    fail(`${loaderFile} is missing src/features/interface/level-up-mobile-safety-v552.js?v=5.5.3`);
   }
 }
 
 const worker = read("service-worker.js");
 requireMarkers(worker, [
-  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-5-10-persistent-navigation-r52"',
-  'const CACHE_NAME = "salita-quest-v5-6-0-modular-bootstrap-r53"',
+  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-0-modular-bootstrap-r53"',
+  'const CACHE_NAME = "salita-quest-v5-6-1-first-module-extraction-r54"',
   '"./popup-governor-v1.js"',
   '"./level-avatar-rewards-v1.js"',
   '"./avatar-unlock-celebration-v1.js"',

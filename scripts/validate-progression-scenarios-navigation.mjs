@@ -224,8 +224,8 @@ for (const [htmlFile, courseId] of [["app.html", "tagalog"], ["bisaya.html", "ce
 
 const serviceWorker = read("service-worker.js");
 requireMarkers(serviceWorker, [
-  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-5-10-persistent-navigation-r52"',
-  'const CACHE_NAME = "salita-quest-v5-6-0-modular-bootstrap-r53"',
+  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-0-modular-bootstrap-r53"',
+  'const CACHE_NAME = "salita-quest-v5-6-1-first-module-extraction-r54"',
   '"./world-progress-status.css"',
   '"./level-progression-v2.js"',
   '"./level-progression-v2.css"',
