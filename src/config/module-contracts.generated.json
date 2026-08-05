@@ -20,7 +20,7 @@
       "mastery-feedback.js",
       "lesson-side-launcher.js",
       "mobile-session-refinement.js",
-      "popup-governor-v1.js",
+      "src/features/interface/popup-governor-v1.js",
       "profile-app.js",
       "profile-emblem-control.js",
       "adaptive-scenarios.js",
@@ -51,7 +51,7 @@
       "mastery-feedback.js",
       "lesson-side-launcher.js",
       "mobile-session-refinement.js",
-      "popup-governor-v1.js",
+      "src/features/interface/popup-governor-v1.js",
       "profile-emblem-control.js",
       "adaptive-scenarios.js",
       "level-progression-v2.js",
@@ -2484,58 +2484,6 @@
       "risk": 42
     },
     {
-      "file": "popup-governor-v1.js",
-      "bytes": 6239,
-      "contexts": [
-        "cebuano",
-        "tagalog"
-      ],
-      "courses": [
-        "cebuano",
-        "tagalog"
-      ],
-      "references": [],
-      "loads": [],
-      "fetches": [],
-      "workers": [],
-      "coreGlobals": [
-        "currentView",
-        "state"
-      ],
-      "window": {
-        "provides": [
-          "__salitaQuestPopupGovernorV1Installed",
-          "getAvatarImagePath",
-          "SalitaAvatarAssets",
-          "SalitaPopupGovernor"
-        ],
-        "consumes": [
-          "SalitaAvatarModel"
-        ]
-      },
-      "storage": [],
-      "dom": {
-        "ids": [
-          "homeView"
-        ],
-        "selectors": [],
-        "datasets": [
-          "currentView",
-          "placementUpdating",
-          "popupGovernance"
-        ]
-      },
-      "events": {
-        "listens": [
-          "pageshow"
-        ],
-        "dispatches": []
-      },
-      "role": "feature-extension",
-      "readiness": "extraction-candidate",
-      "risk": 17
-    },
-    {
       "file": "profile-app.js",
       "bytes": 15930,
       "contexts": [
@@ -2881,7 +2829,7 @@
     },
     {
       "file": "service-worker.js",
-      "bytes": 12569,
+      "bytes": 12609,
       "contexts": [
         "worker"
       ],
@@ -2945,6 +2893,7 @@
         "src/features/interface/collection-key-translation-hotfix.js",
         "src/features/interface/compact-desktop-layout.js",
         "src/features/interface/level-up-mobile-safety-v552.js",
+        "src/features/interface/popup-governor-v1.js",
         "src/features/progression/even-progress-rail.js",
         "src/features/progression/home-reward-coordinator.js",
         "src/features/sharing/achievement-sharing-router-v3.js",
@@ -3186,7 +3135,7 @@
     },
     {
       "file": "src/config/course-manifest.js",
-      "bytes": 6279,
+      "bytes": 6325,
       "contexts": [
         "bootstrap"
       ],
@@ -3207,7 +3156,6 @@
         "mastery-feedback.js",
         "mobile-session-refinement.js",
         "placement-onboarding-v1.js",
-        "popup-governor-v1.js",
         "profile-app.js",
         "profile-emblem-control.js",
         "progression-v54.js",
@@ -3217,6 +3165,7 @@
         "src/features/interface/collection-key-translation-hotfix.js",
         "src/features/interface/compact-desktop-layout.js",
         "src/features/interface/level-up-mobile-safety-v552.js",
+        "src/features/interface/popup-governor-v1.js",
         "src/features/progression/even-progress-rail.js",
         "src/features/progression/home-reward-coordinator.js",
         "ui-quality-fixes.js",
@@ -3807,6 +3756,58 @@
       "risk": 8
     },
     {
+      "file": "src/features/interface/popup-governor-v1.js",
+      "bytes": 6239,
+      "contexts": [
+        "cebuano",
+        "tagalog"
+      ],
+      "courses": [
+        "cebuano",
+        "tagalog"
+      ],
+      "references": [],
+      "loads": [],
+      "fetches": [],
+      "workers": [],
+      "coreGlobals": [
+        "currentView",
+        "state"
+      ],
+      "window": {
+        "provides": [
+          "__salitaQuestPopupGovernorV1Installed",
+          "getAvatarImagePath",
+          "SalitaAvatarAssets",
+          "SalitaPopupGovernor"
+        ],
+        "consumes": [
+          "SalitaAvatarModel"
+        ]
+      },
+      "storage": [],
+      "dom": {
+        "ids": [
+          "homeView"
+        ],
+        "selectors": [],
+        "datasets": [
+          "currentView",
+          "placementUpdating",
+          "popupGovernance"
+        ]
+      },
+      "events": {
+        "listens": [
+          "pageshow"
+        ],
+        "dispatches": []
+      },
+      "role": "feature-extension",
+      "readiness": "extraction-candidate",
+      "risk": 17
+    },
+    {
       "file": "src/features/progression/even-progress-rail.js",
       "bytes": 2891,
       "contexts": [
@@ -4295,7 +4296,7 @@
     },
     {
       "from": "achievement-sharing-avatar-bridge-v1.js",
-      "to": "popup-governor-v1.js",
+      "to": "src/features/avatar/avatar-artwork-registry-v554.js",
       "type": "window-api",
       "symbols": [
         "getAvatarImagePath"
@@ -4303,7 +4304,7 @@
     },
     {
       "from": "achievement-sharing-avatar-bridge-v1.js",
-      "to": "src/features/avatar/avatar-artwork-registry-v554.js",
+      "to": "src/features/interface/popup-governor-v1.js",
       "type": "window-api",
       "symbols": [
         "getAvatarImagePath"
@@ -4367,7 +4368,7 @@
     },
     {
       "from": "achievement-sharing-v4.js",
-      "to": "popup-governor-v1.js",
+      "to": "src/features/avatar/avatar-artwork-registry-v554.js",
       "type": "window-api",
       "symbols": [
         "getAvatarImagePath"
@@ -4375,7 +4376,7 @@
     },
     {
       "from": "achievement-sharing-v4.js",
-      "to": "src/features/avatar/avatar-artwork-registry-v554.js",
+      "to": "src/features/interface/popup-governor-v1.js",
       "type": "window-api",
       "symbols": [
         "getAvatarImagePath"
@@ -4391,7 +4392,7 @@
     },
     {
       "from": "achievement-sharing-v4.js",
-      "to": "popup-governor-v1.js",
+      "to": "src/features/interface/popup-governor-v1.js",
       "type": "window-api",
       "symbols": [
         "SalitaAvatarAssets"
@@ -4473,7 +4474,7 @@
     },
     {
       "from": "avatar-case-v1.js",
-      "to": "popup-governor-v1.js",
+      "to": "src/features/avatar/avatar-artwork-registry-v554.js",
       "type": "window-api",
       "symbols": [
         "getAvatarImagePath"
@@ -4481,7 +4482,7 @@
     },
     {
       "from": "avatar-case-v1.js",
-      "to": "src/features/avatar/avatar-artwork-registry-v554.js",
+      "to": "src/features/interface/popup-governor-v1.js",
       "type": "window-api",
       "symbols": [
         "getAvatarImagePath"
@@ -4557,7 +4558,7 @@
     },
     {
       "from": "avatar-unlock-celebration-v1.js",
-      "to": "popup-governor-v1.js",
+      "to": "src/features/avatar/avatar-artwork-registry-v554.js",
       "type": "window-api",
       "symbols": [
         "getAvatarImagePath"
@@ -4565,7 +4566,7 @@
     },
     {
       "from": "avatar-unlock-celebration-v1.js",
-      "to": "src/features/avatar/avatar-artwork-registry-v554.js",
+      "to": "src/features/interface/popup-governor-v1.js",
       "type": "window-api",
       "symbols": [
         "getAvatarImagePath"
@@ -4581,7 +4582,7 @@
     },
     {
       "from": "avatar-unlock-celebration-v1.js",
-      "to": "popup-governor-v1.js",
+      "to": "src/features/interface/popup-governor-v1.js",
       "type": "window-api",
       "symbols": [
         "SalitaAvatarAssets"
@@ -4621,7 +4622,7 @@
     },
     {
       "from": "avatar-unlock-celebration-v1.js",
-      "to": "popup-governor-v1.js",
+      "to": "src/features/interface/popup-governor-v1.js",
       "type": "window-api",
       "symbols": [
         "SalitaPopupGovernor"
@@ -4874,7 +4875,7 @@
     },
     {
       "from": "desktop-navigation-refinement.js",
-      "to": "popup-governor-v1.js",
+      "to": "src/features/avatar/avatar-artwork-registry-v554.js",
       "type": "window-api",
       "symbols": [
         "getAvatarImagePath"
@@ -4882,7 +4883,7 @@
     },
     {
       "from": "desktop-navigation-refinement.js",
-      "to": "src/features/avatar/avatar-artwork-registry-v554.js",
+      "to": "src/features/interface/popup-governor-v1.js",
       "type": "window-api",
       "symbols": [
         "getAvatarImagePath"
@@ -5036,7 +5037,7 @@
     },
     {
       "from": "level-progression-v2.js",
-      "to": "popup-governor-v1.js",
+      "to": "src/features/interface/popup-governor-v1.js",
       "type": "window-api",
       "symbols": [
         "SalitaPopupGovernor"
@@ -5116,31 +5117,6 @@
         "totalLearningPoints",
         "unlockedModules",
         "updateAll"
-      ]
-    },
-    {
-      "from": "popup-governor-v1.js",
-      "to": "app.js",
-      "type": "core-globals",
-      "symbols": [
-        "currentView",
-        "state"
-      ]
-    },
-    {
-      "from": "popup-governor-v1.js",
-      "to": "avatar-progression-hotfix-v551.js",
-      "type": "window-api",
-      "symbols": [
-        "SalitaAvatarModel"
-      ]
-    },
-    {
-      "from": "popup-governor-v1.js",
-      "to": "coin-avatar-shop-reveal-v1.js",
-      "type": "window-api",
-      "symbols": [
-        "SalitaAvatarModel"
       ]
     },
     {
@@ -5483,10 +5459,35 @@
     },
     {
       "from": "src/features/interface/level-up-mobile-safety-v552.js",
-      "to": "popup-governor-v1.js",
+      "to": "src/features/interface/popup-governor-v1.js",
       "type": "window-api",
       "symbols": [
         "SalitaPopupGovernor"
+      ]
+    },
+    {
+      "from": "src/features/interface/popup-governor-v1.js",
+      "to": "app.js",
+      "type": "core-globals",
+      "symbols": [
+        "currentView",
+        "state"
+      ]
+    },
+    {
+      "from": "src/features/interface/popup-governor-v1.js",
+      "to": "avatar-progression-hotfix-v551.js",
+      "type": "window-api",
+      "symbols": [
+        "SalitaAvatarModel"
+      ]
+    },
+    {
+      "from": "src/features/interface/popup-governor-v1.js",
+      "to": "coin-avatar-shop-reveal-v1.js",
+      "type": "window-api",
+      "symbols": [
+        "SalitaAvatarModel"
       ]
     },
     {
@@ -6021,8 +6022,8 @@
     {
       "name": "pageshow",
       "listeners": [
-        "popup-governor-v1.js",
         "src/features/interface/level-up-mobile-safety-v552.js",
+        "src/features/interface/popup-governor-v1.js",
         "src/features/progression/home-reward-coordinator.js"
       ],
       "dispatchers": []
@@ -6612,7 +6613,7 @@
     {
       "symbol": "__salitaQuestPopupGovernorV1Installed",
       "providers": [
-        "popup-governor-v1.js"
+        "src/features/interface/popup-governor-v1.js"
       ]
     },
     {
@@ -6673,8 +6674,8 @@
     {
       "symbol": "getAvatarImagePath",
       "providers": [
-        "popup-governor-v1.js",
-        "src/features/avatar/avatar-artwork-registry-v554.js"
+        "src/features/avatar/avatar-artwork-registry-v554.js",
+        "src/features/interface/popup-governor-v1.js"
       ]
     },
     {
@@ -6698,7 +6699,7 @@
     {
       "symbol": "SalitaAvatarAssets",
       "providers": [
-        "popup-governor-v1.js"
+        "src/features/interface/popup-governor-v1.js"
       ]
     },
     {
@@ -6784,7 +6785,7 @@
     {
       "symbol": "SalitaPopupGovernor",
       "providers": [
-        "popup-governor-v1.js"
+        "src/features/interface/popup-governor-v1.js"
       ]
     },
     {

@@ -72,3 +72,5 @@ Before extracting these files, introduce an explicit engine adapter that owns ac
 11. `avatar-collection-summary-v1.js` — completed as `src/features/avatar/avatar-collection-summary-v1.js`, with the root compatibility URL retained through r65.
 
 12. `collection-key-translation-hotfix.js` — completed as `src/features/interface/collection-key-translation-hotfix.js`, with the root compatibility URL retained through r66.
+
+13. `popup-governor-v1.js` — completed as `src/features/interface/popup-governor-v1.js`, with the root compatibility URL retained through r67.

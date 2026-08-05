@@ -12,6 +12,7 @@ const requireMarkers = (source, markers, label) => markers.forEach(marker => {
 
 const files = [
   "popup-governor-v1.js",
+  "src/features/interface/popup-governor-v1.js",
   "level-progression-v2.js",
   "level-up-mobile-safety-v552.js",
   "src/features/interface/level-up-mobile-safety-v552.js",
@@ -23,7 +24,13 @@ const files = [
 ];
 for (const file of files) new vm.Script(read(file), {filename:file});
 
-const governor = read("popup-governor-v1.js");
+const compatibility = read("popup-governor-v1.js");
+const governor = read("src/features/interface/popup-governor-v1.js");
+if (!compatibility.includes('const TARGET = "./src/features/interface/popup-governor-v1.js?v=5.5.3"') ||
+    !compatibility.includes("document.write") || !compatibility.includes("script.async = false")) {
+  fail("Historical popup governor URL is not a compatibility-only ordered loader");
+}
+
 requireMarkers(governor, [
   'const RELEASE = "5.5.3"',
   "const queue = []",
@@ -97,7 +104,7 @@ for (const [loaderFile, courseId] of [["app.html", "tagalog"], ["bisaya.html", "
   ], `${loaderFile} modular entry point`);
   const scripts = courseManifest.courses[courseId]?.scripts;
   if (!Array.isArray(scripts)) fail(`${courseId} has no script manifest`);
-  const governorIndex = scripts.indexOf("popup-governor-v1.js?v=5.5.3");
+  const governorIndex = scripts.indexOf("src/features/interface/popup-governor-v1.js?v=5.5.3");
   const levelIndex = scripts.indexOf("level-progression-v2.js?v=5.5.3");
   if (governorIndex < 0 || levelIndex < 0 || governorIndex > levelIndex) {
     fail(`${loaderFile} must load popup governance before level progression`);
@@ -112,9 +119,10 @@ for (const [loaderFile, courseId] of [["app.html", "tagalog"], ["bisaya.html", "
 
 const worker = read("service-worker.js");
 requireMarkers(worker, [
-  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-12-avatar-collection-summary-extraction-r65"',
-  'const CACHE_NAME = "salita-quest-v5-6-13-collection-key-translation-hotfix-extraction-r66"',
+  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-13-collection-key-translation-hotfix-extraction-r66"',
+  'const CACHE_NAME = "salita-quest-v5-6-14-popup-governor-extraction-r67"',
   '"./popup-governor-v1.js"',
+  '"./src/features/interface/popup-governor-v1.js"',
   '"./level-avatar-rewards-v1.js"',
   '"./avatar-unlock-celebration-v1.js"',
   '"./avatar-case-v1.js"',
@@ -126,7 +134,7 @@ if (!refresh.includes('const RELEASE = "5.5.6"')) {
   fail("Mobile refresh page is missing the canonical governed release");
 }
 requireMarkers(refresh, [
-  "popup-governor-v1.js",
+  "src/features/interface/popup-governor-v1.js",
   "level-avatar-rewards-v1.js",
   "avatar-unlock-celebration-v1.js"
 ], "Mobile refresh page");

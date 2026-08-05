@@ -33,7 +33,7 @@
 13. `mastery-feedback.js`
 14. `lesson-side-launcher.js`
 15. `mobile-session-refinement.js`
-16. `popup-governor-v1.js`
+16. `src/features/interface/popup-governor-v1.js`
 17. `profile-app.js`
 18. `profile-emblem-control.js`
 19. `adaptive-scenarios.js`
@@ -65,7 +65,7 @@
 12. `mastery-feedback.js`
 13. `lesson-side-launcher.js`
 14. `mobile-session-refinement.js`
-15. `popup-governor-v1.js`
+15. `src/features/interface/popup-governor-v1.js`
 16. `profile-emblem-control.js`
 17. `adaptive-scenarios.js`
 18. `level-progression-v2.js`
@@ -97,7 +97,7 @@
 - `src/features/avatar/avatar-artwork-registry-v554.js` — risk 13; 0 engine globals; 2 storage operations.
 - `src/features/interface/clean-topbar.js` — risk 14; 2 engine globals; 0 storage operations.
 - `src/features/progression/even-progress-rail.js` — risk 14; 3 engine globals; 0 storage operations.
-- `popup-governor-v1.js` — risk 17; 2 engine globals; 0 storage operations.
+- `src/features/interface/popup-governor-v1.js` — risk 17; 2 engine globals; 0 storage operations.
 - `level-avatar-rewards-v1.js` — risk 25; 1 engine globals; 4 storage operations.
 - `avatar-progression-hotfix-v551.js` — risk 34; 5 engine globals; 0 storage operations.
 
@@ -262,7 +262,7 @@
 | `__salitaQuestMobileSessionRefinementInstalled` | mobile-session-refinement.js |
 | `__salitaQuestPersistentNavigationV1Installed` | desktop-navigation-refinement.js |
 | `__salitaQuestPlacementOnboardingV1Installed` | placement-onboarding-v1.js |
-| `__salitaQuestPopupGovernorV1Installed` | popup-governor-v1.js |
+| `__salitaQuestPopupGovernorV1Installed` | src/features/interface/popup-governor-v1.js |
 | `__salitaQuestProfileEmblemControlInstalled` | profile-emblem-control.js |
 | `__salitaQuestPronunciationReleaseControlInstalled` | src/features/audio/pronunciation-release-control.js |
 | `__salitaQuestQualityFixesInstalled` | ui-quality-fixes.js |
@@ -275,7 +275,7 @@
 | `SalitaAchievementAvatarBridge` | achievement-sharing-avatar-bridge-v1.js |
 | `SalitaAvatarArtwork` | src/features/avatar/avatar-artwork-registry-v554.js |
 | `SalitaAvatarArtworkReady` | src/features/avatar/avatar-artwork-registry-v554.js |
-| `SalitaAvatarAssets` | popup-governor-v1.js |
+| `SalitaAvatarAssets` | src/features/interface/popup-governor-v1.js |
 | `SalitaAvatarCatalogue` | avatar-progression-hotfix-v551.js, coin-avatar-shop-reveal-v1.js |
 | `SalitaAvatarCollectionScreen` | avatar-collection-screen-v1.js |
 | `SalitaAvatarCollectionSummary` | src/features/avatar/avatar-collection-summary-v1.js |
@@ -289,7 +289,7 @@
 | `SalitaLevelAvatarRewards` | level-avatar-rewards-v1.js |
 | `SalitaLevelProgression` | level-progression-v2.js |
 | `SalitaLevelUpMobileSafety` | src/features/interface/level-up-mobile-safety-v552.js |
-| `SalitaPopupGovernor` | popup-governor-v1.js |
+| `SalitaPopupGovernor` | src/features/interface/popup-governor-v1.js |
 | `SalitaQuestAchievementSharing` | achievement-sharing-v4.js |
 | `SalitaQuestAvatarCase` | avatar-case-v1.js |
 | `SalitaQuestBadgeChest` | badge-chest-v2.js |
@@ -345,7 +345,7 @@
 
 | ID | Referencing files |
 |---|---|
-| `homeView` | badge-catalogue-v2.js, key-run-refinement.js, level-progression-v2.js, popup-governor-v1.js, src/features/progression/home-reward-coordinator.js, weekly-avatar-polish.js |
+| `homeView` | badge-catalogue-v2.js, key-run-refinement.js, level-progression-v2.js, src/features/interface/popup-governor-v1.js, src/features/progression/home-reward-coordinator.js, weekly-avatar-polish.js |
 | `questChest` | app.js, key-run-refinement.js, src/features/interface/collection-key-translation-hotfix.js, weekly-avatar-chest.js, weekly-avatar-polish.js, weekly-avatar-shard-rewards-v1.js |
 | `feedbackBox` | app.js, exercise-fixes-v545.js, lesson-side-launcher.js, mobile-session-refinement.js, ui-quality-fixes.js |
 | `audioBtn` | app.js, bisaya-app-loader.js, lesson-side-launcher.js, src/features/interface/compact-desktop-layout.js |
