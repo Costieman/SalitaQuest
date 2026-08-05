@@ -91,9 +91,9 @@
 - `src/features/economy/economy-tracking-phase6-v1.js` — risk 10; 0 engine globals; 0 storage operations.
 - `src/features/interface/compact-desktop-layout.js` — risk 11; 1 engine globals; 0 storage operations.
 - `avatar-collection-summary-v1.js` — risk 12; 0 engine globals; 2 storage operations.
-- `avatar-collection-tabs-phase6-1-v1.js` — risk 12; 0 engine globals; 0 storage operations.
 - `collection-key-translation-hotfix.js` — risk 12; 2 engine globals; 0 storage operations.
 - `src/features/audio/pronunciation-release-control.js` — risk 12; 2 engine globals; 0 storage operations.
+- `src/features/avatar/avatar-collection-tabs-phase6-1-v1.js` — risk 12; 0 engine globals; 0 storage operations.
 - `src/features/avatar/avatar-artwork-registry-v554.js` — risk 13; 0 engine globals; 2 storage operations.
 - `src/features/interface/clean-topbar.js` — risk 14; 2 engine globals; 0 storage operations.
 - `src/features/progression/even-progress-rail.js` — risk 14; 3 engine globals; 0 storage operations.
@@ -226,7 +226,7 @@
 | `__salitaAvatarArtworkRegistryV556Installed` | src/features/avatar/avatar-artwork-registry-v554.js |
 | `__salitaAvatarCollectionScreenInstalled` | avatar-collection-screen-v1.js |
 | `__salitaAvatarCollectionSummaryV1Installed` | avatar-collection-summary-v1.js |
-| `__salitaAvatarCollectionTabsPhase63Installed` | avatar-collection-tabs-phase6-1-v1.js |
+| `__salitaAvatarCollectionTabsPhase63Installed` | src/features/avatar/avatar-collection-tabs-phase6-1-v1.js |
 | `__salitaCoinAvatarRevealV1Installed` | coin-avatar-shop-reveal-v1.js |
 | `__salitaCoinAvatarShardShopV1Installed` | coin-avatar-shard-shop-v1.js |
 | `__salitaCoinAvatarShopBadgesV1Installed` | coin-avatar-shop-badges-v1.js |
@@ -279,7 +279,7 @@
 | `SalitaAvatarCatalogue` | avatar-progression-hotfix-v551.js, coin-avatar-shop-reveal-v1.js |
 | `SalitaAvatarCollectionScreen` | avatar-collection-screen-v1.js |
 | `SalitaAvatarCollectionSummary` | avatar-collection-summary-v1.js |
-| `SalitaAvatarCollectionTabsPhase61` | avatar-collection-tabs-phase6-1-v1.js |
+| `SalitaAvatarCollectionTabsPhase61` | src/features/avatar/avatar-collection-tabs-phase6-1-v1.js |
 | `SalitaAvatarHotfixReady` | avatar-progression-hotfix-v551.js |
 | `SalitaAvatarModel` | avatar-progression-hotfix-v551.js, coin-avatar-shop-reveal-v1.js |
 | `SalitaAvatarUnlockCelebration` | avatar-unlock-celebration-v1.js |
@@ -309,7 +309,7 @@
 | `salita:avatar-case-changed` | avatar-case-v1.js | — |
 | `salita:avatar-case-ready` | avatar-case-v1.js | — |
 | `salita:avatar-collection-changed` | avatar-collection-screen-v1.js, coin-avatar-shard-shop-v1.js, coin-avatar-shop-reveal-v1.js, level-avatar-rewards-v1.js, weekly-avatar-shard-rewards-v1.js | achievement-sharing-avatar-bridge-v1.js, achievement-sharing-v4.js, avatar-case-v1.js, avatar-collection-screen-v1.js, avatar-collection-summary-v1.js, avatar-unlock-celebration-v1.js, src/features/avatar/avatar-artwork-registry-v554.js, weekly-avatar-shard-rewards-v1.js |
-| `salita:avatar-collection-tabs-ready` | avatar-collection-tabs-phase6-1-v1.js | — |
+| `salita:avatar-collection-tabs-ready` | src/features/avatar/avatar-collection-tabs-phase6-1-v1.js | — |
 | `salita:avatar-equipped` | avatar-collection-screen-v1.js, profile-app.js | desktop-navigation-refinement.js, profile-emblem-control.js, src/features/avatar/avatar-artwork-registry-v554.js, weekly-avatar-shard-rewards-v1.js |
 | `salita:avatar-milestones-awarded` | level-avatar-rewards-v1.js | avatar-unlock-celebration-v1.js |
 | `salita:avatar-milestones-repaired` | level-avatar-rewards-v1.js | — |

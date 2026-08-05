@@ -87,8 +87,8 @@ if (!(mobileCatalogue >= 0 && mobileCatalogue < mobileMigration && mobileMigrati
 }
 
 for (const required of [
-  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-9-facebook-share-link-extraction-r62"',
-  'const CACHE_NAME = "salita-quest-v5-6-10-economy-tracking-extraction-r63"',
+  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-10-economy-tracking-extraction-r63"',
+  'const CACHE_NAME = "salita-quest-v5-6-11-avatar-collection-tabs-extraction-r64"',
   '"./avatar-artwork-registry-v554.js"',
   '"./src/features/avatar/avatar-artwork-registry-v554.js"'
 ]) {

@@ -105,8 +105,8 @@ for(const [htmlFile,courseId] of [["app.html","tagalog"],["bisaya.html","cebuano
 }
 
 requireMarkers(worker,[
-  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-9-facebook-share-link-extraction-r62"',
-  'const CACHE_NAME = "salita-quest-v5-6-10-economy-tracking-extraction-r63"',
+  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-10-economy-tracking-extraction-r63"',
+  'const CACHE_NAME = "salita-quest-v5-6-11-avatar-collection-tabs-extraction-r64"',
   '"./desktop-navigation-refinement.js"',
   '"./desktop-navigation-refinement.css"'
 ],"Persistent navigation offline release");

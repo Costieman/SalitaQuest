@@ -853,61 +853,6 @@
       "risk": 12
     },
     {
-      "file": "avatar-collection-tabs-phase6-1-v1.js",
-      "bytes": 5487,
-      "contexts": [
-        "cebuano",
-        "tagalog"
-      ],
-      "courses": [
-        "cebuano",
-        "tagalog"
-      ],
-      "references": [],
-      "loads": [],
-      "fetches": [],
-      "workers": [],
-      "coreGlobals": [],
-      "window": {
-        "provides": [
-          "__salitaAvatarCollectionTabsPhase63Installed",
-          "SalitaAvatarCollectionTabsPhase61"
-        ],
-        "consumes": [
-          "SalitaEconomyTrackingPhase6"
-        ]
-      },
-      "storage": [],
-      "dom": {
-        "ids": [],
-        "selectors": [
-          ":scope > .sq-avatar-case-panel",
-          ":scope > .sq-avatar-collection-close",
-          ":scope > .sq-avatar-collection-header",
-          ":scope > .sq-avatar-collection-tabs",
-          ":scope > .sq-economy-tracking-panel",
-          ".sq-avatar-collection-dialog",
-          "[data-avatar-collection-tab]"
-        ],
-        "datasets": [
-          "activeCollectionTab",
-          "avatarCollectionPane",
-          "avatarCollectionTab"
-        ]
-      },
-      "events": {
-        "listens": [
-          "click"
-        ],
-        "dispatches": [
-          "salita:avatar-collection-tabs-ready"
-        ]
-      },
-      "role": "collection-and-rewards",
-      "readiness": "extraction-candidate",
-      "risk": 12
-    },
-    {
       "file": "avatar-progression-hotfix-v551.js",
       "bytes": 10493,
       "contexts": [
@@ -1595,7 +1540,7 @@
     },
     {
       "file": "coin-avatar-shop-topbar-v1.js",
-      "bytes": 3137,
+      "bytes": 3157,
       "contexts": [
         "cebuano",
         "tagalog"
@@ -1606,16 +1551,16 @@
       ],
       "references": [
         "avatar-collection-summary-v1.js",
-        "avatar-collection-tabs-phase6-1-v1.js",
         "coin-testing-grant-100k-v1.js",
         "coin-testing-grant-50k-phase5-v1.js",
+        "src/features/avatar/avatar-collection-tabs-phase6-1-v1.js",
         "src/features/economy/economy-tracking-phase6-v1.js"
       ],
       "loads": [
         "avatar-collection-summary-v1.js",
-        "avatar-collection-tabs-phase6-1-v1.js",
         "coin-testing-grant-100k-v1.js",
         "coin-testing-grant-50k-phase5-v1.js",
+        "src/features/avatar/avatar-collection-tabs-phase6-1-v1.js",
         "src/features/economy/economy-tracking-phase6-v1.js"
       ],
       "fetches": [],
@@ -3054,7 +2999,7 @@
     },
     {
       "file": "service-worker.js",
-      "bytes": 12150,
+      "bytes": 12306,
       "contexts": [
         "worker"
       ],
@@ -3070,6 +3015,7 @@
         "avatar-case-v1.js",
         "avatar-catalogue-v1.js",
         "avatar-collection-screen-v1.js",
+        "avatar-collection-tabs-phase6-1-v1.js",
         "avatar-progression-hotfix-v551.js",
         "avatar-progression-migration-v1.js",
         "avatar-unlock-celebration-v1.js",
@@ -3107,6 +3053,7 @@
         "src/features/audio/pronunciation-release-control.js",
         "src/features/avatar/avatar-artwork-registry-v554.js",
         "src/features/avatar/avatar-catalogue-v1.js",
+        "src/features/avatar/avatar-collection-tabs-phase6-1-v1.js",
         "src/features/avatar/avatar-progression-migration-v1.js",
         "src/features/economy/economy-tracking-phase6-v1.js",
         "src/features/interface/clean-topbar.js",
@@ -3564,6 +3511,61 @@
       "role": "collection-and-rewards",
       "readiness": "extraction-candidate",
       "risk": 3
+    },
+    {
+      "file": "src/features/avatar/avatar-collection-tabs-phase6-1-v1.js",
+      "bytes": 5487,
+      "contexts": [
+        "cebuano",
+        "tagalog"
+      ],
+      "courses": [
+        "cebuano",
+        "tagalog"
+      ],
+      "references": [],
+      "loads": [],
+      "fetches": [],
+      "workers": [],
+      "coreGlobals": [],
+      "window": {
+        "provides": [
+          "__salitaAvatarCollectionTabsPhase63Installed",
+          "SalitaAvatarCollectionTabsPhase61"
+        ],
+        "consumes": [
+          "SalitaEconomyTrackingPhase6"
+        ]
+      },
+      "storage": [],
+      "dom": {
+        "ids": [],
+        "selectors": [
+          ":scope > .sq-avatar-case-panel",
+          ":scope > .sq-avatar-collection-close",
+          ":scope > .sq-avatar-collection-header",
+          ":scope > .sq-avatar-collection-tabs",
+          ":scope > .sq-economy-tracking-panel",
+          ".sq-avatar-collection-dialog",
+          "[data-avatar-collection-tab]"
+        ],
+        "datasets": [
+          "activeCollectionTab",
+          "avatarCollectionPane",
+          "avatarCollectionTab"
+        ]
+      },
+      "events": {
+        "listens": [
+          "click"
+        ],
+        "dispatches": [
+          "salita:avatar-collection-tabs-ready"
+        ]
+      },
+      "role": "collection-and-rewards",
+      "readiness": "extraction-candidate",
+      "risk": 12
     },
     {
       "file": "src/features/avatar/avatar-progression-migration-v1.js",
@@ -4546,14 +4548,6 @@
       ]
     },
     {
-      "from": "avatar-collection-tabs-phase6-1-v1.js",
-      "to": "src/features/economy/economy-tracking-phase6-v1.js",
-      "type": "window-api",
-      "symbols": [
-        "SalitaEconomyTrackingPhase6"
-      ]
-    },
-    {
       "from": "avatar-progression-hotfix-v551.js",
       "to": "app.js",
       "type": "core-globals",
@@ -4819,17 +4813,17 @@
     },
     {
       "from": "coin-avatar-shop-topbar-v1.js",
-      "to": "avatar-collection-tabs-phase6-1-v1.js",
-      "type": "loads"
-    },
-    {
-      "from": "coin-avatar-shop-topbar-v1.js",
       "to": "coin-testing-grant-100k-v1.js",
       "type": "loads"
     },
     {
       "from": "coin-avatar-shop-topbar-v1.js",
       "to": "coin-testing-grant-50k-phase5-v1.js",
+      "type": "loads"
+    },
+    {
+      "from": "coin-avatar-shop-topbar-v1.js",
+      "to": "src/features/avatar/avatar-collection-tabs-phase6-1-v1.js",
       "type": "loads"
     },
     {
@@ -5427,6 +5421,14 @@
       ]
     },
     {
+      "from": "src/features/avatar/avatar-collection-tabs-phase6-1-v1.js",
+      "to": "src/features/economy/economy-tracking-phase6-v1.js",
+      "type": "window-api",
+      "symbols": [
+        "SalitaEconomyTrackingPhase6"
+      ]
+    },
+    {
       "from": "src/features/avatar/avatar-progression-migration-v1.js",
       "to": "app.js",
       "type": "core-globals",
@@ -5906,7 +5908,6 @@
         "app.js",
         "avatar-case-v1.js",
         "avatar-collection-screen-v1.js",
-        "avatar-collection-tabs-phase6-1-v1.js",
         "avatar-progression-hotfix-v551.js",
         "avatar-unlock-celebration-v1.js",
         "badge-chest-v2.js",
@@ -5924,6 +5925,7 @@
         "progression-v54.js",
         "social-connections-v2.js",
         "src/features/audio/pronunciation-release-control.js",
+        "src/features/avatar/avatar-collection-tabs-phase6-1-v1.js",
         "src/features/sharing/achievement-sharing-router-v3.js",
         "weekly-avatar-chest.js",
         "weekly-avatar-shard-rewards-v1.js"
@@ -6100,7 +6102,7 @@
       "name": "salita:avatar-collection-tabs-ready",
       "listeners": [],
       "dispatchers": [
-        "avatar-collection-tabs-phase6-1-v1.js"
+        "src/features/avatar/avatar-collection-tabs-phase6-1-v1.js"
       ]
     },
     {
@@ -6390,7 +6392,7 @@
     {
       "symbol": "__salitaAvatarCollectionTabsPhase63Installed",
       "providers": [
-        "avatar-collection-tabs-phase6-1-v1.js"
+        "src/features/avatar/avatar-collection-tabs-phase6-1-v1.js"
       ]
     },
     {
@@ -6717,7 +6719,7 @@
     {
       "symbol": "SalitaAvatarCollectionTabsPhase61",
       "providers": [
-        "avatar-collection-tabs-phase6-1-v1.js"
+        "src/features/avatar/avatar-collection-tabs-phase6-1-v1.js"
       ]
     },
     {
