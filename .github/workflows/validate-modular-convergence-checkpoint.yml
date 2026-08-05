@@ -1,0 +1,78 @@
+name: Validate modular convergence checkpoint
+
+on:
+  pull_request:
+  push:
+    branches:
+      - agent/**
+
+permissions:
+  contents: read
+
+jobs:
+  convergence:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Verify committed checkpoint evidence
+        run: |
+          node scripts/analyze-modular-convergence.mjs \
+            --baseline 1f954fec0af3e8dd3fecf699565aae94d4b0df75 \
+            --current b7db34dd9f633e8bc014fde1ce04a5f54e40d3d0 \
+            --check
+
+      - name: Measure current branch architecture
+        run: |
+          node scripts/analyze-modular-convergence.mjs \
+            --baseline 1f954fec0af3e8dd3fecf699565aae94d4b0df75 \
+            --current HEAD \
+            --report /tmp/MODULAR_CONVERGENCE_CURRENT.md \
+            --json /tmp/MODULAR_CONVERGENCE_CURRENT.json
+
+      - name: Enforce convergence ceilings
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+
+          const report = JSON.parse(fs.readFileSync('/tmp/MODULAR_CONVERGENCE_CURRENT.json', 'utf8'));
+          const current = report.current;
+          const failures = [];
+          const requireCeiling = (label, value, ceiling) => {
+            if (value > ceiling) failures.push(`${label}: ${value} exceeds ${ceiling}`);
+          };
+
+          requireCeiling('Direct-storage files outside adapters', current.boundaries.storageFilesOutsideAdapters, 19);
+          requireCeiling('Root files with direct storage', current.boundaries.rootStorageFiles, 15);
+          requireCeiling('Active-profile lookup owners', current.boundaries.activeProfileReaderCount, 20);
+          requireCeiling('Non-adapter switchView owners', current.boundaries.switchViewFilesOutsideAdapters, 4);
+          requireCeiling('Compatibility coordinators', current.runtime.compatibilityCoordinators, 28);
+
+          if (report.decision.verdict.startsWith('Structural complexity has increased')) {
+            failures.push(`Analyzer verdict: ${report.decision.verdict}`);
+          }
+
+          if (failures.length) {
+            console.error('Modular convergence guard failed:');
+            for (const failure of failures) console.error(`- ${failure}`);
+            process.exit(1);
+          }
+
+          console.log(JSON.stringify({
+            verdict: report.decision.verdict,
+            storageFilesOutsideAdapters: current.boundaries.storageFilesOutsideAdapters,
+            rootStorageFiles: current.boundaries.rootStorageFiles,
+            activeProfileReaders: current.boundaries.activeProfileReaderCount,
+            nonAdapterSwitchViewOwners: current.boundaries.switchViewFilesOutsideAdapters,
+            compatibilityCoordinators: current.runtime.compatibilityCoordinators
+          }, null, 2));
+          NODE
+
+      - name: Check whitespace
+        run: git diff --check
