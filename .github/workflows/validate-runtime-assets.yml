@@ -1,0 +1,37 @@
+name: Validate runtime assets
+
+on:
+  push:
+    branches:
+      - sandbox/refactor-audit-v1
+  pull_request:
+    paths:
+      - "index.html"
+      - "app.html"
+      - "bisaya.html"
+      - "service-worker.js"
+      - "src/**"
+      - "*.js"
+      - "*.css"
+      - "scripts/audit-runtime-assets.mjs"
+      - ".github/workflows/validate-runtime-assets.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  runtime-assets:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Build runtime reachability report
+        run: node scripts/audit-runtime-assets.mjs
+      - name: Upload runtime audit
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: runtime-asset-audit
+          path: audit/
