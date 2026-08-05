@@ -4,22 +4,29 @@ on:
   pull_request:
     paths:
       - "*.js"
+      - "mobile-refresh.html"
       - "src/**/*.js"
       - "src/config/module-contracts.generated.json"
       - "docs/MODULE_CONTRACT_INVENTORY.md"
+      - "docs/MODULE_EXTRACTION_PLAN.md"
       - "scripts/generate-module-contract-inventory-v2.mjs"
+      - "scripts/validate-mobile-level-up-hotfix-v552.mjs"
       - ".github/workflows/validate-module-contract-inventory.yml"
   push:
     branches:
       - main
       - agent/modular-refactor-foundation
       - agent/module-contract-inventory
+      - agent/extract-level-up-mobile-safety
     paths:
       - "*.js"
+      - "mobile-refresh.html"
       - "src/**/*.js"
       - "src/config/module-contracts.generated.json"
       - "docs/MODULE_CONTRACT_INVENTORY.md"
+      - "docs/MODULE_EXTRACTION_PLAN.md"
       - "scripts/generate-module-contract-inventory-v2.mjs"
+      - "scripts/validate-mobile-level-up-hotfix-v552.mjs"
       - ".github/workflows/validate-module-contract-inventory.yml"
 
 permissions:
@@ -39,5 +46,7 @@ jobs:
         run: node --check scripts/generate-module-contract-inventory-v2.mjs
       - name: Validate generated inventory
         run: node scripts/generate-module-contract-inventory-v2.mjs --check
+      - name: Validate first module extraction
+        run: node scripts/validate-mobile-level-up-hotfix-v552.mjs
       - name: Check whitespace
         run: git diff --check
