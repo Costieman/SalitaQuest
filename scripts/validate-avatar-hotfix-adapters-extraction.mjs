@@ -92,8 +92,9 @@ for (const token of refreshTokens) {
 
 const previousCache = worker.match(/const PREVIOUS_CACHE_NAME = "([^"]+)"/)?.[1] || "";
 const currentCache = worker.match(/const CACHE_NAME = "([^"]+)"/)?.[1] || "";
-if (previousCache !== "salita-quest-v5-6-19-long-term-badge-adapter-extraction-r72") fail("Previous cache is not r68");
-if (currentCache !== "salita-quest-v5-6-20-avatar-case-profile-adapter-extraction-r73") fail("Current cache is not r69");
+const previousRevision = Number(previousCache.match(/-r(\d+)$/)?.[1] || 0);
+const currentRevision = Number(currentCache.match(/-r(\d+)$/)?.[1] || 0);
+if (!(previousRevision >= 69 && currentRevision > previousRevision)) fail("Avatar hotfix cache boundary is not monotonic beyond r69");
 for (const marker of [`"./${rootFile}"`, `"./${modelFile}"`, `"./${navigationFile}"`]) {
   if (!worker.includes(marker)) fail(`Offline delivery missing ${marker}`);
 }

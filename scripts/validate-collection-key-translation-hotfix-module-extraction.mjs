@@ -37,6 +37,8 @@ for (const marker of [
   './avatar-case-desktop-safety.css?v=5.5.11',
   './mystery-rarity-roll-v1.js?v=5.5.11',
   './avatar-collection-page-v2.css?v=5.5.12',
+  './src/adapters/avatar/avatar-collection-profile-runtime-v1.js?v=5.5.12',
+  './src/adapters/avatar/avatar-collection-profile-runtime-v1.js?v=5.5.12',
   './avatar-collection-page-v2.js?v=5.5.12',
   './avatar-case-page-tab-v1.js?v=1.1',
   './avatar-card-actions-v1.js?v=1.1'
@@ -54,8 +56,8 @@ const cebuanoIndex = manifest.indexOf('const cebuanoScripts');
 if (!(sharingIndex >= 0 && hotfixIndex > sharingIndex && cebuanoIndex > hotfixIndex)) fail("Tagalog final hotfix ordering changed");
 
 for (const marker of [
-  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-19-long-term-badge-adapter-extraction-r72"',
-  'const CACHE_NAME = "salita-quest-v5-6-20-avatar-case-profile-adapter-extraction-r73"',
+  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-20-avatar-case-profile-adapter-extraction-r73"',
+  'const CACHE_NAME = "salita-quest-v5-6-21-avatar-collection-profile-adapter-extraction-r74"',
   '"./collection-key-translation-hotfix.js"',
   '"./src/features/interface/collection-key-translation-hotfix.js"'
 ]) if (!worker.includes(marker)) fail(`Offline delivery is missing ${marker}`);
@@ -117,6 +119,7 @@ const expectedAssets = [
   './avatar-case-desktop-safety.css?v=5.5.11',
   './mystery-rarity-roll-v1.js?v=5.5.11',
   './avatar-collection-page-v2.css?v=5.5.12',
+  './src/adapters/avatar/avatar-collection-profile-runtime-v1.js?v=5.5.12',
   './avatar-collection-page-v2.js?v=5.5.12',
   './avatar-case-page-tab-v1.js?v=1.1',
   './avatar-card-actions-v1.js?v=1.1'

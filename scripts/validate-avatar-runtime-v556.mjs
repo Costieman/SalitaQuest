@@ -22,7 +22,10 @@ const sources = {
       compatibility:read("avatar-progression-hotfix-v551.js"),
   profileLoader:read("profile-emblem-control.js"),
   profile:read("profile-app.js"),
-  collection:read("avatar-collection-screen-v1.js"),
+  collectionCompatibility:read("avatar-collection-screen-v1.js"),
+  collectionProfile:read("src/adapters/avatar/avatar-collection-profile-runtime-v1.js"),
+  collection:read("src/features/avatar/avatar-collection-screen-v1.js"),
+  collectionPage:read("avatar-collection-page-v2.js"),
   avatarCaseRoot:read("avatar-case-v1.js"),
   avatarCaseProfile:read("src/adapters/avatar/avatar-case-profile-runtime-v1.js"),
   avatarCase:read("src/features/avatar/avatar-case-v1.js"),
@@ -98,6 +101,9 @@ check(sources.css.includes("image-rendering:auto!important"), "Avatar scaling us
 
 check(sources.profile.includes("data-sq-avatar-id"), "Profile images carry stable avatar IDs");
 check(sources.collection.includes("data-sq-avatar-id"), "Collection images carry stable avatar IDs");
+check(!/localStorage|sessionStorage/.test(sources.collection + sources.collectionPage), "Collection UIs do not own profile storage");
+check(sources.collectionProfile.includes("SalitaAvatarCollectionProfileRuntimeV1"), "Collection profile persistence has one explicit adapter");
+check(sources.collectionCompatibility.includes("document.write") && sources.collectionCompatibility.includes("script.async = false"), "Historical collection URL is compatibility-only");
 check(sources.avatarCase.includes("const MAX_CASE_AVATARS = 4"), "Avatar Case uses four slots");
 check(sources.avatarCaseProfile.includes("profile.avatarCaseIds = cleaned"), "Avatar Case persists separately on the profile");
 check(!/profile\.avatarId\s*=|equippedAvatarId\s*=/.test(sources.avatarCase + sources.avatarCaseProfile), "Avatar Case does not change the equipped avatar");
@@ -119,8 +125,8 @@ check(cached.length === 48, "Service worker lists exactly 48 canonical PNGs");
 check(new Set(cached).size === 48, "Service-worker canonical paths are unique");
 check(manifestPaths.every(file => cached.includes(file)), "Service worker precaches every manifest image");
 check(!/"\.\/avatars\/(?!canonical\/)/.test(sources.worker), "Service worker does not cache legacy avatar artwork");
-check(sources.worker.includes('PREVIOUS_CACHE_NAME = "salita-quest-v5-6-19-long-term-badge-adapter-extraction-r72"'), "Service worker records the pre-modular cache boundary");
-check(sources.worker.includes('CACHE_NAME = "salita-quest-v5-6-20-avatar-case-profile-adapter-extraction-r73"'), "Service-worker cache revision is the modular-bootstrap release");
+check(sources.worker.includes('PREVIOUS_CACHE_NAME = "salita-quest-v5-6-20-avatar-case-profile-adapter-extraction-r73"'), "Service worker records the pre-modular cache boundary");
+check(sources.worker.includes('CACHE_NAME = "salita-quest-v5-6-21-avatar-collection-profile-adapter-extraction-r74"'), "Service-worker cache revision is the modular-bootstrap release");
 check(sources.worker.includes('"./avatar-case-v1.js"') && sources.worker.includes('"./avatar-case-v1.css"'), "Service worker precaches Avatar Case assets");
 check(sources.worker.includes('"./desktop-navigation-refinement.js"') && sources.worker.includes('"./desktop-navigation-refinement.css"'), "Service worker precaches persistent-navigation assets");
 

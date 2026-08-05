@@ -23,10 +23,11 @@
     document.head.appendChild(link);
   }
 
-  function ensureScript({flag, selector, src, datasetKey, message}) {
+  function ensureScript({flag, selector, src, datasetKey, message, ordered = false}) {
     if (window[flag] || document.querySelector(selector)) return;
     const script = document.createElement("script");
     script.src = src;
+    script.async = !ordered;
     script.dataset[datasetKey] = "true";
     script.onerror = () => console.warn(message);
     document.body.appendChild(script);
@@ -51,11 +52,20 @@
       document.head.appendChild(link);
     }
     ensureScript({
+      flag:"__salitaQuestAvatarCollectionProfileRuntimeV1Installed",
+      selector:'script[data-sq-avatar-collection-profile-runtime]',
+      src:"./src/adapters/avatar/avatar-collection-profile-runtime-v1.js?v=5.5.12",
+      datasetKey:"sqAvatarCollectionProfileRuntime",
+      message:"Avatar Collection profile runtime could not be loaded.",
+      ordered:true
+    });
+    ensureScript({
       flag:"__salitaQuestAvatarCollectionPageV2Installed",
       selector:'script[data-sq-avatar-collection-page]',
       src:"./avatar-collection-page-v2.js?v=5.5.12",
       datasetKey:"sqAvatarCollectionPage",
-      message:"Avatar Collection page could not be loaded."
+      message:"Avatar Collection page could not be loaded.",
+      ordered:true
     });
   }
 

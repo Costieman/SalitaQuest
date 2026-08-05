@@ -117,8 +117,8 @@ for (const courseId of ["tagalog","cebuano"]) {
   if (!(adapterIndex>=0 && featureIndex===adapterIndex+1 && rootIndex===featureIndex+1 && compactIndex>rootIndex)) fail(`${courseId} load order changed`);
 }
 for (const marker of [
-  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-19-long-term-badge-adapter-extraction-r72"',
-  'const CACHE_NAME = "salita-quest-v5-6-20-avatar-case-profile-adapter-extraction-r73"',
+  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-20-avatar-case-profile-adapter-extraction-r73"',
+  'const CACHE_NAME = "salita-quest-v5-6-21-avatar-collection-profile-adapter-extraction-r74"',
   '"./incorrect-order-feedback.js"', '"./incorrect-order-feedback.css"',
   '"./src/adapters/exercise/incorrect-order-feedback-runtime-v1.js"',
   '"./src/features/exercise/incorrect-order-feedback.js"'

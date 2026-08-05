@@ -110,8 +110,8 @@ for (const path of [compactModulePath, topbarModulePath]) {
   if (!refresh.includes(path)) fail(`Mobile refresh does not fetch ${path}`);
 }
 requireMarkers(worker, [
-  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-19-long-term-badge-adapter-extraction-r72"',
-  'const CACHE_NAME = "salita-quest-v5-6-20-avatar-case-profile-adapter-extraction-r73"',
+  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-20-avatar-case-profile-adapter-extraction-r73"',
+  'const CACHE_NAME = "salita-quest-v5-6-21-avatar-collection-profile-adapter-extraction-r74"',
   '"./compact-desktop-layout.js"',
   '"./src/features/interface/compact-desktop-layout.js"',
   '"./clean-topbar.js"',

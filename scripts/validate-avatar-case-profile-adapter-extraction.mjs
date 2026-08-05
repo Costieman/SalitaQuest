@@ -42,8 +42,8 @@ const order = [
 ];
 if (order.some(index => index < 0) || !order.every((value,index) => index === 0 || value > order[index - 1])) fail("Avatar Case loader order changed");
 requireMarkers(worker,[
-  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-19-long-term-badge-adapter-extraction-r72"',
-  'const CACHE_NAME = "salita-quest-v5-6-20-avatar-case-profile-adapter-extraction-r73"',
+  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-20-avatar-case-profile-adapter-extraction-r73"',
+  'const CACHE_NAME = "salita-quest-v5-6-21-avatar-collection-profile-adapter-extraction-r74"',
   '"./avatar-case-v1.js"',
   '"./src/adapters/avatar/avatar-case-profile-runtime-v1.js"',
   '"./src/features/avatar/avatar-case-v1.js"'
