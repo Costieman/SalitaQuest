@@ -181,9 +181,10 @@ for (const [htmlFile, courseId] of [["app.html", "tagalog"], ["bisaya.html", "ce
   ]) if ([...course.styles, ...course.scripts].some(asset => asset.includes(obsolete))) fail(`${htmlFile} still loads obsolete runtime ${obsolete}`);
   const catalogue = course.scripts.indexOf("src/features/badges/badge-catalogue-v2.js?v=5.4.23");
   const chest = course.scripts.indexOf("badge-chest-v2.js?v=5.4.29");
-  const connections = course.scripts.indexOf("social-connections-v2.js?v=5.4.27");
+  const connectionsRuntime = course.scripts.indexOf("src/adapters/sharing/social-connections-runtime-v1.js?v=5.6.0");
+  const connections = course.scripts.indexOf("src/features/sharing/social-connections-v2.js?v=5.4.27");
   const sharing = course.scripts.indexOf("achievement-sharing-v4.js?v=5.4.29");
-  if (!(catalogue >= 0 && chest > catalogue && connections > chest && sharing > connections)) {
+  if (!(catalogue >= 0 && chest > catalogue && connectionsRuntime > chest && connections > connectionsRuntime && sharing > connections)) {
     fail(`${htmlFile} does not preserve catalogue → chest → service → sharing ownership order.`);
   }
 }
@@ -196,8 +197,8 @@ requireMarkers(catalogue, [
 
 const worker = read("service-worker.js");
 requireMarkers(worker, [
-  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-22-avatar-sharing-bridge-extraction-r75"',
-  'const CACHE_NAME = "salita-quest-v5-6-23-badge-catalogue-extraction-r76"',
+  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-23-badge-catalogue-extraction-r76"',
+  'const CACHE_NAME = "salita-quest-v5-6-24-social-connections-extraction-r77"',
   '"./badge-chest-v2.js"',
   '"./badge-chest-v2.css"',
   '"./achievement-sharing-v4.js"',

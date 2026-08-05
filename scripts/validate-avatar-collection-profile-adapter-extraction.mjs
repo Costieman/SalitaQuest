@@ -59,8 +59,8 @@ const rootIndex = loader.indexOf('loadScript("collection"');
 if (!(adapterIndex >= 0 && featureIndex > adapterIndex && rootIndex > featureIndex)) fail("Profile loader order changed");
 if (!hotfix.includes('avatar-collection-profile-runtime-v1.js?v=5.5.12') || !hotfix.includes('ordered:true')) fail("Full-page compatibility delivery is not ordered behind the adapter");
 for (const marker of [
-  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-22-avatar-sharing-bridge-extraction-r75"',
-  'const CACHE_NAME = "salita-quest-v5-6-23-badge-catalogue-extraction-r76"',
+  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-23-badge-catalogue-extraction-r76"',
+  'const CACHE_NAME = "salita-quest-v5-6-24-social-connections-extraction-r77"',
   '"./avatar-collection-screen-v1.js"',
   '"./src/adapters/avatar/avatar-collection-profile-runtime-v1.js"',
   '"./src/features/avatar/avatar-collection-screen-v1.js"',

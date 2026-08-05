@@ -1,0 +1,30 @@
+name: Validate social connections module extraction
+
+on:
+  push:
+    branches: [agent/extract-social-connections]
+  pull_request:
+    paths:
+      - "social-connections-v2.js"
+      - "src/adapters/sharing/social-connections-runtime-v1.js"
+      - "src/features/sharing/social-connections-v2.js"
+      - "src/config/course-manifest.js"
+      - "mobile-refresh.html"
+      - "service-worker.js"
+      - "scripts/validate-social-connections-module-extraction.mjs"
+      - ".github/workflows/validate-social-connections-module-extraction.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - run: node scripts/validate-social-connections-module-extraction.mjs
+      - run: node scripts/generate-module-contract-inventory-v2.mjs --check

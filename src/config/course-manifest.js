@@ -57,7 +57,8 @@
     "src/features/badges/badge-catalogue-v2.js?v=5.4.23",
     "badge-chest-v2.js?v=5.4.29",
     "placement-onboarding-v1.js?v=5.4.23",
-    "social-connections-v2.js?v=5.4.27",
+    "src/adapters/sharing/social-connections-runtime-v1.js?v=5.6.0",
+    "src/features/sharing/social-connections-v2.js?v=5.4.27",
     "achievement-sharing-v4.js?v=5.4.29",
     "src/features/interface/collection-key-translation-hotfix.js?v=5.5.11"
   ];
@@ -90,7 +91,8 @@
     "src/features/badges/badge-catalogue-v2.js?v=5.4.23",
     "badge-chest-v2.js?v=5.4.29",
     "placement-onboarding-v1.js?v=5.4.23",
-    "social-connections-v2.js?v=5.4.27",
+    "src/adapters/sharing/social-connections-runtime-v1.js?v=5.6.0",
+    "src/features/sharing/social-connections-v2.js?v=5.4.27",
     "achievement-sharing-v4.js?v=5.4.29"
   ];
 

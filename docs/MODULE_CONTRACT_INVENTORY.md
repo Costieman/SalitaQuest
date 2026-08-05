@@ -4,11 +4,11 @@
 
 ## Scope
 
-- Runtime files: **70**
+- Runtime files: **71**
 - Dependency edges: **183**
 - Storage contracts: **21**
 - Salita custom events: **36**
-- Extraction candidates: **29**
+- Extraction candidates: **30**
 - Adapter stage: **23**
 - High-coupling: **7**
 - Held infrastructure/loaders: **11**
@@ -48,9 +48,10 @@
 28. `src/features/badges/badge-catalogue-v2.js`
 29. `badge-chest-v2.js`
 30. `placement-onboarding-v1.js`
-31. `social-connections-v2.js`
-32. `achievement-sharing-v4.js`
-33. `src/features/interface/collection-key-translation-hotfix.js`
+31. `src/adapters/sharing/social-connections-runtime-v1.js`
+32. `src/features/sharing/social-connections-v2.js`
+33. `achievement-sharing-v4.js`
+34. `src/features/interface/collection-key-translation-hotfix.js`
 
 ### Cebuano
 
@@ -82,8 +83,9 @@
 26. `src/features/badges/badge-catalogue-v2.js`
 27. `badge-chest-v2.js`
 28. `placement-onboarding-v1.js`
-29. `social-connections-v2.js`
-30. `achievement-sharing-v4.js`
+29. `src/adapters/sharing/social-connections-runtime-v1.js`
+30. `src/features/sharing/social-connections-v2.js`
+31. `achievement-sharing-v4.js`
 
 ## Recommended extraction sequence
 
@@ -113,6 +115,7 @@
 - `src/features/interface/collection-key-translation-hotfix.js` — risk 12; 2 engine globals; 0 storage operations.
 - `src/adapters/avatar/avatar-collection-profile-runtime-v1.js` — risk 13; 0 engine globals; 3 storage operations.
 - `src/features/avatar/avatar-artwork-registry-v554.js` — risk 13; 0 engine globals; 2 storage operations.
+- `src/features/sharing/social-connections-v2.js` — risk 13; 0 engine globals; 0 storage operations.
 - `src/features/interface/clean-topbar.js` — risk 14; 2 engine globals; 0 storage operations.
 - `src/features/progression/even-progress-rail.js` — risk 14; 3 engine globals; 0 storage operations.
 - `src/features/interface/popup-governor-v1.js` — risk 17; 2 engine globals; 0 storage operations.
@@ -123,6 +126,7 @@
 
 - `src/adapters/badges/coin-shop-badge-runtime-v1.js` — 1 engine globals; 1 exported browser APIs; 0 DOM hooks.
 - `src/features/avatar/avatar-case-v1.js` — 0 engine globals; 3 exported browser APIs; 12 DOM hooks.
+- `src/adapters/sharing/social-connections-runtime-v1.js` — 1 engine globals; 2 exported browser APIs; 0 DOM hooks.
 - `src/features/avatar/avatar-collection-screen-v1.js` — 0 engine globals; 2 exported browser APIs; 12 DOM hooks.
 - `coin-testing-grant-100k-v1.js` — 2 engine globals; 1 exported browser APIs; 0 DOM hooks.
 - `coin-testing-grant-50k-phase5-v1.js` — 2 engine globals; 1 exported browser APIs; 0 DOM hooks.
@@ -130,7 +134,6 @@
 - `badge-chest-v2.js` — 5 engine globals; 2 exported browser APIs; 12 DOM hooks.
 - `src/features/progression/home-reward-coordinator.js` — 8 engine globals; 1 exported browser APIs; 5 DOM hooks.
 - `mastery-feedback.js` — 8 engine globals; 1 exported browser APIs; 10 DOM hooks.
-- `social-connections-v2.js` — 1 engine globals; 3 exported browser APIs; 8 DOM hooks.
 - `level-progression-v2.js` — 6 engine globals; 2 exported browser APIs; 6 DOM hooks.
 - `progression-v54.js` — 10 engine globals; 1 exported browser APIs; 5 DOM hooks.
 - `weekly-avatar-polish.js` — 8 engine globals; 1 exported browser APIs; 10 DOM hooks.
@@ -196,7 +199,6 @@
 | `progression-v54.js` | progression | 1 | 37 | 10 | 0/1 | 0 | 5 | 0 |
 | `level-progression-v2.js` | progression | 2 | 36 | 6 | 1/2 | 2 | 6 | 0 |
 | `bisaya-app-loader.js` | runtime-loader | 1 | 32 | 5 | 0/0 | 0 | 3 | 2 |
-| `social-connections-v2.js` | feature-extension | 2 | 32 | 1 | 1/3 | 6 | 8 | 0 |
 | `mastery-feedback.js` | progression | 2 | 31 | 8 | 0/1 | 0 | 10 | 0 |
 | `badge-chest-v2.js` | collection-and-rewards | 2 | 29 | 5 | 1/2 | 0 | 12 | 0 |
 | `src/features/progression/home-reward-coordinator.js` | progression | 2 | 29 | 8 | 0/1 | 0 | 5 | 0 |
@@ -208,6 +210,7 @@
 | `src/features/avatar/level-avatar-rewards-v1.js` | collection-and-rewards | 2 | 25 | 1 | 2/2 | 4 | 0 | 0 |
 | `src/features/avatar/avatar-collection-screen-v1.js` | collection-and-rewards | 2 | 24 | 0 | 5/2 | 0 | 12 | 0 |
 | `src/features/sharing/achievement-sharing-avatar-bridge-v1.js` | runtime-loader | 2 | 23 | 0 | 5/2 | 0 | 4 | 1 |
+| `src/adapters/sharing/social-connections-runtime-v1.js` | feature-extension | 2 | 22 | 1 | 1/2 | 5 | 0 | 0 |
 | `src/features/avatar/avatar-case-v1.js` | collection-and-rewards | 2 | 20 | 0 | 2/3 | 0 | 12 | 0 |
 | `src/adapters/badges/coin-shop-badge-runtime-v1.js` | collection-and-rewards | 2 | 19 | 1 | 5/1 | 2 | 0 | 0 |
 
@@ -226,14 +229,14 @@
 | `localStorage:course.documentCache` | src/app/course-bootstrap.js | src/app/course-bootstrap.js | — |
 | `localStorage:key` | app.js, coin-avatar-shop-reveal-v1.js, coin-testing-grant-100k-v1.js, coin-testing-grant-50k-phase5-v1.js | coin-avatar-shop-reveal-v1.js, coin-testing-grant-100k-v1.js, coin-testing-grant-50k-phase5-v1.js | — |
 | `localStorage:salitaQuestBaseProgressOwner` | — | profile-app.js | profile-app.js |
-| `localStorage:salitaQuestLocalProfilesV1` | achievement-sharing-v4.js, avatar-unlock-celebration-v1.js, coin-avatar-shard-shop-v1.js, coin-avatar-shop-reveal-v1.js, desktop-navigation-refinement.js, profile-app.js, social-connections-v2.js, src/adapters/avatar/avatar-case-profile-runtime-v1.js, src/adapters/avatar/avatar-collection-profile-runtime-v1.js, src/adapters/badges/badge-catalogue-runtime-v1.js, src/adapters/badges/coin-shop-badge-runtime-v1.js, src/features/avatar/avatar-artwork-registry-v554.js, src/features/avatar/avatar-collection-summary-v1.js, src/features/avatar/level-avatar-rewards-v1.js, weekly-avatar-shard-rewards-v1.js | avatar-unlock-celebration-v1.js, coin-avatar-shard-shop-v1.js, coin-avatar-shop-reveal-v1.js, profile-app.js, src/adapters/avatar/avatar-case-profile-runtime-v1.js, src/adapters/avatar/avatar-collection-profile-runtime-v1.js, src/features/avatar/level-avatar-rewards-v1.js, weekly-avatar-shard-rewards-v1.js | — |
+| `localStorage:salitaQuestLocalProfilesV1` | achievement-sharing-v4.js, avatar-unlock-celebration-v1.js, coin-avatar-shard-shop-v1.js, coin-avatar-shop-reveal-v1.js, desktop-navigation-refinement.js, profile-app.js, src/adapters/avatar/avatar-case-profile-runtime-v1.js, src/adapters/avatar/avatar-collection-profile-runtime-v1.js, src/adapters/badges/badge-catalogue-runtime-v1.js, src/adapters/badges/coin-shop-badge-runtime-v1.js, src/adapters/sharing/social-connections-runtime-v1.js, src/features/avatar/avatar-artwork-registry-v554.js, src/features/avatar/avatar-collection-summary-v1.js, src/features/avatar/level-avatar-rewards-v1.js, weekly-avatar-shard-rewards-v1.js | avatar-unlock-celebration-v1.js, coin-avatar-shard-shop-v1.js, coin-avatar-shop-reveal-v1.js, profile-app.js, src/adapters/avatar/avatar-case-profile-runtime-v1.js, src/adapters/avatar/avatar-collection-profile-runtime-v1.js, src/features/avatar/level-avatar-rewards-v1.js, weekly-avatar-shard-rewards-v1.js | — |
 | `localStorage:salitaQuestProgress` | profile-app.js | app.js, coin-avatar-shard-shop-v1.js, coin-avatar-shop-reveal-v1.js, coin-testing-grant-100k-v1.js, coin-testing-grant-50k-phase5-v1.js, profile-app.js | profile-app.js |
-| `localStorage:salitaQuestSocialApiBase` | social-connections-v2.js | social-connections-v2.js | social-connections-v2.js |
+| `localStorage:salitaQuestSocialApiBase` | src/adapters/sharing/social-connections-runtime-v1.js | src/adapters/sharing/social-connections-runtime-v1.js | src/adapters/sharing/social-connections-runtime-v1.js |
 | `localStorage:storage.baseOwner` | src/app/course-bootstrap.js | src/app/course-bootstrap.js | — |
 | `localStorage:storage.baseProgress` | src/app/course-bootstrap.js | src/app/course-bootstrap.js | src/app/course-bootstrap.js |
 | `localStorage:storage.profileStore` | src/app/course-bootstrap.js | — | — |
 | `sessionStorage:salitaQuestActiveCourse` | level-progression-v2.js, profile-app.js, src/features/avatar/level-avatar-rewards-v1.js | profile-app.js | profile-app.js |
-| `sessionStorage:salitaQuestActiveProfileId` | achievement-sharing-v4.js, avatar-unlock-celebration-v1.js, coin-avatar-shard-shop-v1.js, coin-avatar-shop-reveal-v1.js, desktop-navigation-refinement.js, level-progression-v2.js, profile-app.js, social-connections-v2.js, src/adapters/avatar/avatar-case-profile-runtime-v1.js, src/adapters/avatar/avatar-collection-profile-runtime-v1.js, src/adapters/badges/badge-catalogue-runtime-v1.js, src/adapters/badges/coin-shop-badge-runtime-v1.js, src/features/avatar/avatar-artwork-registry-v554.js, src/features/avatar/avatar-collection-summary-v1.js, src/features/avatar/level-avatar-rewards-v1.js, weekly-avatar-shard-rewards-v1.js | — | profile-app.js |
+| `sessionStorage:salitaQuestActiveProfileId` | achievement-sharing-v4.js, avatar-unlock-celebration-v1.js, coin-avatar-shard-shop-v1.js, coin-avatar-shop-reveal-v1.js, desktop-navigation-refinement.js, level-progression-v2.js, profile-app.js, src/adapters/avatar/avatar-case-profile-runtime-v1.js, src/adapters/avatar/avatar-collection-profile-runtime-v1.js, src/adapters/badges/badge-catalogue-runtime-v1.js, src/adapters/badges/coin-shop-badge-runtime-v1.js, src/adapters/sharing/social-connections-runtime-v1.js, src/features/avatar/avatar-artwork-registry-v554.js, src/features/avatar/avatar-collection-summary-v1.js, src/features/avatar/level-avatar-rewards-v1.js, weekly-avatar-shard-rewards-v1.js | — | profile-app.js |
 | `sessionStorage:storage.activeCourse` | — | src/app/course-bootstrap.js | — |
 | `sessionStorage:storage.activeProfile` | src/app/course-bootstrap.js | — | — |
 
@@ -292,8 +295,9 @@
 | `__salitaQuestPronunciationReleaseControlInstalled` | src/features/audio/pronunciation-release-control.js |
 | `__salitaQuestQualityFixesInstalled` | ui-quality-fixes.js |
 | `__salitaQuestSentenceBuilderInteractionRecoveryInstalled` | exercise-fixes-v545.js |
-| `__salitaQuestSocialConnectionsV2Installed` | social-connections-v2.js |
-| `__salitaQuestSocialConnectionsV3Installed` | social-connections-v2.js |
+| `__salitaQuestSocialConnectionsRuntimeV1Installed` | src/adapters/sharing/social-connections-runtime-v1.js |
+| `__salitaQuestSocialConnectionsV2Installed` | src/features/sharing/social-connections-v2.js |
+| `__salitaQuestSocialConnectionsV3Installed` | src/features/sharing/social-connections-v2.js |
 | `__salitaQuestWeeklyAvatarChestInstalled` | weekly-avatar-chest.js |
 | `__salitaQuestWeeklyAvatarPolishInstalled` | key-run-refinement.js, weekly-avatar-polish.js |
 | `__salitaQuestWeeklyAvatarShardsV1Installed` | weekly-avatar-shard-rewards-v1.js |
@@ -334,7 +338,8 @@
 | `SalitaQuestCourseManifest` | src/config/course-manifest.js |
 | `SalitaQuestPersistentNavigation` | desktop-navigation-refinement.js |
 | `SalitaQuestSharingRouter` | src/features/sharing/achievement-sharing-router-v3.js |
-| `SalitaQuestSocialConnections` | social-connections-v2.js |
+| `SalitaQuestSocialConnections` | src/features/sharing/social-connections-v2.js |
+| `SalitaQuestSocialConnectionsRuntimeV1` | src/adapters/sharing/social-connections-runtime-v1.js |
 | `SalitaWeeklyAvatarRewards` | weekly-avatar-shard-rewards-v1.js |
 
 ## Custom event contracts
@@ -386,10 +391,10 @@
 | `questChest` | app.js, key-run-refinement.js, src/features/interface/collection-key-translation-hotfix.js, weekly-avatar-chest.js, weekly-avatar-polish.js, weekly-avatar-shard-rewards-v1.js |
 | `feedbackBox` | app.js, exercise-fixes-v545.js, lesson-side-launcher.js, mobile-session-refinement.js, ui-quality-fixes.js |
 | `audioBtn` | app.js, bisaya-app-loader.js, lesson-side-launcher.js, src/features/interface/compact-desktop-layout.js |
-| `badgesView` | badge-chest-v2.js, desktop-navigation-refinement.js, social-connections-v2.js, src/adapters/navigation/avatar-collections-navigation-v551.js |
+| `badgesView` | badge-chest-v2.js, desktop-navigation-refinement.js, src/adapters/navigation/avatar-collections-navigation-v551.js, src/features/sharing/social-connections-v2.js |
 | `questChestTitle` | app.js, daily-goal-refinement.js, ui-quality-fixes.js, weekly-avatar-polish.js |
 | `sentenceBuilder` | app.js, exercise-fixes-v545.js, src/features/exercise/incorrect-order-feedback.js, ui-quality-fixes.js |
-| `settingsView` | desktop-navigation-refinement.js, placement-onboarding-v1.js, social-connections-v2.js, src/adapters/navigation/avatar-collections-navigation-v551.js |
+| `settingsView` | desktop-navigation-refinement.js, placement-onboarding-v1.js, src/adapters/navigation/avatar-collections-navigation-v551.js, src/features/sharing/social-connections-v2.js |
 | `answerInput` | app.js, exercise-fixes-v545.js, ui-quality-fixes.js |
 | `badgeShelf` | app.js, badge-chest-v2.js, src/features/badges/badge-catalogue-v2.js |
 | `builtSentence` | app.js, exercise-fixes-v545.js, src/features/exercise/incorrect-order-feedback.js |
