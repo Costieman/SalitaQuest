@@ -8,11 +8,15 @@ const fail = message => { throw new Error(message); };
 const catalogueSource = read("src/features/avatar/avatar-catalogue-v1.js");
 const unlockSource = read("avatar-unlock-celebration-v1.js");
 const unlockCss = read("avatar-unlock-celebration-v1.css");
-const bridgeSource = read("achievement-sharing-avatar-bridge-v1.js");
+const bridgeCompatibilitySource = read("achievement-sharing-avatar-bridge-v1.js");
+const bridgeSource = read("src/features/sharing/achievement-sharing-avatar-bridge-v1.js");
+const profileRuntimeSource = read("src/adapters/avatar/avatar-collection-profile-runtime-v1.js");
 const loaderSource = read("profile-emblem-control.js");
 
 new vm.Script(unlockSource, {filename:"avatar-unlock-celebration-v1.js"});
-new vm.Script(bridgeSource, {filename:"achievement-sharing-avatar-bridge-v1.js"});
+new vm.Script(bridgeCompatibilitySource, {filename:"achievement-sharing-avatar-bridge-v1.js"});
+new vm.Script(bridgeSource, {filename:"src/features/sharing/achievement-sharing-avatar-bridge-v1.js"});
+new vm.Script(profileRuntimeSource, {filename:"src/adapters/avatar/avatar-collection-profile-runtime-v1.js"});
 new vm.Script(loaderSource, {filename:"profile-emblem-control.js"});
 
 const sandbox = {};
@@ -105,11 +109,10 @@ for (const required of [
 
 for (const required of [
   'const RELEASE = "5.5.11-explicit-sharing-router"',
-  "profile?.avatarCollection?.equippedAvatarId",
+  "context?.collection?.equippedAvatarId",
   "window.SalitaAvatarModel?.get",
   "window.SalitaAvatarArtwork?.getAvatarImagePath",
   "window.getAvatarImagePath",
-  "normaliseCollectionState",
   "decorateAvatarDetails",
   "dataset.shareAvatar",
   'button.textContent = "Share avatar"',
@@ -128,6 +131,8 @@ for (const required of [
 ]) {
   if (!bridgeSource.includes(required)) fail(`Achievement avatar bridge is missing ${required}`);
 }
+if (!profileRuntimeSource.includes("peekContext") || !profileRuntimeSource.includes("normaliseCollectionState")) fail("Read-only avatar profile snapshot is not adapter-owned");
+if (/localStorage|sessionStorage/.test(bridgeSource)) fail("Extracted avatar sharing feature must not access learner storage");
 for (const retired of ["LEGACY_AVATAR_PATTERN","RedirectedImage","HTMLCanvasElement.prototype.toBlob","interceptSharingClicks","stampAvatar","stampBadge"]) {
   if (bridgeSource.includes(retired)) fail(`Compatibility bridge must not retain retired transport ownership: ${retired}`);
 }
@@ -136,14 +141,14 @@ if (!loaderSource.includes('const RELEASE_VERSION = "5.5.6"')) fail("Shared prof
 for (const required of [
   "avatar-unlock-celebration-v1.css",
   "avatar-unlock-celebration-v1.js",
-  "achievement-sharing-avatar-bridge-v1.js",
+  "src/features/sharing/achievement-sharing-avatar-bridge-v1.js",
   'loadScript("unlock"',
   '"sharing",'
 ]) {
   if (!loaderSource.includes(required)) fail(`Shared loader is missing ${required}`);
 }
 const sharingRouterIndex = loaderSource.indexOf("achievement-sharing-router-v2.js");
-const sharingBridgeIndex = loaderSource.indexOf("achievement-sharing-avatar-bridge-v1.js");
+const sharingBridgeIndex = loaderSource.indexOf("src/features/sharing/achievement-sharing-avatar-bridge-v1.js");
 if (!(sharingRouterIndex >= 0 && sharingBridgeIndex > sharingRouterIndex)) {
   fail("Shared loader must install the central sharing router before the avatar compatibility bridge");
 }
