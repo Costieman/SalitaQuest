@@ -63,8 +63,7 @@ if (voices["ceb-PH"]) {
 
 function validateRequired(required, language, languageEntries) {
   for (const text of required) {
-    const relativePath = languageEntries[text];
-    check(Boolean(relativePath), `${language} is missing required text: ${JSON.stringify(text)}`);
+    check(Boolean(languageEntries[text]), `${language} is missing required text: ${JSON.stringify(text)}`);
   }
 }
 
@@ -130,24 +129,26 @@ check(appSource.includes('handsFreeSpeak(handsFreeEnglish(item),"en-GB",runId)')
 const serviceWorker = readText("service-worker.js");
 check(serviceWorker.includes('"./audio/audio_manifest.json"'),
   "service worker does not precache the audio manifest");
-check(serviceWorker.includes("function isSameOriginAudio"),
-  "service worker lacks the audio request classifier");
+check(/function\s+isAudio\s*\(/.test(serviceWorker)
+    && serviceWorker.includes("url.origin === self.location.origin")
+    && serviceWorker.includes("mp3|m4a|ogg|wav"),
+  "service worker lacks a same-origin audio request classifier");
 check(serviceWorker.includes("audioCacheFirst"),
   "service worker lacks cache-first audio delivery");
-check(serviceWorker.includes('const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-19-long-term-badge-adapter-extraction-r72"'),
-  "service worker no longer records the pre-modular persistent-navigation boundary");
-check(serviceWorker.includes('const CACHE_NAME = "salita-quest-v5-6-20-avatar-case-profile-adapter-extraction-r73"'),
-  "service-worker cache revision is not the modular-bootstrap release");
-check(serviceWorker.includes('"./src/config/course-manifest.js"') && serviceWorker.includes('"./src/app/course-bootstrap.js"'),
+check(serviceWorker.includes('request.headers.get("Range")')
+    && serviceWorker.includes('headers.set("Content-Range"')
+    && serviceWorker.includes("status: 206"),
+  "service worker lacks byte-range audio delivery");
+check(serviceWorker.includes('const CACHE_PREFIX = "salita-quest-sandbox-"')
+    && serviceWorker.includes("key.startsWith(CACHE_PREFIX)"),
+  "service worker cache cleanup is not confined to the sandbox namespace");
+check(serviceWorker.includes('"./src/config/course-manifest.js"')
+    && serviceWorker.includes('"./src/app/course-bootstrap.js"'),
   "service worker does not precache the modular course bootstrap");
 
-const audioReleaseNotes = readText("docs/releases/5.5.7-complete-bisaya-audio.md");
-check(audioReleaseNotes.includes("salita-quest-v5-5-7-complete-bisaya-audio-r49"),
-  "audio release lineage no longer records the complete Bisaya audio cache");
-
-const workflow = readText(".github/workflows/validate-bisaya.yml");
+const workflow = readText(".github/workflows/validate.yml");
 check(workflow.includes("node scripts/validate-bisaya-audio-library.mjs"),
-  "Bisaya workflow does not run the complete audio validator");
+  "consolidated validation does not run the complete audio validator");
 
 const cebuanoGenerator = readText("scripts/generate_cebuano_google_audio.py");
 check(cebuanoGenerator.includes('LANGUAGE_CODE = "ceb-PH"'),
