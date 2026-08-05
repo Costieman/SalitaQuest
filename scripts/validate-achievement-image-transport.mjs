@@ -13,7 +13,8 @@ const routerShim = read("achievement-sharing-router-v2.js");
 const routerRoot = read("achievement-sharing-router-v3.js");
 const router = read("src/features/sharing/achievement-sharing-router-v3.js");
 const routerCss = read("achievement-sharing-router-v2.css");
-const bridge = read("achievement-sharing-avatar-bridge-v1.js");
+const bridgeRoot = read("achievement-sharing-avatar-bridge-v1.js");
+const bridge = read("src/features/sharing/achievement-sharing-avatar-bridge-v1.js");
 const loader = read("profile-emblem-control.js");
 const worker = read("service-worker.js");
 
@@ -21,7 +22,8 @@ for (const [file,source] of [
   ["achievement-sharing-router-v2.js",routerShim],
   ["achievement-sharing-router-v3.js",routerRoot],
   ["src/features/sharing/achievement-sharing-router-v3.js",router],
-  ["achievement-sharing-avatar-bridge-v1.js",bridge],
+  ["achievement-sharing-avatar-bridge-v1.js",bridgeRoot],
+  ["src/features/sharing/achievement-sharing-avatar-bridge-v1.js",bridge],
   ["profile-emblem-control.js",loader],
   ["service-worker.js",worker]
 ]) new vm.Script(source,{filename:file});
@@ -104,7 +106,7 @@ requireMarkers(loader,[
   '`./achievement-sharing-router-v2.css?v=${SHARING_VERSION}`',
   '"achievement-sharing-router"',
   '`./achievement-sharing-router-v2.js?v=${SHARING_VERSION}`',
-  '`./achievement-sharing-avatar-bridge-v1.js?v=${SHARING_VERSION}`',
+  '`./src/features/sharing/achievement-sharing-avatar-bridge-v1.js?v=${SHARING_VERSION}`',
   'sharingVersion:SHARING_VERSION'
 ],"Current sharing loader");
 

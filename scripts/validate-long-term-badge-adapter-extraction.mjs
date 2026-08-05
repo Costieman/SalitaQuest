@@ -30,8 +30,8 @@ if (!(runtimeIndex >= 0 && featureIndex > runtimeIndex && rootIndex > featureInd
 if ((loader.match(/badge-catalogue-runtime-v1\.js/g)||[]).length !== 1 || (loader.match(/src\/features\/badges\/long-term-badges-v1\.js/g)||[]).length !== 1 || (loader.match(/\.\/long-term-badges-v1\.js/g)||[]).length !== 1) fail("Profile loader does not own exactly one adapter/feature/root path");
 
 for (const marker of [
-  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-20-avatar-case-profile-adapter-extraction-r73"',
-  'const CACHE_NAME = "salita-quest-v5-6-21-avatar-collection-profile-adapter-extraction-r74"',
+  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-21-avatar-collection-profile-adapter-extraction-r74"',
+  'const CACHE_NAME = "salita-quest-v5-6-22-avatar-sharing-bridge-extraction-r75"',
   '"./long-term-badges-v1.js"',
   '"./src/adapters/badges/badge-catalogue-runtime-v1.js"',
   '"./src/features/badges/long-term-badges-v1.js"'

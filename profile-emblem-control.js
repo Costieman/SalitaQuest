@@ -77,7 +77,7 @@
       );
       await loadScript(
         "sharing",
-        `./achievement-sharing-avatar-bridge-v1.js?v=${SHARING_VERSION}`,
+        `./src/features/sharing/achievement-sharing-avatar-bridge-v1.js?v=${SHARING_VERSION}`,
         "Avatar-aware sharing could not be loaded."
       );
       await loadScript(

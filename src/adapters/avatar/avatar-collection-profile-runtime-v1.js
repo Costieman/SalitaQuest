@@ -25,20 +25,29 @@
     return true;
   }
 
-  function readContext() {
-    const model = window.SalitaAvatarModel;
-    if (!model) return null;
-    const store = readStore();
-    const activeId = sessionStorage.getItem(ACTIVE_PROFILE);
-    const profile = store.profiles.find(item => item.id === activeId) || null;
-    if (!profile) return null;
-    const collection = model.normaliseCollectionState(profile.avatarCollection, profile.avatarId);
+  function buildContext({persistNormalisation = false} = {}) {
+  const model = window.SalitaAvatarModel;
+  if (!model) return null;
+  const store = readStore();
+  const activeId = sessionStorage.getItem(ACTIVE_PROFILE);
+  const profile = store.profiles.find(item => item.id === activeId) || null;
+  if (!profile) return null;
+  const collection = model.normaliseCollectionState(profile.avatarCollection, profile.avatarId);
+  if (persistNormalisation) {
     profile.avatarCollection = collection;
     if (collection.equippedAvatarId) profile.avatarId = collection.equippedAvatarId;
     writeStore(store);
-    return {store, profile, collection, model};
   }
+  return {store, profile, collection, model};
+}
 
+function peekContext() {
+  return buildContext();
+}
+
+function readContext() {
+  return buildContext({persistNormalisation:true});
+}
   function saveContext(context) {
     if (!context?.store || !context?.profile || !context?.collection) return false;
     context.profile.avatarCollection = context.collection;
@@ -60,6 +69,7 @@
     version:1,
     profileStoreKey:PROFILE_STORE,
     activeProfileKey:ACTIVE_PROFILE,
+    peekContext,
     readContext,
     saveContext,
     equip

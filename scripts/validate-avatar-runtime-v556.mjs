@@ -32,7 +32,8 @@ const sources = {
   weekly:read("weekly-avatar-shard-rewards-v1.js"),
   level:read("src/features/avatar/level-avatar-rewards-v1.js"),
   unlock:read("avatar-unlock-celebration-v1.js"),
-  sharing:read("achievement-sharing-avatar-bridge-v1.js"),
+  sharingCompatibility:read("achievement-sharing-avatar-bridge-v1.js"),
+  sharing:read("src/features/sharing/achievement-sharing-avatar-bridge-v1.js"),
   worker:read("service-worker.js"),
   refresh:read("mobile-refresh.html"),
   css:read("profile-emblem-control.css")
@@ -110,6 +111,9 @@ check(!/profile\.avatarId\s*=|equippedAvatarId\s*=/.test(sources.avatarCase + so
 check(sources.weekly.includes("item.image") || sources.weekly.includes("SalitaAvatarArtwork"), "Weekly rewards resolve canonical artwork");
 check(sources.level.includes("avatar:item") && sources.level.includes("avatarId:item.id"), "Level rewards hand the canonical avatar record to the unlock renderer");
 check(sources.unlock.includes("item.image") || sources.unlock.includes("getAvatarImagePath") || sources.unlock.includes("SalitaAvatarArtwork"), "Unlock celebrations resolve canonical artwork");
+check(sources.sharingCompatibility.includes("FEATURE_URL") && sources.sharingCompatibility.includes("document.write"), "Historical avatar sharing URL is compatibility-only");
+check(!/localStorage|sessionStorage/.test(sources.sharing), "Avatar sharing feature does not own learner storage");
+check(sources.collectionProfile.includes("peekContext"), "Avatar profile adapter exposes a read-only snapshot");
 check(sources.sharing.includes("canonicalAvatarPath") && sources.sharing.includes("item?.image"), "Compatibility bridge resolves canonical artwork directly");
 check(sources.sharing.includes("compatibilityOnly:true"), "Avatar sharing bridge declares compatibility-only mode");
 check(sources.sharing.includes("controller()?.openAvatar"), "Avatar sharing bridge delegates to the shared controller");
@@ -125,8 +129,8 @@ check(cached.length === 48, "Service worker lists exactly 48 canonical PNGs");
 check(new Set(cached).size === 48, "Service-worker canonical paths are unique");
 check(manifestPaths.every(file => cached.includes(file)), "Service worker precaches every manifest image");
 check(!/"\.\/avatars\/(?!canonical\/)/.test(sources.worker), "Service worker does not cache legacy avatar artwork");
-check(sources.worker.includes('PREVIOUS_CACHE_NAME = "salita-quest-v5-6-20-avatar-case-profile-adapter-extraction-r73"'), "Service worker records the pre-modular cache boundary");
-check(sources.worker.includes('CACHE_NAME = "salita-quest-v5-6-21-avatar-collection-profile-adapter-extraction-r74"'), "Service-worker cache revision is the modular-bootstrap release");
+check(sources.worker.includes('PREVIOUS_CACHE_NAME = "salita-quest-v5-6-21-avatar-collection-profile-adapter-extraction-r74"'), "Service worker records the pre-modular cache boundary");
+check(sources.worker.includes('CACHE_NAME = "salita-quest-v5-6-22-avatar-sharing-bridge-extraction-r75"'), "Service-worker cache revision is the modular-bootstrap release");
 check(sources.worker.includes('"./avatar-case-v1.js"') && sources.worker.includes('"./avatar-case-v1.css"'), "Service worker precaches Avatar Case assets");
 check(sources.worker.includes('"./desktop-navigation-refinement.js"') && sources.worker.includes('"./desktop-navigation-refinement.css"'), "Service worker precaches persistent-navigation assets");
 
