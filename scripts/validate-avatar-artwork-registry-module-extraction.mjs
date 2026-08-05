@@ -87,8 +87,8 @@ if (!(mobileCatalogue >= 0 && mobileCatalogue < mobileMigration && mobileMigrati
 }
 
 for (const required of [
-  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-6-avatar-artwork-registry-extraction-r59"',
-  'const CACHE_NAME = "salita-quest-v5-6-7-achievement-sharing-router-extraction-r60"',
+  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-7-achievement-sharing-router-extraction-r60"',
+  'const CACHE_NAME = "salita-quest-v5-6-8-home-reward-coordinator-extraction-r61"',
   '"./avatar-artwork-registry-v554.js"',
   '"./src/features/avatar/avatar-artwork-registry-v554.js"'
 ]) {

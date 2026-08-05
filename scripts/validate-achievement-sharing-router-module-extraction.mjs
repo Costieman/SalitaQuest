@@ -100,8 +100,8 @@ const bridgeIndex = profileLoader.indexOf('"sharing"', routerIndex + 1);
 if (!(routerIndex >= 0 && bridgeIndex > routerIndex)) fail("Profile sharing router → bridge order changed");
 
 for (const required of [
-  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-6-avatar-artwork-registry-extraction-r59"',
-  'const CACHE_NAME = "salita-quest-v5-6-7-achievement-sharing-router-extraction-r60"',
+  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-7-achievement-sharing-router-extraction-r60"',
+  'const CACHE_NAME = "salita-quest-v5-6-8-home-reward-coordinator-extraction-r61"',
   '"./achievement-sharing-router-v2.js"',
   '"./achievement-sharing-router-v2.css"',
   '"./achievement-sharing-router-v3.js"',

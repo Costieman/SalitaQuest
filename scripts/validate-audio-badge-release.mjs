@@ -11,6 +11,7 @@ for (const file of [
   "pronunciation-release-control.js",
   "src/features/audio/pronunciation-release-control.js",
   "home-reward-coordinator.js",
+  "src/features/progression/home-reward-coordinator.js",
   "badge-catalogue-v2.js",
   "src/config/course-manifest.js",
   "service-worker.js"
@@ -38,7 +39,7 @@ for (const marker of [
   "salitaCompatibilityLoader"
 ]) if (!pronunciationLoader.includes(marker)) fail(`Missing pronunciation compatibility-loader marker: ${marker}`);
 
-const reward = read("home-reward-coordinator.js");
+const reward = read("src/features/progression/home-reward-coordinator.js");
 for (const marker of [
   '__salitaQuestHomeRewardCoordinatorInstalled',
   'pendingKeyAwards',
@@ -113,12 +114,12 @@ for (const [htmlFile,courseId] of [["app.html","tagalog"],["bisaya.html","cebuan
   if (!course.styles.includes('badge-catalogue-v2.css?v=5.4.23')) fail(`${htmlFile} does not load badge-catalogue-v2.css?v=5.4.23`);
   for (const asset of [
     'src/features/audio/pronunciation-release-control.js?v=5.4.22',
-    'home-reward-coordinator.js?v=5.4.22',
+    'src/features/progression/home-reward-coordinator.js?v=5.4.22',
     'badge-catalogue-v2.js?v=5.4.23'
   ]) if (!course.scripts.includes(asset)) fail(`${htmlFile} does not load ${asset}`);
   const nav = course.scripts.findIndex(asset => /^desktop-navigation-refinement\.js\?v=(?:5\.4\.21|5\.5\.2|5\.5\.3)$/.test(asset));
   const audio = course.scripts.indexOf('src/features/audio/pronunciation-release-control.js?v=5.4.22');
-  const rewardIndex = course.scripts.indexOf('home-reward-coordinator.js?v=5.4.22');
+  const rewardIndex = course.scripts.indexOf('src/features/progression/home-reward-coordinator.js?v=5.4.22');
   const catalogue = course.scripts.indexOf('badge-catalogue-v2.js?v=5.4.23');
   if (!(nav >= 0 && audio > nav && rewardIndex > audio && catalogue > rewardIndex)) fail(`${htmlFile} has incorrect final runtime order`);
 }
@@ -129,6 +130,7 @@ for (const asset of [
   '"./pronunciation-release-control.js"',
   '"./src/features/audio/pronunciation-release-control.js"',
   '"./home-reward-coordinator.js"',
+  '"./src/features/progression/home-reward-coordinator.js"',
   '"./badge-catalogue-v2.js"',
   '"./badge-catalogue-v2.css"'
 ]) if (!serviceWorker.includes(asset)) fail(`Offline cache missing ${asset}`);

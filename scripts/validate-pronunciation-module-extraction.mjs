@@ -53,7 +53,7 @@ for (const courseId of ["tagalog", "cebuano"]) {
   const scripts = courses[courseId]?.scripts || [];
   const navigation = scripts.indexOf("desktop-navigation-refinement.js?v=5.5.3");
   const pronunciation = scripts.indexOf(expected);
-  const reward = scripts.indexOf("home-reward-coordinator.js?v=5.4.22");
+  const reward = scripts.indexOf("src/features/progression/home-reward-coordinator.js?v=5.4.22");
   if (!(navigation >= 0 && pronunciation > navigation && reward > pronunciation)) {
     fail(`${courseId} does not preserve pronunciation runtime order`);
   }
@@ -67,8 +67,8 @@ if (!refresh.includes("src/features/audio/pronunciation-release-control.js")) {
 }
 
 for (const marker of [
-  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-6-avatar-artwork-registry-extraction-r59"',
-  'const CACHE_NAME = "salita-quest-v5-6-7-achievement-sharing-router-extraction-r60"',
+  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-7-achievement-sharing-router-extraction-r60"',
+  'const CACHE_NAME = "salita-quest-v5-6-8-home-reward-coordinator-extraction-r61"',
   '"./pronunciation-release-control.js"',
   '"./src/features/audio/pronunciation-release-control.js"'
 ]) if (!worker.includes(marker)) fail(`Service worker is missing ${marker}`);
