@@ -40,7 +40,7 @@
 20. `level-progression-v2.js`
 21. `src/features/interface/level-up-mobile-safety-v552.js`
 22. `desktop-navigation-refinement.js`
-23. `pronunciation-release-control.js`
+23. `src/features/audio/pronunciation-release-control.js`
 24. `home-reward-coordinator.js`
 25. `badge-catalogue-v2.js`
 26. `badge-chest-v2.js`
@@ -71,7 +71,7 @@
 18. `level-progression-v2.js`
 19. `src/features/interface/level-up-mobile-safety-v552.js`
 20. `desktop-navigation-refinement.js`
-21. `pronunciation-release-control.js`
+21. `src/features/audio/pronunciation-release-control.js`
 22. `home-reward-coordinator.js`
 23. `badge-catalogue-v2.js`
 24. `badge-chest-v2.js`
@@ -93,7 +93,7 @@
 - `avatar-collection-summary-v1.js` — risk 12; 0 engine globals; 2 storage operations.
 - `avatar-collection-tabs-phase6-1-v1.js` — risk 12; 0 engine globals; 0 storage operations.
 - `collection-key-translation-hotfix.js` — risk 12; 2 engine globals; 0 storage operations.
-- `pronunciation-release-control.js` — risk 12; 2 engine globals; 0 storage operations.
+- `src/features/audio/pronunciation-release-control.js` — risk 12; 2 engine globals; 0 storage operations.
 - `avatar-artwork-registry-v554.js` — risk 13; 0 engine globals; 2 storage operations.
 - `clean-topbar.js` — risk 14; 2 engine globals; 0 storage operations.
 - `even-progress-rail.js` — risk 14; 3 engine globals; 0 storage operations.
@@ -264,7 +264,7 @@
 | `__salitaQuestPlacementOnboardingV1Installed` | placement-onboarding-v1.js |
 | `__salitaQuestPopupGovernorV1Installed` | popup-governor-v1.js |
 | `__salitaQuestProfileEmblemControlInstalled` | profile-emblem-control.js |
-| `__salitaQuestPronunciationReleaseControlInstalled` | pronunciation-release-control.js |
+| `__salitaQuestPronunciationReleaseControlInstalled` | src/features/audio/pronunciation-release-control.js |
 | `__salitaQuestQualityFixesInstalled` | ui-quality-fixes.js |
 | `__salitaQuestSentenceBuilderInteractionRecoveryInstalled` | exercise-fixes-v545.js |
 | `__salitaQuestSocialConnectionsV2Installed` | social-connections-v2.js |

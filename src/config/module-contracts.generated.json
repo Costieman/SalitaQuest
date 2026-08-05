@@ -27,7 +27,7 @@
       "level-progression-v2.js",
       "src/features/interface/level-up-mobile-safety-v552.js",
       "desktop-navigation-refinement.js",
-      "pronunciation-release-control.js",
+      "src/features/audio/pronunciation-release-control.js",
       "home-reward-coordinator.js",
       "badge-catalogue-v2.js",
       "badge-chest-v2.js",
@@ -57,7 +57,7 @@
       "level-progression-v2.js",
       "src/features/interface/level-up-mobile-safety-v552.js",
       "desktop-navigation-refinement.js",
-      "pronunciation-release-control.js",
+      "src/features/audio/pronunciation-release-control.js",
       "home-reward-coordinator.js",
       "badge-catalogue-v2.js",
       "badge-chest-v2.js",
@@ -3539,57 +3539,8 @@
       "risk": 37
     },
     {
-      "file": "pronunciation-release-control.js",
-      "bytes": 2944,
-      "contexts": [
-        "cebuano",
-        "tagalog"
-      ],
-      "courses": [
-        "cebuano",
-        "tagalog"
-      ],
-      "references": [],
-      "loads": [],
-      "fetches": [],
-      "workers": [],
-      "coreGlobals": [
-        "state",
-        "toast"
-      ],
-      "window": {
-        "provides": [
-          "__salitaQuestPronunciationReleaseControlInstalled"
-        ],
-        "consumes": [
-          "AudioContext",
-          "webkitAudioContext"
-        ]
-      },
-      "storage": [],
-      "dom": {
-        "ids": [],
-        "selectors": [],
-        "datasets": [
-          "releasePlayback",
-          "text"
-        ]
-      },
-      "events": {
-        "listens": [
-          "click",
-          "pointerdown",
-          "pointerup"
-        ],
-        "dispatches": []
-      },
-      "role": "audio",
-      "readiness": "extraction-candidate",
-      "risk": 12
-    },
-    {
       "file": "service-worker.js",
-      "bytes": 11384,
+      "bytes": 11457,
       "contexts": [
         "worker"
       ],
@@ -3636,6 +3587,7 @@
         "social-connections-v2.js",
         "src/app/course-bootstrap.js",
         "src/config/course-manifest.js",
+        "src/features/audio/pronunciation-release-control.js",
         "src/features/interface/level-up-mobile-safety-v552.js",
         "ui-quality-fixes.js",
         "weekly-avatar-chest.js",
@@ -3874,7 +3826,7 @@
     },
     {
       "file": "src/config/course-manifest.js",
-      "bytes": 6026,
+      "bytes": 6064,
       "contexts": [
         "bootstrap"
       ],
@@ -3904,8 +3856,8 @@
         "profile-app.js",
         "profile-emblem-control.js",
         "progression-v54.js",
-        "pronunciation-release-control.js",
         "social-connections-v2.js",
+        "src/features/audio/pronunciation-release-control.js",
         "src/features/interface/level-up-mobile-safety-v552.js",
         "ui-quality-fixes.js",
         "weekly-avatar-chest.js",
@@ -3936,6 +3888,55 @@
       "role": "course-config",
       "readiness": "hold",
       "risk": 5
+    },
+    {
+      "file": "src/features/audio/pronunciation-release-control.js",
+      "bytes": 2944,
+      "contexts": [
+        "cebuano",
+        "tagalog"
+      ],
+      "courses": [
+        "cebuano",
+        "tagalog"
+      ],
+      "references": [],
+      "loads": [],
+      "fetches": [],
+      "workers": [],
+      "coreGlobals": [
+        "state",
+        "toast"
+      ],
+      "window": {
+        "provides": [
+          "__salitaQuestPronunciationReleaseControlInstalled"
+        ],
+        "consumes": [
+          "AudioContext",
+          "webkitAudioContext"
+        ]
+      },
+      "storage": [],
+      "dom": {
+        "ids": [],
+        "selectors": [],
+        "datasets": [
+          "releasePlayback",
+          "text"
+        ]
+      },
+      "events": {
+        "listens": [
+          "click",
+          "pointerdown",
+          "pointerup"
+        ],
+        "dispatches": []
+      },
+      "role": "audio",
+      "readiness": "extraction-candidate",
+      "risk": 12
     },
     {
       "file": "src/features/interface/level-up-mobile-safety-v552.js",
@@ -5438,15 +5439,6 @@
       ]
     },
     {
-      "from": "pronunciation-release-control.js",
-      "to": "app.js",
-      "type": "core-globals",
-      "symbols": [
-        "state",
-        "toast"
-      ]
-    },
-    {
       "from": "service-worker.js",
       "to": "app.js",
       "type": "core-globals",
@@ -5476,6 +5468,15 @@
       "type": "core-globals",
       "symbols": [
         "session"
+      ]
+    },
+    {
+      "from": "src/features/audio/pronunciation-release-control.js",
+      "to": "app.js",
+      "type": "core-globals",
+      "symbols": [
+        "state",
+        "toast"
       ]
     },
     {
@@ -5909,8 +5910,8 @@
         "profile-app.js",
         "profile-emblem-control.js",
         "progression-v54.js",
-        "pronunciation-release-control.js",
         "social-connections-v2.js",
+        "src/features/audio/pronunciation-release-control.js",
         "weekly-avatar-chest.js",
         "weekly-avatar-shard-rewards-v1.js"
       ],
@@ -6010,14 +6011,14 @@
     {
       "name": "pointerdown",
       "listeners": [
-        "pronunciation-release-control.js"
+        "src/features/audio/pronunciation-release-control.js"
       ],
       "dispatchers": []
     },
     {
       "name": "pointerup",
       "listeners": [
-        "pronunciation-release-control.js"
+        "src/features/audio/pronunciation-release-control.js"
       ],
       "dispatchers": []
     },
@@ -6604,7 +6605,7 @@
     {
       "symbol": "__salitaQuestPronunciationReleaseControlInstalled",
       "providers": [
-        "pronunciation-release-control.js"
+        "src/features/audio/pronunciation-release-control.js"
       ]
     },
     {

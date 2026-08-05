@@ -9,13 +9,15 @@ const fail = message => { throw new Error(message); };
 
 for (const file of [
   "pronunciation-release-control.js",
+  "src/features/audio/pronunciation-release-control.js",
   "home-reward-coordinator.js",
   "badge-catalogue-v2.js",
   "src/config/course-manifest.js",
   "service-worker.js"
 ]) new vm.Script(read(file),{filename:file});
 
-const pronunciation = read("pronunciation-release-control.js");
+const pronunciationLoader = read("pronunciation-release-control.js");
+const pronunciation = read("src/features/audio/pronunciation-release-control.js");
 for (const marker of [
   'const BUTTON_SELECTOR = "#audioBtn"',
   'document.addEventListener("pointerup"',
@@ -27,6 +29,14 @@ for (const marker of [
   'loadStaticAudioManifest?.()',
   'Audio could not play'
 ]) if (!pronunciation.includes(marker)) fail(`Missing release-audio marker: ${marker}`);
+
+for (const marker of [
+  'const TARGET = "./src/features/audio/pronunciation-release-control.js?v=5.4.22"',
+  "document.currentScript",
+  "document.write",
+  "script.async = false",
+  "salitaCompatibilityLoader"
+]) if (!pronunciationLoader.includes(marker)) fail(`Missing pronunciation compatibility-loader marker: ${marker}`);
 
 const reward = read("home-reward-coordinator.js");
 for (const marker of [
@@ -102,12 +112,12 @@ for (const [htmlFile,courseId] of [["app.html","tagalog"],["bisaya.html","cebuan
   if (!course) fail(`${courseId} is missing from the course manifest.`);
   if (!course.styles.includes('badge-catalogue-v2.css?v=5.4.23')) fail(`${htmlFile} does not load badge-catalogue-v2.css?v=5.4.23`);
   for (const asset of [
-    'pronunciation-release-control.js?v=5.4.22',
+    'src/features/audio/pronunciation-release-control.js?v=5.4.22',
     'home-reward-coordinator.js?v=5.4.22',
     'badge-catalogue-v2.js?v=5.4.23'
   ]) if (!course.scripts.includes(asset)) fail(`${htmlFile} does not load ${asset}`);
   const nav = course.scripts.findIndex(asset => /^desktop-navigation-refinement\.js\?v=(?:5\.4\.21|5\.5\.2|5\.5\.3)$/.test(asset));
-  const audio = course.scripts.indexOf('pronunciation-release-control.js?v=5.4.22');
+  const audio = course.scripts.indexOf('src/features/audio/pronunciation-release-control.js?v=5.4.22');
   const rewardIndex = course.scripts.indexOf('home-reward-coordinator.js?v=5.4.22');
   const catalogue = course.scripts.indexOf('badge-catalogue-v2.js?v=5.4.23');
   if (!(nav >= 0 && audio > nav && rewardIndex > audio && catalogue > rewardIndex)) fail(`${htmlFile} has incorrect final runtime order`);
@@ -117,6 +127,7 @@ const serviceWorker = read("service-worker.js");
 for (const asset of [
   'const CACHE_NAME = "salita-quest-',
   '"./pronunciation-release-control.js"',
+  '"./src/features/audio/pronunciation-release-control.js"',
   '"./home-reward-coordinator.js"',
   '"./badge-catalogue-v2.js"',
   '"./badge-catalogue-v2.css"'
