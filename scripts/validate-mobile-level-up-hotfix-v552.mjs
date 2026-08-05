@@ -61,8 +61,8 @@ if (/localStorage\.(?:clear|removeItem)\(/.test(refresh)) {
 }
 
 for (const required of [
-  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-13-collection-key-translation-hotfix-extraction-r66"',
-  'const CACHE_NAME = "salita-quest-v5-6-14-popup-governor-extraction-r67"',
+  'const PREVIOUS_CACHE_NAME = "salita-quest-v5-6-14-popup-governor-extraction-r67"',
+  'const CACHE_NAME = "salita-quest-v5-6-15-level-avatar-rewards-extraction-r68"',
   '"./level-up-mobile-safety-v552.js"',
   '"./src/features/interface/level-up-mobile-safety-v552.js"'
 ]) {
