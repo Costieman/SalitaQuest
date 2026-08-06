@@ -25,6 +25,10 @@
     ensureScript("__salitaQuestPronounClarityDailyCollapseV1", 'script[data-sq-pronoun-daily-collapse]', "./pronoun-clarity-daily-quest-collapse-v1.js?v=1.0.0", "sqPronounDailyCollapse", "Pronoun clarity and Daily Quest collapse could not be loaded.");
   }
 
+  function ensurePromptDistinctionClarity() {
+    ensureScript("__salitaQuestPromptDistinctionClarityV1", 'script[data-sq-prompt-distinction-clarity]', "./prompt-distinction-clarity-v1.js?v=1.0.0", "sqPromptDistinctionClarity", "Prompt distinction clarity could not be loaded.");
+  }
+
   function retry() {
     window.setTimeout(install, 70);
   }
@@ -182,5 +186,6 @@
   ensureTranslationGlossCompletion();
   ensureWordBreakdownCleanup();
   ensurePronounClarityAndQuestCollapse();
+  ensurePromptDistinctionClarity();
   install();
 })();
