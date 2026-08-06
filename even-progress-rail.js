@@ -22,7 +22,7 @@
   }
 
   function ensurePronounClarityAndQuestCollapse() {
-    ensureScript("__salitaQuestPronounClarityDailyCollapseV1", 'script[data-sq-pronoun-daily-collapse]', "./pronoun-clarity-daily-quest-collapse-v1.js?v=1.0.0", "sqPronounDailyCollapse", "Pronoun clarity and Daily Quest collapse could not be loaded.");
+    ensureScript("__salitaQuestPronounClarityDailyCollapseV1", 'script[data-sq-pronoun-daily-collapse]', "./pronoun-clarity-daily-quest-collapse-v1.js?v=1.0.1", "sqPronounDailyCollapse", "Pronoun clarity and Daily Quest collapse could not be loaded.");
   }
 
   function ensurePromptDistinctionClarity() {
