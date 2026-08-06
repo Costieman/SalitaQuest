@@ -4,22 +4,25 @@
   const INSTALL_FLAG = "__salitaQuestEvenProgressRailInstalled";
   const EDGE_INSET = 7;
 
-  function ensureTranslationGlossCompletion() {
-    if (window.__salitaQuestTranslationGlossCompletionV1 || document.querySelector('script[data-sq-translation-gloss-completion]')) return;
+  function ensureScript(flag, selector, src, datasetKey, message) {
+    if (window[flag] || document.querySelector(selector)) return;
     const script = document.createElement("script");
-    script.src = "./translation-gloss-completion-v1.js?v=1.0.1";
-    script.dataset.sqTranslationGlossCompletion = "true";
-    script.onerror = () => console.warn("Word-by-word translation glosses could not be loaded.");
+    script.src = src;
+    script.dataset[datasetKey] = "true";
+    script.onerror = () => console.warn(message);
     document.body.appendChild(script);
   }
 
+  function ensureTranslationGlossCompletion() {
+    ensureScript("__salitaQuestTranslationGlossCompletionV1", 'script[data-sq-translation-gloss-completion]', "./translation-gloss-completion-v1.js?v=1.0.2", "sqTranslationGlossCompletion", "Word-by-word translation glosses could not be loaded.");
+  }
+
   function ensureWordBreakdownCleanup() {
-    if (window.__salitaQuestWordBreakdownCleanupV1 || document.querySelector('script[data-sq-word-breakdown-cleanup]')) return;
-    const script = document.createElement("script");
-    script.src = "./word-breakdown-cleanup-v1.js?v=1.0.0";
-    script.dataset.sqWordBreakdownCleanup = "true";
-    script.onerror = () => console.warn("Vocabulary word-by-word cleanup could not be loaded.");
-    document.body.appendChild(script);
+    ensureScript("__salitaQuestWordBreakdownCleanupV1", 'script[data-sq-word-breakdown-cleanup]', "./word-breakdown-cleanup-v1.js?v=1.0.1", "sqWordBreakdownCleanup", "Vocabulary word-by-word cleanup could not be loaded.");
+  }
+
+  function ensurePronounClarityAndQuestCollapse() {
+    ensureScript("__salitaQuestPronounClarityDailyCollapseV1", 'script[data-sq-pronoun-daily-collapse]', "./pronoun-clarity-daily-quest-collapse-v1.js?v=1.0.0", "sqPronounDailyCollapse", "Pronoun clarity and Daily Quest collapse could not be loaded.");
   }
 
   function retry() {
@@ -82,7 +85,6 @@
               ? "progress-approaching"
               : "progress-future"
         );
-
         const dot = node.querySelector(".mastery-dot");
         if (dot) dot.textContent = String(number);
       });
@@ -179,5 +181,6 @@
 
   ensureTranslationGlossCompletion();
   ensureWordBreakdownCleanup();
+  ensurePronounClarityAndQuestCollapse();
   install();
 })();
