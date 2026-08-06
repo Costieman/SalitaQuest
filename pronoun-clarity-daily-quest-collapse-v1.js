@@ -12,7 +12,7 @@
     .trim()
     .toLocaleLowerCase();
 
-  function clarifyPronouns() {
+  function clarifyPromptQualifiers() {
     if (typeof ITEMS === "undefined" || !Array.isArray(ITEMS)) return false;
 
     ITEMS.forEach(item => {
@@ -25,6 +25,10 @@
         item.meaning = "How are you? (several people / respectfully)";
         item.natural = "How are you? (several people / respectfully)";
         item.hint = "Kayo means you when speaking to several people, or respectfully to one person.";
+      } else if (term === "magandang umaga po") {
+        item.meaning = "Good morning (respectfully)";
+        item.natural = "Good morning (respectfully)";
+        item.hint = "Po makes the greeting respectful. Without po, Magandang umaga simply means Good morning.";
       }
 
       const tokens = item?.analysis?.tokens;
@@ -34,6 +38,7 @@
         const source = normalise(token[0]).replace(/[.,!?]$/g, "");
         if (source === "ka") token[1] = "you (singular)";
         if (source === "kayo") token[1] = "you (plural / respectful)";
+        if (source === "po") token[1] = "respect marker";
       });
     });
 
@@ -120,13 +125,13 @@
     queued = true;
     requestAnimationFrame(() => {
       queued = false;
-      clarifyPronouns();
+      clarifyPromptQualifiers();
       collapseCompletedDailyQuests();
     });
   }
 
   ensureStyles();
-  clarifyPronouns();
+  clarifyPromptQualifiers();
   new MutationObserver(schedule).observe(document.documentElement, {subtree:true, childList:true, characterData:true, attributes:true});
   document.addEventListener("salita:daily-quests-rendered", schedule);
   document.addEventListener("salita:exercise-rendered", schedule);
