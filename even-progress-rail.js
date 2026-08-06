@@ -2,6 +2,7 @@
   "use strict";
 
   const INSTALL_FLAG = "__salitaQuestEvenProgressRailInstalled";
+  const EDGE_INSET = 7;
 
   function retry() {
     window.setTimeout(install, 70);
@@ -47,10 +48,12 @@
       const count = nodes.length;
       const points = totalLearningPoints();
       const nextIndex = milestones.findIndex(module => points < module.unlockAt);
+      const usableWidth = 100 - EDGE_INSET * 2;
 
       nodes.forEach((node, index) => {
         const number = index + 2;
-        const position = count > 1 ? index / (count - 1) * 100 : 50;
+        const ratio = count > 1 ? index / (count - 1) : .5;
+        const position = EDGE_INSET + ratio * usableWidth;
         node.style.left = `${position}%`;
         node.dataset.evenMilestone = String(number);
         node.classList.remove("progress-complete", "progress-approaching", "progress-future");
@@ -75,6 +78,65 @@
       host.dataset.evenSpacing = "true";
     }
 
+    function makeDailyQuestsActionable() {
+      if (typeof DAILY_QUESTS === "undefined") return;
+      const list = document.getElementById("dailyQuestList");
+      if (!list) return;
+      [...list.querySelectorAll(".daily-quest")].forEach((card, index) => {
+        const quest = DAILY_QUESTS[index];
+        if (!quest) return;
+        card.dataset.questAction = quest.id === "session" ? "daily" : "quick";
+        card.setAttribute("role", "button");
+        card.setAttribute("tabindex", "0");
+        card.setAttribute("aria-label", `${quest.title}. Open ${quest.id === "session" ? "Daily Session" : "Quick Review"}.`);
+      });
+    }
+
+    function openQuestTarget(card) {
+      if (!card || typeof startSession !== "function") return;
+      startSession(card.dataset.questAction === "daily" ? "daily" : "quick");
+    }
+
+    document.addEventListener("click", event => {
+      const card = event.target.closest("#dailyQuestList .daily-quest[data-quest-action]");
+      if (card) openQuestTarget(card);
+    });
+
+    document.addEventListener("keydown", event => {
+      if (event.key !== "Enter" && event.key !== " ") return;
+      const card = event.target.closest("#dailyQuestList .daily-quest[data-quest-action]");
+      if (!card) return;
+      event.preventDefault();
+      openQuestTarget(card);
+    });
+
+    function suppressDuplicateKeyDuringFlight() {
+      let timer = 0;
+      const keepTargetEmpty = () => {
+        const award = document.querySelector(".daily-key-award");
+        if (!award) {
+          window.clearInterval(timer);
+          timer = 0;
+          return;
+        }
+        const label = document.querySelector(".daily-key-celebration-banner strong")?.textContent || "";
+        const count = Math.max(1, Number(label.match(/^(\d+)/)?.[1] || 1));
+        const target = document.querySelector(`.weekly-key-slot:nth-child(${count})`);
+        if (target) {
+          target.textContent = "";
+          target.classList.remove("collected", "key-arrival");
+          target.classList.add("pending-key-arrival");
+        }
+      };
+
+      const observer = new MutationObserver(() => {
+        if (!document.querySelector(".daily-key-award") || timer) return;
+        keepTargetEmpty();
+        timer = window.setInterval(keepTargetEmpty, 50);
+      });
+      observer.observe(document.body, {childList:true, subtree:true});
+    }
+
     const baseRenderMasteryRail = renderMasteryRail;
     renderMasteryRail = function renderMasteryRailWithEvenMilestones() {
       const result = baseRenderMasteryRail.apply(this, arguments);
@@ -82,7 +144,18 @@
       return result;
     };
 
+    if (typeof renderDailyQuests === "function") {
+      const baseRenderDailyQuests = renderDailyQuests;
+      renderDailyQuests = function renderActionableDailyQuests() {
+        const result = baseRenderDailyQuests.apply(this, arguments);
+        makeDailyQuestsActionable();
+        return result;
+      };
+    }
+
     applyEvenSpacing();
+    makeDailyQuestsActionable();
+    suppressDuplicateKeyDuringFlight();
     window.addEventListener("resize", applyEvenSpacing, {passive:true});
   }
 
