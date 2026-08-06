@@ -30,30 +30,46 @@ const normalize = value => value
   .replace(/\\/g, "/");
 
 function resolveCandidate(fromFile, raw) {
-  const clean = normalize(raw.trim());
+  const clean = normalize(String(raw || "").trim().replace(/^['"]|['"]$/g, ""));
   if (!clean || clean.startsWith("data:") || clean.startsWith("javascript:") || clean.includes("${")) return null;
-  const candidates = [clean, path.posix.normalize(path.posix.join(path.posix.dirname(fromFile), clean))];
+  const candidates = [
+    clean,
+    path.posix.normalize(path.posix.join(path.posix.dirname(fromFile), clean))
+  ];
   for (const candidate of candidates) if (fileSet.has(candidate)) return candidate;
   return null;
 }
 
 const refs = new Map(files.map(file => [file, new Set()]));
 const reverse = new Map(files.map(file => [file, new Set()]));
-const patterns = [
-  /(?:src|href|content)\s*=\s*["']([^"']+)["']/gi,
-  /(?:import\s+(?:[^"']+?\s+from\s+)?|import\s*\(|require\s*\(|loadScript\s*\(|fetch\s*\(|new\s+Worker\s*\(|register\s*\()["']([^"']+)["']/gi,
-  /["']((?:\.\.?\/|\/)?[A-Za-z0-9_@.-]+(?:\/[A-Za-z0-9_@.()\[\]-]+)*\.(?:js|mjs|css|html|json|webmanifest|png|jpg|jpeg|svg|webp|mp3|wav|ogg|woff2?|ttf))["']/gi
-];
+const addRef = (from, raw) => {
+  const target = resolveCandidate(from, raw);
+  if (!target || target === from) return;
+  refs.get(from).add(target);
+  reverse.get(target).add(from);
+};
+
+const quotedPathPattern = /["']((?:\.\.?\/|\/)?[A-Za-z0-9_@.-]+(?:\/[A-Za-z0-9_@.()\[\]-]+)*\.(?:js|mjs|css|html|json|webmanifest|png|jpg|jpeg|svg|webp|mp3|wav|ogg|woff2?|ttf|py|sh))["']/gi;
+const htmlPattern = /(?:src|href|content)\s*=\s*["']([^"']+)["']/gi;
+const loaderPattern = /(?:import\s+(?:[^"']+?\s+from\s+)?|import\s*\(|require\s*\(|loadScript\s*\(|fetch\s*\(|new\s+Worker\s*\(|register\s*\()["']([^"']+)["']/gi;
+const workflowCommandPattern = /(?:^|[\s;|&])(?:node|python3?|bash|sh)\s+([^\s"']+\.(?:mjs|js|py|sh))(?=\s|$)/gmi;
+const shellPathPattern = /(?:^|[\s;|&])(?:\.\/)?((?:scripts|tools|tests?)\/[A-Za-z0-9_@.()\[\]\/-]+\.(?:mjs|js|py|sh))(?=\s|$)/gmi;
 
 for (const [file, text] of sourceText) {
-  for (const pattern of patterns) {
+  for (const pattern of [htmlPattern, loaderPattern, quotedPathPattern, workflowCommandPattern, shellPathPattern]) {
     pattern.lastIndex = 0;
     let match;
-    while ((match = pattern.exec(text))) {
-      const target = resolveCandidate(file, match[1]);
-      if (!target || target === file) continue;
-      refs.get(file).add(target);
-      reverse.get(target).add(file);
+    while ((match = pattern.exec(text))) addRef(file, match[1]);
+  }
+
+  if (/\.(?:json|webmanifest)$/i.test(file)) {
+    for (const candidate of files) {
+      if (candidate === file) continue;
+      const relative = path.posix.relative(path.posix.dirname(file), candidate);
+      const base = path.posix.basename(candidate);
+      if (text.includes(candidate) || text.includes(`./${candidate}`) || text.includes(relative) || text.includes(base)) {
+        addRef(file, candidate);
+      }
     }
   }
 }
@@ -84,15 +100,15 @@ function classify(file, category, reason) { categories.set(file, category); reas
 
 for (const file of files) {
   const ext = path.extname(file).toLowerCase();
-  if (runtime.has(file)) classify(file, "runtime-active", "Reachable from a deployed entry point through a static reference chain.");
-  else if (development.has(file)) classify(file, "development-active", "Reachable from a GitHub Actions workflow or validator/tooling chain.");
+  if (runtime.has(file)) classify(file, "runtime-active", "Reachable from a deployed entry point through a static, loader, manifest, or cache reference chain.");
+  else if (development.has(file)) classify(file, "development-active", "Reachable from a GitHub Actions workflow, command, validator, or tooling chain.");
   else if (docs.includes(file)) classify(file, "documentation-or-history", "Documentation, migration, research, checklist, or changelog material; not part of the deployed runtime.");
   else if (/^(audio|assets|images|icons|languages)\//.test(file) && !codeExtensions.has(ext)) {
-    if ((reverse.get(file)?.size || 0) > 0 || cacheMentioned.has(file)) classify(file, "runtime-asset", "Referenced by code/data or explicitly cached.");
-    else classify(file, "unverified-asset", "Media/static asset with no static inbound reference found; may be selected dynamically.");
-  } else if (/^(scripts|tools|tests?|reports)\//.test(file)) classify(file, "unwired-development", "Development-oriented location but not reachable from current workflows.");
+    if ((reverse.get(file)?.size || 0) > 0 || cacheMentioned.has(file)) classify(file, "runtime-asset", "Referenced by code/data, a manifest, or explicitly cached.");
+    else classify(file, "unverified-asset", "Media/static asset with no detected inbound reference; may still be selected through generated names.");
+  } else if (/^(scripts|tools|tests?|reports)\//.test(file)) classify(file, "unwired-development", "Development-oriented file not reachable from current workflows or tooling chains.");
   else if (/^\.github\/workflows\//.test(file)) classify(file, "development-active", "GitHub Actions workflow.");
-  else if ((reverse.get(file)?.size || 0) === 0) classify(file, "disconnected-candidate", "No inbound static reference and not an entry point, workflow dependency, documentation, or known asset class.");
+  else if ((reverse.get(file)?.size || 0) === 0) classify(file, "disconnected-candidate", "No detected inbound reference and not an entry point, workflow dependency, documentation, or known asset class.");
   else classify(file, "indirect-or-dynamic", "Has inbound references but is not reachable from identified deployment or workflow seeds.");
 }
 
@@ -121,9 +137,9 @@ const json = {
   generatedAt: new Date().toISOString(),
   commit: execFileSync("git", ["rev-parse","HEAD"], {encoding:"utf8"}).trim(),
   limitations: [
-    "This is static reachability analysis; computed filenames, server-side routes, browser storage keys, and runtime-generated URLs can evade detection.",
+    "This remains static reachability analysis; computed filenames, server-side routes, browser storage keys, and runtime-generated URLs can evade detection.",
     "A disconnected candidate is not automatically safe to delete. It requires targeted runtime and historical review.",
-    "Large media libraries may be addressed through manifests or generated hashes and therefore remain unverified until their manifests are cross-checked."
+    "Large media libraries may be addressed through generated hashes; those assets remain unverified until manifest coverage is checked."
   ],
   seeds: {runtime:runtimeSeeds, workflows:workflowSeeds},
   counts,
