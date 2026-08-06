@@ -12,7 +12,8 @@
     "grammar component",
     "component of the expression",
     "translation pending content review",
-    "direct component"
+    "direct component",
+    "see phrase translation"
   ]);
 
   const CURATED_GLOSSES = {
@@ -20,11 +21,12 @@
     kailan: "when", saan: "where", sino: "who", ano: "what", bakit: "why", paano: "how",
     oo: "yes", opo: "yes, respectfully", hindi: "no / not", po: "respect marker", ho: "respect marker",
     ang: "subject/topic marker", ng: "object / possessive marker", mga: "plural marker", sa: "at / in / to",
-    si: "personal-name marker", sina: "plural personal-name marker", ako: "I / me", ko: "my / by me",
-    ka: "you", ikaw: "you", mo: "your / by you", siya: "he / she", niya: "his / her / by him or her",
-    kami: "we, excluding you", tayo: "we, including you", namin: "our, excluding you", natin: "our, including you",
-    kayo: "you, plural or respectful", nila: "their / by them", ito: "this", iyan: "that, near you",
-    iyon: "that, over there", dito: "here", diyan: "there, near you", doon: "there, over there",
+    si: "personal-name marker", sina: "plural personal-name marker", ako: "I / me", akong: "I / my + linker",
+    ko: "my / by me", ka: "you", ikaw: "you", mo: "your / by you", siya: "he / she",
+    niya: "his / her / by him or her", kami: "we, excluding you", tayo: "we, including you",
+    namin: "our, excluding you", natin: "our, including you", kayo: "you, plural or respectful",
+    nila: "their / by them", ito: "this", iyan: "that, near you", iyon: "that, over there",
+    dito: "here", diyan: "there, near you", doon: "there, over there", pera: "money",
     at: "and", o: "or", pero: "but", dahil: "because", para: "for / so that", naman: "in turn / softener",
     rin: "also / too", din: "also / too", lang: "only / just", lamang: "only / just", na: "already / now / linker",
     pa: "still / yet / more", ba: "question marker", daw: "reportedly / they say", raw: "reportedly / they say",
@@ -61,13 +63,22 @@
     return glossary;
   }
 
+  function linkedFormGloss(sourceKey, glossary) {
+    if (!sourceKey.endsWith("ng") || sourceKey.length < 4) return "";
+    const base = sourceKey.slice(0, -2);
+    const baseGloss = glossary.get(base);
+    return baseGloss ? `${baseGloss} + linker` : "";
+  }
+
   function componentGloss(source, glossary) {
     const sourceKey = key(source);
     if (!sourceKey) return "";
     if (glossary.has(sourceKey)) return glossary.get(sourceKey);
+    const linked = linkedFormGloss(sourceKey, glossary);
+    if (linked) return linked;
     const pieces = sourceKey.split(/[\s-]+/).filter(Boolean);
     if (pieces.length < 2) return "";
-    const glosses = pieces.map(piece => glossary.get(piece) || "");
+    const glosses = pieces.map(piece => glossary.get(piece) || linkedFormGloss(piece, glossary));
     return glosses.every(Boolean) ? glosses.join(" + ") : "";
   }
 
@@ -112,7 +123,7 @@
       const row = node.parentElement?.closest("[data-token], [data-source-token], .token-row, .breakdown-row, li, tr, .analysis-token, .word-analysis, .word-bubble");
       const source = sourceFromRow(row, node), gloss = bestGloss(row, source, glossary);
       if (gloss) { node.nodeValue = gloss; row?.classList.remove("sq-translation-review-needed"); }
-      else { console.warn("Missing direct translation gloss", {source, row}); node.nodeValue = source ? `Meaning of ${source}` : "See phrase translation"; row?.classList.add("sq-translation-review-needed"); }
+      else { console.warn("Missing direct translation gloss", {source, row}); node.nodeValue = source ? `Meaning of ${source}` : "Meaning unavailable"; row?.classList.add("sq-translation-review-needed"); }
     });
   }
 
