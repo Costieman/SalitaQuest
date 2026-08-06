@@ -13,6 +13,15 @@
     document.body.appendChild(script);
   }
 
+  function ensureWordBreakdownCleanup() {
+    if (window.__salitaQuestWordBreakdownCleanupV1 || document.querySelector('script[data-sq-word-breakdown-cleanup]')) return;
+    const script = document.createElement("script");
+    script.src = "./word-breakdown-cleanup-v1.js?v=1.0.0";
+    script.dataset.sqWordBreakdownCleanup = "true";
+    script.onerror = () => console.warn("Vocabulary word-by-word cleanup could not be loaded.");
+    document.body.appendChild(script);
+  }
+
   function retry() {
     window.setTimeout(install, 70);
   }
@@ -169,5 +178,6 @@
   }
 
   ensureTranslationGlossCompletion();
+  ensureWordBreakdownCleanup();
   install();
 })();
