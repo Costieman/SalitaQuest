@@ -1,0 +1,33 @@
+name: Validate course content
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - "agent/**"
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Audit Tagalog and Cebuano course content
+        run: node scripts/audit-course-content.mjs
+      - name: Upload audit reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: course-content-audit
+          path: |
+            reports/course-content-audit.json
+            reports/course-content-audit.md
+          if-no-files-found: error
