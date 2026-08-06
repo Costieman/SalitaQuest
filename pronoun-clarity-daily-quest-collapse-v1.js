@@ -63,13 +63,15 @@
     return list?.parentElement || null;
   }
 
+  function markCollapsibleChildren(panel, summary) {
+    [...panel.children].forEach(element => {
+      if (element !== summary) element.classList.add("sq-daily-quest-collapsible-content");
+    });
+  }
+
   function setPanelExpanded(panel, expanded) {
     const summary = panel.querySelector(":scope > .sq-daily-quest-summary");
-    const stored = panel.__sqQuestChildren || [];
-    stored.forEach(({element, wasHidden}) => {
-      if (element === summary) return;
-      element.hidden = expanded ? wasHidden : true;
-    });
+    markCollapsibleChildren(panel, summary);
     panel.classList.toggle("sq-daily-quests-expanded", expanded);
     panel.classList.toggle("sq-daily-quests-collapsed", !expanded);
     summary?.setAttribute("aria-expanded", String(expanded));
@@ -93,30 +95,32 @@
       summary.className = "sq-daily-quest-summary";
       summary.innerHTML = '<span><strong>Daily Quests</strong><span class="sq-daily-quest-status">Completed</span></span><span class="sq-daily-quest-chevron" aria-hidden="true">▾</span>';
       panel.insertBefore(summary, panel.firstChild);
-      panel.__sqQuestChildren = [...panel.children]
-        .filter(element => element !== summary)
-        .map(element => ({element, wasHidden: element.hidden}));
       summary.addEventListener("click", () => {
         const expanded = summary.getAttribute("aria-expanded") === "true";
         setPanelExpanded(panel, !expanded);
       });
     }
 
+    markCollapsibleChildren(panel, summary);
     if (!panel.classList.contains("sq-daily-quests-expanded")) setPanelExpanded(panel, false);
   }
 
   function ensureStyles() {
-    if (document.getElementById("sq-pronoun-daily-collapse-style")) return;
-    const style = document.createElement("style");
-    style.id = "sq-pronoun-daily-collapse-style";
+    let style = document.getElementById("sq-pronoun-daily-collapse-style");
+    if (!style) {
+      style = document.createElement("style");
+      style.id = "sq-pronoun-daily-collapse-style";
+      document.head.appendChild(style);
+    }
     style.textContent = `
       .sq-daily-quest-summary{width:100%;min-height:48px;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 14px;border:0;background:transparent;color:inherit;font:inherit;text-align:left;cursor:pointer}
       .sq-daily-quest-summary>span:first-child{display:flex;align-items:center;gap:10px;min-width:0}
       .sq-daily-quest-status{font-size:.9em;opacity:.72;white-space:nowrap}
       .sq-daily-quest-chevron{font-size:1.15em;line-height:1}
-      .sq-daily-quests-collapsed{padding-top:0!important;padding-bottom:0!important;min-height:48px!important}
+      .sq-daily-quests-collapsed{padding-top:0!important;padding-bottom:0!important;min-height:48px!important;max-height:64px!important;overflow:hidden!important}
+      .sq-daily-quests-collapsed>.sq-daily-quest-collapsible-content{display:none!important}
+      .sq-daily-quests-expanded>.sq-daily-quest-collapsible-content{display:revert}
     `;
-    document.head.appendChild(style);
   }
 
   let queued = false;
