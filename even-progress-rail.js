@@ -4,6 +4,15 @@
   const INSTALL_FLAG = "__salitaQuestEvenProgressRailInstalled";
   const EDGE_INSET = 7;
 
+  function ensureTranslationGlossCompletion() {
+    if (window.__salitaQuestTranslationGlossCompletionV1 || document.querySelector('script[data-sq-translation-gloss-completion]')) return;
+    const script = document.createElement("script");
+    script.src = "./translation-gloss-completion-v1.js?v=1.0.1";
+    script.dataset.sqTranslationGlossCompletion = "true";
+    script.onerror = () => console.warn("Word-by-word translation glosses could not be loaded.");
+    document.body.appendChild(script);
+  }
+
   function retry() {
     window.setTimeout(install, 70);
   }
@@ -159,5 +168,6 @@
     window.addEventListener("resize", applyEvenSpacing, {passive:true});
   }
 
+  ensureTranslationGlossCompletion();
   install();
 })();
