@@ -3,8 +3,11 @@
 
   const INSTALL_FLAG = "__salitaQuestHomeRewardCoordinatorInstalled";
   const KEY_TARGET = 6;
+  const RESERVATION_CLASS = "daily-key-reward-reservation";
   let timer = 0;
   let playing = false;
+  let reservation = null;
+  let releaseTimer = 0;
 
   function retry() {
     window.setTimeout(install, 90);
@@ -16,6 +19,51 @@
     chest.pendingKeyAwards = Array.isArray(chest.pendingKeyAwards) ? chest.pendingKeyAwards.filter(item => item?.date) : [];
     chest.animatedKeyDates = Array.isArray(chest.animatedKeyDates) ? [...new Set(chest.animatedKeyDates.filter(Boolean))] : [];
     return chest;
+  }
+
+  function hasPendingKey() {
+    try { return keyState().pendingKeyAwards.length > 0; }
+    catch { return false; }
+  }
+
+  function keyAnimationVisible() {
+    return Boolean(document.querySelector(".daily-key-celebration:not(.daily-key-reward-reservation),.daily-key-award"));
+  }
+
+  function reserveRewardPriority() {
+    window.clearTimeout(releaseTimer);
+    if (!reservation?.isConnected) {
+      reservation = document.createElement("div");
+      reservation.className = `daily-key-celebration ${RESERVATION_CLASS}`;
+      reservation.hidden = true;
+      reservation.setAttribute("aria-hidden", "true");
+      document.body.appendChild(reservation);
+    }
+    document.documentElement.dataset.dailyKeyRewardPriority = "reserved";
+    try { window.SalitaPopupGovernor?.suspend?.(6000, "daily_key_priority"); } catch {}
+  }
+
+  function releaseRewardPrioritySoon() {
+    window.clearTimeout(releaseTimer);
+    releaseTimer = window.setTimeout(() => {
+      if (hasPendingKey() || keyAnimationVisible() || playing) {
+        reserveRewardPriority();
+        return;
+      }
+      reservation?.remove();
+      reservation = null;
+      delete document.documentElement.dataset.dailyKeyRewardPriority;
+      try {
+        window.SalitaPopupGovernor?.resume?.("daily_key_finished");
+        window.SalitaPopupGovernor?.notify?.();
+      } catch {}
+      document.dispatchEvent(new CustomEvent("salita:daily-key-reward-finished"));
+    }, 650);
+  }
+
+  function syncRewardPriority() {
+    if (hasPendingKey() || keyAnimationVisible() || playing) reserveRewardPriority();
+    else if (reservation) releaseRewardPrioritySoon();
   }
 
   function today() {
@@ -38,6 +86,7 @@
     const recent = chest.keyDates.slice(-KEY_TARGET);
     chest.pendingKeyAwards.push({date, count:Math.max(1, Math.min(KEY_TARGET, recent.length)), queuedAt:new Date().toISOString(), source:"home-recovery"});
     saveState();
+    reserveRewardPriority();
     return true;
   }
 
@@ -145,7 +194,11 @@
     if (playing || !homeVisible()) return;
     recoverMissedAward();
     const award = keyState().pendingKeyAwards[0];
-    if (!award) return;
+    if (!award) {
+      syncRewardPriority();
+      return;
+    }
+    reserveRewardPriority();
     playing = true;
     try {
       renderDailyQuests();
@@ -155,11 +208,13 @@
     } finally {
       playing = false;
       if (keyState().pendingKeyAwards.length && homeVisible()) schedule(700);
+      else releaseRewardPrioritySoon();
     }
   }
 
   function schedule(delay = 800) {
     clearTimeout(timer);
+    if (hasPendingKey()) reserveRewardPriority();
     timer = window.setTimeout(playPending, delay);
   }
 
@@ -179,12 +234,24 @@
       return result;
     };
 
-    document.addEventListener("visibilitychange", () => { if (!document.hidden && homeVisible()) schedule(700); });
-    window.addEventListener("pageshow", () => { if (homeVisible()) schedule(900); });
-    const observer = new MutationObserver(() => { if (homeVisible() && keyState().pendingKeyAwards.length) schedule(500); });
+    document.addEventListener("visibilitychange", () => {
+      syncRewardPriority();
+      if (!document.hidden && homeVisible()) schedule(700);
+    });
+    document.addEventListener("salita:popup-queued", syncRewardPriority);
+    document.addEventListener("salita:badge-earned", syncRewardPriority);
+    window.addEventListener("pageshow", () => {
+      syncRewardPriority();
+      if (homeVisible()) schedule(900);
+    });
+    const observer = new MutationObserver(() => {
+      syncRewardPriority();
+      if (homeVisible() && keyState().pendingKeyAwards.length) schedule(500);
+    });
     observer.observe(document.getElementById("homeView") || document.body, {subtree:true,childList:true,attributes:true,attributeFilter:["class"]});
 
     recoverMissedAward();
+    syncRewardPriority();
     if (homeVisible()) schedule(1000);
   }
 
