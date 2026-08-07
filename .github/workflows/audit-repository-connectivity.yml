@@ -1,0 +1,28 @@
+name: Audit repository connectivity
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Audit tracked-file connectivity
+        run: node scripts/audit-repository-connectivity.mjs
+      - name: Upload forensic reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: repository-connectivity-audit
+          path: |
+            reports/repository-connectivity-audit.json
+            reports/repository-connectivity-audit.md
